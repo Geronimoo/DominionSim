@@ -13,9 +13,6 @@ public class SeawayCard extends DomCard {
     }
 
     public void play() {
-        DomCardName theDesiredCard = owner.getDesiredCard(DomCardType.Action,new DomCost(4, 0), false,false,null);
-        if (theDesiredCard!=null)
-            owner.gain(theDesiredCard);
-        owner.setPlusBuyAction(theDesiredCard);
+        owner.gain(owner.placePlusOneBuyToken());
    }
 }
