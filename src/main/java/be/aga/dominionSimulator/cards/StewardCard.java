@@ -27,7 +27,6 @@ public class StewardCard extends DomCard {
          }
 
         if (owner.getActionsLeft()>0 && owner.getDeckSize()>0) {
-            //test
             playForCards();
             return;
         }
