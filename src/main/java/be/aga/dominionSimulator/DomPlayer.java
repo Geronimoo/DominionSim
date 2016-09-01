@@ -2985,10 +2985,11 @@ public class DomPlayer implements Comparable<DomPlayer> {
             if (DomEngine.haveToLog) DomEngine.addToLog(this + " puts +$1 token on " + plusOneCoinTokenOn.toHTML());
     }
 
-    public void placePlusOneBuyToken() {
+    public DomCardName placePlusOneBuyToken() {
         plusOneBuyTokenOn = getChosenCardForFunction(DomBotFunction.isPlusOneBuyTokenSet);
         if (plusOneBuyTokenOn != null)
             if (DomEngine.haveToLog) DomEngine.addToLog(this + " puts +1 Buy token on " + plusOneBuyTokenOn.toHTML());
+        return plusOneBuyTokenOn;
     }
 
     public void placeTrashingToken() {
