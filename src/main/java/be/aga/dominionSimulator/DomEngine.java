@@ -35,8 +35,8 @@ import be.aga.dominionSimulator.gui.DomLineChart;
 import be.aga.dominionSimulator.gui.StatusBar;
 
 public class DomEngine {
-    public static boolean showColoredLog=false;
-    public static boolean hideGraphs =true;
+    public static boolean showColoredLog=true;
+    public static boolean hideGraphs =false;
     public static boolean developmentMode=false;
 
     public static double NUMBER_OF_GAMES = 1000;

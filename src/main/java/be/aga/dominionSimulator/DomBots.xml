@@ -1,5 +1,135 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <playerCollection>
+    <player name="Shelters"
+            author="Geronimoo"
+            description="The optimized strategy that buys only treasure.">
+        <type name="Bot"/>
+        <type name="SingleCard"/>
+        <type name="TwoPlayer"/>
+        <type name="Province"/>
+        <type name="Optimized"/>
+        <type name="BigMoney"/>
+        <start_state>
+            <hand contents=""/>
+            <discard contents=""/>
+            <drawdeck contents="7 Copper, Necropolis, Overgrown Estate, Hovel" shuffle="true"/>
+        </start_state>
+        <buy name="Province">
+            <condition>
+                <left type="getTotalMoney"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="18.0"/>
+            </condition>
+        </buy>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+        </buy>
+        <buy name="Estate">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Gold"/>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="6.0"/>
+            </condition>
+        </buy>
+        <buy name="Silver"/>
+    </player>
+
+    <player name="Lab/Militia/Chapel"
+            author="Geronimoo"
+            description="A Base game strategy">
+        <type name="TwoPlayer"/>
+        <type name="AppliesPPR"/>
+        <type name="Engine"/>
+        <type name="Competitive"/>
+        <type name="Bot"/>
+        <type name="Province"/>
+        <type name="Attacking"/>
+        <buy name="Province">
+            <condition>
+                <left type="countAvailableMoney"/>
+                <operator type="greaterOrEqualThan" />
+                <right type="constant" attribute="13.0"/>
+            </condition>
+        </buy>
+        <buy name="Province">
+            <condition>
+                <left type="countCardsInDeck" attribute="Province"/>
+                <operator type="greaterOrEqualThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="3.0"/>
+            </condition>
+        </buy>
+        <buy name="Estate">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Gold">
+            <condition>
+                <left type="countCardsInDeck" attribute="Gold"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Festival">
+            <condition>
+                <left type="countCardsInDeck" attribute="Festival"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Market">
+            <condition>
+                <left type="countCardsInDeck" attribute="Laboratory"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Laboratory"/>
+        <buy name="Militia">
+            <condition>
+                <left type="countCardsInDeck" attribute="Militia"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Chapel" strategy="aggressiveTrashing">
+            <condition>
+                <left type="countCardsInDeck" attribute="Chapel"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Spy">
+            <condition>
+                <left type="countCardsInDeck" attribute="Gold"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Silver"/>
+    </player>
+
     <player name="Apprentice/Market Square"
             author="Geronimoo"
             description="Beastly combo">

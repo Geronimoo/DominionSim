@@ -7,9 +7,9 @@ import be.aga.dominionSimulator.enums.DomCardType;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class NewScoutCard extends DomCard {
-    public NewScoutCard() {
-      super( DomCardName.NewScout);
+public class PatrolCard extends DomCard {
+    public PatrolCard() {
+      super( DomCardName.Patrol);
     }
 
     public void play() {
@@ -17,7 +17,7 @@ public class NewScoutCard extends DomCard {
       ArrayList< DomCard > theCards = owner.revealTopCards(4);
       Collections.sort(theCards,SORT_FOR_DISCARDING);
       for (DomCard theCard:theCards) {
-    	if (theCard.hasCardType(DomCardType.Victory)){
+    	if (theCard.hasCardType(DomCardType.Victory) || theCard.hasCardType(DomCardType.Curse)){
            owner.putInHand(theCard);
     	} else {
     	   owner.putOnTopOfDeck(theCard);

@@ -2,12 +2,8 @@ package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomCost;
-import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomPlayStrategy;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 public class DuplicateCard extends DomCard {
     public DuplicateCard() {
@@ -31,7 +27,7 @@ public class DuplicateCard extends DomCard {
                 return true;
             return false;
         }
-        if (aCard.getCost(owner.getCurrentGame()).compareTo(new DomCost(6,0))<=0 && owner.wants(aCard.getName()))
+        if (aCard.getCost(owner.getCurrentGame()).compareTo(new DomCost(6,0))<=0 && owner.wants(aCard.getName()) && aCard.getTrashPriority()>DomCardName.Silver.getTrashPriority())
           return true;
 
         return false;

@@ -36,6 +36,6 @@ public class LookoutCard extends DomCard {
     		if (card.getTrashPriority(owner)<16)
     			theCount+=owner.countInDeck(card);
     	}
-    	return theCount>=5;
+    	return theCount>=4;
     }
 }

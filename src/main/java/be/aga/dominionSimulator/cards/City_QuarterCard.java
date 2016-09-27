@@ -15,4 +15,13 @@ public class City_QuarterCard extends DomCard {
       if (theNumberOfActions>0)
         owner.drawCards(theNumberOfActions);
     }
+
+    @Override
+    public int getPlayPriority() {
+        for (DomCard theCard : owner.getCardsInHand()){
+            if (owner.getActionsLeft()>1 && theCard!=this && theCard.hasCardType(DomCardType.Card_Advantage) && theCard.wantsToBePlayed() && owner.getCardsFromHand(DomCardType.Action).size()<4)
+                return theCard.getPlayPriority()+1;
+        }
+        return super.getPlayPriority();
+    }
 }

@@ -23,7 +23,10 @@ public class PeddlerCard extends DomCard {
         if (owner.getCardsFromHand(DomCardName.Peddler).size()==1 && owner.getPlayStrategyFor(this)== DomPlayStrategy.combo && !owner.getCardsFromHand(DomCardName.Expand).isEmpty())
             return owner.getCardsFromHand(DomCardName.Expand).get(0).getPlayPriority()+1;
 
-    	//TODO it's one of the best combos with Salvager, but can't handle multiple buys (yet) 
+        if (owner.getCardsFromHand(DomCardName.Peddler).size()==1 && owner.getPlayStrategyFor(this)== DomPlayStrategy.combo && !owner.getCardsFromHand(DomCardName.Apprentice).isEmpty())
+            return owner.getCardsFromHand(DomCardName.Apprentice).get(0).getPlayPriority()+1;
+
+        //TODO it's one of the best combos with Salvager, but can't handle multiple buys (yet)
 //    	if (!owner.getCardsFromHand(DomCardName.Salvager).isEmpty()
 //    	&& owner.getCardsFromHand(DomCardName.Peddler).size()==1
 //    	&& !owner.stillInEarlyGame()) {

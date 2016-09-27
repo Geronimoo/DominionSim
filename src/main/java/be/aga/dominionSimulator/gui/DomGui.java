@@ -535,7 +535,7 @@ public class DomGui extends JFrame implements ActionListener {
     }
 
     /**
-     * @param aDomLineChart
+     * @param aChart
      */
     public void setMoneyLineChart( DomLineChart aChart ) {
         myMoneyLineChart.getChartPanel().setChart(aChart.getChartPanel().getChart());       

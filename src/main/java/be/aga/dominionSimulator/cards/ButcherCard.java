@@ -5,8 +5,6 @@ import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
 
-import java.util.ArrayList;
-
 public class ButcherCard extends DomCard {
     public ButcherCard() {
       super( DomCardName.Butcher);
@@ -53,7 +51,8 @@ public class ButcherCard extends DomCard {
                 if (theRemodelGainCard==null)
                     theRemodelGainCard=owner.getCurrentGame().getBestCardInSupplyFor(owner, null, theMaxCostOfCardToGain);
                 if (theBestCardToGain==null ||
-                        theRemodelGainCard.getTrashPriority(owner) > theBestCardToGain.getTrashPriority(owner)) {
+                        (theRemodelGainCard.getTrashPriority(owner) > theBestCardToGain.getTrashPriority(owner)
+                        && theRemodelGainCard.getTrashPriority(owner) >= card.getTrashPriority()) ) {
                     theBestCardToTrash = card;
                     theBestCardToGain = theRemodelGainCard;
                 }

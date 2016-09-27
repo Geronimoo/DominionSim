@@ -1,11 +1,13 @@
 package be.aga.dominionSimulator.cards;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
+import be.aga.dominionSimulator.enums.DomCardType;
 import be.aga.dominionSimulator.enums.DomPlayStrategy;
 
 public class AmbassadorCard extends DomCard {
@@ -24,6 +26,16 @@ public class AmbassadorCard extends DomCard {
         DomCard thePreviousTrash = null;
         DomCard theRevealedCard = null;
         int theTrashCount = 0;
+        ArrayList<DomCard> setAsideShelters = new ArrayList<DomCard>();
+        for (DomCard theCard : owner.getCardsInHand()) {
+            if (theCard.hasCardType(DomCardType.Shelter))
+                setAsideShelters.add(theCard);
+        }
+        if (setAsideShelters.size()==owner.getCardsInHand().size())
+            return;
+        for (DomCard theCard : setAsideShelters) {
+            owner.removeCardFromHand(theCard);
+        }
         DomCardName theCardToTrash = owner.getCardsInHand().get( 0 ).getName();
         while (theTrashCount<2 && !owner.getCardsFromHand(theCardToTrash).isEmpty()) {
           theRevealedCard = owner.getCardsFromHand(theCardToTrash).get(0);
@@ -39,10 +51,21 @@ public class AmbassadorCard extends DomCard {
           owner.returnToSupply(theCardToRemove);
           theTrashCount++;
         }
-        attackOpponents( theRevealedCard.getName() );          
+        attackOpponents( theRevealedCard.getName() );
+        owner.addCardsToHand(setAsideShelters);
     }
 
     private void handleAmbassadorWar() {
+        ArrayList<DomCard> setAsideShelters = new ArrayList<DomCard>();
+        for (DomCard theCard : owner.getCardsInHand()) {
+            if (theCard.hasCardType(DomCardType.Shelter))
+                setAsideShelters.add(theCard);
+        }
+        if (setAsideShelters.size()==owner.getCardsInHand().size())
+            return;
+        for (DomCard theCard : setAsideShelters) {
+            owner.removeCardFromHand(theCard);
+        }
         DomCardName theCardToReturn;
         if (!owner.getCardsFromHand(DomCardName.Curse).isEmpty()) {
             theCardToReturn = DomCardName.Curse;
@@ -78,6 +101,7 @@ public class AmbassadorCard extends DomCard {
             theTrashCount++;
         }
         attackOpponents( theCardToReturn );
+        owner.addCardsToHand(setAsideShelters);
     }
 
     private void attackOpponents( DomCardName aCardName ) {

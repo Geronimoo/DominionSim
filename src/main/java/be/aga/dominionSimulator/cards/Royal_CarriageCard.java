@@ -14,7 +14,8 @@ public class Royal_CarriageCard extends DomCard {
 
     public void play() {
       owner.addActions(1);
-      owner.putOnTavernMat(owner.removeCardFromPlay(this));
+      if (owner.getCardsInPlay().contains(this))
+        owner.putOnTavernMat(owner.removeCardFromPlay(this));
     }
 
     @Override

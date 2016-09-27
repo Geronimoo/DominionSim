@@ -104,6 +104,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
     private int mountainPassBid = 0;
     private DomCardName obeliskChoice = null;
     private boolean villaTriggered = false;
+    private int merchantsPlayed;
 
     public DomPlayer(String aString) {
         name = aString;
@@ -131,6 +132,64 @@ public class DomPlayer implements Comparable<DomPlayer> {
             }
         }
         return theMultipleCards;
+    }
+
+    public DomCard findCardToTrash(DomCard remodelCard, int theAmount) {
+    	ArrayList<DomCard> theCardsToConsiderTrashing=new ArrayList<DomCard>();
+    	ArrayList<DomCardName> theCardsToGain=new ArrayList<DomCardName>();
+    	DomCardName theDesiredCardIfRemodelNotUsed = getDesiredCard(getTotalPotentialCurrency(), false);
+        for (int i=0;i< getCardsInHand().size();i++) {
+            if (getCardsInHand().get(i)== remodelCard)
+                continue;
+        	//temporarily remove the card from hand AND deck
+        	DomCard theCard = getCardsInHand().remove(i);
+            DomCost theMaxCostOfCardToGain = new DomCost( theCard.getCoinCost(getCurrentGame()) + theAmount, theCard.getPotionCost());
+        	getDeck().get(theCard.getName()).remove(theCard );
+      	    DomCardName theRemodelGainCard = getDesiredCard(theMaxCostOfCardToGain, false);
+        	DomCardName theDesiredCard = getDesiredCard(getTotalPotentialCurrency(), false);
+        	//first we will make a list of cards we consider good candidates for trashing
+        	//only add to the list if:
+        	//  -what we will gain is better than the card we trash (so of course it's not null)
+        	//  -(and the card we will gain is better than what we were able to buy without using Remodel
+        	//    or -trashing the card will not hinder our buying potential)
+            if (   (theRemodelGainCard!=null
+            	  && theRemodelGainCard.getTrashPriority(this)>theCard.getName().getTrashPriority(this)
+            	  && (theDesiredCardIfRemodelNotUsed == null
+            	  || theRemodelGainCard.getTrashPriority(this)>=theDesiredCardIfRemodelNotUsed.getTrashPriority(this)
+            	  || theDesiredCard==theDesiredCardIfRemodelNotUsed))){
+				theCardsToConsiderTrashing.add(theCard);
+				theCardsToGain.add(theRemodelGainCard);
+            }
+        	getDeck().get(theCard.getName()).add(theCard );
+        	getCardsInHand().add(i, theCard);
+        }
+        //nothing good found
+        if (theCardsToConsiderTrashing.isEmpty())
+        	return null;
+        //now we scan the lists to find the best possible trashing candidate
+        DomCardName theBestCardToGain=null;
+        DomCard theBestCardToTrash=null;
+        for (int i=0;i<theCardsToGain.size();i++) {
+          DomCardName theCardToGain = theCardsToGain.get(i);
+          if (stillInEarlyGame()){
+	    	if (theBestCardToGain==null
+	        || theCardsToConsiderTrashing.get(i).getTrashPriority()<theBestCardToTrash.getTrashPriority()) {
+	    	    theBestCardToGain=theCardToGain;
+	    	    theBestCardToTrash=theCardsToConsiderTrashing.get(i);
+	    	}
+	      } else {
+	    	  if (theBestCardToGain==null
+	      	   //trashing this card will give us a better card
+	    	   || theCardToGain.getTrashPriority(this)>theBestCardToGain.getTrashPriority(this)
+	           //trashing this card is more desirable while still allowing us to gain the best card
+	    	   || ((theCardToGain.getTrashPriority(this)==theBestCardToGain.getTrashPriority(this)
+	               && theCardsToConsiderTrashing.get(i).getTrashPriority()<theBestCardToTrash.getTrashPriority()))) {
+	    	    theBestCardToGain=theCardToGain;
+	    	    theBestCardToTrash=theCardsToConsiderTrashing.get(i);
+	    	  }
+	      }
+        }
+        return theBestCardToTrash;
     }
 
     public void makeBuyDecision() {
@@ -443,6 +502,9 @@ public class DomPlayer implements Comparable<DomPlayer> {
         discard(deck.getPutAsideCards());
         drawHandForNextTurn();
         setPhase(null);
+        //reset variables needed for total money checking in other player's turns
+        availableCoins=0;
+        availablePotions=0;
     }
 
     private void showBeginningOfTurnLog() {
@@ -463,6 +525,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
         availablePotions = 0;
         hoardCount = 0;
         actionsplayed = 0;
+        merchantsPlayed=0;
         pointsBeforeBuys = countVictoryPoints();
     }
 
@@ -1738,6 +1801,9 @@ public class DomPlayer implements Comparable<DomPlayer> {
                 gain(DomCardName.Silver);
             }
         }
+        if (!getCardsFromHand(DomCardName.Diplomat).isEmpty()) {
+            ((DiplomatCard) getCardsFromHand(DomCardName.Diplomat).get(0)).react();
+        }
         if (!getCardsFromHand(DomCardName.Secret_Chamber).isEmpty()) {
             ((Secret_ChamberCard) getCardsFromHand(DomCardName.Secret_Chamber).get(0)).react();
         }
@@ -2839,7 +2905,6 @@ public class DomPlayer implements Comparable<DomPlayer> {
         if (plusOneActionTokenOn != null) {
             if (DomEngine.haveToLog)
                 DomEngine.addToLog(this + " puts +1 Action token on " + plusOneActionTokenOn.toHTML());
-            return;
         }
     }
 
@@ -3163,5 +3228,34 @@ public class DomPlayer implements Comparable<DomPlayer> {
 
     public int getAvailableCoinsWithoutTokens() {
         return availableCoins;
+    }
+
+    public int getMerchantsPlayed() {
+        return merchantsPlayed;
+    }
+
+    public void resetMerchantsPlayed() {
+        merchantsPlayed=0;
+    }
+
+    public void addMerchantPlayed() {
+        merchantsPlayed++;
+    }
+
+    public void putCardFromHandOnTop() {
+        Collections.sort(getCardsInHand(), DomCard.SORT_FOR_DISCARD_FROM_HAND);
+        DomCard theCardToReturn = null;
+        ArrayList<DomCard> theCardsInHand = getCardsInHand();
+        for (int i=theCardsInHand.size()-1;i>=0;i--){
+            if (theCardsInHand.get(i).hasCardType(DomCardType.Action))
+                continue;
+            theCardToReturn = theCardsInHand.get(i);
+            if (!removingReducesBuyingPower(theCardToReturn)) {
+                break;
+            }
+        }
+        if (theCardsInHand.get(0).hasCardType(DomCardType.Action))
+            theCardToReturn=theCardsInHand.get(0);
+        putOnTopOfDeck(removeCardFromHand(theCardToReturn));
     }
 }
