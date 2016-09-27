@@ -5,6 +5,8 @@ import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomPlayStrategy;
 
+import java.util.Collections;
+
 public class SilverCard extends DomCard {
 
     public SilverCard() {
@@ -18,6 +20,15 @@ public class SilverCard extends DomCard {
             if (DomEngine.haveToLog) DomEngine.addToLog(owner + " played " + owner.getMerchantsPlayed() + " Merchants");
             owner.addAvailableCoins(owner.getMerchantsPlayed());
             owner.resetMerchantsPlayed();
+        }
+        for (DomCard theSauna : owner.getCardsFromPlay(DomCardName.Sauna)) {
+            if (owner.getCardsInHand().isEmpty())
+                return;
+            Collections.sort(owner.getCardsInHand(), SORT_FOR_TRASHING);
+            if (owner.getCardsInHand().get(0).getTrashPriority() <= DomCardName.Copper.getTrashPriority()) {
+                if (DomEngine.haveToLog) DomEngine.addToLog(DomCardName.Sauna.toHTML() + " cleans the hand");
+                owner.trash(owner.removeCardFromHand(owner.getCardsInHand().get(0)));
+            }
         }
     }
 

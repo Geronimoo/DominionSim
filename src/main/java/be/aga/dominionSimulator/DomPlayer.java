@@ -278,6 +278,14 @@ public class DomPlayer implements Comparable<DomPlayer> {
             if (getCurrentGame().countInSupply(DomCardName.Encampment) > 5)
                 theCost = null;
         }
+        if (theBuyRule.getCardToBuy() == DomCardName.Sauna) {
+            if (getCurrentGame().countInSupply(DomCardName.Sauna) < 6)
+                theCost = null;
+        }
+        if (theBuyRule.getCardToBuy() == DomCardName.Avanto) {
+            if (getCurrentGame().countInSupply(DomCardName.Sauna) > 5)
+                theCost = null;
+        }
         return theCost;
     }
 

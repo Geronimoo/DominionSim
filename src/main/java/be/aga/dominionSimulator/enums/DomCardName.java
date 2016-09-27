@@ -41,6 +41,7 @@ public enum DomCardName  {
     Armory (4, 0, 0, 0, 38, 22, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal}),
     Artificer (5, 0, 1, 0, 12, 28, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler}),
     Artisan (6, 0, 0, 0, 30, 27, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal}),
+    Avanto (5, 0, 0, 0, 25, 24, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal, DomCardType.Card_Advantage, DomCardType.Split_Pile}),
     Bag_of_Gold (0, 0, 0, 0, 7, 25, new DomCardType[]{DomCardType.Action, DomCardType.Prize}),
     Baker (5, 0, 1, 0, 12, 28, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler}),
     Ball (5, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
@@ -304,6 +305,7 @@ public enum DomCardName  {
     Sage (3, 0, 0, 0, 12, 18, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler}),
     Salt_the_Earth (4, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
     Salvager (4, 0, 0, 0, 25, 22, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal, DomCardType.Trasher, DomCardType.TrashForBenefit}),
+    Sauna (4, 0, 0, 0, 12, 18, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler, DomCardType.Trasher, DomCardType.Split_Pile}),
     Scavenger (4, 0, 2, 0, 30, 20, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal}),
     Scheme (3, 0, 0, 0, 10, 16, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler}),
     Scout (4, 0, 0, 0, 2, 22, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler}),
@@ -507,6 +509,8 @@ public enum DomCardName  {
             return new ArtificerCard();
         case Artisan:
             return new ArtisanCard();
+        case Avanto:
+            return new AvantoCard();
         case Bag_of_Gold:
             return new Bag_of_GoldCard();
         case Baker:
@@ -1015,6 +1019,8 @@ public enum DomCardName  {
             return new Salt_the_EarthCard();
         case Salvager:
             return new SalvagerCard();
+        case Sauna:
+            return new SaunaCard();
         case Scavenger:
             return new ScavengerCard();
         case Scheme:
@@ -1587,6 +1593,10 @@ public enum DomCardName  {
                 case Gladiator:
                 case Fortune:
                     return DomCardName.Gladiator;
+                case Sauna:
+                case Avanto:
+                    return DomCardName.Sauna;
+
             }
         }
 

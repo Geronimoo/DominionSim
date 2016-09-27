@@ -118,6 +118,9 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
             Collections.sort(get(DomCardName.Encampment), DomCard.SORT_BY_COST);
         if (get(DomCardName.Castles)!=null)
             Collections.sort(get(DomCardName.Castles),DomCard.SORT_BY_COST);
+        if (get(DomCardName.Sauna)!=null)
+            Collections.sort(get(DomCardName.Sauna), DomCard.SORT_BY_COST);
+
         embargoTokens=new EnumMap<DomCardName, Integer>(DomCardName.class);
         gatheringVPTokens=new EnumMap<DomCardName, Integer>(DomCardName.class);
 
@@ -230,6 +233,9 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 case Encampment:
                 case Plunder:
                     addEncampmentPile();
+                case Sauna:
+                case Avanto:
+                    addSaunaPile();
                 default:
                     addCardPile(theCard);
                     break;
@@ -269,6 +275,20 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 }
             }
         }
+    }
+
+    private void addSaunaPile() {
+        put(DomCardName.Sauna, new ArrayList<DomCard>());
+        get(DomCardName.Sauna).add(DomCardName.Sauna.createNewCardInstance());
+        get(DomCardName.Sauna).add(DomCardName.Sauna.createNewCardInstance());
+        get(DomCardName.Sauna).add(DomCardName.Sauna.createNewCardInstance());
+        get(DomCardName.Sauna).add(DomCardName.Sauna.createNewCardInstance());
+        get(DomCardName.Sauna).add(DomCardName.Sauna.createNewCardInstance());
+        get(DomCardName.Sauna).add(DomCardName.Avanto.createNewCardInstance());
+        get(DomCardName.Sauna).add(DomCardName.Avanto.createNewCardInstance());
+        get(DomCardName.Sauna).add(DomCardName.Avanto.createNewCardInstance());
+        get(DomCardName.Sauna).add(DomCardName.Avanto.createNewCardInstance());
+        get(DomCardName.Sauna).add(DomCardName.Avanto.createNewCardInstance());
     }
 
     private void addCatapultPile() {
@@ -500,6 +520,8 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
             theList = get(DomCardName.Patrician);
         if (aCardName==DomCardName.Plunder)
             theList = get(DomCardName.Encampment);
+        if (aCardName==DomCardName.Avanto)
+            theList = get(DomCardName.Sauna);
 
         if (theList==null || theList.isEmpty())
         	return null;
@@ -547,6 +569,8 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
           aCardName=DomCardName.Patrician;
         if (aCardName==DomCardName.Plunder)
             aCardName=DomCardName.Encampment;
+        if (aCardName==DomCardName.Avanto)
+            aCardName=DomCardName.Sauna;
         ArrayList<DomCard> theList = get(aCardName);
         if (theList==null || theList.isEmpty())
             return 0;
@@ -602,6 +626,10 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
            get(DomCardName.Encampment).add(0,aCard);
            return;
        }
+        if (aCard.getName()==DomCardName.Avanto) {
+            get(DomCardName.Sauna).add(0,aCard);
+            return;
+        }
 
        if (get(aCard.getName())==null) {
          put(aCard.getName(), new ArrayList< DomCard >());
