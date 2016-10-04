@@ -26,22 +26,22 @@ public class WitchCard extends DomCard {
       }
       return super.getTrashPriority();
     }
-    
+
     @Override
     public int getDiscardPriority( int aActionsLeft ) {
         if (owner!=null) {
-          if (owner.getCurrentGame().countInSupply( DomCardName.Curse )==0)
-              return DomCardName.Moat.getDiscardPriority(aActionsLeft);
+            if (owner.getCurrentGame().countInSupply( DomCardName.Curse )==0)
+                return DomCardName.Moat.getDiscardPriority(aActionsLeft);
         }
         return super.getDiscardPriority( aActionsLeft );
     }
-    
+
     @Override
     public int getPlayPriority( ) {
       if (owner!=null) {
           if (owner.getCurrentGame().countInSupply( DomCardName.Curse )==0)
               return DomCardName.Moat.getPlayPriority();
       }
-      return super.getPlayPriority( );
+      return super.getPlayPriority();
     }
 }

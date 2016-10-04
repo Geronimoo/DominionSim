@@ -49,4 +49,9 @@ public class ChapelCard extends DomCard {
           return 18;
         return super.getPlayPriority();
     }
+
+    @Override
+    public boolean wantsToBeMultiplied() {
+        return false;
+    }
 }

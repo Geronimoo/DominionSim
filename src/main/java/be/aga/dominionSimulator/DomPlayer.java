@@ -105,6 +105,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
     private DomCardName obeliskChoice = null;
     private boolean villaTriggered = false;
     private int merchantsPlayed;
+    private int drawDeckSize;
 
     public DomPlayer(String aString) {
         name = aString;
@@ -134,12 +135,12 @@ public class DomPlayer implements Comparable<DomPlayer> {
         return theMultipleCards;
     }
 
-    public DomCard findCardToTrash(DomCard remodelCard, int theAmount) {
+    public DomCard findCardToRemodel(DomCard domCard, int theAmount) {
     	ArrayList<DomCard> theCardsToConsiderTrashing=new ArrayList<DomCard>();
     	ArrayList<DomCardName> theCardsToGain=new ArrayList<DomCardName>();
     	DomCardName theDesiredCardIfRemodelNotUsed = getDesiredCard(getTotalPotentialCurrency(), false);
         for (int i=0;i< getCardsInHand().size();i++) {
-            if (getCardsInHand().get(i)== remodelCard)
+            if (getCardsInHand().get(i)== domCard)
                 continue;
         	//temporarily remove the card from hand AND deck
         	DomCard theCard = getCardsInHand().remove(i);
@@ -1667,6 +1668,11 @@ public class DomPlayer implements Comparable<DomPlayer> {
         if (aCardToTrash.owner != null) {
             aCardToTrash.doWhenTrashed();
             deck.trash(aCardToTrash);
+        } else {
+            //fix for Lurker
+            aCardToTrash.owner=this;
+            aCardToTrash.doWhenTrashed();
+            aCardToTrash.owner=null;
         }
         if (aCardToTrash.getName() == DomCardName.Fortress) {
             game.getTrashedCards().remove(aCardToTrash);
@@ -3265,5 +3271,9 @@ public class DomPlayer implements Comparable<DomPlayer> {
         if (theCardsInHand.get(0).hasCardType(DomCardType.Action))
             theCardToReturn=theCardsInHand.get(0);
         putOnTopOfDeck(removeCardFromHand(theCardToReturn));
+    }
+
+    public double getDrawDeckSize() {
+        return getDeck().getDrawDeckSize();
     }
 }

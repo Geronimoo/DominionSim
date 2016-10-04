@@ -16,7 +16,7 @@ public class ReplaceCard extends DomCard {
     public void play() {
       if (owner.getCardsInHand().isEmpty())
     	return;
-      DomCard theCardToTrash = owner.findCardToTrash(this, 2);
+      DomCard theCardToTrash = owner.findCardToRemodel(this, 2);
       if (theCardToTrash==null) {
         //this is needed when card is played with Throne Room effect
         Collections.sort(owner.getCardsInHand(),SORT_FOR_TRASHING);
@@ -48,6 +48,6 @@ public class ReplaceCard extends DomCard {
 
     @Override
     public boolean wantsToBePlayed() {
-      return owner.findCardToTrash(this, 2)!=null;
+      return owner.findCardToRemodel(this, 2)!=null;
    }
 }

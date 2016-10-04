@@ -1,5 +1,333 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <playerCollection>
+    <player name="City Quarter/Council Room"
+            author="Geronimoo"
+            description="KOTW oktober 2016">
+        <type name="Province"/>
+        <type name="Engine"/>
+        <type name="Bot"/>
+        <type name="TwoPlayer"/>
+        <board contents="Palace" bane="" Mountain_Pass_Bid="0" Obelisk_Choice=""/>
+        <buy name="Travelling_Fair">
+            <condition>
+                <left type="isTravellingFairActive"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countAvailableMoney"/>
+                <operator type="greaterOrEqualThan" />
+                <right type="constant" attribute="7.0"/>
+            </condition>
+        </buy>
+        <buy name="Travelling_Fair">
+            <condition>
+                <left type="countCardsInDeck" attribute="Gold"/>
+                <operator type="greaterOrEqualThan" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+            <condition>
+                <left type="countBuysLeft"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Province">
+            <condition>
+                <left type="countCardsInPlay" attribute="Highway"/>
+                <operator type="greaterOrEqualThan" />
+                <right type="constant" attribute="6.0"/>
+            </condition>
+            <condition>
+                <left type="countAvailableMoney"/>
+                <operator type="greaterOrEqualThan" />
+                <right type="constant" attribute="22.0"/>
+            </condition>
+        </buy>
+        <buy name="Province">
+            <condition>
+                <left type="countCardsInDeck" attribute="Province"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInDeck" attribute="Province"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Silver">
+            <condition>
+                <left type="countCardsInDeck" attribute="Silver"/>
+                <operator type="smallerThan" />
+                <right type="countCardsInDeck" attribute="Gold"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Silver"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="countCardsInDeck" attribute="Copper"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Province"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Copper">
+            <condition>
+                <left type="countCardsInDeck" attribute="Copper"/>
+                <operator type="smallerThan" />
+                <right type="countCardsInDeck" attribute="Gold"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Copper"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="countCardsInDeck" attribute="Silver"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Province"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Estate">
+            <condition>
+                <left type="countCardsInDeck" attribute="Province"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Travelling_Fair">
+            <condition>
+                <left type="countCardsInDeck" attribute="Gold"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countAvailableMoney"/>
+                <operator type="greaterOrEqualThan" />
+                <right type="constant" attribute="10.0"/>
+            </condition>
+            <condition>
+                <left type="countBuysLeft"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Travelling_Fair">
+            <condition>
+                <left type="countAvailableMoney"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="7.0"/>
+            </condition>
+            <condition>
+                <left type="countBuysLeft"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Council_Room">
+            <condition>
+                <left type="countCardsInDeck" attribute="Council_Room"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Treasure_Map">
+            <condition>
+                <left type="countCardsInDeck" attribute="Gold"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+            <condition>
+                <left type="countAvailableMoney"/>
+                <operator type="greaterOrEqualThan" />
+                <right type="constant" attribute="8.0"/>
+            </condition>
+            <condition>
+                <left type="countBuysLeft"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Treasure_Map"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Treasure_Map">
+            <condition>
+                <left type="countCardsInDeck" attribute="Gold"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countAvailableMoney"/>
+                <operator type="greaterOrEqualThan" />
+                <right type="constant" attribute="8.0"/>
+            </condition>
+            <condition>
+                <left type="countBuysLeft"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Treasure_Map"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+            <condition>
+                <left type="isTravellingFairActive"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Treasure_Map">
+            <condition>
+                <left type="countCardsInDeck" attribute="Gold"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countAvailableMoney"/>
+                <operator type="greaterOrEqualThan" />
+                <right type="constant" attribute="6.0"/>
+            </condition>
+            <condition>
+                <left type="countBuysLeft"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Treasure_Map"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+            <condition>
+                <left type="isTravellingFairActive"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInPlay" attribute="Highway"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Treasure_Map">
+            <condition>
+                <left type="countCardsInDeck" attribute="Treasure_Map"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="City_Quarter">
+            <condition>
+                <left type="countCardsInDeck" attribute="City_Quarter"/>
+                <operator type="smallerThan" />
+                <right type="countCardsInDeck" attribute="Council_Room"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Steward"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="City_Quarter"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Council_Room">
+            <condition>
+                <left type="countAvailableMoney"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="5.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Council_Room"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="countCardTypeInDeck" attribute="Village"/>
+            </condition>
+        </buy>
+        <buy name="Highway">
+            <condition>
+                <left type="countCardsInDeck" attribute="Highway"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="8.0"/>
+            </condition>
+        </buy>
+        <buy name="City_Quarter">
+            <condition>
+                <left type="countCardsInDeck" attribute="Highway"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="3.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="City_Quarter"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="countCardsInDeck" attribute="Council_Room"/>
+            </condition>
+        </buy>
+        <buy name="Council_Room">
+            <condition>
+                <left type="countCardsInDeck" attribute="Highway"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="3.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="City_Quarter"/>
+                <operator type="greaterThan" />
+                <right type="countCardsInDeck" attribute="Council_Room"/>
+            </condition>
+        </buy>
+        <buy name="Delve">
+            <condition>
+                <left type="countAvailableMoney"/>
+                <operator type="greaterOrEqualThan" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Silver"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Gold"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Steward" strategy="modestTrashing">
+            <condition>
+                <left type="countCardsInDeck" attribute="Steward"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Delve">
+            <condition>
+                <left type="countCardsInDeck" attribute="Silver"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="5.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Gold"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Crossroads">
+            <condition>
+                <left type="countCardsInDeck" attribute="Crossroads"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+    </player>
+
     <player name="Shelters"
             author="Geronimoo"
             description="The optimized strategy that buys only treasure.">

@@ -76,13 +76,21 @@ public class MultiplicationCard extends DomCard {
 	}
 	    
 	public void resolveDuration() {
+      boolean cardOwnerWasNull = false;
       for (DomCard card : myDurationCards) {
+        cardOwnerWasNull = false;
     	if (DomEngine.haveToLog) DomEngine.addToLog( owner + " played " +card + " with "+ this);
+        if (card.owner==null) {
+          cardOwnerWasNull = true;
+          card.owner=owner;
+        }
 	    card.resolveDuration();
 	    if (getName()==DomCardName.King$s_Court){
 	      if (DomEngine.haveToLog) DomEngine.addToLog( owner + " played " +card + " with "+ this);
 		  card.resolveDuration();
 	    }
+        if (cardOwnerWasNull)
+            card.owner=null;
       }
       ArrayList<DomCard> theCardsToStayInPlay = new ArrayList<DomCard>();
       for (DomCard theCard : myDurationCards)
@@ -107,8 +115,8 @@ public class MultiplicationCard extends DomCard {
           if (theCard.hasCardType(DomCardType.Multiplier))
         	return theCard;
           if (theCard.hasCardType(DomCardType.Action) && theCard.wantsToBePlayed()){
-        	if (theCard.hasCardType(DomCardType.Terminal)  
-                && (owner.getActionsLeft()>0 || owner.getCardsFromHand(DomCardType.Terminal).size()==owner.getCardsFromHand(DomCardType.Action).size()) 
+        	if (theCard.hasCardType(DomCardType.Terminal)
+                && (owner.getActionsLeft()>0 || owner.getCardsFromHand(DomCardType.Terminal).size()==owner.getCardsFromHand(DomCardType.Action).size())
         	    && (theCardToPlay == null ||theCard.getDiscardPriority(1)> theCardToPlay.getDiscardPriority(1))) {
               if (theCard.getName()!=DomCardName.Trading_Post)
                 theCardToPlay = theCard;
@@ -119,6 +127,8 @@ public class MultiplicationCard extends DomCard {
        		}
           }
         }
+        if (theCardToPlay==null && !owner.getCardsFromHand(DomCardType.Action).isEmpty())
+            theCardToPlay=owner.getCardsFromHand(DomCardType.Action).get(0);
 
         DomCard theNewCardToPlay = fixForKingsCourtRabble(theCardToPlay);
         if (theNewCardToPlay!=null)
@@ -153,7 +163,7 @@ public class MultiplicationCard extends DomCard {
     		|| theCard.getName()==DomCardName.Throne_Room
             || theCard.getName()==DomCardName.Crown)
     			return 0;
-            if (theCard.hasCardType(DomCardType.Action))
+            if (theCard.hasCardType(DomCardType.Action) && !(theCard instanceof DrawUntilXCardsCard))
             	theActionCount++;
     	}
     	if (theActionCount==1)

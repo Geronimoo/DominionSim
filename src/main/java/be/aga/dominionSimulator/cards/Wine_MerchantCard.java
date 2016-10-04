@@ -12,6 +12,7 @@ public class Wine_MerchantCard extends DomCard {
     public void play() {
         owner.addAvailableBuys(1);
         owner.addAvailableCoins(4);
-        owner.putOnTavernMat(owner.removeCardFromPlay(this));
+        if (!owner.getCardsFromPlay(DomCardName.Wine_Merchant).isEmpty())
+          owner.putOnTavernMat(owner.removeCardFromPlay(this));
     }
 }

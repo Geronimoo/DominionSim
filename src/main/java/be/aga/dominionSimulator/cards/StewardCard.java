@@ -7,6 +7,7 @@ import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
+import be.aga.dominionSimulator.enums.DomPlayStrategy;
 
 public class StewardCard extends DomCard {
     public StewardCard () {
@@ -83,10 +84,18 @@ public class StewardCard extends DomCard {
         	}
         }
         Collections.sort(cardsInHand,SORT_FOR_TRASHING);
-        if (cardsInHand.get(0).getTrashPriority()<20 && cardsInHand.get(1).getTrashPriority()<20) {
-        	owner.trash(owner.removeCardFromHand( cardsInHand.get(0)));
-        	owner.trash(owner.removeCardFromHand( cardsInHand.get(0)));
-        	return true;
+        if (owner.getPlayStrategyFor(this)==DomPlayStrategy.modestTrashing) {
+            if (cardsInHand.get(0).getTrashPriority()<DomCardName.Copper.getTrashPriority() && cardsInHand.get(1).getTrashPriority()<DomCardName.Copper.getTrashPriority()) {
+                owner.trash(owner.removeCardFromHand( cardsInHand.get(0)));
+                owner.trash(owner.removeCardFromHand( cardsInHand.get(0)));
+                return true;
+            }
+        }else {
+            if (cardsInHand.get(0).getTrashPriority() < 20 && cardsInHand.get(1).getTrashPriority() < 20) {
+                owner.trash(owner.removeCardFromHand(cardsInHand.get(0)));
+                owner.trash(owner.removeCardFromHand(cardsInHand.get(0)));
+                return true;
+            }
         }
         return false;
     }

@@ -65,6 +65,8 @@ public class RatsCard extends DomCard {
 
     @Override
     public int getTrashPriority() {
+        if (owner==null)
+            return super.getTrashPriority();
         if (owner.countInDeck(DomCardName.Rats)>1)
             return 15;
         return super.getTrashPriority();

@@ -17,4 +17,9 @@ public class DrawUntilXCardsCard extends DomCard{
 			return false;
     	return super.wantsToBePlayed();
     }
+
+    @Override
+    public boolean wantsToBeMultiplied() {
+        return false;
+    }
 }

@@ -33,6 +33,8 @@ public class Treasure_MapCard extends DomCard {
       
     @Override
     public int getDiscardPriority( int aActionsLeft ) {
-    	return wantsToBePlayed() ? 50 : 5;
+    	if (owner.getCardsInHand().contains(this))
+            return wantsToBePlayed() ? 50 : 5;
+        return super.getDiscardPriority(1);
     }
 }

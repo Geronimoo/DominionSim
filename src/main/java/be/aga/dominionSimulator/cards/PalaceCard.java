@@ -18,6 +18,6 @@ public class PalaceCard extends DomCard {
         theCount = aPlayer.countInDeck(DomCardName.Gold);
         if (theCount<theMinCount)
             theMinCount=theCount;
-        return theCount*3;
+        return theMinCount*3;
     }
 }

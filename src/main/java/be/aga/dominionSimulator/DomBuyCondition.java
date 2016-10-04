@@ -147,6 +147,9 @@ public class DomBuyCondition {
           case tokensOnDefiledShrine:
               leftValue=owner.getCurrentGame().getBoard().getVPOnLandmark(DomCardName.Defiled_Shrine);
               break;
+          case isTravellingFairActive:
+              leftValue=owner.isTravellingFairActive() ? 1 : 0;
+              break;
         }
 		switch(rightFunction){
 		  case countCardsInDeck:
@@ -240,6 +243,9 @@ public class DomBuyCondition {
               break;
          case tokensOnDefiledShrine:
               rightValue=owner.getCurrentGame().getBoard().getVPOnLandmark(DomCardName.Defiled_Shrine);
+              break;
+         case isTravellingFairActive:
+              rightValue=owner.isTravellingFairActive() ? 1 : 0;
               break;
         }
 		double theRightValue=rightValue;

@@ -30,6 +30,7 @@ public enum DomBotFunction {
    tokensOnDefiledShrine,
    getTotalMoneyExcludingNativeVillage,
    countOnTavernMat, isSwampHagActive,
+   isTravellingFairActive,
    countGainedCards;
 
    public String toString() {

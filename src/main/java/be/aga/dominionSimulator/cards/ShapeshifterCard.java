@@ -26,7 +26,8 @@ public class ShapeshifterCard extends DomCard {
         if (theChosenCard==null)
             return;
         if (DomEngine.haveToLog) DomEngine.addToLog( owner + " chooses to play " + this +" as "+theChosenCard.toHTML());
-        owner.removeCardFromPlay(this);
+        if (!owner.getCardsFromPlay(this.getName()).isEmpty())
+            owner.removeCardFromPlay(this);
         DomCard theCopy = theChosenCard.createNewCardInstance();
         theCopy.setOwner(owner);
         theCopy.setShapeshifterCard(this);
