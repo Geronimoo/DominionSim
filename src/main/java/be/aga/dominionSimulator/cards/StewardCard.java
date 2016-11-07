@@ -85,7 +85,7 @@ public class StewardCard extends DomCard {
         }
         Collections.sort(cardsInHand,SORT_FOR_TRASHING);
         if (owner.getPlayStrategyFor(this)==DomPlayStrategy.modestTrashing) {
-            if (cardsInHand.get(0).getTrashPriority()<DomCardName.Copper.getTrashPriority() && cardsInHand.get(1).getTrashPriority()<DomCardName.Copper.getTrashPriority()) {
+            if (cardsInHand.get(0).getTrashPriority()<DomCardName.Copper.getTrashPriority() && cardsInHand.get(1).getTrashPriority()<=DomCardName.Copper.getTrashPriority()) {
                 owner.trash(owner.removeCardFromHand( cardsInHand.get(0)));
                 owner.trash(owner.removeCardFromHand( cardsInHand.get(0)));
                 return true;

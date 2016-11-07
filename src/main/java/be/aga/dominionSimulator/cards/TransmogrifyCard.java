@@ -48,7 +48,7 @@ public class TransmogrifyCard extends DomCard {
 
         for (DomCard theCard : owner.getCardsInHand()) {
           DomCardName theDesiredCard = owner.getDesiredCard(theCard.getName().getCost(owner.getCurrentGame()).add(new DomCost(1,0 ) ), false);
-          if (theDesiredCard!=null && theDesiredCard.getTrashPriority(owner)>=theCard.getTrashPriority()) {
+          if (theDesiredCard!=null && theDesiredCard.getTrashPriority(owner)>theCard.getTrashPriority()) {
             owner.trash( owner.removeCardFromHand( theCard ) );
             owner.gainInHand(theDesiredCard);
             return;

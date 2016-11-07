@@ -43,6 +43,8 @@ public class BishopCard extends DomCard {
       		theCardToTrash=theProvinces.get(0);
       	}
       }
+      if (!owner.getCardsFromHand(DomCardName.Market_Square).isEmpty() && !owner.getCardsFromHand(DomCardName.Gold).isEmpty())
+          theCardToTrash=owner.getCardsFromHand(DomCardName.Gold).get(0);
       return theCardToTrash;
 	}
 
@@ -66,7 +68,7 @@ public class BishopCard extends DomCard {
 	@Override
 	public boolean wantsToBePlayed() {
 		if (owner.getTotalMoneyInDeck()<7 && owner.countAllCards()<5)
-		  //little fix to prevent NGN - The Golden deck from trashing itself to death
+		  //little fix to prevent The Golden deck from trashing itself to death
 		  return false;
 		return super.wantsToBePlayed();
 	}

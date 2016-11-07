@@ -45,6 +45,8 @@ public class TorturerCard extends DomCard {
     private boolean isHandTooStrongToDiscard(DomPlayer aPlayer) {
         if (!aPlayer.isGoingToBuyTopCardInBuyRules(aPlayer.getTotalPotentialCurrency()))
            return false;
+        if (aPlayer.getCardsInHand().size()<2)
+            return false;
         Collections.sort(aPlayer.getCardsInHand(),SORT_FOR_DISCARDING);
         ArrayList<DomCard> theRemovedCards = new ArrayList<DomCard>();
         theRemovedCards.add(aPlayer.getCardsInHand().remove(0));

@@ -34,7 +34,7 @@ public class Sea_HagCard extends DomCard {
     public int getDiscardPriority( int aActionsLeft ) {
         if (owner!=null) {
           if (owner.getCurrentGame().countInSupply( DomCardName.Curse )==0)
-            return 0;
+            return 1;
         }
         return super.getDiscardPriority( aActionsLeft );
     }

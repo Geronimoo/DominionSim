@@ -989,13 +989,13 @@ public class DomPlayer implements Comparable<DomPlayer> {
             }
         }
         addDebt(aCard.getCost(getCurrentGame()).getDebt());
-        if (debt > 0) {
-            payOffDebt();
-        }
 
         if (getTrashingTokenOn() == aCard.isFromPile())
             maybeTrashACardFromHand();
         handleSpecialBuyEffects(aCard);
+        if (debt > 0) {
+            payOffDebt();
+        }
         if (aCard.hasCardType(DomCardType.Action) && getCurrentGame().getBoard().isLandmarkActive(DomCardName.Colonnade) && !getCardsFromPlay(aCard.getName()).isEmpty()) {
             int theVP = getCurrentGame().getBoard().removeVPFrom(DomCardName.Colonnade, 2);
             if (theVP > 0) {

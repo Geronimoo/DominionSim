@@ -60,7 +60,7 @@ public enum DomCardName  {
     Bishop (4, 0, 0, 0, 22, 25, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal, DomCardType.Trasher, DomCardType.TrashForBenefit}),
     Black_Market (3, 0, 2, 0, 32, 20, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal}),
     Bonfire (3, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
-    Border_Village (6, 0, 0, 0, 5, 19, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler, DomCardType.Village}),
+    Border_Village (6, 0, 0, 0, 5, 22, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler, DomCardType.Village}),
     Borrow (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
     Bridge (4, 0, 2, 0, 25, 25, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal}),
     Bridge_Troll (5, 0, 1, 0, 25, 25, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal, DomCardType.Attack, DomCardType.Duration}),
@@ -228,7 +228,7 @@ public enum DomCardName  {
     Militia (4, 0, 2, 0, 30, 25, new DomCardType[]{DomCardType.Action, DomCardType.Attack, DomCardType.Kingdom, DomCardType.Terminal}),
     Mill (4, 0, 0, 1, 5, 16, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Victory, DomCardType.Cycler}),
     Mine (5, 0, 0, 0, 24, 22, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal}),
-    Minion (5, 0, 2, 0, 16, 40, new DomCardType[]{DomCardType.Action, DomCardType.Attack, DomCardType.Kingdom}),
+    Minion (5, 0, 2, 0, 17, 40, new DomCardType[]{DomCardType.Action, DomCardType.Attack, DomCardType.Kingdom}),
     Mining_Village (4, 0, 0, 0, 9, 22, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Village, DomCardType.Cycler}),
     Mint (5, 0, 0, 0, 40, 19, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal}),
     Miser (4, 0, 0, 0, 23, 21, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal}),
@@ -1285,6 +1285,10 @@ public enum DomCardName  {
 			theStrategies.add(DomPlayStrategy.bigTurnGoons);
 			theStrategies.add(DomPlayStrategy.ApothecaryNativeVillage);
 			break;
+
+        case Necropolis:
+            theStrategies.add(DomPlayStrategy.trashWhenObsolete);
+            break;
 
         case Peddler:
             theStrategies.add(DomPlayStrategy.combo);
