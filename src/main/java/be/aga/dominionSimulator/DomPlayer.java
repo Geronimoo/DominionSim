@@ -1096,7 +1096,12 @@ public class DomPlayer implements Comparable<DomPlayer> {
                 play(removeCardFromHand(theCardToPlay));
                 handleUrchins(theCardToPlay);
                 if (cardsInPlay.contains(theCardToPlay) && theCardToPlay.getName() != DomCardName.Tactician && theCardToPlay.getName()!=DomCardName.Bridge_Troll && getFromTavernMat(DomCardName.Royal_Carriage) != null) {
-                    handleRoyalCarriages();
+                    if (getPlayStrategyFor(getFromTavernMat(DomCardName.Royal_Carriage)) == DomPlayStrategy.bigTurnBridge) {
+                        if (theCardToPlay.getName() == DomCardName.Bridge && countOnTavernMat(DomCardName.Royal_Carriage) >= 6)
+                            handleRoyalCarriages();
+                    } else {
+                        handleRoyalCarriages();
+                    }
                 }
                 if (actionsLeft == 0 && getFromTavernMat(DomCardName.Coin_of_the_Realm) != null && getNextActionToPlay() != null) {
                     handleCoinOfTheRealm();

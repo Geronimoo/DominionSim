@@ -133,7 +133,6 @@ public class MultiplicationCard extends DomCard {
         DomCard theNewCardToPlay = fixForKingsCourtRabble(theCardToPlay);
         if (theNewCardToPlay!=null)
             theCardToPlay=theNewCardToPlay;
-        //TODO mandatory playing of action cards with Throne Room
         return theCardToPlay;
     }
 
