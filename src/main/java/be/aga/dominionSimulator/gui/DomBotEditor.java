@@ -402,7 +402,8 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
 
     private JList getTypeList() {
     	myBotTypeList = new JList(DomBotType.values());
-    	ArrayList<DomBotType> thePossibleTypes = new ArrayList<DomBotType>(); 
+    	myBotTypeList.setSelectionModel(new ToggleListSelectionModel());
+    	ArrayList<DomBotType> thePossibleTypes = new ArrayList<DomBotType>();
     	for (DomBotType botType : DomBotType.values()){
     		thePossibleTypes.add(botType);
     	}
@@ -413,7 +414,7 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
     		theSelectedIndices[i++] = thePossibleTypes.indexOf(type); 
     	}
     	myBotTypeList.setSelectedIndices(theSelectedIndices);
-    	myBotTypeList.setBorder(new TitledBorder("Ctrl-button for multiple types"));
+      myBotTypeList.setBorder(new TitledBorder("Click to select types"));
     	myBotTypeList.requestFocus();
     	return myBotTypeList;
 	}
