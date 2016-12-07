@@ -1,5 +1,6 @@
 package be.aga.dominionSimulator.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -109,19 +110,8 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
 	}
 
 	private void buildGui()	{
-	  getContentPane().setLayout( new GridBagLayout() );
-	  final GridBagConstraints theCons = DomGui.getGridBagConstraints( 1 );
-
-	  getContentPane().add( getControlPanel(),theCons );
-	  
-	  theCons.gridy++;
-      getContentPane().add( getPlayerPanel(),theCons );
-
-//      myImagePanel = getImagePanel();
-//      theCons.gridx++;
-//      theCons.gridy=0;
-//      theCons.gridheight=2;
-//      getContentPane().add( myImagePanel,theCons );
+    getContentPane().add(getControlPanel(), BorderLayout.PAGE_START);
+    getContentPane().add(getPlayerPanel(), BorderLayout.CENTER);
 	}
 
 	private void fillPlayerPanel() {
@@ -150,13 +140,13 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
       theCons.fill=GridBagConstraints.NONE;
       myPlayerPanel.add(theBTN,theCons);
       theCons.fill=GridBagConstraints.BOTH;
-      
+
       for (DomBuyRulePanel thePanel : myBuyRulePanels){
     	i++;
     	theCons.gridy++;
 	    myPlayerPanel.add(thePanel, theCons);
       }
-      
+
       theBTN = new JButton("Add a Buy Rule");
       theBTN.setMnemonic('B');
       theBTN.addActionListener(this);
@@ -168,7 +158,7 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
 
       theCons.gridy++;
       DomGui.addHeavyLabel(myPlayerPanel, theCons);
-      
+
       validate();
 	}
 
@@ -249,7 +239,7 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
         //Type(s) button
         theCons.gridy++;
         myControlPanel.add(getTypesButton(), theCons);
-        
+
         return myControlPanel;
     }
 
@@ -308,7 +298,7 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
         	myShuffleDeckBox.setSelected(theStartState.isShuffleDrawDeck());
         }
 
-        
+
         return thePanel;
 	}
 
@@ -366,7 +356,7 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
         thePanel.add(theInfoBTN,theCons);
         return thePanel;
 	}
-	
+
 	private JButton getTypesButton() {
         myTypeButton = new JButton("Type(s): "+getTypes());
         myTypeButton.setMnemonic('y');
@@ -402,8 +392,8 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
 
     private JList getTypeList() {
     	myBotTypeList = new JList(DomBotType.values());
-    	myBotTypeList.setSelectionModel(new ToggleListSelectionModel());
     	ArrayList<DomBotType> thePossibleTypes = new ArrayList<DomBotType>();
+    	myBotTypeList.setSelectionModel(new ToggleListSelectionModel());
     	for (DomBotType botType : DomBotType.values()){
     		thePossibleTypes.add(botType);
     	}
@@ -411,7 +401,7 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
     	int[] theSelectedIndices = new int[20];
     	int i=0;
     	for (DomBotType type : myTypes==null? myChosenStrategy.getTypes() : myTypes){
-    		theSelectedIndices[i++] = thePossibleTypes.indexOf(type); 
+    		theSelectedIndices[i++] = thePossibleTypes.indexOf(type);
     	}
     	myBotTypeList.setSelectedIndices(theSelectedIndices);
       myBotTypeList.setBorder(new TitledBorder("Click to select types"));
@@ -430,22 +420,22 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
       if (aE.getActionCommand().equals( "StartStateInfo" )) {
     	  String theText= "<html><u>This tab allows defining a forced starting state (instead of starting with 7 Coppers and 3 Estates)</u>"
         		+"<br>Use the correct spelling for cards and capitals where needed (and no ending 's' for multiples)!"
-        		+"<br>This is correct: <i>2 Mountebank, 2 Copper, Village</i>" 
-        		+"<br><br>The draw deck can either be shuffled or put into a fixed order." 
-        		+"<br><br>If starting hand is empty, 5 cards will be drawn." 
+        		+"<br>This is correct: <i>2 Mountebank, 2 Copper, Village</i>"
+        		+"<br><br>The draw deck can either be shuffled or put into a fixed order."
+        		+"<br><br>If starting hand is empty, 5 cards will be drawn."
         		+"</html>";
           JOptionPane.showMessageDialog(this, theText, "Info", JOptionPane.INFORMATION_MESSAGE);
       }
-    	
+
       if (aE.getActionCommand().equals( "BoardInfo" )) {
     	  String theText= "<html><u>This tab allows defining a board</u>"
         		+"<br><br>Use the correct spelling for cards and capitals where needed!"
-        		+"<br>This is correct: <i>Chapel, Throne Room, Pawn, Courtyard, Vault, Caravan, Cellar, Moat, Witch and Worker's Village</i>" 
+        		+"<br>This is correct: <i>Chapel, Throne Room, Pawn, Courtyard, Vault, Caravan, Cellar, Moat, Witch and Worker's Village</i>"
         		+"<br><br>The Bane card for Young Witch, if present, must be defined separately" +
         				"</html>";
           JOptionPane.showMessageDialog(this, theText, "Info", JOptionPane.INFORMATION_MESSAGE);
       }
-    	
+
       if (aE.getActionCommand().equals( "Move Up" )) {
     	 JButton theButton = (JButton) aE.getSource();
     	 DomBuyRulePanel thePanel = (DomBuyRulePanel) theButton.getClientProperty("my rule box");

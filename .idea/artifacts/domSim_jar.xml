@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="domSim:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/domSim_jar</output-path>
+    <root id="archive" name="GeronimooDomSim.jar">
+      <element id="module-output" name="domSim" />
+    </root>
+  </artifact>
+</component>
