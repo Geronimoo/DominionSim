@@ -6,6 +6,8 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -24,10 +26,13 @@ import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomBotType;
 
-public class DomBotSelector extends EscapeDialog implements ListSelectionListener, ActionListener {
+public class DomBotSelector extends EscapeDialog
+                            implements ListSelectionListener, ActionListener, WindowListener {
    private DomEngine myEngine;
    private JList myBotTypeList;
    private JList myBotList;
+
+   private static int[] sSelectedIndices = new int[]{8,10};
 
    Action chooseAction = new AbstractAction() {
        public void actionPerformed(ActionEvent e) {
@@ -35,11 +40,12 @@ public class DomBotSelector extends EscapeDialog implements ListSelectionListene
    		 dispose();
        }
    };
-   
+
 public DomBotSelector(DomEngine anEngine, final DomPlayer aSelectedBot) {
 	 myEngine=anEngine;
 	 buildGUI();
-	 setTitle("Select a strategy (use CTRL-button to select multiple types)");
+   addWindowListener(this);
+	 setTitle("Select a strategy (click to select multiple types)");
 	 pack();
 	 RefineryUtilities.centerFrameOnScreen(this);
 	 setVisible(true);
@@ -99,7 +105,7 @@ private JPanel getButtonPanel() {
     theCons.gridx++;
     thePanel.add(theBTN,theCons);
 	return thePanel;
-	
+
 }
 
 private JPanel getSelectionPanel() {
@@ -120,14 +126,15 @@ private JPanel getSelectionPanel() {
 
 private JList getBotTypeList() {
 	myBotTypeList = new JList(DomBotType.values());
-	myBotTypeList.setSelectedIndices(new int[]{8,10});
+  myBotTypeList.setSelectionModel(new ToggleListSelectionModel());
+	myBotTypeList.setSelectedIndices(sSelectedIndices);
 	myBotTypeList.addListSelectionListener(this);
 	return myBotTypeList;
 }
 
 @SuppressWarnings("serial")
 private JList getBotList() {
-	myBotList = new JList(myEngine.getBots(new DomBotType[]{DomBotType.Province, DomBotType.TwoPlayer})) {
+	myBotList = new JList(myEngine.getBots(myBotTypeList.getSelectedValues())) {
     // This method is called as the cursor moves within the list.
 	    public String getToolTipText(MouseEvent evt) {
 	        int index = locationToIndex(evt.getPoint());
@@ -167,4 +174,28 @@ public void actionPerformed(ActionEvent e) {
 		myBotList.requestFocus();
 	}
 }
+
+  public void windowClosed(WindowEvent arg0) {
+    // Store the current type filter for the next time.
+    sSelectedIndices = myBotTypeList.getSelectedIndices();
+  }
+
+  public void windowActivated(WindowEvent arg0) {
+  }
+
+  public void windowClosing(WindowEvent arg0) {
+  }
+
+  public void windowDeactivated(WindowEvent arg0) {
+  }
+
+  public void windowDeiconified(WindowEvent arg0) {
+  }
+
+  public void windowIconified(WindowEvent arg0) {
+  }
+
+  public void windowOpened(WindowEvent arg0) {
+  }
+
 }
