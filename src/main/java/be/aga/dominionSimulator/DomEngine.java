@@ -35,15 +35,15 @@ import be.aga.dominionSimulator.gui.DomLineChart;
 import be.aga.dominionSimulator.gui.StatusBar;
 
 public class DomEngine {
-    public static boolean showColoredLog=false;
-    public static boolean hideGraphs =true;
+    public static boolean showColoredLog = true;
+    public static boolean hideGraphs = false;
     public static boolean developmentMode=false;
 
     public static double NUMBER_OF_GAMES = 1000;
     public static boolean haveToLog;
     public static String myLog;
     public static int logIndentation=0;
-	public static int logPlayerIndentation=0;
+    public static int logPlayerIndentation=0;
     private static final Logger LOGGER = Logger.getLogger( DomEngine.class );
     public static final Level LEVEL = Level.INFO;
     public static final boolean addAppender = true;
