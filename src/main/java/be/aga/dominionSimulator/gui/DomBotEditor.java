@@ -392,17 +392,25 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
 
     private JList getTypeList() {
     	myBotTypeList = new JList(DomBotType.values());
+      myBotTypeList.setSelectionModel(new ToggleListSelectionModel());
     	ArrayList<DomBotType> thePossibleTypes = new ArrayList<DomBotType>();
-    	myBotTypeList.setSelectionModel(new ToggleListSelectionModel());
     	for (DomBotType botType : DomBotType.values()){
     		thePossibleTypes.add(botType);
     	}
     	myBotTypeList.setBorder(new TitledBorder("Choose type(s) of this strategy"));
-    	int[] theSelectedIndices = new int[20];
+
+      HashSet<DomBotType> selectedTypes = (myTypes == null ? myChosenStrategy.getTypes() : myTypes);
+      int[] theSelectedIndices = new int[selectedTypes.size()];
     	int i=0;
-    	for (DomBotType type : myTypes==null? myChosenStrategy.getTypes() : myTypes){
+            
+      System.out.println("selectedTypes = " + selectedTypes);
+    	for (DomBotType type : selectedTypes){
     		theSelectedIndices[i++] = thePossibleTypes.indexOf(type);
     	}
+      System.out.println("AS: theSelectedIndices=" + theSelectedIndices);
+      for (int n=0; i<theSelectedIndices.length; ++n) {
+        System.out.println("AS: theSelectedIndices[" + n + "]="  + theSelectedIndices[n]);
+      }
     	myBotTypeList.setSelectedIndices(theSelectedIndices);
       myBotTypeList.setBorder(new TitledBorder("Click to select types"));
     	myBotTypeList.requestFocus();

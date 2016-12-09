@@ -32,7 +32,7 @@ public class DomBotSelector extends EscapeDialog
    private JList myBotTypeList;
    private JList myBotList;
 
-   private static int[] sSelectedIndices = new int[]{8,10};
+   private static int[] sSelectedIndices = new int[]{9,11};
 
    Action chooseAction = new AbstractAction() {
        public void actionPerformed(ActionEvent e) {
