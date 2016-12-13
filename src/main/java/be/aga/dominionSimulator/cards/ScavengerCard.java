@@ -18,7 +18,14 @@ public class ScavengerCard extends DomCard {
       if (theCardsToConsider.isEmpty())
           return;
       Collections.sort(theCardsToConsider, SORT_FOR_DISCARDING);
-      owner.putOnTopOfDeck(owner.removeCardFromDiscard(theCardsToConsider.get(theCardsToConsider.size()-1)));
+      DomCard theChosenCard = theCardsToConsider.get(theCardsToConsider.size() - 1);
+      if (owner.countInDeck(DomCardName.Stash)>0) {
+          for (DomCard theCard : theCardsToConsider){
+              if (theCard.getName()==DomCardName.Scavenger)
+                  theChosenCard=theCard;
+          }
+      }
+      owner.putOnTopOfDeck(owner.removeCardFromDiscard(theChosenCard));
     }
 
     @Override

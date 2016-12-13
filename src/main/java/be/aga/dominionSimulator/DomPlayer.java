@@ -1097,7 +1097,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
                 handleUrchins(theCardToPlay);
                 if (cardsInPlay.contains(theCardToPlay) && theCardToPlay.getName() != DomCardName.Tactician && theCardToPlay.getName()!=DomCardName.Bridge_Troll && getFromTavernMat(DomCardName.Royal_Carriage) != null) {
                     if (getPlayStrategyFor(getFromTavernMat(DomCardName.Royal_Carriage)) == DomPlayStrategy.bigTurnBridge) {
-                        if (theCardToPlay.getName() == DomCardName.Bridge && countOnTavernMat(DomCardName.Royal_Carriage) >= 6)
+                        if (theCardToPlay.getName() == DomCardName.Bridge && countOnTavernMat(DomCardName.Royal_Carriage) >= 5)
                             handleRoyalCarriages();
                     } else {
                         handleRoyalCarriages();
@@ -1456,6 +1456,11 @@ public class DomPlayer implements Comparable<DomPlayer> {
         }
         //first discard excess terminals
         ArrayList<DomCard> theTerminalsInHand = getCardsFromHand(DomCardType.Terminal);
+        if (getCardsFromHand(DomCardName.Treasure_Map).size()>1) {
+            for (DomCard theTM : getCardsFromHand(DomCardName.Treasure_Map)) {
+                theTerminalsInHand.remove(theTM);
+            }
+        }
         if (getCurrentGame().getActivePlayer() == this)
             Collections.sort(theTerminalsInHand, DomCard.SORT_FOR_DISCARD_FROM_HAND);
         else

@@ -1,5 +1,616 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <playerCollection>
+    <player name="Beggar/Gardens"
+            author="Geronimoo"
+            description="Beggar/Gardens combo">
+        <type name="TwoPlayer"/>
+        <type name="Competitive"/>
+        <type name="Combo"/>
+        <type name="Bot"/>
+        <type name="Province"/>
+        <buy name="Beggar">
+            <condition>
+                <left type="countCardsInDeck" attribute="Beggar"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="8.0"/>
+            </condition>
+        </buy>
+        <buy name="Gardens"/>
+        <buy name="Beggar"/>
+        <buy name="Estate"/>
+        <buy name="Copper"/>
+    </player>
+
+    <player name="Ranger/Lost Arts"
+            author="Geronimoo"
+            description="Ranger/Lost Arts combo">
+        <type name="Province"/>
+        <type name="TwoPlayer"/>
+        <type name="Combo"/>
+        <type name="Competitive"/>
+        <type name="Bot"/>
+        <buy name="Province">
+            <condition>
+                <left type="countCardsInDeck" attribute="Ranger"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="5.0"/>
+            </condition>
+        </buy>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="3.0"/>
+            </condition>
+        </buy>
+        <buy name="Estate">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Lost_Arts">
+            <condition>
+                <left type="isPlusOneActionTokenSet" attribute="Ranger"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Gold">
+            <condition>
+                <left type="countCardsInDeck" attribute="Gold"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Ranger"/>
+        <buy name="Silver"/>
+    </player>
+
+    <player name="Fool's Gold/Wharf"
+            author="Geronimoo"
+            description="If you're the only player going for the Fool's Golds, you'll win easily as proven by this bot.">
+        <type name="Province"/>
+        <type name="TwoPlayer"/>
+        <type name="Combo"/>
+        <type name="Competitive"/>
+        <type name="BigMoney"/>
+        <type name="Bot"/>
+        <buy name="Province">
+            <condition>
+                <left type="countCardsInDeck" attribute="Wharf"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="5.0"/>
+            </condition>
+        </buy>
+        <buy name="Estate">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Wharf">
+            <condition>
+                <left type="countCardsInDeck" attribute="Wharf"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Fool$s_Gold"/>
+    </player>
+
+    <player name="Treasure Map/Dungeon"
+            author="Geronimoo"
+            description="Treasure Map/Dungeon combo">
+        <type name="Province"/>
+        <type name="TwoPlayer"/>
+        <type name="Combo"/>
+        <type name="Competitive"/>
+        <type name="Bot"/>
+        <buy name="Province"/>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+        </buy>
+        <buy name="Estate">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Treasure_Map">
+            <condition>
+                <left type="countCardsInDeck" attribute="Treasure_Map"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="3.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Gold"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Gold"/>
+        <buy name="Dungeon"/>
+        <buy name="Silver"/>
+    </player>
+
+    <player name="Tournament/Hunting Party"
+            author="Geronimoo"
+            description="Tournament + Hunting Party combo">
+        <type name="Province"/>
+        <type name="Combo"/>
+        <type name="TwoPlayer"/>
+        <type name="Competitive"/>
+        <type name="BigMoney"/>
+        <type name="Bot"/>
+        <buy name="Followers"/>
+        <buy name="Trusty_Steed"/>
+        <buy name="Bag_of_Gold"/>
+        <buy name="Princess"/>
+        <buy name="Diadem"/>
+        <buy name="Province"/>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+        </buy>
+        <buy name="Estate">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Gold">
+            <condition>
+                <left type="countCardsInDeck" attribute="Gold"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Hunting_Party"/>
+        <buy name="Tournament"/>
+        <buy name="Silver"/>
+    </player>
+
+    <player name="Jack/Bonfire"
+            author="Geronimoo"
+            description="Jack + Bonfire combo">
+        <type name="TwoPlayer"/>
+        <type name="Competitive"/>
+        <type name="Combo"/>
+        <type name="Province"/>
+        <type name="Bot"/>
+        <buy name="Province"/>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="3.0"/>
+            </condition>
+        </buy>
+        <buy name="Estate">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Gold"/>
+        <buy name="Jack_of_all_Trades">
+            <condition>
+                <left type="countCardsInDeck" attribute="Jack_of_all_Trades"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Bonfire">
+            <condition>
+                <left type="countCardsInPlay" attribute="Copper"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Silver"/>
+    </player>
+
+    <player name="Ironmonger/Inheritance"
+            author="Geronimoo"
+            description="Ironmonger + Inheritance combo">
+        <type name="TwoPlayer"/>
+        <type name="Competitive"/>
+        <type name="Combo"/>
+        <type name="Province"/>
+        <type name="Bot"/>
+        <buy name="Province">
+            <condition>
+                <left type="isEstateTokenPlaced" attribute="Ironmonger"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+        </buy>
+        <buy name="Estate">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Inheritance">
+            <condition>
+                <left type="isEstateTokenPlaced" attribute="Ironmonger"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Gold"/>
+        <buy name="Estate">
+            <condition>
+                <left type="isEstateTokenPlaced" attribute="Ironmonger"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Ironmonger"/>
+        <buy name="Silver"/>
+    </player>
+
+    <player name="Courtyard/Delve"
+            author="Geronimoo"
+            description="Courtyard + Delve combo">
+        <type name="TwoPlayer"/>
+        <type name="Optimized"/>
+        <type name="Combo"/>
+        <type name="Competitive"/>
+        <type name="Bot"/>
+        <type name="Province"/>
+        <buy name="Province"/>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+        </buy>
+        <buy name="Estate">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Delve">
+            <condition>
+                <left type="countAvailableMoney"/>
+                <operator type="greaterOrEqualThan" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+        </buy>
+        <buy name="Courtyard">
+            <condition>
+                <left type="countCardsInDeck" attribute="Courtyard"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Courtyard">
+            <condition>
+                <left type="countCardsInDeck" attribute="Courtyard"/>
+                <operator type="smallerThan" />
+                <right type="countCardTypeInDeck" attribute="Treasure"/>
+                <extra_operation type="divideBy" attribute="7.0" />
+            </condition>
+        </buy>
+        <buy name="Delve"/>
+    </player>
+
+    <player name="Cultist/Lurker"
+            author="Geronimoo"
+            description="Cultist + Lurker combo">
+        <type name="TwoPlayer"/>
+        <type name="Optimized"/>
+        <type name="Combo"/>
+        <type name="Bot"/>
+        <type name="Province"/>
+        <buy name="Province"/>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+        </buy>
+        <buy name="Gold"/>
+        <buy name="Cultist"/>
+        <buy name="Lurker">
+            <condition>
+                <left type="countCardsInDeck" attribute="Lurker"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+        </buy>
+        <buy name="Silver"/>
+    </player>
+
+    <player name="Cultist/Ferry"
+            author="Geronimoo"
+            description="Cultist + Ferry combo">
+        <type name="TwoPlayer"/>
+        <type name="Optimized"/>
+        <type name="Combo"/>
+        <type name="Province"/>
+        <type name="Bot"/>
+        <buy name="Province"/>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+        </buy>
+        <buy name="Ferry">
+            <condition>
+                <left type="isMinus$2TokenSet" attribute="Cultist"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Cultist">
+            <condition>
+                <left type="countCardsInDeck" attribute="Cultist"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+        </buy>
+        <buy name="Gold"/>
+        <buy name="Cultist"/>
+        <buy name="Silver"/>
+    </player>
+
+    <player name="Scavenger/Stash"
+            author="Geronimoo"
+            description="Scavenger + Stash combo">
+        <type name="Combo"/>
+        <type name="Province"/>
+        <type name="TwoPlayer"/>
+        <type name="Bot"/>
+        <type name="Competitive"/>
+        <buy name="Stash">
+            <condition>
+                <left type="countCardsInDeck" attribute="Stash"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="3.0"/>
+            </condition>
+        </buy>
+        <buy name="Province"/>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="5.0"/>
+            </condition>
+        </buy>
+        <buy name="Estate">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Scavenger"/>
+        <buy name="Silver"/>
+    </player>
+
+    <player name="Governor/Ferry"
+            author="Geronimoo"
+            description="Governor + Ferry combo">
+        <type name="TwoPlayer"/>
+        <type name="Optimized"/>
+        <type name="Combo"/>
+        <type name="Bot"/>
+        <type name="Province"/>
+        <buy name="Province"/>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+        </buy>
+        <buy name="Ferry">
+            <condition>
+                <left type="isMinus$2TokenSet" attribute="Governor"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Governor" strategy="GoldEarlyTrashMid"/>
+        <buy name="Silver"/>
+    </player>
+
+    <player name="Tunnel/Dungeon"
+            author="Geronimoo"
+            description="Dungeon + Tunnel combo">
+        <type name="TwoPlayer"/>
+        <type name="Combo"/>
+        <type name="Competitive"/>
+        <type name="Bot"/>
+        <type name="Province"/>
+        <buy name="Province"/>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="5.0"/>
+            </condition>
+        </buy>
+        <buy name="Estate">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Tunnel">
+            <condition>
+                <left type="countCardsInDeck" attribute="Tunnel"/>
+                <operator type="smallerThan" />
+                <right type="countCardsInDeck" attribute="Dungeon"/>
+                <extra_operation type="minus" attribute="1.0" />
+            </condition>
+        </buy>
+        <buy name="Dungeon"/>
+    </player>
+
+    <player name="Bridge/Royal Carriage"
+            author="Geronimoo"
+            description="Bridge + RC combo">
+        <type name="TwoPlayer"/>
+        <type name="Optimized"/>
+        <type name="Competitive"/>
+        <type name="Combo"/>
+        <type name="Province"/>
+        <type name="Bot"/>
+        <buy name="Province">
+            <condition>
+                <left type="countBuysLeft"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="6.0"/>
+            </condition>
+        </buy>
+        <buy name="Province">
+            <condition>
+                <left type="countCardsInDeck" attribute="Province"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Estate">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Royal_Carriage" strategy="bigTurnBridge"/>
+        <buy name="Bridge">
+            <condition>
+                <left type="countCardsInDeck" attribute="Bridge"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Silver"/>
+    </player>
+
+    <player name="Jack/Villa"
+            author="Geronimoo"
+            description="Jack + Villa combo">
+        <type name="TwoPlayer"/>
+        <type name="Competitive"/>
+        <type name="Combo"/>
+        <type name="Province"/>
+        <type name="Bot"/>
+        <buy name="Villa">
+            <condition>
+                <left type="countCardsInHand" attribute="Jack_of_all_Trades"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Province"/>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="6.0"/>
+            </condition>
+        </buy>
+        <buy name="Estate">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Jack_of_all_Trades"/>
+        <buy name="Silver"/>
+    </player>
+
+    <player name="Rebuild/Ferry"
+            author="Geronimoo"
+            description="Rebuild + Ferry combo">
+        <type name="TwoPlayer"/>
+        <type name="Optimized"/>
+        <type name="Combo"/>
+        <type name="Province"/>
+        <type name="Bot"/>
+        <buy name="Province"/>
+        <buy name="Duchy">
+            <condition>
+                <left type="isActionPhase"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Ferry">
+            <condition>
+                <left type="isMinus$2TokenSet" attribute="Rebuild"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Rebuild">
+            <condition>
+                <left type="countCardsInDeck" attribute="Rebuild"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+        </buy>
+        <buy name="Estate">
+            <condition>
+                <left type="countCardsInDeck" attribute="Estate"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInSupply" attribute="Duchy"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+    </player>
+
     <player name="City Quarter/Council Room"
             author="Geronimoo"
             description="KOTW oktober 2016">
@@ -870,16 +1481,45 @@
     <player name="Counting House/Travelling Fair"
             author="Geronimoo"
             description="Big Combo!">
-        <type name="TwoPlayer"/>
-        <type name="Bot"/>
-        <type name="Optimized"/>
-        <type name="Combo"/>
         <type name="Province"/>
+        <type name="Combo"/>
+        <type name="TwoPlayer"/>
+        <type name="Optimized"/>
+        <type name="Bot"/>
         <buy name="Province">
             <condition>
                 <left type="countAvailableMoney"/>
                 <operator type="greaterOrEqualThan" />
-                <right type="constant" attribute="16.0"/>
+                <right type="constant" attribute="20.0"/>
+            </condition>
+            <condition>
+                <left type="countBuysLeft"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Province">
+            <condition>
+                <left type="countCardsInDeck" attribute="Province"/>
+                <operator type="greaterOrEqualThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="countAvailableMoney"/>
+                <operator type="greaterOrEqualThan" />
+                <right type="constant" attribute="13.0"/>
+            </condition>
+            <condition>
+                <left type="countBuysLeft"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="1.0"/>
             </condition>
             <condition>
                 <left type="countBuysLeft"/>
@@ -894,18 +1534,11 @@
                 <right type="constant" attribute="10.0"/>
             </condition>
         </buy>
-        <buy name="Province">
-            <condition>
-                <left type="countCardsInDeck" attribute="Province"/>
-                <operator type="greaterOrEqualThan" />
-                <right type="constant" attribute="1.0"/>
-            </condition>
-        </buy>
         <buy name="Duchy">
             <condition>
                 <left type="countCardsInSupply" attribute="Province"/>
                 <operator type="smallerOrEqualThan" />
-                <right type="constant" attribute="5.0"/>
+                <right type="constant" attribute="2.0"/>
             </condition>
         </buy>
         <buy name="Estate">
@@ -922,8 +1555,20 @@
                 <right type="constant" attribute="7.0"/>
             </condition>
         </buy>
-        <buy name="Counting_House"/>
-        <buy name="Travelling_Fair"/>
+        <buy name="Counting_House">
+            <condition>
+                <left type="countBuysLeft"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Travelling_Fair">
+            <condition>
+                <left type="countAvailableMoney"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="5.0"/>
+            </condition>
+        </buy>
         <buy name="Copper"/>
     </player>
 
@@ -3049,14 +3694,16 @@
     <player name="Fishing Village/Wharf"
             author="Geronimoo"
             description="This bot has been generated by the computer without any optimization. XXXXIt just buys a single Action card and money">
-        <type name="Province"/>
         <type name="TwoPlayer"/>
+        <type name="Engine"/>
+        <type name="Competitive"/>
+        <type name="Province"/>
         <type name="Bot"/>
         <buy name="Province">
             <condition>
                 <left type="countAvailableMoney"/>
                 <operator type="greaterOrEqualThan" />
-                <right type="constant" attribute="16.0"/>
+                <right type="constant" attribute="13.0"/>
             </condition>
         </buy>
         <buy name="Province">

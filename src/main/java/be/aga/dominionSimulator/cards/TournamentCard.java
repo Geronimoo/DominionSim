@@ -45,4 +45,11 @@ public class TournamentCard extends DomCard {
 			}
 		}
 	}
+
+    @Override
+    public int getPlayPriority() {
+        if (owner.getCardsFromHand(DomCardName.Province).isEmpty() && !owner.getCardsFromHand(DomCardName.Hunting_Party).isEmpty())
+            return owner.getCardsFromHand(DomCardName.Hunting_Party).get(0).getPlayPriority()+1;
+        return super.getPlayPriority();
+    }
 }
