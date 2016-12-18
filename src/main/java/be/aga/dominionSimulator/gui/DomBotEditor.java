@@ -91,7 +91,6 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
     	}
     	theNewPlayer.setTypes(myTypes);
     	theNewPlayer.addType(DomBotType.UserCreated);
-    	theNewPlayer.addType(DomBotType.Bot);
     	if (!theNewPlayer.hasType(DomBotType.ThreePlayer) && ! theNewPlayer.hasType(DomBotType.FourPlayer))
     		theNewPlayer.addType(DomBotType.TwoPlayer);
     	if (!theNewPlayer.hasType(DomBotType.Colony))
