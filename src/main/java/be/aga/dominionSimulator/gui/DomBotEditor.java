@@ -401,15 +401,10 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
       HashSet<DomBotType> selectedTypes = (myTypes == null ? myChosenStrategy.getTypes() : myTypes);
       int[] theSelectedIndices = new int[selectedTypes.size()];
     	int i=0;
-            
-      System.out.println("selectedTypes = " + selectedTypes);
+
     	for (DomBotType type : selectedTypes){
     		theSelectedIndices[i++] = thePossibleTypes.indexOf(type);
     	}
-      System.out.println("AS: theSelectedIndices=" + theSelectedIndices);
-      for (int n=0; i<theSelectedIndices.length; ++n) {
-        System.out.println("AS: theSelectedIndices[" + n + "]="  + theSelectedIndices[n]);
-      }
     	myBotTypeList.setSelectedIndices(theSelectedIndices);
       myBotTypeList.setBorder(new TitledBorder("Click to select types"));
     	myBotTypeList.requestFocus();
