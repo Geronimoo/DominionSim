@@ -409,16 +409,27 @@ public class DomEngine {
 		Collections.sort(bots);
 	}
 
-	public Object[] getBots(Object[] domBotTypes) {
+	/**
+	 * Get the list of bots that match the given criteria.
+	 * @param domBotTypes The types of bots to get.  Only bots that match all the given types will be returned.
+	 * @param cards The cards to search for.  Only bots with all the given cards in their buy rules will be returned.
+	 * @return The bots that match the given criteria.
+	 */
+	public Object[] getBots(Object[] domBotTypes, DomCardName[] cards) {
 		ArrayList<DomPlayer> theBots = new ArrayList<DomPlayer>();
-		for (DomPlayer player : bots){
-			int i;
-			for (i=0; i<domBotTypes.length;i++){
-				if (!player.hasType(domBotTypes[i]))
-					break;
+		player:
+		for (DomPlayer player : bots) {
+			for (Object type : domBotTypes) {
+				if (!player.hasType(type)) {
+					continue player;
+				}
 			}
-			if (i>=domBotTypes.length)
-				theBots.add(player);
+			for (DomCardName card : cards) {
+				if (!player.isInBuyRules(card)) {
+					continue player;
+				}
+			}
+			theBots.add(player);
 		}
 		Collections.sort(theBots);
 		return theBots.toArray();
