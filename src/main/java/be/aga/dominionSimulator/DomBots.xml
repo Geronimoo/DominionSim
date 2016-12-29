@@ -1,5 +1,297 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <playerCollection>
+        <player name="Delve/Donate"
+                author="tracer"
+                description="Fill deck with Silver then trash everything else and start greening">
+            <type name="Province"/>
+            <type name="TwoPlayer"/>
+            <buy name="Delve">
+                <condition>
+                    <left type="countAvailableMoney"/>
+                    <operator type="equalTo" />
+                    <right type="constant" attribute="10.0"/>
+                </condition>
+            </buy>
+            <buy name="Province">
+                <condition>
+                    <left type="countCardsInDeck" attribute="Estate"/>
+                    <operator type="equalTo" />
+                    <right type="constant" attribute="0.0"/>
+                </condition>
+            </buy>
+            <buy name="Donate">
+                <condition>
+                    <left type="countCardTypeInDeck" attribute="Curse"/>
+                    <operator type="greaterThan" />
+                    <right type="constant" attribute="2.0"/>
+                </condition>
+            </buy>
+            <buy name="Donate">
+                <condition>
+                    <left type="countCardTypeInDeck" attribute="Ruins"/>
+                    <operator type="greaterThan" />
+                    <right type="constant" attribute="4.0"/>
+                </condition>
+            </buy>
+            <buy name="Delve"/>
+            <buy name="Donate">
+                <condition>
+                    <left type="countTurns"/>
+                    <operator type="equalTo" />
+                    <right type="constant" attribute="3.0"/>
+                </condition>
+            </buy>
+        </player>
+
+        <player name="Giant"
+                author="tracer"
+                description="Optimized against Smithy">
+            <type name="Generated"/>
+            <type name="Province"/>
+            <type name="TwoPlayer"/>
+            <type name="BigMoney"/>
+            <type name="SingleCard"/>
+            <buy name="Province">
+                <condition>
+                    <left type="getTotalMoney"/>
+                    <operator type="greaterThan" />
+                    <right type="constant" attribute="11.0"/>
+                </condition>
+            </buy>
+            <buy name="Duchy">
+                <condition>
+                    <left type="countCardsInSupply" attribute="Province"/>
+                    <operator type="smallerOrEqualThan" />
+                    <right type="constant" attribute="4.0"/>
+                </condition>
+            </buy>
+            <buy name="Estate">
+                <condition>
+                    <left type="countCardsInSupply" attribute="Province"/>
+                    <operator type="smallerOrEqualThan" />
+                    <right type="constant" attribute="2.0"/>
+                </condition>
+            </buy>
+            <buy name="Giant">
+                <condition>
+                    <left type="countCardsInDeck" attribute="Giant"/>
+                    <operator type="smallerThan" />
+                    <right type="constant" attribute="3.0"/>
+                </condition>
+            </buy>
+            <buy name="Gold"/>
+            <buy name="Giant"/>
+            <buy name="Silver"/>
+        </player>
+
+        <player name="Dungeon"
+                author="tracer"
+                description="Optimized against Embassy">
+            <type name="SingleCard"/>
+            <type name="TwoPlayer"/>
+            <type name="Province"/>
+            <type name="BigMoney"/>
+            <buy name="Province">
+                <condition>
+                    <left type="getTotalMoney"/>
+                    <operator type="greaterThan" />
+                    <right type="constant" attribute="14.0"/>
+                </condition>
+            </buy>
+            <buy name="Duchy">
+                <condition>
+                    <left type="countCardsInSupply" attribute="Province"/>
+                    <operator type="smallerOrEqualThan" />
+                    <right type="constant" attribute="5.0"/>
+                </condition>
+            </buy>
+            <buy name="Estate">
+                <condition>
+                    <left type="countCardsInSupply" attribute="Province"/>
+                    <operator type="smallerOrEqualThan" />
+                    <right type="constant" attribute="2.0"/>
+                </condition>
+            </buy>
+            <buy name="Gold"/>
+            <buy name="Duchy">
+                <condition>
+                    <left type="countCardsInSupply" attribute="Province"/>
+                    <operator type="smallerOrEqualThan" />
+                    <right type="constant" attribute="6.0"/>
+                </condition>
+            </buy>
+            <buy name="Dungeon">
+                <condition>
+                    <left type="countCardsInDeck" attribute="Dungeon"/>
+                    <operator type="smallerThan" />
+                    <right type="constant" attribute="3.0"/>
+                </condition>
+                <condition>
+                    <left type="countCardsInDeck" attribute="Dungeon"/>
+                    <operator type="smallerThan" />
+                    <right type="countCardTypeInDeck" attribute="Treasure"/>
+                    <extra_operation type="minus" attribute="7.0" />
+                </condition>
+            </buy>
+            <buy name="Silver"/>
+        </player>
+
+        <player name="Borrow"
+                author="WanderingWinder, tracer"
+                description="The optimized strategy that buys only treasure. And Borrow. Which makes a huge difference.">
+            <type name="TwoPlayer"/>
+            <type name="Province"/>
+            <type name="BigMoney"/>
+            <type name="SingleCard"/>
+            <type name="Optimized"/>
+            <buy name="Borrow">
+                <condition>
+                    <left type="countAvailableMoney"/>
+                    <operator type="equalTo" />
+                    <right type="constant" attribute="7.0"/>
+                </condition>
+                <condition>
+                    <left type="getTotalMoney"/>
+                    <operator type="greaterThan" />
+                    <right type="constant" attribute="18.0"/>
+                </condition>
+            </buy>
+            <buy name="Province">
+                <condition>
+                    <left type="getTotalMoney"/>
+                    <operator type="greaterThan" />
+                    <right type="constant" attribute="18.0"/>
+                </condition>
+            </buy>
+            <buy name="Borrow">
+                <condition>
+                    <left type="countAvailableMoney"/>
+                    <operator type="equalTo" />
+                    <right type="constant" attribute="4.0"/>
+                </condition>
+                <condition>
+                    <left type="countCardsInSupply" attribute="Province"/>
+                    <operator type="smallerOrEqualThan" />
+                    <right type="constant" attribute="4.0"/>
+                </condition>
+            </buy>
+            <buy name="Duchy">
+                <condition>
+                    <left type="countCardsInSupply" attribute="Province"/>
+                    <operator type="smallerOrEqualThan" />
+                    <right type="constant" attribute="4.0"/>
+                </condition>
+            </buy>
+            <buy name="Borrow">
+                <condition>
+                    <left type="countAvailableMoney"/>
+                    <operator type="equalTo" />
+                    <right type="constant" attribute="1.0"/>
+                </condition>
+                <condition>
+                    <left type="countCardsInSupply" attribute="Province"/>
+                    <operator type="smallerOrEqualThan" />
+                    <right type="constant" attribute="2.0"/>
+                </condition>
+            </buy>
+            <buy name="Estate">
+                <condition>
+                    <left type="countCardsInSupply" attribute="Province"/>
+                    <operator type="smallerOrEqualThan" />
+                    <right type="constant" attribute="2.0"/>
+                </condition>
+            </buy>
+            <buy name="Borrow">
+                <condition>
+                    <left type="countAvailableMoney"/>
+                    <operator type="equalTo" />
+                    <right type="constant" attribute="5.0"/>
+                </condition>
+            </buy>
+            <buy name="Gold"/>
+            <buy name="Borrow">
+                <condition>
+                    <left type="countAvailableMoney"/>
+                    <operator type="equalTo" />
+                    <right type="constant" attribute="2.0"/>
+                </condition>
+            </buy>
+            <buy name="Silver"/>
+        </player>
+
+        <player name="Beggar/Triumph"
+                author="Emil"
+                description="Build points lead and sit on it, ending game optional">
+            <type name="TwoPlayer"/>
+            <type name="Province"/>
+            
+            <buy name="Triumph">
+                <condition>
+                    <left type="countCardsInPlay" attribute="Beggar"/>
+                    <operator type="greaterThan" />
+                    <right type="constant" attribute="0.0"/>
+                </condition>
+                <condition>
+                    <left type="countCardsInSupply" attribute="Estate"/>
+                    <operator type="greaterThan" />
+                    <right type="constant" attribute="0.0"/>
+                </condition>
+            </buy>
+            <buy name="Province"/>
+            <buy name="Beggar">
+                <condition>
+                    <left type="countCardsInDeck" attribute="Beggar"/>
+                    <operator type="smallerThan" />
+                    <right type="constant" attribute="2.0"/>
+                </condition>
+            </buy>
+            <buy name="Duchy"/>
+            <buy name="Beggar"/>
+            <buy name="Silver"/>
+            <buy name="Copper">
+                <condition>
+                    <left type="isActionPhase"/>
+                    <operator type="equalTo" />
+                    <right type="constant" attribute="1.0"/>
+                </condition>
+            </buy>
+        </player>
+
+    <player name="Capital/Counterfeit"
+            author="Computer"
+            description="Capital/Counterfeit">
+        <type name="TwoPlayer"/>
+        <type name="Competitive"/>
+        <type name="Combo"/>
+        <type name="Province"/>
+        
+        <type name="Generated"/>
+        <buy name="Province"/>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+        </buy>
+        <buy name="Estate">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Counterfeit">
+            <condition>
+                <left type="countCardsInDeck" attribute="Counterfeit"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Capital"/>
+        <buy name="Silver"/>
+    </player>
+
     <player name="Beggar/Gardens"
             author="Geronimoo"
             description="Beggar/Gardens combo">
