@@ -1,7 +1,7 @@
 package be.aga.dominionSimulator.enums;
 
 public enum DomBotType {
-   Bot,
+   Favorite,
    Generated,
    UserCreated,
    BigMoney,

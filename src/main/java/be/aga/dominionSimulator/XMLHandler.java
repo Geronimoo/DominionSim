@@ -35,7 +35,12 @@ public final class XMLHandler extends DefaultHandler {
         		                    resolveAttrib(uri, "author", attribs, null),
         				            resolveAttrib(uri, "description", attribs, null)) );
       }else if( localName.equals( "type" )  ) {
-          ((DomPlayer)stack.peek()).addType(DomBotType.valueOf(resolveAttrib(uri, "name", attribs, null)));
+        String attribValue = resolveAttrib(uri, "name", attribs, null);
+        try {
+          ((DomPlayer)stack.peek()).addType(DomBotType.valueOf(attribValue));
+        } catch (IllegalArgumentException e) {
+          // Ignore unknown types.
+        }
       }else if( localName.equals( "board" )  ) {
     	  ((DomPlayer)stack.peek()).addBoard(resolveAttrib(uri, "contents", attribs, null), resolveAttrib(uri, "bane", attribs, null),resolveAttrib(uri, "Mountain_Pass_Bid", attribs, null), resolveAttrib(uri, "Obelisk_Choice", attribs, null) );
       }else if( localName.equals( "start_state" )  ) {
