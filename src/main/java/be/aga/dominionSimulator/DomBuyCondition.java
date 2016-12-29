@@ -150,6 +150,9 @@ public class DomBuyCondition {
           case isTravellingFairActive:
               leftValue=owner.isTravellingFairActive() ? 1 : 0;
               break;
+          case countVPon:
+              leftValue=owner.getCurrentGame().getBoard().getVPOnLandmark(leftCardName);
+              break;
         }
 		switch(rightFunction){
 		  case countCardsInDeck:
@@ -246,6 +249,9 @@ public class DomBuyCondition {
               break;
          case isTravellingFairActive:
               rightValue=owner.isTravellingFairActive() ? 1 : 0;
+              break;
+         case countVPon:
+              rightValue=owner.getCurrentGame().getBoard().getVPOnLandmark(leftCardName);
               break;
         }
 		double theRightValue=rightValue;
@@ -443,6 +449,7 @@ public class DomBuyCondition {
                 || leftFunction==DomBotFunction.isEstateTokenPlaced
                 || leftFunction==DomBotFunction.isTrashingTokenPlaced
                 || leftFunction==DomBotFunction.isPlusOneCoinTokenSet
+                || leftFunction==DomBotFunction.countVPon
                 ) {
           theXML.append(" attribute=\"").append(leftCardName.name()).append("\"");
         }
@@ -470,6 +477,7 @@ public class DomBuyCondition {
                 || rightFunction==DomBotFunction.isEstateTokenPlaced
                 || rightFunction==DomBotFunction.isTrashingTokenPlaced
                 || rightFunction==DomBotFunction.isPlusOneCoinTokenSet
+                || rightFunction==DomBotFunction.countVPon
                 ) {
           theXML.append(" attribute=\"").append(rightCardName.name()).append("\"");
         }

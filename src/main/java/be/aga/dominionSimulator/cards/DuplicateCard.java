@@ -11,7 +11,8 @@ public class DuplicateCard extends DomCard {
     }
 
     public void play() {
-      owner.putOnTavernMat(owner.removeCardFromPlay(this));
+        if (owner.getCardsFromPlay(getName()).contains(this))
+            owner.putOnTavernMat(owner.removeCardFromPlay(this));
     }
 
     @Override

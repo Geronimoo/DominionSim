@@ -21,7 +21,8 @@ public class PrinceCard extends DomCard {
         for (int i=owner.getCardsInHand().size()-1;i>0;i--) {
             if (owner.getCardsInHand().get(i).hasCardType(DomCardType.Action)
                     && owner.getCardsInHand().get(i).getCost(owner.getCurrentGame()).compareTo(new DomCost(4,0))<=0) {
-                owner.removeCardFromPlay(this);
+                if (owner.getCardsFromPlay(getName()).contains(this))
+                   owner.removeCardFromPlay(this);
                 if (DomEngine.haveToLog) DomEngine.addToLog( owner + " sets aside " + owner.getCardsInHand().get(i) + " with " + this);
                 owner.setAsideForPrince(owner.removeCardFromHand(owner.getCardsInHand().get(i)));
             }

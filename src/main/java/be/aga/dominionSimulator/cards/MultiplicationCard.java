@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.DomEngine;
+import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
@@ -30,7 +31,7 @@ public class MultiplicationCard extends DomCard {
       play(theCardToMultiply, 1);
       //little fix for Tactician
       if (theCardToMultiply.getName()!=DomCardName.Tactician){
-	      play(theCardToMultiply, 2);
+          play(theCardToMultiply, 2);
 	      if (getName()==DomCardName.King$s_Court) {
 	        play(theCardToMultiply, 3);
 	      }
@@ -57,19 +58,23 @@ public class MultiplicationCard extends DomCard {
 	}
 
 	private void play(DomCard theCardToMultiply, int i ) {
+        DomPlayer thePlayer = owner;
+        //fix for Crowning a Black Market buying a Mint from the Black Market
+        if (thePlayer==null)
+            thePlayer=theCardToMultiply.owner;
 		String aLogAppend = " with the " + this;
 		if (i==2) 
 		  aLogAppend = " again";
 		if (i==3) 
 	      aLogAppend = " a third time";
-		owner.increaseActionsPlayed();
+		thePlayer.increaseActionsPlayed();
 		if (DomEngine.haveToLog ) {
-		  DomEngine.addToLog( owner + " plays " + theCardToMultiply + aLogAppend);
+		  DomEngine.addToLog( thePlayer + " plays " + theCardToMultiply + aLogAppend);
 		  DomEngine.logIndentation++;
 		}
         //some cards have been trashed so playing second time needs an owner assigned
-        theCardToMultiply.owner=owner;
-        owner.playThis(theCardToMultiply);
+        theCardToMultiply.owner=thePlayer;
+        thePlayer.playThis(theCardToMultiply);
 		if (DomEngine.haveToLog ) {
   		  DomEngine.logIndentation--;
 		}

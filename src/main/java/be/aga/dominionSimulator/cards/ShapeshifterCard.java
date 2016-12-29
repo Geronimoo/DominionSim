@@ -31,6 +31,13 @@ public class ShapeshifterCard extends DomCard {
         DomCard theCopy = theChosenCard.createNewCardInstance();
         theCopy.setOwner(owner);
         theCopy.setShapeshifterCard(this);
+        //bug fix when throned
+        for (DomCard theCard : owner.getCardsInPlay()){
+            if (theCard.getShapeshifterCard()==this) {
+                owner.removeCardFromPlay(theCard);
+                break;
+            }
+        }
         owner.play(theCopy);
     }
 

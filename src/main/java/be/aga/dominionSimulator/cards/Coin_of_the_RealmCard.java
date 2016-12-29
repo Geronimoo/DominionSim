@@ -12,7 +12,8 @@ public class Coin_of_the_RealmCard extends DomCard {
 
     public void play() {
       owner.addAvailableCoins(1);
-      owner.putOnTavernMat(owner.removeCardFromPlay(this));
+      if (owner.getCardsFromPlay(getName()).contains(this))
+         owner.putOnTavernMat(owner.removeCardFromPlay(this));
     }
 
     @Override

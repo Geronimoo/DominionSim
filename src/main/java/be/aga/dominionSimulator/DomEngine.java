@@ -54,6 +54,8 @@ public class DomEngine {
          LOGGER.addAppender(new ConsoleAppender(new SimpleLayout()) );
     }
 
+    public static DomPlayer currentPlayer;
+
     private ArrayList< DomPlayer > players = new ArrayList< DomPlayer >();
 	private long findWinnerTime=0;
 	private ArrayList<DomPlayer> bots;

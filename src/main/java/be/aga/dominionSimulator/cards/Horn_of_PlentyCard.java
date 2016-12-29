@@ -35,7 +35,7 @@ public class Horn_of_PlentyCard extends DomCard {
       if (theCardToGain==null)
         return;
       owner.gain(theCardToGain);
-      if (theCardToGain.hasCardType(DomCardType.Victory))
+      if (theCardToGain.hasCardType(DomCardType.Victory)&& owner.getCardsFromPlay(getName()).contains(this))
         owner.trash(owner.removeCardFromPlay(this));
     }
     

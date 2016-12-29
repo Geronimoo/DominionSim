@@ -26,7 +26,10 @@ public class CounterfeitCard extends DomCard {
         if (!owner.getCardsFromHand(DomCardName.Spoils).isEmpty())
             theCardToPlayTwice=owner.removeCardFromHand(owner.getCardsFromHand(DomCardName.Spoils).get(0));
         else
-            theCardToPlayTwice = owner.removeCardFromHand(theTreasures.get(0));
+            if (!owner.getCardsFromHand(DomCardName.Capital).isEmpty())
+                theCardToPlayTwice=owner.removeCardFromHand(owner.getCardsFromHand(DomCardName.Capital).get(0));
+            else
+                theCardToPlayTwice = owner.removeCardFromHand(theTreasures.get(0));
         if (DomEngine.haveToLog) DomEngine.addToLog( owner + " chooses " + theCardToPlayTwice+ " to counterfeit");
         owner.getCardsInPlay().add(theCardToPlayTwice);
         if (theCardToPlayTwice.getName()==DomCardName.Spoils) {
@@ -35,6 +38,9 @@ public class CounterfeitCard extends DomCard {
             return;
         }
         theCardToPlayTwice.play();
+        //fix for Horn of Plenty which might be trashed
+        if (theCardToPlayTwice.owner==null)
+            theCardToPlayTwice.owner=owner;
         theCardToPlayTwice.play();
         if (!owner.getCardsFromPlay(theCardToPlayTwice.getName()).isEmpty())
             owner.trash(owner.removeCardFromPlay(theCardToPlayTwice));

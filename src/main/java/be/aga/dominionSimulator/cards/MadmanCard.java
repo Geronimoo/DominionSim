@@ -1,6 +1,7 @@
 package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
+import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomPlayStrategy;
 
@@ -22,7 +23,7 @@ public class MadmanCard extends DomCard {
     @Override
     public boolean wantsToBePlayed() {
         if (owner.getPlayStrategyFor(this)== DomPlayStrategy.MarketSquareCombo) {
-          if ((owner.countInDeck(DomCardName.Madman)>3 || owner.getCardsInHand().size()>5)
+          if ((owner.countInDeck(DomCardName.Madman)>4 || owner.getCardsInHand().size()>5)
                   && owner.countInDeck(DomCardName.Market_Square)-owner.countInPlay(DomCardName.Market_Square)>5 && owner.getDeck().getDeckAndDiscardSize() > 3 )
               return true;
           else

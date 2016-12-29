@@ -31,7 +31,8 @@ public enum DomBotFunction {
    getTotalMoneyExcludingNativeVillage,
    countOnTavernMat, isSwampHagActive,
    isTravellingFairActive,
-   countGainedCards;
+   countGainedCards,
+   countVPon;
 
    public String toString() {
        switch ( this ) {
@@ -97,6 +98,9 @@ public enum DomBotFunction {
 
        case countGainedCards:
            return "count gained cards";
+
+       case countVPon:
+           return "count VP on";
 
     default :
         return super.toString();

@@ -16,6 +16,7 @@ public class ProcessionCard extends MultiplicationCard {
         super.play();
         if (theCardToMultiply==null)
             return;
+
         DomCardName theDesiredCard = owner.getDesiredCard(DomCardType.Action, theCardToMultiply.getName().getCost(owner.getCurrentGame()).add(new DomCost(1,0 ) ), true,false,null);
         if (owner.getCardsInPlay().indexOf(theCardToMultiply)!=-1)
           owner.trash(owner.removeCardFromPlay(theCardToMultiply));

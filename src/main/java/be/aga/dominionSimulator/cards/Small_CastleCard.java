@@ -16,7 +16,8 @@ public class Small_CastleCard extends DomCard {
       if (owner==null)
           return;
       if (owner.getCardsFromHand(DomCardName.Crumbling_Castle).isEmpty()) {
-          owner.trash(owner.removeCardFromPlay(this));
+          if (owner.getCardsFromPlay(getName()).contains(this))
+              owner.trash(owner.removeCardFromPlay(this));
       } else  {
           owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(DomCardName.Crumbling_Castle).get(0)));
       }

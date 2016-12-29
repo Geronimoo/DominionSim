@@ -68,6 +68,8 @@ public class GearCard extends DomCard {
     }
 
     private void checkForOtherJunk() {
+        if (owner.getCardsInHand().isEmpty())
+            return;
         if (owner.getCardsInHand().get(0).getDiscardPriority(owner.getActionsLeft())<DomCardName.Copper.getDiscardPriority(1)) {
             mySetAsideCards.add(owner.getCardsInHand().remove(0));
             if (DomEngine.haveToLog) DomEngine.addToLog(owner + " has set aside " + mySetAsideCards);

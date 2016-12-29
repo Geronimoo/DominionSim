@@ -40,7 +40,15 @@ public class CrownCard extends MultiplicationCard {
             return;
         }
         theCardToPlayTwice.play();
-        theCardToPlayTwice.play();
+        //fix for Horn of Plenty which might be trashed
+        if (theCardToPlayTwice.owner==null) {
+          theCardToPlayTwice.owner = owner;
+          theCardToPlayTwice.play();
+          theCardToPlayTwice.owner = null;
+        }else {
+          theCardToPlayTwice.play();
+        }
+
     }
 
     @Override

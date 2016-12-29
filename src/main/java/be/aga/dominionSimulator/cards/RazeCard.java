@@ -34,8 +34,10 @@ public class RazeCard extends DomCard {
     }
 
     private void trashItself(DomPlayer theOwner) {
-        owner.trash(owner.removeCardFromPlay(this));
-        revealAndKeepACard(theOwner, getCoinCost(theOwner.getCurrentGame()));
+        if (owner.getCardsFromPlay(getName()).contains(this)) {
+            owner.trash(owner.removeCardFromPlay(this));
+            revealAndKeepACard(theOwner, getCoinCost(theOwner.getCurrentGame()));
+        }
     }
 
     private void revealAndKeepACard(DomPlayer anOwner, int anAmount) {

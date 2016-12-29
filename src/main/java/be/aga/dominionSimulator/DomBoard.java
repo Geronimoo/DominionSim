@@ -672,7 +672,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 	}
 
 	public void returnToBlackMarketDeck(DomCard theCard) {
-		blackMarketDeck.add(blackMarketDeck.size()-1, theCard);
+		blackMarketDeck.add(blackMarketDeck.size(), theCard);
 	}
 
 	public int getEmbargoTokensOn(DomCardName aCard) {
@@ -719,7 +719,8 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 		    && ((!anExactCost && domCost.compareTo(theCardName.getCost(aPlayer.getCurrentGame()))>=0)
 		    	|| (anExactCost && domCost.compareTo(theCardName.getCost(aPlayer.getCurrentGame()))==0))
 		    && ( theCardToGet==null ||
-		      theCardName.getTrashPriority(aPlayer)>theCardToGet.getTrashPriority(aPlayer))) {
+		      theCardName.getTrashPriority(aPlayer)>theCardToGet.getTrashPriority(aPlayer))
+            && !aPlayer.suicideIfBuys(theCardName)) {
 				theCardToGet=theCardName;
 			}
 		}
@@ -860,7 +861,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     public int getAllVPFromPile(DomCardName cardName) {
         if (gatheringVPTokens.isEmpty())
             return 0;
-        int theTotal = gatheringVPTokens.get(cardName);
+        int theTotal = gatheringVPTokens.get(cardName)==null? 0 : gatheringVPTokens.get(cardName);
         resetVPon(cardName);
         return theTotal;
     }

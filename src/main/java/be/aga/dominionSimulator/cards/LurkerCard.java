@@ -24,13 +24,15 @@ public class LurkerCard extends DomCard {
   }
 
     private void trashActionFromSupply() {
-        HashSet<DomCardName> theCardsToConsider = new HashSet<DomCardName>();
-        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-            if (theCard.hasCardType(DomCardType.Action) && owner.wants(theCard))
-                theCardsToConsider.add(theCard);
+        for (DomBuyRule theBuyRule : owner.getBuyRules()) {
+            if (theBuyRule.getCardToBuy().hasCardType(DomCardType.Action) && owner.checkBuyConditions(theBuyRule)) {
+                DomCard theCard = owner.getCurrentGame().takeFromSupply(theBuyRule.getCardToBuy());
+                owner.trash(theCard);
+                return;
+            }
         }
         for (DomBuyRule theBuyRule : owner.getBuyRules()) {
-            if (theCardsToConsider.contains(theBuyRule.getCardToBuy())){
+            if (theBuyRule.getCardToBuy().hasCardType(DomCardType.Action) ) {
                 DomCard theCard = owner.getCurrentGame().takeFromSupply(theBuyRule.getCardToBuy());
                 owner.trash(theCard);
                 return;

@@ -16,6 +16,7 @@ public class EncampmentCard extends DomCard {
           if (DomEngine.haveToLog) DomEngine.addToLog( owner + " reveals Gold or Plunder");
           return;
       }
-      owner.setAside(owner.removeCardFromPlay(this));
+      if (owner.getCardsFromPlay(getName()).contains(this))
+          owner.setAside(owner.removeCardFromPlay(this));
     }
 }

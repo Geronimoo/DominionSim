@@ -13,7 +13,8 @@ public class GuideCard extends DomCard {
     public void play() {
       owner.addActions(1);
       owner.drawCards(1);
-      owner.putOnTavernMat(owner.removeCardFromPlay(this));
+      if (owner.getCardsFromPlay(getName()).contains(this))
+         owner.putOnTavernMat(owner.removeCardFromPlay(this));
     }
 
     public boolean wantsToBeCalled() {

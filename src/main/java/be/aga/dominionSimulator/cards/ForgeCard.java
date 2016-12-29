@@ -1,6 +1,7 @@
 package be.aga.dominionSimulator.cards;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomCost;
@@ -46,8 +47,9 @@ public class ForgeCard extends DomCard {
       if (!theFinalCardsToTrash.isEmpty()) {
     	  DomCardName theCardToGain = tryForge(theFinalCardsToTrash);
     	  for (DomCard theCard : theFinalCardsToTrash) {
-    		owner.trash(owner.removeCardFromHand(theCard));
-    	  }
+            if (owner.getCardsInHand().contains((theCard)))
+    		    owner.trash(owner.removeCardFromHand(theCard));
+          }
     	  owner.gain(theCardToGain);
       } else {
     	  owner.gain(owner.getCurrentGame().getBestCardInSupplyFor(owner, null, DomCost.ZERO));

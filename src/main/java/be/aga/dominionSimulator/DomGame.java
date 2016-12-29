@@ -112,8 +112,8 @@ public void run() {
           DomEngine.logPlayerIndentation++;
         }
     } while (!isGameFinished() );
-    if (turn<=10)
-        LOGGER.info("Weinig beurten: " + turn);
+//    if (turn<=10)
+//        LOGGER.info("Weinig beurten: " + turn);
     DomEngine.logPlayerIndentation = 0;
 }
 

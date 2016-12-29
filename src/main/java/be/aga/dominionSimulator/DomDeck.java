@@ -183,7 +183,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
 		if (aLocation==DISCARD && aCard.getName()!=DomCardName.Villa){
 	    	if (aCard.getName()==DomCardName.Nomad_Camp
 	    	 || (!owner.getCardsFromPlay(DomCardName.Royal_Seal).isEmpty() && aCard.getDiscardPriority(1)>=16)
-             || (owner.isTravellingFairActive() && aCard.getDiscardPriority(1)>=DomCardName.Copper.getDiscardPriority(1))) {
+             || (owner.isTravellingFairActive() && (aCard.getDiscardPriority(1)>DomCardName.Copper.getDiscardPriority(1) || (aCard.getName()==DomCardName.Copper && getDrawDeckSize()<8)))) {
                 owner.putOnTopOfDeck(aCard);
             } else {
                discardPile.add(0,aCard);

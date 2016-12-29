@@ -15,6 +15,8 @@ public class Secret_PassageCard extends DomCard {
     public void play() {
         owner.addActions(1);
         owner.drawCards(2);
+        if (owner.getCardsInHand().isEmpty())
+            return;
         Collections.sort(owner.getCardsInHand(), SORT_FOR_DISCARD_FROM_HAND);
         DomCard theCardToReturn = null;
         ArrayList<DomCard> theCardsInHand = owner.getCardsInHand();
