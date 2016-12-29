@@ -109,7 +109,6 @@ public class DomPlayer implements Comparable<DomPlayer> {
 
     public DomPlayer(String aString) {
         name = aString;
-        types.add(DomBotType.Bot);
     }
 
     public DomPlayer(String aName, String anAuthor, String aDescription) {

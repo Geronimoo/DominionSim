@@ -403,7 +403,7 @@ public class DomGui extends JFrame implements ActionListener {
 		String theName = theSelector.getText();
 		if (theName==null || theName.equals(""))
 			return null;
-		for (Object player : myEngine.getBots(new DomBotType[]{DomBotType.Bot})){
+		for (Object player : myEngine.getBotArray()){
 			if (((DomPlayer)player).toString().equals(theName) )
 			  return (DomPlayer)player;
 		}

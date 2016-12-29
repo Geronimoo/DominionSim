@@ -91,7 +91,6 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
     	}
     	theNewPlayer.setTypes(myTypes);
     	theNewPlayer.addType(DomBotType.UserCreated);
-    	theNewPlayer.addType(DomBotType.Bot);
     	if (!theNewPlayer.hasType(DomBotType.ThreePlayer) && ! theNewPlayer.hasType(DomBotType.FourPlayer))
     		theNewPlayer.addType(DomBotType.TwoPlayer);
     	if (!theNewPlayer.hasType(DomBotType.Colony))
@@ -392,15 +391,18 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
 
     private JList getTypeList() {
     	myBotTypeList = new JList(DomBotType.values());
+      myBotTypeList.setSelectionModel(new ToggleListSelectionModel());
     	ArrayList<DomBotType> thePossibleTypes = new ArrayList<DomBotType>();
-    	myBotTypeList.setSelectionModel(new ToggleListSelectionModel());
     	for (DomBotType botType : DomBotType.values()){
     		thePossibleTypes.add(botType);
     	}
     	myBotTypeList.setBorder(new TitledBorder("Choose type(s) of this strategy"));
-    	int[] theSelectedIndices = new int[20];
+
+      HashSet<DomBotType> selectedTypes = (myTypes == null ? myChosenStrategy.getTypes() : myTypes);
+      int[] theSelectedIndices = new int[selectedTypes.size()];
     	int i=0;
-    	for (DomBotType type : myTypes==null? myChosenStrategy.getTypes() : myTypes){
+
+    	for (DomBotType type : selectedTypes){
     		theSelectedIndices[i++] = thePossibleTypes.indexOf(type);
     	}
     	myBotTypeList.setSelectedIndices(theSelectedIndices);

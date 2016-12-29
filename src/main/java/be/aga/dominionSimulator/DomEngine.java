@@ -117,7 +117,6 @@ public class DomEngine {
 			rdr.parse(anXMLSource);
 			ArrayList<DomPlayer> theNewPlayers = saxHandler.getBots();
 			for (DomPlayer thePlayer : theNewPlayers) {
-			  thePlayer.addType(DomBotType.Bot);
 			  thePlayer.addType(DomBotType.UserCreated);
 			  addUserBot(thePlayer);
 			}
