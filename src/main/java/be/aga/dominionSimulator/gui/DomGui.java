@@ -70,12 +70,17 @@ public class DomGui extends JFrame implements ActionListener {
       pack();
       addWindowListener(new WindowAdapter() {
         public void windowClosing(WindowEvent e) {
-          System.exit(0);
+            shutDown();
         }
       });
       if (DomEngine.hideGraphs)
         hideGraphs();
 	}
+
+	private void shutDown() {
+        myEngine.saveCurrentUserBots();
+        System.exit( 0 );
+    }
 
 	private void hideGraphs() {
 	  Runnable setMinSize = new Runnable() {
@@ -618,11 +623,11 @@ public class DomGui extends JFrame implements ActionListener {
 	    JMenuBar bar = new JMenuBar();
 	    JMenu fileMenu = new JMenu( "File" );
 	    fileMenu.setMnemonic( 'f' );
-	    JMenuItem loadPool = new JMenuItem( "Load Bots", 'L' );
+	    JMenuItem loadPool = new JMenuItem( "Import Bots", 'I' );
 	    loadPool.addActionListener( this );
 	    loadPool.setActionCommand( "Load" );
 	    fileMenu.add( loadPool );
-	    JMenuItem saveDeck = new JMenuItem( "Save Bots", 'S' );
+	    JMenuItem saveDeck = new JMenuItem( "Export Bots", 'E' );
 	    saveDeck.addActionListener( this );
 	    saveDeck.setActionCommand( "Save" );
 	    fileMenu.add( saveDeck );
@@ -630,7 +635,7 @@ public class DomGui extends JFrame implements ActionListener {
 	    JMenuItem exit = new JMenuItem( "Exit", 'X' );
 	    exit.addActionListener( new ActionListener() {
 	      public void actionPerformed( ActionEvent ae ) {
-	        System.exit( 1 );
+	        shutDown();
 	      }
 	    } );
 	    fileMenu.add( exit );
