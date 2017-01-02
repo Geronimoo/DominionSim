@@ -726,7 +726,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
         buyTime += System.currentTimeMillis() - theTime;
     }
 
-    private boolean isInBuyRules(DomCardName aCard) {
+    public boolean isInBuyRules(DomCardName aCard) {
         for (DomBuyRule theBuyRule : getBuyRules()) {
             if (theBuyRule.getCardToBuy() == aCard)
                 return true;

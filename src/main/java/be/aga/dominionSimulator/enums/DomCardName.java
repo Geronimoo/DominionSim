@@ -1564,7 +1564,7 @@ public enum DomCardName  {
 	public static Object[] getKingdomCards() {
 		ArrayList<DomCardName> theCards = new ArrayList<DomCardName>(); 
 		for (DomCardName cardName : values()){
-			if (!DomSet.Base.contains(cardName))
+			if (!DomSet.Common.contains(cardName))
 				theCards.add(cardName);
 		}
 		return theCards.toArray();
