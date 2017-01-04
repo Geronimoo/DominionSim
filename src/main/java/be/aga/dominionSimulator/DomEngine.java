@@ -40,6 +40,8 @@ public class DomEngine {
     public static boolean developmentMode=false;
 
     public static double NUMBER_OF_GAMES = 1000;
+	public static File BOT_FILE = new File(System.getProperty("user.home") + "/.domsim/userbots.xml");
+
     public static boolean haveToLog;
     public static String myLog;
     public static int logIndentation=0;
@@ -70,10 +72,11 @@ public class DomEngine {
 	private DomGameFrame myGameFrame;
     
     public DomEngine () {
-      loadSystemBots();
-      createSimpleCardStrategiesBots();
-      myGui = new DomGui( this );
-      myGui.setVisible(true);
+		loadSystemBots();
+		createSimpleCardStrategiesBots();
+		loadCurrentUserBots();
+		myGui = new DomGui( this );
+		myGui.setVisible(true);
     }
     
     private void createSimpleCardStrategiesBots() {
@@ -107,6 +110,42 @@ public class DomEngine {
 			JOptionPane.showMessageDialog(myGui, "You'll need to download Java 1.6 at www.java.com to run this program!!!");
 		}
 		Collections.sort( bots );
+	}
+
+	public boolean loadCurrentUserBots() {
+		LOGGER.info("loading from: " + BOT_FILE);
+		if (BOT_FILE.exists() && BOT_FILE.isFile()) {
+			Reader input = null;
+			try {
+				input = new BufferedReader(new FileReader(BOT_FILE));
+				loadUserBotsFromXML(new InputSource(input));
+				input.close();
+			} catch (IOException e1) {
+				LOGGER.error("failed to load current user bots", e1);
+				JOptionPane.showMessageDialog(myGui,
+						"Error Reading File", "error",
+						JOptionPane.ERROR_MESSAGE);
+			}
+			return false;
+		}
+		return true;
+	}
+
+	public void saveCurrentUserBots() {
+		LOGGER.info("saving to: " + BOT_FILE);
+		Writer output = null;
+		try {
+			BOT_FILE.getParentFile().mkdirs();
+			BOT_FILE.createNewFile();
+			output = new BufferedWriter(new FileWriter(BOT_FILE));
+			output.write(getXMLForAllUserBots());
+			output.close();
+		} catch (IOException e1) {
+			LOGGER.error("failed to save current user bots", e1);
+			JOptionPane.showMessageDialog(myGui,
+					"Error Writing File", "error",
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
     public DomPlayer loadUserBotsFromXML(InputSource anXMLSource) {
@@ -319,7 +358,9 @@ public class DomEngine {
 			}
 		}
 		bots.add(0,theNewPlayer);
-		myGui.refreshBotSelectors(theNewPlayer);
+		if (myGui != null) {
+			myGui.refreshBotSelectors(theNewPlayer);
+		}
 	}
 
 	public void deleteBot(DomPlayer selectedItem) {
