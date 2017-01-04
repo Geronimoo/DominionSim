@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -20,6 +22,9 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import be.aga.dominionSimulator.DomBuyRule;
+import be.aga.dominionSimulator.enums.DomCardName;
+import be.aga.dominionSimulator.enums.DomSet;
 import org.jfree.ui.RefineryUtilities;
 
 import be.aga.dominionSimulator.DomEngine;
@@ -135,13 +140,33 @@ private JList getBotTypeList() {
 @SuppressWarnings("serial")
 private JList getBotList() {
 	myBotList = new JList(myEngine.getBots(myBotTypeList.getSelectedValues())) {
-    // This method is called as the cursor moves within the list.
-	    public String getToolTipText(MouseEvent evt) {
-	        int index = locationToIndex(evt.getPoint());
-	        Object item = getModel().getElementAt(index);
-	        String theDescription = ((DomPlayer)item).getDescription().replaceAll("XXXX", "<br>");
-	        return "<html>"+theDescription+"</html>";
-	    }
+        // This method is called as the cursor moves within the list.
+        public String getToolTipText(MouseEvent evt) {
+            int index = locationToIndex(evt.getPoint());
+            Object item = getModel().getElementAt(index);
+            DomPlayer bot = (DomPlayer) item;
+
+            StringBuilder tip = new StringBuilder();
+            tip.append("<html>");
+            tip.append(bot.getDescription().replaceAll("XXXX", "<br>"));
+
+            // Show the kingdom cards used by this bot.
+            tip.append("<p>Cards used:<ul>");
+            Set<DomCardName> cardSet = new HashSet<DomCardName>();
+            for (DomBuyRule rule : bot.getBuyRules()) {
+                DomCardName card = rule.getCardToBuy();
+                if (!cardSet.contains(card) && !DomSet.Common.contains(card)) {
+                    cardSet.add(card);
+                    tip.append("<li>");
+                    tip.append(rule.getCardToBuy().toHTML());
+                    tip.append("</li>\n");
+                }
+            }
+            tip.append("</p></ul>");
+            tip.append("</html>");
+
+            return tip.toString();
+        }
 	};
 	new ListAction(myBotList, chooseAction);
 	return myBotList;
