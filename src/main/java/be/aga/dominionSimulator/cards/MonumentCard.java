@@ -12,4 +12,11 @@ public class MonumentCard extends DomCard {
       owner.addAvailableCoins( 2 );
       owner.addVP( 1);
     }
+
+    @Override
+    public int getPlayPriority() {
+        if (owner.getActionsLeft()>1 && !owner.getCardsFromHand(DomCardName.Hunting_Party).isEmpty())
+            return owner.getCardsFromHand(DomCardName.Hunting_Party).get(0).getPlayPriority()-1;
+        return super.getPlayPriority();
+    }
 }

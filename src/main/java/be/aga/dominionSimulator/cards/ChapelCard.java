@@ -25,7 +25,7 @@ public class ChapelCard extends DomCard {
           DomCard theCardToTrash=owner.getCardsInHand().get( 0 );
           if (theCardToTrash.getTrashPriority()>=16 
            || (owner.removingReducesBuyingPower( theCardToTrash ) && theTrashCount< theTrashOverBuyTreshold)
-           || owner.getTotalMoneyInDeck()-theCardToTrash.getPotentialCoinValue() < theMin$Indeck ) {  
+           || owner.getTotalMoneyInDeck()-theCardToTrash.getPotentialCoinValue() < theMin$Indeck ) {
             return ;
           }
           owner.trash(owner.removeCardFromHand( theCardToTrash));

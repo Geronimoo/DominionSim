@@ -101,7 +101,7 @@ public class GovernorCard extends DomCard {
 //		int governorsInHand = owner.getCardsFromHand(DomCardName.Governor).size();
 //		int goldsInHand = owner.getCardsFromHand(DomCardName.Gold).size(); 
 		int provincesLeftInSupply = owner.getCurrentGame().countInSupply(DomCardName.Province);
-        return provincesLeftInSupply <= 5;
+        return provincesLeftInSupply <= 4;
     }
 
 	private void remodelSomething() {

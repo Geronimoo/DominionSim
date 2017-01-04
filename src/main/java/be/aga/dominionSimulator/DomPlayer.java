@@ -2897,11 +2897,11 @@ public class DomPlayer implements Comparable<DomPlayer> {
     }
 
     public void addAvailableCoinsSilent(int aI) {
+        if (aI<=0)
+            return;
         if (minusOneCoinToken) {
-            if (DomEngine.haveToLog && aI > 0) DomEngine.addToLog(this + " loses -$1 token");
+            if (DomEngine.haveToLog) DomEngine.addToLog(this + " loses -$1 token");
             aI--;
-            if (aI < 0)
-                aI = 0;
             minusOneCoinToken = false;
         }
 
