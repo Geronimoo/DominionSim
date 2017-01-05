@@ -1,10 +1,21 @@
 package be.aga.dominionSimulator.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -14,10 +25,14 @@ import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -36,6 +51,9 @@ public class DomBotSelector extends EscapeDialog
    private DomEngine myEngine;
    private JList myBotTypeList;
    private JList myBotList;
+   private HintTextField mSearchField;
+
+   private String[] mSearchTerms = null;
 
    private static int[] sSelectedIndices = new int[]{8,10};
 
@@ -54,7 +72,7 @@ public DomBotSelector(DomEngine anEngine, final DomPlayer aSelectedBot) {
 	 pack();
 	 RefineryUtilities.centerFrameOnScreen(this);
 	 setVisible(true);
-	 myBotList.requestFocus();
+	 mSearchField.requestFocus();
      Runnable doScroll = new Runnable() {
        public void run() {
       	 myBotList.setSelectedValue(aSelectedBot, true);
@@ -64,11 +82,10 @@ public DomBotSelector(DomEngine anEngine, final DomPlayer aSelectedBot) {
 }
 
 private void buildGUI() {
-	setLayout( new GridBagLayout() );
-    final GridBagConstraints theCons = DomGui.getGridBagConstraints( 2 );
-	add(getSelectionPanel(), theCons);
-	theCons.gridy++;
-	add(getButtonPanel(), theCons);
+	setLayout( new BorderLayout() );
+	add(getSelectionPanel(), BorderLayout.CENTER);
+	add(getButtonPanel(), BorderLayout.PAGE_END);
+	setPreferredSize(new Dimension(600, 600));
 }
 
 private JPanel getButtonPanel() {
@@ -119,14 +136,50 @@ private JPanel getSelectionPanel() {
     final GridBagConstraints theCons = DomGui.getGridBagConstraints( 2 );
     JScrollPane theTypePane = new JScrollPane(getBotTypeList(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     theTypePane.setBorder(new TitledBorder( "Type" ));
-    theTypePane.setPreferredSize(new Dimension(150,400));
-    thePanel.add(theTypePane,theCons);
+    theCons.weightx = 0.0;
+    theCons.weighty = 1.0;
+    thePanel.add(theTypePane, theCons);
+
+    theCons.weightx = 1.0;
     theCons.gridx++;
-    JScrollPane theBotPane = new JScrollPane(getBotList(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-    theBotPane.setBorder(new TitledBorder( "Select a strategy" ));
-    theBotPane.setPreferredSize(new Dimension(350,400));
-    thePanel.add(theBotPane,theCons);
+    thePanel.add(getBotPanel(), theCons);
+
     return thePanel;
+}
+
+private JPanel getBotPanel() {
+    JPanel thePanel = new JPanel();
+    thePanel.setLayout(new BorderLayout());
+    thePanel.setBorder(new TitledBorder("Select a strategy"));
+
+    thePanel.add(getSearchField(), BorderLayout.PAGE_START);
+
+    JScrollPane theBotPane = new JScrollPane(getBotList(),
+            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    thePanel.add(theBotPane, BorderLayout.CENTER);
+
+    return thePanel;
+}
+
+private HintTextField getSearchField() {
+    mSearchField = new HintTextField("Find by name or cards used");
+    mSearchField.addKeyListener(new KeyListener() {
+        public void keyTyped(KeyEvent e) {
+        }
+
+        public void keyPressed(KeyEvent e) {
+        }
+
+        public void keyReleased(KeyEvent e) {
+            mSearchTerms = mSearchField.getText().split("[\\W/]+");
+            for (int i=mSearchTerms.length-1; i >= 0; i--) {
+                mSearchTerms[i] = mSearchTerms[i].toLowerCase();
+            }
+            refreshBotList();
+        }
+    });
+    return mSearchField;
 }
 
 private JList getBotTypeList() {
@@ -139,7 +192,7 @@ private JList getBotTypeList() {
 
 @SuppressWarnings("serial")
 private JList getBotList() {
-	myBotList = new JList(myEngine.getBots(myBotTypeList.getSelectedValues())) {
+	myBotList = new JList(myEngine.getBots(myBotTypeList.getSelectedValues(), mSearchTerms)) {
         // This method is called as the cursor moves within the list.
         public String getToolTipText(MouseEvent evt) {
             int index = locationToIndex(evt.getPoint());
@@ -175,9 +228,12 @@ private JList getBotList() {
 @Override
 public void valueChanged(ListSelectionEvent e) {
 	if ( e.getSource().equals(myBotTypeList)){
-	  myBotList.setListData(myEngine.getBots(myBotTypeList.getSelectedValues()));
-	  myBotList.requestFocus();
+        refreshBotList();
 	}
+}
+
+private void refreshBotList() {
+    myBotList.setListData(myEngine.getBots(myBotTypeList.getSelectedValues(), mSearchTerms));
 }
 
 @Override
@@ -195,7 +251,7 @@ public void actionPerformed(ActionEvent e) {
 	}
 	if (e.getActionCommand().equals("Delete")){
 		myEngine.deleteBot((DomPlayer) myBotList.getSelectedValue());
-		myBotList.setListData(myEngine.getBots(myBotTypeList.getSelectedValues()));
+		refreshBotList();
 		myBotList.requestFocus();
 	}
 }
@@ -223,4 +279,27 @@ public void actionPerformed(ActionEvent e) {
   public void windowOpened(WindowEvent arg0) {
   }
 
+}
+
+class HintTextField extends JTextField {
+    public HintTextField(String hint) {
+        _hint = hint;
+    }
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        if (getText().length() == 0) {
+            int h = getHeight();
+            ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            Insets ins = getInsets();
+            FontMetrics fm = g.getFontMetrics();
+            int c0 = getBackground().getRGB();
+            int c1 = getForeground().getRGB();
+            int m = 0xfefefefe;
+            int c2 = ((c0 & m) >>> 1) + ((c1 & m) >>> 1);
+            g.setColor(new Color(c2, true));
+            g.drawString(_hint, ins.left, h / 2 + fm.getAscent() / 2 - 2);
+        }
+    }
+    private final String _hint;
 }

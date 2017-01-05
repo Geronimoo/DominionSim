@@ -29,6 +29,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
     private ArrayList<DomBuyRule> buyRules = new ArrayList<DomBuyRule>();
     private ArrayList<DomBuyRule> prizeBuyRules = new ArrayList<DomBuyRule>();
     private EnumMap<DomCardName, DomPlayStrategy> playStrategies = new EnumMap<DomCardName, DomPlayStrategy>(DomCardName.class);
+    private String[] keywords = null;
 
     private DomDeck deck = new DomDeck(this);
     private ArrayList<DomCard> cardsInPlay = new ArrayList<DomCard>();
@@ -2103,6 +2104,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
         } else {
             buyRules.add(buyRule);
         }
+        clearKeywords();
     }
 
     public DomPlayer getCopy(String aName) {
@@ -2377,6 +2379,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
             theNewRule.addCondition(theCondition);
             getBuyRules().add(getBuyRules().indexOf(theRule), theNewRule);
         }
+        clearKeywords();
         return;
     }
 
@@ -3290,5 +3293,25 @@ public class DomPlayer implements Comparable<DomPlayer> {
 
     public double getDrawDeckSize() {
         return getDeck().getDrawDeckSize();
+    }
+
+    private void clearKeywords() {
+        keywords = null;
+    }
+
+    public String[] getKeywords() {
+        if (keywords == null) {
+            HashSet<String> kws = new HashSet<String>();
+            for (DomBuyRule rule : buyRules) {
+                for (String word : rule.getCardToBuy().toString().trim().split("[\\W/]+")) {
+                    kws.add(word.toLowerCase(Locale.ENGLISH));
+                }
+            }
+            for (String word : name.trim().split("[\\W/]+")) {
+                kws.add(word.toLowerCase(Locale.ENGLISH));
+            }
+            keywords = kws.toArray(new String[kws.size()]);
+        }
+        return keywords;
     }
 }

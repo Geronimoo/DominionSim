@@ -450,16 +450,27 @@ public class DomEngine {
 		Collections.sort(bots);
 	}
 
-	public Object[] getBots(Object[] domBotTypes) {
+	public Object[] getBots(Object[] domBotTypes, String[] keywords) {
 		ArrayList<DomPlayer> theBots = new ArrayList<DomPlayer>();
-		for (DomPlayer player : bots){
-			int i;
-			for (i=0; i<domBotTypes.length;i++){
-				if (!player.hasType(domBotTypes[i]))
-					break;
+		player:
+		for (DomPlayer player : bots) {
+			for (Object type : domBotTypes) {
+				if (!player.hasType(type)) {
+					continue player;
+			    }
+		    }
+		    if (keywords != null) {
+				keyword:
+				for (String searchKeyword : keywords) {
+					for (String playerKeyword : player.getKeywords()) {
+						if (playerKeyword.startsWith(searchKeyword)) {
+							continue keyword;
+						}
+					}
+					continue player;
+				}
 			}
-			if (i>=domBotTypes.length)
-				theBots.add(player);
+			theBots.add(player);
 		}
 		Collections.sort(theBots);
 		return theBots.toArray();
