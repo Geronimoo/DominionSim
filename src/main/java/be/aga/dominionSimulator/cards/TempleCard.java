@@ -42,6 +42,8 @@ public class TempleCard extends DomCard {
 
     @Override
     public boolean wantsToBePlayed() {
+        if (owner.getCardsInHand().isEmpty())
+            return true;
         Collections.sort( owner.getCardsInHand() , SORT_FOR_TRASHING);
         if (owner.getCardsInHand().get(0).getTrashPriority()<=DomCardName.Copper.getTrashPriority())
             return true;
@@ -50,4 +52,21 @@ public class TempleCard extends DomCard {
         return false;
     }
 
+    @Override
+    public int getTrashPriority() {
+        if (owner==null)
+            return super.getTrashPriority();
+
+        int theCount=0;
+        for (DomCardName card : owner.getDeck().keySet()){
+            //avoid endless loop when both Temple and Amb in deck
+            if (card==DomCardName.Temple || card==DomCardName.Ambassador)
+                continue;
+            if (card.getTrashPriority(owner)<16)
+                theCount+=owner.countInDeck(card);
+        }
+        if (theCount<3 && owner.countInDeck(DomCardName.Curse)==0)
+            return 14;
+        return super.getTrashPriority();
+    }
 }

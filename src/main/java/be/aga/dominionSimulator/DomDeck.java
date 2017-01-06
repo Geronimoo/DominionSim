@@ -197,7 +197,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 }
             }
             if (owner.getCurrentGame().getBoard().isLandmarkActive(DomCardName.Aqueduct)) {
-                int theVP = owner.getCurrentGame().getBoard().removeVPFrom(DomCardName.Aqueduct, owner.getCurrentGame().getBoard().getVPOnLandmark(DomCardName.Aqueduct));
+                int theVP = owner.getCurrentGame().getBoard().removeVPFrom(DomCardName.Aqueduct, owner.getCurrentGame().getBoard().countVPon(DomCardName.Aqueduct));
                 if (theVP>0) {
                     if (DomEngine.haveToLog) DomEngine.addToLog(owner + " takes VP from " + DomCardName.Aqueduct.toHTML());
                     owner.addVP(theVP);

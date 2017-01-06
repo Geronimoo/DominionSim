@@ -833,9 +833,13 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     }
 
     public int countVPon(DomCardName cardName) {
+        if (cardName.hasCardType(DomCardType.Landmark)) {
+            if (landmarkTokens.get(cardName) == null)
+                return 0;
+            return landmarkTokens.get(cardName);
+        }
         if (gatheringVPTokens.get(cardName)==null)
             return 0;
-
         return gatheringVPTokens.get(cardName);
     }
 
@@ -918,12 +922,6 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
             landmarkTokens.put(aCard, theTokens - i);
             return i;
         }
-    }
-
-    public int getVPOnLandmark(DomCardName aCard) {
-        if (landmarkTokens.get(aCard)==null)
-            return 0;
-        return landmarkTokens.get(aCard);
     }
 
     public void moveVPFromTo(DomCardName fromCard, DomCardName toCard) {

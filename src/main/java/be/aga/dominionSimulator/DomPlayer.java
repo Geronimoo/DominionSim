@@ -1008,7 +1008,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
             }
         }
         if (aCard.getName() == DomCardName.Curse && getCurrentGame().getBoard().isLandmarkActive(DomCardName.Defiled_Shrine)) {
-            int theVP = getCurrentGame().getBoard().removeVPFrom(DomCardName.Defiled_Shrine, getCurrentGame().getBoard().getVPOnLandmark(DomCardName.Defiled_Shrine));
+            int theVP = getCurrentGame().getBoard().removeVPFrom(DomCardName.Defiled_Shrine, getCurrentGame().getBoard().countVPon(DomCardName.Defiled_Shrine));
             if (theVP > 0) {
                 if (DomEngine.haveToLog)
                     DomEngine.addToLog(this + " takes VP from " + DomCardName.Defiled_Shrine.toHTML());

@@ -16,7 +16,9 @@ public class KnightCard extends DomCard {
     }
 
     public void play() {
-        for (DomPlayer thePlayer : owner.getOpponents()) {
+        //theOwner needed in multiplayer game when this card will be trashed mid-play
+        DomPlayer theOwner = owner;
+        for (DomPlayer thePlayer : theOwner.getOpponents()) {
           if (thePlayer.checkDefense() )
               continue;
           ArrayList< DomCard > theRevealedCards = thePlayer.revealTopCards(2);
@@ -24,7 +26,7 @@ public class KnightCard extends DomCard {
               continue;
           Collections.sort(theRevealedCards,SORT_FOR_TRASHING);
           DomCard theCard = theRevealedCards.get(0);
-          while (theCard!=null && (theCard.getCoinCost(owner.getCurrentGame()) <3 || theCard.getCoinCost(owner.getCurrentGame()) > 6 || theCard.getPotionCost()>0 || theCard.getDebtCost()>0) ) {
+          while (theCard!=null && (theCard.getCoinCost(theOwner.getCurrentGame()) <3 || theCard.getCoinCost(theOwner.getCurrentGame()) > 6 || theCard.getPotionCost()>0 || theCard.getDebtCost()>0) ) {
               thePlayer.discard(theRevealedCards.remove(0));
               if (theRevealedCards.isEmpty())
                   theCard=null;
@@ -35,7 +37,7 @@ public class KnightCard extends DomCard {
               continue;
           DomCard theCardToTrash = theRevealedCards.remove(0);
           thePlayer.trash(theCardToTrash);
-          if (theCardToTrash.hasCardType(DomCardType.Knight) && owner!=null)
+          if (theCardToTrash.hasCardType(DomCardType.Knight) && owner!=null && !owner.getCardsFromPlay(getName()).isEmpty())
               owner.trash(owner.removeCardFromPlay(this));
           if (!theRevealedCards.isEmpty())
               thePlayer.discard(theRevealedCards);

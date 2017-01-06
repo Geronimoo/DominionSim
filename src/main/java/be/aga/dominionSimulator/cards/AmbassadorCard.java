@@ -129,7 +129,8 @@ public class AmbassadorCard extends DomCard {
 
     	int theCount=0;
     	for (DomCardName card : owner.getDeck().keySet()){
-    		if (card==DomCardName.Ambassador)
+            //avoid endless loop when both Temple and Amb in deck
+            if (card==DomCardName.Ambassador || card==DomCardName.Temple)
     			continue;
     		if (card.getTrashPriority(owner)<16)
     			theCount+=owner.countInDeck(card);

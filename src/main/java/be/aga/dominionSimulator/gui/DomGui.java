@@ -469,8 +469,8 @@ public class DomGui extends JFrame implements ActionListener {
         theCons.gridy++;
         JTextArea a = new JTextArea( 250, 260 );
         a.setText( "\n Geronimoo's Dominion Simulator \n\n"
-            + " Version:\n      1.2.13\n" + " Written by:\n      Jeroen Aga\n"
-            + " Released:\n      december 2016\n\n"
+            + " Version:\n      1.2.14\n" + " Written by:\n      Jeroen Aga\n"
+            + " Released:\n      january 2017\n\n"
             + " Website:\n      http://dominionsimulator.wordpress.com\n" 
             + " Report bugs/Sing Praise:\n      jeroen_aga@yahoo.com\n" );
         theAboutPanel.add( a, theCons );

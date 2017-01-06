@@ -145,13 +145,13 @@ public class DomBuyCondition {
               leftValue=owner.getCardsGainedLastTurn().size();
               break;
           case tokensOnDefiledShrine:
-              leftValue=owner.getCurrentGame().getBoard().getVPOnLandmark(DomCardName.Defiled_Shrine);
+              leftValue=owner.getCurrentGame().getBoard().countVPon(DomCardName.Defiled_Shrine);
               break;
           case isTravellingFairActive:
               leftValue=owner.isTravellingFairActive() ? 1 : 0;
               break;
           case countVPon:
-              leftValue=owner.getCurrentGame().getBoard().getVPOnLandmark(leftCardName);
+              leftValue=owner.getCurrentGame().getBoard().countVPon(leftCardName);
               break;
         }
 		switch(rightFunction){
@@ -245,13 +245,13 @@ public class DomBuyCondition {
               rightValue=owner.getCardsGainedLastTurn().size();
               break;
          case tokensOnDefiledShrine:
-              rightValue=owner.getCurrentGame().getBoard().getVPOnLandmark(DomCardName.Defiled_Shrine);
+              rightValue=owner.getCurrentGame().getBoard().countVPon(DomCardName.Defiled_Shrine);
               break;
          case isTravellingFairActive:
               rightValue=owner.isTravellingFairActive() ? 1 : 0;
               break;
          case countVPon:
-              rightValue=owner.getCurrentGame().getBoard().getVPOnLandmark(leftCardName);
+              rightValue=owner.getCurrentGame().getBoard().countVPon(leftCardName);
               break;
         }
 		double theRightValue=rightValue;
