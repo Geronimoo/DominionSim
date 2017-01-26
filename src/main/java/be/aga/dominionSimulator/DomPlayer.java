@@ -89,7 +89,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
     private boolean travellingFairIsActive;
     private boolean pilgrimageActivatedThisTurn;
     private boolean almsActivated;
-    private boolean expeditionActivated;
+    private int expeditionsActivated;
     private DomCardName minus$2TokenOn;
     private DomCard estateTokenOn;
     private int coinTokensToAdd;
@@ -563,7 +563,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
             }
         }
         drawCards(5);
-        if (expeditionActivated)
+        for (int i=0;i<expeditionsActivated;i++)
             drawCards(2);
     }
 
@@ -658,7 +658,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
         travellingFairIsActive = false;
         pilgrimageActivatedThisTurn = false;
         almsActivated = false;
-        expeditionActivated = false;
+        expeditionsActivated = 0;
         bridgesPlayedCount = 0;
         hasDoubledMoney = false;
         charmReminder = 0;
@@ -1761,16 +1761,32 @@ public class DomPlayer implements Comparable<DomPlayer> {
                 return false;
             }
         }
+        //temporarily add the card to the deck
+        DomCard theCard = getCurrentGame().takeFromSupply(aCardName);
+        getDeck().forcedAdd(theCard);
         for (DomPlayer thePlayer : getOpponents()) {
-            if (countVictoryPoints() < thePlayer.countVictoryPoints() - aCardName.getVictoryValue(this)) {
+            if (countVictoryPoints() < thePlayer.countVictoryPoints() ) {
                 return true;
             }
-            if (countVictoryPoints() == thePlayer.countVictoryPoints() - aCardName.getVictoryValue(this)) {
+            if (countVictoryPoints() == thePlayer.countVictoryPoints()) {
                 if (getTurns() > thePlayer.getTurns()) {
                     return true;
                 }
             }
         }
+        //remove it again
+        getCurrentGame().getBoard().add(getDeck().forcedRemove(theCard));
+
+//        for (DomPlayer thePlayer : getOpponents()) {
+//            if (countVictoryPoints() < thePlayer.countVictoryPoints() - aCardName.getVictoryValue(this)) {
+//                return true;
+//            }
+//            if (countVictoryPoints() == thePlayer.countVictoryPoints() - aCardName.getVictoryValue(this)) {
+//                if (getTurns() > thePlayer.getTurns()) {
+//                    return true;
+//                }
+//            }
+//        }
         return false;
     }
 
@@ -3024,8 +3040,8 @@ public class DomPlayer implements Comparable<DomPlayer> {
         almsActivated = true;
     }
 
-    public void setExpeditionActivated() {
-        expeditionActivated = true;
+    public void activateExpedition() {
+        expeditionsActivated++;
     }
 
     public DomCardName getMinus$2TokenOn() {

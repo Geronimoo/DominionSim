@@ -13,6 +13,8 @@ public class ChapelCard extends DomCard {
 
     public void play() {
     	int theMin$Indeck = owner.getPlayStrategyFor(this)==DomPlayStrategy.aggressiveTrashing ? 4 : 6;
+        if (owner.getPlayStrategyFor(this)==DomPlayStrategy.keepPayload)
+            theMin$Indeck=9;
     	int theTrashOverBuyTreshold = owner.getPlayStrategyFor(this)==DomPlayStrategy.aggressiveTrashing ? 3 : 4;
         int theTrashCount=0;
         for (DomCard theCard : owner.getCardsInHand()) {
@@ -52,6 +54,30 @@ public class ChapelCard extends DomCard {
 
     @Override
     public boolean wantsToBeMultiplied() {
+        return false;
+    }
+
+    @Override
+    public boolean wantsToBePlayed() {
+        int theMin$Indeck = owner.getPlayStrategyFor(this)==DomPlayStrategy.aggressiveTrashing ? 4 : 6;
+        int theTrashOverBuyTreshold = owner.getPlayStrategyFor(this)==DomPlayStrategy.aggressiveTrashing ? 3 : 4;
+        int theTrashCount=0;
+        for (DomCard theCard : owner.getCardsInHand()) {
+            if (theCard.getTrashPriority()<16) {
+                theTrashCount++;
+            }
+        }
+        Collections.sort(owner.getCardsInHand(),SORT_FOR_TRASHING);
+        for ( int i=0; i<4 && !owner.getCardsInHand().isEmpty();i++) {
+            DomCard theCardToTrash=owner.getCardsInHand().get( 0 );
+            if (theCardToTrash.getTrashPriority()>=16
+                    || (owner.removingReducesBuyingPower( theCardToTrash ) && theTrashCount< theTrashOverBuyTreshold)
+                    || owner.getTotalMoneyInDeck()-theCardToTrash.getPotentialCoinValue() < theMin$Indeck ) {
+                return false;
+            } else {
+                return true;
+            }
+        }
         return false;
     }
 }

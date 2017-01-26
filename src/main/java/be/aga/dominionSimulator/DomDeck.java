@@ -799,4 +799,20 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
             return null;
         return discardPile.get(0);
     }
+
+    public void forcedAdd(DomCard aCard) {
+        if (!containsKey( aCard.getName() )) {
+            put(aCard.getName(), new ArrayList< DomCard >());
+        }
+        get(aCard.getName()).add( aCard );
+        aCard.setOwner(owner);
+        discardPile.add(aCard);
+    }
+
+    public DomCard forcedRemove(DomCard aCard) {
+        get(aCard.getName()).remove( aCard );
+        aCard.setOwner(null);
+        discardPile.remove(aCard);
+        return aCard;
+    }
 }

@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <playerCollection>
-        <player name="Delve/Donate"
+    <player name="Beggar/Tower"
+            author="Emil"
+            description="Strong combo gaining all the Coppers and Beggars for 63VP">
+        <type name="Province"/>
+        <type name="TwoPlayer"/>
+        <type name="Combo"/>
+        <board contents="Tower" bane="" Mountain_Pass_Bid="0" Obelisk_Choice=""/>
+        <buy name="Beggar"/>
+        <buy name="Copper"/>
+        <buy name="Duchy"/>
+        <buy name="Estate"/>
+    </player>
+
+    <player name="Delve/Donate"
                 author="tracer"
                 description="Fill deck with Silver then trash everything else and start greening">
             <type name="Province"/>

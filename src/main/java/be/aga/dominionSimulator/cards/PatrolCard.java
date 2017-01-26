@@ -24,4 +24,11 @@ public class PatrolCard extends DomCard {
     	}
       }
     }
+
+    @Override
+    public int getPlayPriority() {
+        if (owner.getDeckSize()==0)
+            return 1000;
+        return super.getPlayPriority();
+    }
 }

@@ -84,7 +84,7 @@ public enum DomCardName  {
     Charm (5, 0, 0, 0, 500, 25, new DomCardType[]{DomCardType.Kingdom, DomCardType.Treasure}),
     City (5, 0, 0, 0, 5, 30, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler, DomCardType.Village}),
     City_Quarter (0, 0, 0, 0, 2, 30, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler, DomCardType.Village}),
-    Coin_of_the_Realm (2, 0, 0, 0, 10, 17, new DomCardType[]{DomCardType.Treasure, DomCardType.Kingdom, DomCardType.Reserve}),
+    Coin_of_the_Realm (2, 0, 0, 0, 10, 22, new DomCardType[]{DomCardType.Treasure, DomCardType.Kingdom, DomCardType.Reserve}),
     Colonnade (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Landmark}),
     Conquest (6, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
     Conspirator (4, 0, 2, 0, 35, 25, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal}),
@@ -1247,7 +1247,8 @@ public enum DomCardName  {
 			break;
 
 		case Chapel:
-			theStrategies.add(DomPlayStrategy.aggressiveTrashing);
+            theStrategies.add(DomPlayStrategy.aggressiveTrashing);
+            theStrategies.add(DomPlayStrategy.keepPayload);
 			break;
 
         case Duplicate:
