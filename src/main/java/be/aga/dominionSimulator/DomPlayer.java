@@ -89,6 +89,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
     private boolean travellingFairIsActive;
     private boolean pilgrimageActivatedThisTurn;
     private boolean almsActivated;
+    private boolean saveActivated;
     private int expeditionsActivated;
     private DomCardName minus$2TokenOn;
     private DomCard estateTokenOn;
@@ -107,6 +108,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
     private boolean villaTriggered = false;
     private int merchantsPlayed;
     private int drawDeckSize;
+    private DomCard savedCard;
 
     public DomPlayer(String aString) {
         name = aString;
@@ -304,6 +306,8 @@ public class DomPlayer implements Comparable<DomPlayer> {
         if (cardToBuy == DomCardName.Advance && getCardsFromHand(DomCardType.Action).isEmpty())
             return false;
         if (cardToBuy == DomCardName.Ritual && getCardsInHand().isEmpty())
+            return false;
+        if (cardToBuy==DomCardName.Save && saveActivated)
             return false;
 
         return true;
@@ -517,6 +521,9 @@ public class DomPlayer implements Comparable<DomPlayer> {
         discardAll();
         discard(deck.getPutAsideCards());
         drawHandForNextTurn();
+        if (savedCard!=null)
+            cardsInHand.add(savedCard);
+        savedCard=null;
         setPhase(null);
         //reset variables needed for total money checking in other player's turns
         availableCoins=0;
@@ -658,6 +665,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
         travellingFairIsActive = false;
         pilgrimageActivatedThisTurn = false;
         almsActivated = false;
+        saveActivated = false;
         expeditionsActivated = 0;
         bridgesPlayedCount = 0;
         hasDoubledMoney = false;
@@ -1765,13 +1773,11 @@ public class DomPlayer implements Comparable<DomPlayer> {
         DomCard theCard = getCurrentGame().takeFromSupply(aCardName);
         getDeck().forcedAdd(theCard);
         for (DomPlayer thePlayer : getOpponents()) {
-            if (countVictoryPoints() < thePlayer.countVictoryPoints() ) {
+            if (countVictoryPoints() < thePlayer.countVictoryPoints()
+              || (countVictoryPoints() == thePlayer.countVictoryPoints() && getTurns() > thePlayer.getTurns())) {
+                //remove it again
+                getCurrentGame().getBoard().add(getDeck().forcedRemove(theCard));
                 return true;
-            }
-            if (countVictoryPoints() == thePlayer.countVictoryPoints()) {
-                if (getTurns() > thePlayer.getTurns()) {
-                    return true;
-                }
             }
         }
         //remove it again
@@ -3329,5 +3335,13 @@ public class DomPlayer implements Comparable<DomPlayer> {
             keywords = kws.toArray(new String[kws.size()]);
         }
         return keywords;
+    }
+
+    public void setAsideToSave(DomCard domCard) {
+        savedCard = domCard;
+    }
+
+    public void setSaveActivated() {
+        saveActivated=true;
     }
 }

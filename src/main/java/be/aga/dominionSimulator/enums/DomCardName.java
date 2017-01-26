@@ -306,6 +306,7 @@ public enum DomCardName  {
     Salt_the_Earth (4, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
     Salvager (4, 0, 0, 0, 25, 22, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal, DomCardType.Trasher, DomCardType.TrashForBenefit}),
     Sauna (4, 0, 0, 0, 12, 18, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler, DomCardType.Trasher, DomCardType.Split_Pile}),
+    Save (1, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
     Scavenger (4, 0, 2, 0, 30, 20, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal}),
     Scheme (3, 0, 0, 0, 10, 16, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler}),
     Scout (4, 0, 0, 0, 2, 22, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler}),
@@ -1019,6 +1020,8 @@ public enum DomCardName  {
             return new Salt_the_EarthCard();
         case Salvager:
             return new SalvagerCard();
+        case Save:
+            return new SaveCard();
         case Sauna:
             return new SaunaCard();
         case Scavenger:
