@@ -39,9 +39,26 @@ public class AmuletCard extends DomCard {
             }
         }
 
-        if (!playForMoney())
+        if (!playForTrashEstatesOrWorse())
+         if (!playForMoney())
            if (!playForTrash())
               owner.gain(DomCardName.Silver);
+    }
+
+    private boolean playForTrashEstatesOrWorse() {
+        ArrayList<DomCard> cardsInHand = owner.getCardsInHand();
+        if (cardsInHand.isEmpty())
+            return false;
+        Collections.sort(cardsInHand,SORT_FOR_TRASHING);
+
+        DomCard theCardToTrash = cardsInHand.get(0);
+
+        if (theCardToTrash.getTrashPriority()<DomCardName.Copper.getTrashPriority(owner)) {
+            owner.trash(owner.removeCardFromHand(theCardToTrash));
+            return true;
+        }
+
+        return false;
     }
 
     private boolean playForAgroTrash() {

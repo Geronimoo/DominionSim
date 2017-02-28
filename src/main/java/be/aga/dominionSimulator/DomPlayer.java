@@ -3344,4 +3344,8 @@ public class DomPlayer implements Comparable<DomPlayer> {
     public void setSaveActivated() {
         saveActivated=true;
     }
+
+    public void addCardGainedLastTurn(DomCardName name) {
+        cardsGainedLastTurn.add(name);
+    }
 }

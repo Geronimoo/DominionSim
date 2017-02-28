@@ -31,4 +31,11 @@ public class CatapultCard extends DomCard {
             }
         }
     }
+
+    @Override
+    public int getTrashPriority() {
+        if (owner.countInDeck(DomCardName.Rocks)<3 && owner.getCurrentGame().countInSupply(DomCardName.Rocks)==0)
+            return DomCardName.Silver.getTrashPriority()-1;
+        return super.getTrashPriority();
+    }
 }

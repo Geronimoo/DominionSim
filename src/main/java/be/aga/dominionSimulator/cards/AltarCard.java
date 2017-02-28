@@ -23,4 +23,17 @@ public class AltarCard extends DomCard {
       if (theDesiredCard!=null)
          owner.gain(theDesiredCard);
     }
+
+    @Override
+    public boolean wantsToBePlayed() {
+        DomCardName theDesiredCard = owner.getDesiredCard(new DomCost( 5, 0), false);
+        if (theDesiredCard==null)
+            return false;
+        Collections.sort( owner.getCardsInHand() , SORT_FOR_TRASHING);
+        if (owner.getCardsInHand().size()==1)
+            return true;
+        if (theDesiredCard.getTrashPriority(owner)<=owner.getCardsInHand().get(0).getTrashPriority())
+            return false;
+        return true;
+    }
 }

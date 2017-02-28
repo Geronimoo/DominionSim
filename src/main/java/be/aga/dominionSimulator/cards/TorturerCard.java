@@ -59,4 +59,9 @@ public class TorturerCard extends DomCard {
             return true;
         }
     }
+
+    @Override
+    public int getPlayPriority() {
+        return owner.getActionsLeft()>1 ? 6 : super.getPlayPriority();
+    }
 }

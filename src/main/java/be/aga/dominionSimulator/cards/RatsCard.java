@@ -40,7 +40,12 @@ public class RatsCard extends DomCard {
         if (owner.getCardsInHand().isEmpty())
             return false;
         Collections.sort( owner.getCardsInHand() , SORT_FOR_TRASHING);
-        if (owner.getCardsInHand().get(0).getName()!=DomCardName.Rats && owner.getCardsInHand().get(0).getTrashPriority()<=DomCardName.Copper.getTrashPriority())
+        int i=0;
+        while (i<owner.getCardsInHand().size() && owner.getCardsInHand().get(i).getName()==DomCardName.Rats )
+            i++;
+        if (i==owner.getCardsInHand().size())
+            return false;
+        if (owner.getCardsInHand().get(i).getTrashPriority()<=DomCardName.Copper.getTrashPriority())
             return true;
         if (!owner.getCardsFromHand(DomCardName.Fortress).isEmpty())
             return true;

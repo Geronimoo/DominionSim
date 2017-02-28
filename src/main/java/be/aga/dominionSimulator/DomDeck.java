@@ -243,7 +243,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
       }
       get(aCard.getName()).add( aCard );
       aCard.setOwner(owner);
-      owner.getCardsGainedLastTurn().add(aCard.getName());
+      owner.addCardGainedLastTurn(aCard.getName());
       if (owner.getCurrentGame().getBoard().isLandmarkActive(DomCardName.Labyrinth) && owner==owner.getCurrentGame().getActivePlayer()){
           if (owner.getCardsGainedLastTurn().size()==2) {
               int theVP = owner.getCurrentGame().getBoard().removeVPFrom(DomCardName.Labyrinth, 2);

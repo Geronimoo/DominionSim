@@ -17,10 +17,8 @@ public class SoldierCard extends DomCard {
       if (owner.getCardsFromPlay(DomCardType.Attack).size()-1>0)
           owner.addAvailableCoins(owner.getCardsFromPlay(DomCardType.Attack).size()-1);
       for (DomPlayer thePlayer : owner.getOpponents()) {
-          if (thePlayer.checkDefense())
+          if (thePlayer.checkDefense() || thePlayer.getCardsInHand().isEmpty() || thePlayer.getCardsInHand().size()<4)
               continue;
-          if (thePlayer.getCardsInHand().isEmpty() || thePlayer.getCardsInHand().size()<4)
-              return;
           thePlayer.doForcedDiscard(1,false);
       }
     }
