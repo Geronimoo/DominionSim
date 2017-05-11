@@ -20,7 +20,9 @@ public class SpoilsCard extends DomCard {
     	if (owner==null)
     		return;
     	owner.addAvailableCoins(3);
-    	owner.getCardsInPlay().remove(this);
-    	owner.returnToSupply(this);
+        if (owner.getCardsInPlay().contains(this)) {
+            owner.getCardsInPlay().remove(this);
+            owner.returnToSupply(this);
+        }
     }
 }

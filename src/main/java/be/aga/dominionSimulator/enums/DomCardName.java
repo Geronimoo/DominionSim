@@ -69,7 +69,7 @@ public enum DomCardName  {
     Butcher (5, 0, 2, 0, 19, 28, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal, DomCardType.Trasher}),
     Cache (5, 0, 3, 0, 100, 31, new DomCardType[]{DomCardType.Treasure, DomCardType.Kingdom}),
     Candlestick_Maker (2, 0, 1, 0, 7, 19, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom}),
-    Capital (5, 0, 0, 0, 70, 25, new DomCardType[]{DomCardType.Kingdom, DomCardType.Treasure}),
+    Capital (5, 0, 6, 0, 19, 25, new DomCardType[]{DomCardType.Kingdom, DomCardType.Treasure}),
     Caravan (4, 0, 0, 0, 8, 27, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Duration, DomCardType.Cycler, DomCardType.Card_Advantage}),
     Caravan_Guard (3, 0, 1, 0, 8, 27, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Duration, DomCardType.Cycler, DomCardType.Reaction}),
     Cartographer (5, 0, 0, 0, 19, 25, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler}),
@@ -1267,6 +1267,10 @@ public enum DomCardName  {
             theStrategies.add(DomPlayStrategy.bigTurnBridge);
             break;
 
+        case Lurker:
+            theStrategies.add(DomPlayStrategy.playOnlyIfGaining);
+            break;
+
         case Mine:
             theStrategies.add(DomPlayStrategy.mineCopperFirst);
             break;
@@ -1333,6 +1337,9 @@ public enum DomCardName  {
         case Stonemason:
             theStrategies.add(DomPlayStrategy.combo);
             break;
+
+        case Storeroom:
+            theStrategies.add(DomPlayStrategy.cityQuarterCombo);
 
 		case Tactician:
 			theStrategies.add(DomPlayStrategy.playIfNotBuyingTopCard);

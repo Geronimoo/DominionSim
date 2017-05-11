@@ -132,8 +132,6 @@ public class MultiplicationCard extends DomCard {
        		}
           }
         }
-        if (theCardToPlay==null && !owner.getCardsFromHand(DomCardType.Action).isEmpty())
-            theCardToPlay=owner.getCardsFromHand(DomCardType.Action).get(0);
 
         DomCard theNewCardToPlay = fixForKingsCourtRabble(theCardToPlay);
         if (theNewCardToPlay!=null)

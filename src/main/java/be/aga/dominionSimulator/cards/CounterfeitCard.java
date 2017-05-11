@@ -44,5 +44,6 @@ public class CounterfeitCard extends DomCard {
         theCardToPlayTwice.play();
         if (!owner.getCardsFromPlay(theCardToPlayTwice.getName()).isEmpty())
             owner.trash(owner.removeCardFromPlay(theCardToPlayTwice));
+        theCardToPlayTwice.owner=null;
     }
 }

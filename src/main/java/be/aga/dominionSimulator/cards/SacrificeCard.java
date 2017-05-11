@@ -52,4 +52,16 @@ public class SacrificeCard extends DomCard {
         }
         return false;
     }
+
+    @Override
+    public boolean wantsToBeMultiplied() {
+        int count = 0;
+        for (DomCard theCard : owner.getCardsInHand()) {
+            if (theCard!=this && theCard.getTrashPriority()<16 )
+                count++;
+        }
+        if (owner.countInDeck(DomCardName.King$s_Court)>0)
+          return count>2;
+        return count>1;
+    }
 }

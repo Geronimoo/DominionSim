@@ -11,15 +11,12 @@ public class MiserCard extends DomCard {
     }
 
     public void play() {
-      if (owner.getCardsFromHand(DomCardName.Copper).isEmpty()) {
+      if (owner.getCardsFromHand(DomCardName.Copper).isEmpty()
+        || (owner.getPlayStrategyFor(this) != DomPlayStrategy.removeAllCoppers && owner.getAllFromTavernMat(DomCardName.Copper).size() > 4)) {
           playForMoney();
-          return;
+      } else {
+          playForInvesting();
       }
-      if (owner.getPlayStrategyFor(this)!= DomPlayStrategy.removeAllCoppers && owner.getAllFromTavernMat(DomCardName.Copper).size()>4) {
-          playForMoney();
-          return;
-      }
-      playForInvesting();
     }
 
     private void playForInvesting() {

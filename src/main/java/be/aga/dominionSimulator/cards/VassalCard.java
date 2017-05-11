@@ -19,4 +19,13 @@ public class VassalCard extends DomCard {
       else
         owner.discard(theRevealedCard);
     }
+
+    @Override
+    public int getPlayPriority() {
+        if (owner.getKnownTopCards()>0 && owner.getDeck().peekAtTopCard().hasCardType(DomCardType.Action) && !owner.getDeck().peekAtTopCard().hasCardType(DomCardType.Terminal))
+            return 1;
+        if (owner.getKnownTopCards()>0 && owner.getDeck().peekAtTopCard().hasCardType(DomCardType.Action) && owner.getActionsLeft()>1)
+            return 1;
+        return super.getPlayPriority();
+    }
 }

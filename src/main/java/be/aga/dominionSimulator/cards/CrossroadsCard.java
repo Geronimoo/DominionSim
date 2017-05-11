@@ -21,7 +21,8 @@ public class CrossroadsCard extends DomCard {
     	if (owner.getCardsFromHand(DomCardType.Action).size()
     	    -owner.getCardsFromHand(DomCardName.Crossroads).size()
     	    -owner.getCardsFromHand(DomCardName.Nobles).size()
-    	    -owner.getCardsFromHand(DomCardName.Great_Hall).size()
+                -owner.getCardsFromHand(DomCardName.Great_Hall).size()
+                -owner.getCardsFromHand(DomCardName.Mill).size()
     	    >owner.getCardsFromHand(DomCardType.Terminal).size())
     	  return 30;
     	return super.getPlayPriority();

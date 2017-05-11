@@ -101,7 +101,7 @@ public class DomBuyCondition {
               leftValue=owner.countMaxOpponentsVictoryPoints();
               break;
           case countCardsLeftInDrawDeck:
-              leftValue=owner.getDeck().getDrawDeckSize();
+              leftValue=owner.getDeckSize();
               break;
           case countEmptyPiles:
               leftValue=owner.getCurrentGame().countEmptyPiles();
@@ -201,7 +201,7 @@ public class DomBuyCondition {
               rightValue=owner.countMaxOpponentsVictoryPoints();
               break;
           case countCardsLeftInDrawDeck:
-              rightValue=owner.getDeck().getDrawDeckSize();
+              rightValue=owner.getDeckSize();
               break;
           case countEmptyPiles:
               rightValue=owner.getCurrentGame().countEmptyPiles();

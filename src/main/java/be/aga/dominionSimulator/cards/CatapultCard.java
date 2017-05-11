@@ -38,4 +38,15 @@ public class CatapultCard extends DomCard {
             return DomCardName.Silver.getTrashPriority()-1;
         return super.getTrashPriority();
     }
+
+    @Override
+    public boolean wantsToBePlayed() {
+        for (DomCard theCard:owner.getCardsInHand()){
+            if (theCard==this)
+                continue;
+            if (theCard.getTrashPriority()<=DomCardName.Silver.getTrashPriority())
+                return true;
+        }
+        return false;
+    }
 }

@@ -815,4 +815,10 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
         discardPile.remove(aCard);
         return aCard;
     }
+
+    public DomCard peekAtTopCard() {
+        if (drawDeck.isEmpty())
+            return null;
+        return drawDeck.get(0);
+    }
 }
