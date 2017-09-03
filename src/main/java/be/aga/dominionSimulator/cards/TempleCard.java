@@ -13,7 +13,7 @@ public class TempleCard extends DomCard {
 
     public void play() {
         owner.addVP(1);
-        HashSet<DomCardName> theCardsTrashed = new HashSet<DomCardName>();
+        HashSet<DomCardName> theCardsTrashed = new HashSet<>();
         Collections.sort(owner.getCardsInHand(),SORT_FOR_TRASHING);
         for (int i=0;i<owner.getCardsInHand().size() && theCardsTrashed.size()<3;i++) {
             DomCard theCardToTrash = owner.getCardsInHand().get(i);

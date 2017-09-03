@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class ArchiveCard extends DomCard {
-    private ArrayList<DomCard> myArchivedCards = new ArrayList<DomCard>();
+    private ArrayList<DomCard> myArchivedCards = new ArrayList<>();
 
     public ArchiveCard() {
       super( DomCardName.Archive);

@@ -16,11 +16,11 @@ public class ForgeCard extends DomCard {
 	//or what the player can buy with the rest of his cards...
     public void play() {
       ArrayList<DomCard> cardsInHand = owner.getCardsInHand();
-      ArrayList<DomCard> theFinalCardsToTrash = new ArrayList<DomCard>();
+      ArrayList<DomCard> theFinalCardsToTrash = new ArrayList<>();
       DomCardName theDesiredCardIfForgeNotUsed = owner.getDesiredCard(owner.getTotalPotentialCurrency(), false);
       for (int i=1;i<Math.pow(2,cardsInHand.size());i++) {
           DomCost theTotalCurrency = DomCost.ZERO;
-    	  ArrayList<DomCard> theCardsToTrash = new ArrayList<DomCard>();
+    	  ArrayList<DomCard> theCardsToTrash = new ArrayList<>();
     	  //run through all combinations by turning hand into a binary number
     	  String theStringRepr = Integer.toBinaryString(i);
     	  for (int j=0;j<theStringRepr.length();j++) {

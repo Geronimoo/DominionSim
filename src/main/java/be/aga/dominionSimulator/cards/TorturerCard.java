@@ -48,7 +48,7 @@ public class TorturerCard extends DomCard {
         if (aPlayer.getCardsInHand().size()<2)
             return false;
         Collections.sort(aPlayer.getCardsInHand(),SORT_FOR_DISCARDING);
-        ArrayList<DomCard> theRemovedCards = new ArrayList<DomCard>();
+        ArrayList<DomCard> theRemovedCards = new ArrayList<>();
         theRemovedCards.add(aPlayer.getCardsInHand().remove(0));
         theRemovedCards.add(aPlayer.getCardsInHand().remove(0));
         if (aPlayer.isGoingToBuyTopCardInBuyRules(aPlayer.getTotalPotentialCurrency())) {

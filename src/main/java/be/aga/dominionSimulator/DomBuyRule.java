@@ -9,7 +9,7 @@ import be.aga.dominionSimulator.gui.DomBuyRulePanel;
 
 public class DomBuyRule {
 	private final DomCardName cardToBuy;
-	private ArrayList<DomBuyCondition> buyConditions=new ArrayList<DomBuyCondition>();
+	private ArrayList<DomBuyCondition> buyConditions=new ArrayList<>();
 	private DomPlayStrategy playStrategy=DomPlayStrategy.standard;
 	private DomCardName baneCard=null;
 	

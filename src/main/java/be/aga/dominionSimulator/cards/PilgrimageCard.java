@@ -19,7 +19,7 @@ public class PilgrimageCard extends DomCard {
         if (!owner.isJourneyTokenFaceUp())
           return;
         Collections.sort(owner.getCardsInPlay(),SORT_FOR_TRASHING);
-        Set theGainedCards = new HashSet<DomCardName>();
+        Set theGainedCards = new HashSet<>();
         int i=owner.getCardsInPlay().size()-1;
         while (theGainedCards.size()<3 && i>=0) {
             DomCardName theCardToConsider = owner.getCardsInPlay().get(i).getName();

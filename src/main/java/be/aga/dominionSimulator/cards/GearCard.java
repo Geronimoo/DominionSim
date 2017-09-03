@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class GearCard extends DomCard {
-    private ArrayList<DomCard> mySetAsideCards=new ArrayList<DomCard>();
+    private ArrayList<DomCard> mySetAsideCards=new ArrayList<>();
 
     public GearCard() {
       super(DomCardName.Gear);

@@ -6,7 +6,7 @@ import java.util.Collections;
  */
 public class Deck extends ArrayList<Cow> {
 
-    private ArrayList<Cow> discard = new ArrayList<Cow>();
+    private ArrayList<Cow> discard = new ArrayList<>();
 
     public void shuffle() {
         addAll(discard);

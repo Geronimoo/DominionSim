@@ -189,7 +189,7 @@ public enum DomSet {
 
    ;
    
-   private final ArrayList< DomCardName> cards = new ArrayList< DomCardName>();
+   private final ArrayList< DomCardName> cards = new ArrayList<>();
    
    DomSet(DomCardName[] aCards) {
      for (DomCardName theCard : aCards) {

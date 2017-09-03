@@ -15,7 +15,7 @@ public class Horn_of_PlentyCard extends DomCard {
     }
 
     public void play() {
-  	  HashSet<DomCardName> theSingleCards = new HashSet<DomCardName>();
+  	  HashSet<DomCardName> theSingleCards = new HashSet<>();
       for (DomCard card : owner.getCardsInPlay()) {
     	theSingleCards.add(card.getName());
       }
@@ -41,7 +41,7 @@ public class Horn_of_PlentyCard extends DomCard {
     
     @Override
     public boolean wantsToBePlayed() {
-    	  HashSet<DomCardName> theSingleCards = new HashSet<DomCardName>();
+    	  HashSet<DomCardName> theSingleCards = new HashSet<>();
   		  theSingleCards.add(getName());
           for (DomCard card : owner.getCardsInPlay()) {
         	  theSingleCards.add(card.getName());

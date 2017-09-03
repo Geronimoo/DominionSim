@@ -15,7 +15,7 @@ public class JourneymanCard extends DomCard {
     }
 
     public void play() {
-      Map<DomCardName,Integer> theCardsToConsider = new EnumMap<DomCardName,Integer>(DomCardName.class);
+      Map<DomCardName,Integer> theCardsToConsider = new EnumMap<>(DomCardName.class);
       for (DomCard theCard : owner.getDeck().getDrawOrAndDiscardDeck()) {
         if (theCard.getDiscardPriority(owner.getActionsLeft())>DomCardName.Estate.getDiscardPriority(0))
             continue;

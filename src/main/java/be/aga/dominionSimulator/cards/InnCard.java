@@ -19,7 +19,7 @@ public class InnCard extends DomCard {
     
     @Override
     public void doWhenGained() {
-    	HashSet<DomCard> theCards = new HashSet<DomCard>();
+    	HashSet<DomCard> theCards = new HashSet<>();
 		for (DomCard theCard : owner.getDeck().getDiscardPile()){
 			if (theCard.hasCardType(DomCardType.Action) && theCard.getDiscardPriority(1)>10)
 			  theCards.add(theCard);

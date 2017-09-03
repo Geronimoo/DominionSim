@@ -14,18 +14,18 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 
     private ArrayList< DomPlayer > players;
     
-    private ArrayList< DomCard > trashPile = new ArrayList< DomCard >();
-	private ArrayList<DomCard> blackMarketDeck=new ArrayList<DomCard>();
-    private ArrayList<DomCard> prizePile=new ArrayList<DomCard>();
-    private EnumMap<DomCardName,ArrayList<DomCard>> separatePiles = new EnumMap<DomCardName, ArrayList<DomCard>>(DomCardName.class);
+    private ArrayList< DomCard > trashPile = new ArrayList<>();
+	private ArrayList<DomCard> blackMarketDeck=new ArrayList<>();
+    private ArrayList<DomCard> prizePile=new ArrayList<>();
+    private EnumMap<DomCardName,ArrayList<DomCard>> separatePiles = new EnumMap<>(DomCardName.class);
 
-    private EnumMap< DomCardName, Integer > embargoTokens = new EnumMap<DomCardName, Integer>(DomCardName.class);
-    private EnumMap< DomCardName, Integer > gatheringVPTokens = new EnumMap<DomCardName, Integer>(DomCardName.class);
-    private HashSet<DomCardName> tradeRouteMat = new HashSet<DomCardName>();
-    private HashSet<DomCardName> activeLandmarks = new HashSet<DomCardName>();
+    private EnumMap< DomCardName, Integer > embargoTokens = new EnumMap<>(DomCardName.class);
+    private EnumMap< DomCardName, Integer > gatheringVPTokens = new EnumMap<>(DomCardName.class);
+    private HashSet<DomCardName> tradeRouteMat = new HashSet<>();
+    private HashSet<DomCardName> activeLandmarks = new HashSet<>();
     private int gainsNeededToEndGame;
-    private EnumMap< DomCardName, Integer > taxTokens = new EnumMap<DomCardName, Integer>(DomCardName.class);
-    private EnumMap< DomCardName, Integer > landmarkTokens = new EnumMap<DomCardName, Integer>(DomCardName.class);
+    private EnumMap< DomCardName, Integer > taxTokens = new EnumMap<>(DomCardName.class);
+    private EnumMap< DomCardName, Integer > landmarkTokens = new EnumMap<>(DomCardName.class);
 
     public DomBoard ( Class< DomCardName > aKeyType, ArrayList< DomPlayer > aPlayers ) {
       super( aKeyType );
@@ -121,8 +121,8 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
         if (get(DomCardName.Sauna)!=null)
             Collections.sort(get(DomCardName.Sauna), DomCard.SORT_BY_COST);
 
-        embargoTokens=new EnumMap<DomCardName, Integer>(DomCardName.class);
-        gatheringVPTokens=new EnumMap<DomCardName, Integer>(DomCardName.class);
+        embargoTokens=new EnumMap<>(DomCardName.class);
+        gatheringVPTokens=new EnumMap<>(DomCardName.class);
 
         for (DomCardName theCardName : keySet()) {
             for(DomCard theCard : get(theCardName))
@@ -143,7 +143,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     }
 
     private void resetTaxTokens() {
-        taxTokens = new EnumMap<DomCardName, Integer>(DomCardName.class);
+        taxTokens = new EnumMap<>(DomCardName.class);
     }
 
     private void putTaxTokensOnAll() {
@@ -190,7 +190,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 	}
 
 	private void createBlackMarketDeck() {
-    	blackMarketDeck = new ArrayList<DomCard>();
+    	blackMarketDeck = new ArrayList<>();
     	for (DomCardName theCardName : DomCardName.values()) {
     	  if (get(theCardName)==null) {
 		    if ( theCardName!=DomCardName.Treasure_Map
@@ -278,7 +278,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     }
 
     private void addSaunaPile() {
-        put(DomCardName.Sauna, new ArrayList<DomCard>());
+        put(DomCardName.Sauna, new ArrayList<>());
         get(DomCardName.Sauna).add(DomCardName.Sauna.createNewCardInstance());
         get(DomCardName.Sauna).add(DomCardName.Sauna.createNewCardInstance());
         get(DomCardName.Sauna).add(DomCardName.Sauna.createNewCardInstance());
@@ -292,7 +292,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     }
 
     private void addCatapultPile() {
-        put(DomCardName.Catapult, new ArrayList<DomCard>());
+        put(DomCardName.Catapult, new ArrayList<>());
         get(DomCardName.Catapult).add(DomCardName.Catapult.createNewCardInstance());
         get(DomCardName.Catapult).add(DomCardName.Catapult.createNewCardInstance());
         get(DomCardName.Catapult).add(DomCardName.Catapult.createNewCardInstance());
@@ -306,7 +306,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     }
 
     private void addPatricianPile() {
-        put(DomCardName.Patrician, new ArrayList<DomCard>());
+        put(DomCardName.Patrician, new ArrayList<>());
         get(DomCardName.Patrician).add(DomCardName.Patrician.createNewCardInstance());
         get(DomCardName.Patrician).add(DomCardName.Patrician.createNewCardInstance());
         get(DomCardName.Patrician).add(DomCardName.Patrician.createNewCardInstance());
@@ -320,7 +320,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     }
 
     private void addSettlersPile() {
-        put(DomCardName.Settlers, new ArrayList<DomCard>());
+        put(DomCardName.Settlers, new ArrayList<>());
         get(DomCardName.Settlers).add(DomCardName.Settlers.createNewCardInstance());
         get(DomCardName.Settlers).add(DomCardName.Settlers.createNewCardInstance());
         get(DomCardName.Settlers).add(DomCardName.Settlers.createNewCardInstance());
@@ -334,7 +334,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     }
 
     private void addCastlesPile(int playerCount) {
-        put(DomCardName.Castles, new ArrayList<DomCard>());
+        put(DomCardName.Castles, new ArrayList<>());
         get(DomCardName.Castles).add(DomCardName.Humble_Castle.createNewCardInstance());
         get(DomCardName.Castles).add(DomCardName.Crumbling_Castle.createNewCardInstance());
         get(DomCardName.Castles).add(DomCardName.Small_Castle.createNewCardInstance());
@@ -355,7 +355,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     }
 
     private void addKnightsPile() {
-        put( DomCardName.Knights, new ArrayList< DomCard >() );
+        put( DomCardName.Knights, new ArrayList<>() );
         get(DomCardName.Knights).add(DomCardName.Dame_Josephine.createNewCardInstance());
         get(DomCardName.Knights).add(DomCardName.Dame_Anna.createNewCardInstance());
         get(DomCardName.Knights).add(DomCardName.Dame_Molly.createNewCardInstance());
@@ -370,7 +370,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     }
 
     private void addGladiatorPile() {
-        put(DomCardName.Gladiator, new ArrayList<DomCard>());
+        put(DomCardName.Gladiator, new ArrayList<>());
         get(DomCardName.Gladiator).add(DomCardName.Gladiator.createNewCardInstance());
         get(DomCardName.Gladiator).add(DomCardName.Gladiator.createNewCardInstance());
         get(DomCardName.Gladiator).add(DomCardName.Gladiator.createNewCardInstance());
@@ -384,7 +384,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     }
 
     private void addEncampmentPile() {
-        put(DomCardName.Encampment, new ArrayList<DomCard>());
+        put(DomCardName.Encampment, new ArrayList<>());
         get(DomCardName.Encampment).add(DomCardName.Encampment.createNewCardInstance());
         get(DomCardName.Encampment).add(DomCardName.Encampment.createNewCardInstance());
         get(DomCardName.Encampment).add(DomCardName.Encampment.createNewCardInstance());
@@ -398,7 +398,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     }
 
     private void addSeparatePile(DomCardName aCardName, int size) {
-        ArrayList<DomCard> theCards = new ArrayList<DomCard>();
+        ArrayList<DomCard> theCards = new ArrayList<>();
         for (int i=0;i<size;i++) {
             theCards.add(aCardName.createNewCardInstance());
         }
@@ -406,7 +406,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     }
 
     private void addRuinsPile() {
-        put( DomCardName.Ruins, new ArrayList< DomCard >() );
+        put( DomCardName.Ruins, new ArrayList<>() );
         for (int i=0;i<2;i++) {
             get(DomCardName.Ruins).add(DomCardName.Abandoned_Mine.createNewCardInstance());
             get(DomCardName.Ruins).add(DomCardName.Survivors.createNewCardInstance());
@@ -420,7 +420,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     public void addCardPile( DomCardName aCardName ) {
         if (aCardName.hasCardType(DomCardType.Shelter)) {
             if (separatePiles.get(aCardName)==null){
-                separatePiles.put(aCardName, new ArrayList<DomCard>());
+                separatePiles.put(aCardName, new ArrayList<>());
             }
             separatePiles.get(aCardName).add(aCardName.createNewCardInstance());
             return;
@@ -428,7 +428,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 
         if (get(aCardName)!=null)
             return;
-        put( aCardName, new ArrayList< DomCard >() );
+        put( aCardName, new ArrayList<>() );
         int theNumber = 10;
 
         if (aCardName.hasCardType(DomCardType.Event))
@@ -590,7 +590,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
        }
        if (separatePiles.containsKey(aCard.getName())) {
            if (separatePiles.get(aCard.getName())==null)
-             separatePiles.put(aCard.getName(), new ArrayList<DomCard>());
+             separatePiles.put(aCard.getName(), new ArrayList<>());
            separatePiles.get(aCard.getName()).add(aCard);
            return;
        }
@@ -632,7 +632,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
         }
 
        if (get(aCard.getName())==null) {
-         put(aCard.getName(), new ArrayList< DomCard >());
+         put(aCard.getName(), new ArrayList<>());
        }
        get(aCard.getName()).add( 0, aCard );
     }
@@ -642,7 +642,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     }
 
     public ArrayList< String > getEmptyPiles() {
-        ArrayList< String > theList = new ArrayList< String >();
+        ArrayList< String > theList = new ArrayList<>();
         for (DomCardName theCardName : keySet()) {
           if (get(theCardName).size()== 0){
               theList.add( theCardName.toHTML() );
@@ -664,7 +664,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     }
 
 	public ArrayList<DomCard> revealFromBlackMarketDeck() {
-		ArrayList<DomCard> theCards = new ArrayList<DomCard>();
+		ArrayList<DomCard> theCards = new ArrayList<>();
 		for (int i=0;i<3 && !blackMarketDeck.isEmpty(); i++) {
 	      theCards.add(blackMarketDeck.remove(0));
 		}
@@ -693,7 +693,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 	public DomCardName getRandomCardWithEmbargoToken() {
 		if (embargoTokens.keySet().isEmpty())
 			return DomCardName.Curse;
-		ArrayList<DomCardName> theCards = new ArrayList<DomCardName>(Arrays.asList(embargoTokens.keySet().toArray(new DomCardName[0])));
+		ArrayList<DomCardName> theCards = new ArrayList<>(Arrays.asList(embargoTokens.keySet().toArray(new DomCardName[0])));
 		Collections.shuffle(theCards);
 		return theCards.get(0);
 	}
@@ -768,7 +768,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 	public int getGainsNeededToEndGame() {
 		if (gainsNeededToEndGame!=0)
 			return gainsNeededToEndGame;
-		ArrayList<Integer> theCounts = new ArrayList<Integer>();
+		ArrayList<Integer> theCounts = new ArrayList<>();
 		for (DomCardName cardName : keySet()){
 			theCounts.add(get(cardName).size());
 		}
@@ -783,7 +783,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 	}
 
 	public static ArrayList<DomCardName> getRandomBoard() {
-		ArrayList<DomCardName> theCardsToChooseFrom = new ArrayList<DomCardName>();
+		ArrayList<DomCardName> theCardsToChooseFrom = new ArrayList<>();
 		for (DomSet set : DomSet.values()){
 			if (set!=DomSet.Common && !isExcluded(set)){
 				for (DomCardName cardName : set.getCards()){
@@ -794,7 +794,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 			}
 		}
 		Collections.shuffle(theCardsToChooseFrom);
-		ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+		ArrayList<DomCardName> theChosenCards = new ArrayList<>();
 		for (int i=0;i<11;i++){
 			theChosenCards.add(theCardsToChooseFrom.get(i));
 		}
@@ -820,7 +820,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 	}
 
     public int countDifferentTreasuresInTrash() {
-        HashSet<DomCardName> theSet = new HashSet<DomCardName>();
+        HashSet<DomCardName> theSet = new HashSet<>();
         for (DomCard theCard : trashPile) {
             if (theCard.hasCardType(DomCardType.Treasure))
                 theSet.add(theCard.getName());

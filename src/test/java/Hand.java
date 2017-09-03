@@ -9,7 +9,7 @@ public class Hand extends ArrayList<Cow> {
     private int value;
 
     public int getValue() {
-        HashSet<Cow> theUniques = new HashSet<Cow>();
+        HashSet<Cow> theUniques = new HashSet<>();
         for (Cow theCow:this) {
             theUniques.add(theCow);
         }

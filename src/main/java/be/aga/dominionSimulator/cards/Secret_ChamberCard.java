@@ -64,7 +64,7 @@ public class Secret_ChamberCard extends DomCard {
 		  owner.doForcedDiscard(2,true);
 		  return;
 		}
-		ArrayList<DomCard> theTreasures = new ArrayList<DomCard>();
+		ArrayList<DomCard> theTreasures = new ArrayList<>();
 		//put all treasures aside then put the two worst cards back on deck
 		for (DomCard card : owner.getCardsFromHand(DomCardType.Treasure)){
 		  theTreasures.add(owner.removeCardFromHand(card));

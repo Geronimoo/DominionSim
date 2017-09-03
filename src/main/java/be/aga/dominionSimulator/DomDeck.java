@@ -23,12 +23,12 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
             LOGGER.addAppender(new ConsoleAppender(new SimpleLayout()) );
     }
 
-    private ArrayList< DomCard > drawDeck = new ArrayList< DomCard >();
-    private final ArrayList< DomCard > discardPile = new ArrayList< DomCard >();
-    private ArrayList< DomCard > islandMat = new ArrayList< DomCard >();
+    private ArrayList< DomCard > drawDeck = new ArrayList<>();
+    private final ArrayList< DomCard > discardPile = new ArrayList<>();
+    private ArrayList< DomCard > islandMat = new ArrayList<>();
 
     private DomPlayer owner;
-	private ArrayList<DomCard> putAsideCards=new ArrayList<DomCard>();
+	private ArrayList<DomCard> putAsideCards=new ArrayList<>();
     public static final int DISCARD = 0;
     public static final int TOP_OF_DECK = 1;
     public static final int HAND = 2;
@@ -36,7 +36,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
     public DomDeck (DomPlayer aDomPlayer) {
       super( DomCardName.class );
       owner = aDomPlayer; 
-      islandMat = new ArrayList< DomCard >();
+      islandMat = new ArrayList<>();
     }
 
     public void shuffle() {
@@ -54,7 +54,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
     }
 
 	private void handleStash() {
-	  ArrayList<DomCard> theStashes= new ArrayList<DomCard>();
+	  ArrayList<DomCard> theStashes= new ArrayList<>();
 	  for (DomCard card : drawDeck){
 		if (card.getName()==DomCardName.Stash){
 		  theStashes.add(card);
@@ -67,7 +67,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
 
     private void doOverhandShuffle() {
       for (int j=0;j<2+Math.random()*4;j++){
-        ArrayList<DomCard> newDeck = new ArrayList<DomCard>();
+        ArrayList<DomCard> newDeck = new ArrayList<>();
     	while (!drawDeck.isEmpty()) {
 		    int theNumber = (int) (drawDeck.size()*Math.random()/3.0);
 		    for (int i=theNumber;i>=0;i--)
@@ -84,9 +84,9 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
 
     private void doRiffleShuffle() {
         for (int j=0;j<2+Math.random()*4;j++){
-          ArrayList<DomCard> newDeck = new ArrayList<DomCard>();
-          ArrayList<DomCard> leftDeck = new ArrayList<DomCard>();
-          ArrayList<DomCard> rightDeck = new ArrayList<DomCard>();
+          ArrayList<DomCard> newDeck = new ArrayList<>();
+          ArrayList<DomCard> leftDeck = new ArrayList<>();
+          ArrayList<DomCard> rightDeck = new ArrayList<>();
 		  int theSplit = (int) (drawDeck.size()/2.0 + drawDeck.size()*Math.random()/10.0);
 		  for (int i=0;i<theSplit;i++){
 			leftDeck.add(drawDeck.remove(0));
@@ -116,7 +116,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
 
     public ArrayList< DomCard > getTopCards( int aI ) {
     	owner.setKnownTopCards(owner.getKnownTopCards()-aI);
-        ArrayList< DomCard > theTopCards = new ArrayList< DomCard >();
+        ArrayList< DomCard > theTopCards = new ArrayList<>();
         for (int i=0;i<aI ;i++) {
           if (drawDeck.isEmpty()) {
             if (discardPile.isEmpty())
@@ -239,7 +239,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
         return false;
       
       if (!containsKey( aCard.getName() )) {
-        put(aCard.getName(), new ArrayList< DomCard >());
+        put(aCard.getName(), new ArrayList<>());
       }
       get(aCard.getName()).add( aCard );
       aCard.setOwner(owner);
@@ -261,7 +261,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
      * @return
      */
     public ArrayList< DomCard > revealUntilType( DomCardType aType ) {
-        ArrayList< DomCard > theTopCards = new ArrayList< DomCard >();
+        ArrayList< DomCard > theTopCards = new ArrayList<>();
         int theTotalDeckSize = getDeckAndDiscardSize();
         for (int i = 0; i< theTotalDeckSize;i++){
           DomCard theCard = getTopCard();
@@ -298,7 +298,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
 	}
 
     public ArrayList< DomCard > revealTopCards( int aI ) {
-        ArrayList< DomCard > theTopX = new ArrayList< DomCard >();
+        ArrayList< DomCard > theTopX = new ArrayList<>();
         int theTotalDeckSize = drawDeck.size()+discardPile.size();
         for (int i = 0; i<aI && i< theTotalDeckSize;i++){
           theTopX.add(getTopCard());
@@ -470,7 +470,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
      * @return
      */
     public ArrayList< DomCard > collectAllCards() {
-        ArrayList< DomCard > theCards = new ArrayList< DomCard >();
+        ArrayList< DomCard > theCards = new ArrayList<>();
         for (DomCardName theCardName : keySet()) {
           theCards.addAll( get( theCardName ));    
         }
@@ -485,7 +485,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
 	}
 
 	public int countDifferentCards() {
-    	ArrayList<DomCardName> theSingleCards = new ArrayList<DomCardName>();
+    	ArrayList<DomCardName> theSingleCards = new ArrayList<>();
 		int theCount=theSingleCards.size();
 		for (DomCardName theCardName : keySet()) {
 	      theCount+=get(theCardName).isEmpty()? 0 : 1;
@@ -505,12 +505,12 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
 
 	public ArrayList<DomCard> getPutAsideCards() {
 		ArrayList<DomCard> thePutAsideCards = putAsideCards;
-		putAsideCards=new ArrayList<DomCard>();
+		putAsideCards=new ArrayList<>();
 		return thePutAsideCards;
 	}
 
 	public ArrayList<DomCard> revealUntilCost(int aCost) {
-        ArrayList< DomCard > theTopCards = new ArrayList< DomCard >();
+        ArrayList< DomCard > theTopCards = new ArrayList<>();
         int theTotalDeckSize = getDeckAndDiscardSize();
         for (int i = 0; i< theTotalDeckSize;i++){
           DomCard theCard = getTopCard();
@@ -533,7 +533,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
 			return drawDeck.get(0).getName();
 		shuffle();
 		DomCardName theMostLikelyCard=null;
-		EnumMap<DomCardName, Integer> theCounts = new EnumMap<DomCardName, Integer>(DomCardName.class);
+		EnumMap<DomCardName, Integer> theCounts = new EnumMap<>(DomCardName.class);
 		for (DomCard card : drawDeck){
 		  if (theCounts.get(card.getName())==null){
 			  theCounts.put(card.getName(),1);
@@ -568,7 +568,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
     }
 
     public ArrayList<DomCard> revealUntilVictoryOrCurse() {
-        ArrayList< DomCard > theTopCards = new ArrayList< DomCard >();
+        ArrayList< DomCard > theTopCards = new ArrayList<>();
         int theTotalDeckSize = getDeckAndDiscardSize();
         for (int i = 0; i< theTotalDeckSize;i++){
           DomCard theCard = getTopCard();
@@ -581,7 +581,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
 	}
 
 	public ArrayList<DomCard> revealUntilActionOrTreasure() {
-        ArrayList< DomCard > theTopCards = new ArrayList< DomCard >();
+        ArrayList< DomCard > theTopCards = new ArrayList<>();
         int theTotalDeckSize = getDeckAndDiscardSize();
         for (int i = 0; i< theTotalDeckSize;i++){
           DomCard theCard = getTopCard();
@@ -616,13 +616,13 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
 	public void addPhysicalCardFromMasquerade(DomCard aCard) {
 		//cards that were passed are not considered 'gained' so can not be watchtowered...
         if (!containsKey( aCard.getName() )) 
-          put(aCard.getName(), new ArrayList< DomCard >());
+          put(aCard.getName(), new ArrayList<>());
         get(aCard.getName()).add( aCard );
         aCard.setOwner(owner);
 	}
 
 	public ArrayList<DomCard> removeCardsFromDiscard(DomCardName aCardName) {
-		ArrayList<DomCard> theCards = new ArrayList<DomCard>();
+		ArrayList<DomCard> theCards = new ArrayList<>();
 		for (DomCard theCard : discardPile) {
 			if (theCard.getName()==aCardName) 
 				theCards.add(theCard);
@@ -678,7 +678,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
             shuffle();
         }
         DomCardName theMostLikelyCard=null;
-        EnumMap<DomCardName, Integer> theCounts = new EnumMap<DomCardName, Integer>(DomCardName.class);
+        EnumMap<DomCardName, Integer> theCounts = new EnumMap<>(DomCardName.class);
         int theMultiplier = 1;
         for (DomCard card : drawDeck){
             if (card.getTrashPriority()<=DomCardName.Copper.getTrashPriority(owner)) {
@@ -706,7 +706,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
     }
 
     public ArrayList<DomCard> revealUntilVictoryCardNotNamed(DomCardName theNamedCard) {
-        ArrayList< DomCard > theTopCards = new ArrayList< DomCard >();
+        ArrayList< DomCard > theTopCards = new ArrayList<>();
         int theTotalDeckSize = getDeckAndDiscardSize();
         for (int i = 0; i< theTotalDeckSize;i++){
             DomCard theCard = getTopCard();
@@ -719,7 +719,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
     }
 
     public ArrayList<DomCard> getDrawOrAndDiscardDeck() {
-        ArrayList<DomCard> theCards = new ArrayList<DomCard>();
+        ArrayList<DomCard> theCards = new ArrayList<>();
         if (drawDeck.size()<3) {
             theCards.addAll(discardPile);
         }
@@ -729,8 +729,8 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
 
     public ArrayList<DomCard> revealUntilThreeOfCardNotNamed(DomCardName card) {
         int theCount=0;
-        ArrayList<DomCard> theCards = new ArrayList<DomCard>();
-        ArrayList<DomCard> theCardsToDiscard = new ArrayList<DomCard>();
+        ArrayList<DomCard> theCards = new ArrayList<>();
+        ArrayList<DomCard> theCardsToDiscard = new ArrayList<>();
         if (getDeckAndDiscardSize()==0)
             return theCards;
         DomCard theTopCard = getTopCard();
@@ -755,14 +755,14 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
     }
 
     public ArrayList<DomCard> getAllCards() {
-        ArrayList<DomCard> theCards = new ArrayList<DomCard>();
+        ArrayList<DomCard> theCards = new ArrayList<>();
         theCards.addAll(drawDeck);
         theCards.addAll(discardPile);
         return theCards;
     }
 
     public DomCard removeFromDiscard(DomCardName cardName) {
-        ArrayList<DomCard> theCards = new ArrayList<DomCard>();
+        ArrayList<DomCard> theCards = new ArrayList<>();
         for (DomCard theCard : discardPile) {
             if (theCard.getName()==cardName) {
                 discardPile.remove(theCard);
@@ -782,7 +782,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
     }
 
     public ArrayList<DomCard> removeAllCardsFromDiscardAndDeck() {
-        ArrayList<DomCard> theCards = new ArrayList<DomCard>();
+        ArrayList<DomCard> theCards = new ArrayList<>();
         theCards.addAll(discardPile);
         discardPile.clear();
         theCards.addAll(drawDeck);
@@ -802,7 +802,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
 
     public void forcedAdd(DomCard aCard) {
         if (!containsKey( aCard.getName() )) {
-            put(aCard.getName(), new ArrayList< DomCard >());
+            put(aCard.getName(), new ArrayList<>());
         }
         get(aCard.getName()).add( aCard );
         aCard.setOwner(owner);
