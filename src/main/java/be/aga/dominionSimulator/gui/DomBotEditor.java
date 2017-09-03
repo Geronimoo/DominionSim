@@ -35,7 +35,7 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
   private final DomPlayer myChosenStrategy;
   private JPanel myPlayerPanel;
   private JPanel myImagePanel;
-  private ArrayList<DomBuyRulePanel> myBuyRulePanels=new ArrayList<DomBuyRulePanel>();
+  private ArrayList<DomBuyRulePanel> myBuyRulePanels=new ArrayList<>();
   private JTextField myNameField;
   private JList myBotTypeList;
   private JTextArea myDescriptionField;
@@ -367,13 +367,13 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
 	private String getTypes() {
 		StringBuilder theTypeString=null;
 		if (myBotTypeList!=null){
-			myTypes=new HashSet<DomBotType>();
+			myTypes=new HashSet<>();
 			for (Object botType : myBotTypeList.getSelectedValues()){
 				myTypes.add((DomBotType) botType);
 			}
 		}
 		if (myTypes==null) {
-			myTypes = new HashSet<DomBotType>();
+			myTypes = new HashSet<>();
 			for (DomBotType botType : myChosenStrategy.getTypes()){
 				myTypes.add(botType);
 			}
@@ -392,7 +392,7 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
     private JList getTypeList() {
     	myBotTypeList = new JList(DomBotType.values());
       myBotTypeList.setSelectionModel(new ToggleListSelectionModel());
-    	ArrayList<DomBotType> thePossibleTypes = new ArrayList<DomBotType>();
+    	ArrayList<DomBotType> thePossibleTypes = new ArrayList<>();
     	for (DomBotType botType : DomBotType.values()){
     		thePossibleTypes.add(botType);
     	}

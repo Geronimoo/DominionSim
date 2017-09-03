@@ -8,7 +8,7 @@ import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
 public class LibraryCard extends DrawUntilXCardsCard {
-    private ArrayList<DomCard> myPutAsideCards=new ArrayList<DomCard>();
+    private ArrayList<DomCard> myPutAsideCards=new ArrayList<>();
 
     public LibraryCard () {
       super( DomCardName.Library);

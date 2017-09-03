@@ -28,7 +28,7 @@ import be.aga.dominionSimulator.enums.DomPlayStrategy;
 public class DomBuyRulePanel extends JPanel implements ActionListener, ItemListener {
 
 	private JComboBox myCardToBuyBox;
-    private ArrayList<DomBuyConditionPanel> myBuyConditionPanels=new ArrayList<DomBuyConditionPanel>();
+    private ArrayList<DomBuyConditionPanel> myBuyConditionPanels=new ArrayList<>();
 	private JPanel myConditionsPanel;
 	private DomBotEditor myParent;
 	private JComboBox myPlayStrategyBox;

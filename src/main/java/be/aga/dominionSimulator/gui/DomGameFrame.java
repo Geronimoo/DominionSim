@@ -30,7 +30,7 @@ public class DomGameFrame extends JFrame implements ActionListener {
 	private JLabel myActionsLabel;
 	private JLabel myTurnLabel;
 	private JLabel myBuysLabel;
-	private HashMap<JLabel, DomCardName> myBoardCards = new HashMap<JLabel, DomCardName>();
+	private HashMap<JLabel, DomCardName> myBoardCards = new HashMap<>();
 	private JTextArea myLogArea;
 	private JPanel myInPlayPanel;
 	private DomCardPanel myHandPanel;

@@ -11,7 +11,7 @@ import be.aga.dominionSimulator.enums.DomCardType;
 
 public class MultiplicationCard extends DomCard {
 
-	private final ArrayList<DomCard> myDurationCards = new ArrayList<DomCard>();
+	private final ArrayList<DomCard> myDurationCards = new ArrayList<>();
 
 	public MultiplicationCard(DomCardName aCardName) {
 	  super(aCardName);
@@ -97,7 +97,7 @@ public class MultiplicationCard extends DomCard {
         if (cardOwnerWasNull)
             card.owner=null;
       }
-      ArrayList<DomCard> theCardsToStayInPlay = new ArrayList<DomCard>();
+      ArrayList<DomCard> theCardsToStayInPlay = new ArrayList<>();
       for (DomCard theCard : myDurationCards)
         if (theCard.mustStayInPlay())
             theCardsToStayInPlay.add(theCard);

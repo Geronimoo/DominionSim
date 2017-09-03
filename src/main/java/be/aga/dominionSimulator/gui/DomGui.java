@@ -38,17 +38,17 @@ import be.aga.dominionSimulator.enums.DomBotType;
 
 public class DomGui extends JFrame implements ActionListener {
   private DomEngine myEngine;
-  private ArrayList< JButton > myBotSelectors= new ArrayList< JButton>();
+  private ArrayList< JButton > myBotSelectors= new ArrayList<>();
   private DomBarChart myBarChart;
   private DomLineChart myVPLineChart;
   private DomLineChart myMoneyLineChart;
-  private HashMap< JButton, ButtonGroup > myStartStateButtonGroups = new HashMap< JButton, ButtonGroup >();
-  private HashMap< JButton, JButton > myEditCreateButtons = new HashMap<JButton, JButton>();
-  private HashMap< JButton, JButton > myCopyPasteButtons = new HashMap<JButton, JButton>();
-  private HashMap< JButton, JButton > myColonizeButtons = new HashMap<JButton, JButton>();
+  private HashMap< JButton, ButtonGroup > myStartStateButtonGroups = new HashMap<>();
+  private HashMap< JButton, JButton > myEditCreateButtons = new HashMap<>();
+  private HashMap< JButton, JButton > myCopyPasteButtons = new HashMap<>();
+  private HashMap< JButton, JButton > myColonizeButtons = new HashMap<>();
   private JCheckBox myOrderBox;
   private JButton myEditedSelector;
-  private HashMap< JComponent, JComponent> myWinPercentageLBLs=new HashMap<JComponent, JComponent>();
+  private HashMap< JComponent, JComponent> myWinPercentageLBLs=new HashMap<>();
   private JLabel myTiesLBL=new JLabel("");
   private JLabel myAverageTurnsLBL=new JLabel("");
   private JLabel myTimeLBL=new JLabel("");
@@ -56,7 +56,7 @@ public class DomGui extends JFrame implements ActionListener {
   private JSplitPane myTopSplit;
   private JSplitPane myBigSplit;
   private JSplitPane myBottomSplit;
-  private HashMap<DomPlayer, JButton> myPlayers = new HashMap<DomPlayer, JButton>();
+  private HashMap<DomPlayer, JButton> myPlayers = new HashMap<>();
 
 	public DomGui(DomEngine anEngine)	{
       myEngine=anEngine;
@@ -482,8 +482,8 @@ public class DomGui extends JFrame implements ActionListener {
      * @param aE
      */
     private void startSimulation( ActionEvent aE ) {
-          myPlayers = new HashMap<DomPlayer, JButton>();
-          ArrayList<DomPlayer> thePlayers = new ArrayList<DomPlayer>(); 
+          myPlayers = new HashMap<>();
+          ArrayList<DomPlayer> thePlayers = new ArrayList<>();
           for (JButton theSelector : myBotSelectors ) {
             if (getSelectedPlayer(theSelector) == null) 
               continue;
@@ -686,7 +686,7 @@ public class DomGui extends JFrame implements ActionListener {
 	}
 
     public ArrayList<DomPlayer> getBots() {
-        ArrayList<DomPlayer> theBots = new ArrayList<DomPlayer>();
+        ArrayList<DomPlayer> theBots = new ArrayList<>();
         for (JButton theSelector : myBotSelectors) {
             if (getSelectedPlayer(theSelector) == null)
                 continue;

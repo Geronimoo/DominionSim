@@ -13,7 +13,7 @@ public class HarvestCard extends DomCard {
 
     public void play() {
       ArrayList< DomCard > theCards = owner.revealTopCards(4);
-  	  HashSet<DomCardName> theSingleCards = new HashSet<DomCardName>();
+  	  HashSet<DomCardName> theSingleCards = new HashSet<>();
       for (DomCard card : theCards)
           theSingleCards.add(card.getName());
       owner.addAvailableCoins(theSingleCards.size());

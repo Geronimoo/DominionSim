@@ -13,7 +13,7 @@ public class AnnexCard extends DomCard {
     }
 
     public void play() {
-        HashSet<DomCard> theCards = new HashSet<DomCard>();
+        HashSet<DomCard> theCards = new HashSet<>();
         Collections.sort(owner.getDeck().getDiscardPile(),SORT_FOR_DISCARDING);
         for (DomCard theCard : owner.getDeck().getDiscardPile()){
             if (theCard.getDiscardPriority(1)>=DomCardName.Silver.getDiscardPriority(1))

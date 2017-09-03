@@ -43,7 +43,7 @@ public class PrinceCard extends DomCard {
 
     @Override
     public int getPlayPriority() {
-        ArrayList<DomCard> theCards = new ArrayList<DomCard>();
+        ArrayList<DomCard> theCards = new ArrayList<>();
         theCards.addAll(owner.getCardsInHand());
         int theCount=0;
         DomCard theCardToPrince=null;

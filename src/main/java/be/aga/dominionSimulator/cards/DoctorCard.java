@@ -19,7 +19,7 @@ public class DoctorCard extends DomCard {
       }
       if (DomEngine.haveToLog) DomEngine.addToLog(owner + " names " + theChoice.toHTML());
       ArrayList<DomCard> theRevealedCards = owner.revealTopCards(3);
-      ArrayList<DomCard> theCardsToPutBack = new ArrayList<DomCard>();
+      ArrayList<DomCard> theCardsToPutBack = new ArrayList<>();
       for (DomCard theCard : theRevealedCards) {
           if (theCard.getName()==theChoice)
               owner.trash(theCard);

@@ -17,7 +17,7 @@ public class KeepCard extends DomCard {
         int theVP = 0;
         for (DomCardName theCard : aPlayer.getDeck().keySet()) {
             if (theCard.hasCardType(DomCardType.Treasure)) {
-                HashSet<DomPlayer> theWinners = new HashSet<DomPlayer>();
+                HashSet<DomPlayer> theWinners = new HashSet<>();
                 int theMaxCount = 0;
                 for (DomPlayer thePlayer : aPlayer.getCurrentGame().getPlayers()) {
                     if (thePlayer.getDeck().get(theCard)!=null) {

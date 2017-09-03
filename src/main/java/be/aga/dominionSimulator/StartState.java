@@ -9,9 +9,9 @@ import be.aga.dominionSimulator.enums.DomCardName;
 
 public class StartState {
 
-	private ArrayList< DomCardName> myHand = new ArrayList<DomCardName>();
-	private ArrayList< DomCardName> myDrawDeck = new ArrayList<DomCardName>();
-	private ArrayList< DomCardName> myDiscard = new ArrayList<DomCardName>();
+	private ArrayList< DomCardName> myHand = new ArrayList<>();
+	private ArrayList< DomCardName> myDrawDeck = new ArrayList<>();
+	private ArrayList< DomCardName> myDiscard = new ArrayList<>();
 	private boolean shuffleDrawDeck = true;
 	public String myOriginalHand;
 	public String myOriginalDrawDeck;
@@ -35,7 +35,7 @@ public class StartState {
 
 	public static boolean dissectAndAdd(String aString, ArrayList<DomCardName> aDestination) {
 		if (aString.trim().isEmpty()) {
-			aDestination= new ArrayList<DomCardName>();
+			aDestination= new ArrayList<>();
 			return true;
 		}
     	for (String tag : aString.split(",| and")){

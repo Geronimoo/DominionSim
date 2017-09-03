@@ -20,7 +20,7 @@ public class DomGame {
             LOGGER.addAppender(new ConsoleAppender(new SimpleLayout()) );
     }
 
-  ArrayList< DomPlayer > players = new ArrayList< DomPlayer >();
+  ArrayList< DomPlayer > players = new ArrayList<>();
   DomBoard board;
   public long checkGameFinishTime=0;
   public long playerTurnTime=0;
@@ -373,7 +373,7 @@ public boolean isInKingDom(DomCardName aCard) {
 public int getBridge_TrollsInPlay() { return activePlayer.getCardsFromPlay(DomCardName.Bridge_Troll).size();    }
 
     public ArrayList<DomCard> getRogueableCardsInTrash() {
-        ArrayList<DomCard> theRogueableCards = new ArrayList<DomCard>();
+        ArrayList<DomCard> theRogueableCards = new ArrayList<>();
         for (DomCard theCard : getTrashedCards()) {
             if (theCard.getCoinCost(this)>=3 && theCard.getCoinCost(this)<=6 && theCard.getPotionCost()==0)
                 theRogueableCards.add(theCard);

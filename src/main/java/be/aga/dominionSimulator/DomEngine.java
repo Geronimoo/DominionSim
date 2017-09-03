@@ -58,7 +58,7 @@ public class DomEngine {
 
     public static DomPlayer currentPlayer;
 
-    private ArrayList< DomPlayer > players = new ArrayList< DomPlayer >();
+    private ArrayList< DomPlayer > players = new ArrayList<>();
 	private long findWinnerTime=0;
 	private ArrayList<DomPlayer> bots;
     private long boardResetTime=0;
@@ -451,7 +451,7 @@ public class DomEngine {
 	}
 
 	public Object[] getBots(Object[] domBotTypes, String[] keywords) {
-		ArrayList<DomPlayer> theBots = new ArrayList<DomPlayer>();
+		ArrayList<DomPlayer> theBots = new ArrayList<>();
 		player:
 		for (DomPlayer player : bots) {
 			for (Object type : domBotTypes) {
@@ -489,14 +489,14 @@ public class DomEngine {
 	}
 
 	public ArrayList<DomCardName> getBoardCards() {
-		ArrayList<DomCardName> theCards = new ArrayList<DomCardName>();
+		ArrayList<DomCardName> theCards = new ArrayList<>();
 		theCards.addAll(DomSet.Common.getCards());
 		theCards.addAll(DomBoard.getRandomBoard());
 		return theCards;
 	}
 
 	public ArrayList<DomCard> getHumanPlayerHand() {
-		ArrayList<DomCard> theCards = new ArrayList<DomCard>();
+		ArrayList<DomCard> theCards = new ArrayList<>();
 		int i = 0;
 		for (DomCardName cardName : DomBoard.getRandomBoard()) {
 			theCards.add(cardName.createNewCardInstance());
@@ -520,7 +520,7 @@ public class DomEngine {
 	}
 
 	public ArrayList<DomCard> getCardsInPlay() {
-		ArrayList<DomCard> theCards = new ArrayList<DomCard>();
+		ArrayList<DomCard> theCards = new ArrayList<>();
 		theCards.add(DomCardName.Woodcutter.createNewCardInstance());
 		theCards.add(DomCardName.Woodcutter.createNewCardInstance());
 		theCards.add(DomCardName.Woodcutter.createNewCardInstance());

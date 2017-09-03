@@ -417,7 +417,7 @@ public enum DomCardName  {
     };
 
     private DomCost cost = null;
-    private final HashSet< DomCardType > types = new HashSet< DomCardType >();
+    private final HashSet< DomCardType > types = new HashSet<>();
     private int coinValue;
     private int victoryValue;
     private int playPriority;
@@ -448,7 +448,7 @@ public enum DomCardName  {
     }
 
     public static DomCardName[] getSafeValues() {
-        ArrayList<DomCardName> theValues = new ArrayList<DomCardName>();
+        ArrayList<DomCardName> theValues = new ArrayList<>();
         for (DomCardName theCard : values()){
             if (theCard.hasCardType(DomCardType.Knight)&&theCard!=Knights)
                 continue;
@@ -462,7 +462,7 @@ public enum DomCardName  {
             DomCardName[] theArr = new DomCardName[1];
             return (DomCardName[]) theValues.toArray(theArr);
         } else {
-            ArrayList<DomCardName> theCards = new ArrayList<DomCardName>();
+            ArrayList<DomCardName> theCards = new ArrayList<>();
             for (DomCardName theCard : theValues){
                 if (!theCard.hasCardType(DomCardType.DominionDevelopment))
                     theCards.add(theCard);
@@ -1233,7 +1233,7 @@ public enum DomCardName  {
     }
     
     public Object[] getPlayStrategies() {
-    	ArrayList<DomPlayStrategy> theStrategies = new ArrayList<DomPlayStrategy>();
+    	ArrayList<DomPlayStrategy> theStrategies = new ArrayList<>();
     	switch (this) {
 		case Ambassador:
             theStrategies.add(DomPlayStrategy.ambassadorWar);
@@ -1511,7 +1511,7 @@ public enum DomCardName  {
 	}
 
 	public static Object[] getPossibleBaneCards() {
-	    ArrayList<DomCardName> possibleBanes = new ArrayList<DomCardName>();
+	    ArrayList<DomCardName> possibleBanes = new ArrayList<>();
 		for (DomCardName cardName : values()) {
 			if (cardName.getCost().compareTo(new DomCost(2, 0))==0
 			 || cardName.getCost().compareTo(new DomCost(3, 0))==0){
@@ -1573,7 +1573,7 @@ public enum DomCardName  {
 	}
 
 	public static Object[] getKingdomCards() {
-		ArrayList<DomCardName> theCards = new ArrayList<DomCardName>(); 
+		ArrayList<DomCardName> theCards = new ArrayList<>();
 		for (DomCardName cardName : values()){
 			if (!DomSet.Base.contains(cardName))
 				theCards.add(cardName);

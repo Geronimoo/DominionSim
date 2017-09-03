@@ -26,7 +26,7 @@ public class AmbassadorCard extends DomCard {
         DomCard thePreviousTrash = null;
         DomCard theRevealedCard = null;
         int theTrashCount = 0;
-        ArrayList<DomCard> setAsideShelters = new ArrayList<DomCard>();
+        ArrayList<DomCard> setAsideShelters = new ArrayList<>();
         for (DomCard theCard : owner.getCardsInHand()) {
             if (theCard.hasCardType(DomCardType.Shelter))
                 setAsideShelters.add(theCard);
@@ -56,7 +56,7 @@ public class AmbassadorCard extends DomCard {
     }
 
     private void handleAmbassadorWar() {
-        ArrayList<DomCard> setAsideShelters = new ArrayList<DomCard>();
+        ArrayList<DomCard> setAsideShelters = new ArrayList<>();
         for (DomCard theCard : owner.getCardsInHand()) {
             if (theCard.hasCardType(DomCardType.Shelter))
                 setAsideShelters.add(theCard);

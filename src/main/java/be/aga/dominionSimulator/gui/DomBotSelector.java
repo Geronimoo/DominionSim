@@ -205,7 +205,7 @@ private JList getBotList() {
 
             // Show the kingdom cards used by this bot.
             tip.append("<p>Cards used:<ul>");
-            Set<DomCardName> cardSet = new HashSet<DomCardName>();
+            Set<DomCardName> cardSet = new HashSet<>();
             for (DomBuyRule rule : bot.getBuyRules()) {
                 DomCardName card = rule.getCardToBuy();
                 if (!cardSet.contains(card) && !DomSet.Common.contains(card)) {

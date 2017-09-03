@@ -40,7 +40,7 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
         GridBagConstraints theCons = DomGui.getGridBagConstraints( 2 );
         
         //left function
-        ArrayList<Object> theValues = new ArrayList<Object>();
+        ArrayList<Object> theValues = new ArrayList<>();
         Collections.addAll(theValues, DomBotFunction.values());
         Collections.addAll(theValues, numberValues);
         theValues.remove(DomBotFunction.constant);

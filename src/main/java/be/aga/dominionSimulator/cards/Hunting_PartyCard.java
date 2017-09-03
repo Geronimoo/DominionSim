@@ -14,7 +14,7 @@ public class Hunting_PartyCard extends DomCard {
       owner.addActions(1);
       owner.drawCards(1);
 //      owner.showHand();
-      ArrayList<DomCard> theRevealedCards = new ArrayList<DomCard>();
+      ArrayList<DomCard> theRevealedCards = new ArrayList<>();
       for (;;){
         ArrayList<DomCard> theTopCard = owner.revealTopCards(1);
         if (theTopCard.isEmpty())

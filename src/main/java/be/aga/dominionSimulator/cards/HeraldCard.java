@@ -31,7 +31,7 @@ public class HeraldCard extends DomCard {
         if (owner.getBuysLeft()>0 && owner.getDesiredCard(owner.getTotalAvailableCurrency(),false)!=null)
           return;
         Collections.sort(owner.getCardsFromDiscard(),SORT_FOR_DISCARDING);
-        ArrayList<DomCard> theCardsToConsider = new ArrayList<DomCard>();
+        ArrayList<DomCard> theCardsToConsider = new ArrayList<>();
         for (int i=owner.getCardsFromDiscard().size()-1;i>=0;i--) {
             if (owner.getCardsFromDiscard().get(i).getDiscardPriority(1)>=DomCardName.Silver.getDiscardPriority(1))
                 if (owner.getCardsFromDiscard().get(i)!=this)

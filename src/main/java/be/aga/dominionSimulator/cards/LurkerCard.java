@@ -53,7 +53,7 @@ public class LurkerCard extends DomCard {
     private DomCard findActionInTrash() {
         if (owner.getCurrentGame().getTrashedCards().isEmpty())
             return null;
-        Set<DomCardName> theActions = new HashSet<DomCardName>();
+        Set<DomCardName> theActions = new HashSet<>();
         for (DomCard theCard : owner.getCurrentGame().getTrashedCards()){
             if (theCard.hasCardType(DomCardType.Action) && owner.wantsToGainOrKeep(theCard.getName()))
                 theActions.add(theCard.getName());

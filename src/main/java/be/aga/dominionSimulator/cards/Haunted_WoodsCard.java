@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Haunted_WoodsCard extends DomCard {
-    private Set<DomPlayer> protectedOpponents = new HashSet<DomPlayer>();
+    private Set<DomPlayer> protectedOpponents = new HashSet<>();
 
     public Haunted_WoodsCard() {
       super( DomCardName.Haunted_Woods);

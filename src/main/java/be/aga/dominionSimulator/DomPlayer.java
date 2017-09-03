@@ -26,17 +26,17 @@ public class DomPlayer implements Comparable<DomPlayer> {
             LOGGER.addAppender(new ConsoleAppender(new SimpleLayout()));
     }
 
-    private ArrayList<DomBuyRule> buyRules = new ArrayList<DomBuyRule>();
-    private ArrayList<DomBuyRule> prizeBuyRules = new ArrayList<DomBuyRule>();
-    private EnumMap<DomCardName, DomPlayStrategy> playStrategies = new EnumMap<DomCardName, DomPlayStrategy>(DomCardName.class);
+    private ArrayList<DomBuyRule> buyRules = new ArrayList<>();
+    private ArrayList<DomBuyRule> prizeBuyRules = new ArrayList<>();
+    private EnumMap<DomCardName, DomPlayStrategy> playStrategies = new EnumMap<>(DomCardName.class);
     private String[] keywords = null;
 
     private DomDeck deck = new DomDeck(this);
-    private ArrayList<DomCard> cardsInPlay = new ArrayList<DomCard>();
-    private ArrayList<DomCard> cardsInHand = new ArrayList<DomCard>();
-    private ArrayList<DomCard> nativeVillageMat = new ArrayList<DomCard>();
-    private ArrayList<DomCard> horseTradersPile = new ArrayList<DomCard>();
-    private ArrayList<DomCard> cardsToSummon = new ArrayList<DomCard>();
+    private ArrayList<DomCard> cardsInPlay = new ArrayList<>();
+    private ArrayList<DomCard> cardsInHand = new ArrayList<>();
+    private ArrayList<DomCard> nativeVillageMat = new ArrayList<>();
+    private ArrayList<DomCard> horseTradersPile = new ArrayList<>();
+    private ArrayList<DomCard> cardsToSummon = new ArrayList<>();
 
     protected String name;
     public int actionsLeft=1;
@@ -46,8 +46,8 @@ public class DomPlayer implements Comparable<DomPlayer> {
     protected DomGame game;
     private int wins = 0;
     private double ties = 0;
-    private ArrayList<Integer> moneyCurve = new ArrayList<Integer>();
-    private ArrayList<Integer> VPcurve = new ArrayList<Integer>();
+    private ArrayList<Integer> moneyCurve = new ArrayList<>();
+    private ArrayList<Integer> VPcurve = new ArrayList<>();
     private int turns = 0;
     private int victoryTokens = 0;
     private int pointsBeforeBuys = 0;
@@ -58,31 +58,31 @@ public class DomPlayer implements Comparable<DomPlayer> {
     public long buyTime = 0;
     private int hoardCount = 0;
     private int forcedStart = 0;
-    private ArrayList<DomCard> boughtCards = new ArrayList<DomCard>();
+    private ArrayList<DomCard> boughtCards = new ArrayList<>();
     private int actionsplayed;
-    private ArrayList<DomCardName> forbiddenCardsToBuy = new ArrayList<DomCardName>();
+    private ArrayList<DomCardName> forbiddenCardsToBuy = new ArrayList<>();
     private boolean extraOutpostTurn;
-    private ArrayList<DomPlayer> possessionTurns = new ArrayList<DomPlayer>();
+    private ArrayList<DomPlayer> possessionTurns = new ArrayList<>();
     DomPlayer possessor;
-    private ArrayList<DomCardName> cardsGainedLastTurn = new ArrayList<DomCardName>();
+    private ArrayList<DomCardName> cardsGainedLastTurn = new ArrayList<>();
     private int sameCardCount = 0;
     private DomCardName previousPlayedCardName = null;
     public boolean pprUsed = false;
-    private HashSet<DomBotType> types = new HashSet<DomBotType>();
+    private HashSet<DomBotType> types = new HashSet<>();
     private String description = "No description available";
     private String author = "Anonymous";
     private DomPhase currentPhase = null;
-    private ArrayList<DomCard> cardsToStayInPlay = new ArrayList<DomCard>();
+    private ArrayList<DomCard> cardsToStayInPlay = new ArrayList<>();
     private int knownTopCards = 0;
     private StartState myStartState = null;
-    private ArrayList<DomCardName> mySuggestedBoardCards = new ArrayList<DomCardName>();
+    private ArrayList<DomCardName> mySuggestedBoardCards = new ArrayList<>();
     private DomCardName myBaneCard;
     private int coinTokens;
     private boolean journeyTokenIsFaceUp;
-    private ArrayList<DomCard> tavernMat = new ArrayList<DomCard>();
+    private ArrayList<DomCard> tavernMat = new ArrayList<>();
     private boolean minusOneCardToken;
     private DomCardName plusOneBuyTokenOn;
-    private ArrayList<DomCard> princedCards = new ArrayList<DomCard>();
+    private ArrayList<DomCard> princedCards = new ArrayList<>();
     private boolean minusOneCoinToken;
     private DomCardName plusOneCardTokenOn;
     private DomCardName plusOneActionTokenOn;
@@ -101,7 +101,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
     private int debt;
     private boolean hasDoubledMoney;
     private int charmReminder = 0;
-    private ArrayList<DomCard> mySetAsideEncampments = new ArrayList<DomCard>();
+    private ArrayList<DomCard> mySetAsideEncampments = new ArrayList<>();
     private boolean donateTriggered;
     private int mountainPassBid = 0;
     private DomCardName obeliskChoice = null;
@@ -123,8 +123,8 @@ public class DomPlayer implements Comparable<DomPlayer> {
     }
 
     public static ArrayList<DomCard> getMultiplesInHand(MenagerieCard card) {
-        ArrayList<DomCardName> theSingleCards = new ArrayList<DomCardName>();
-        ArrayList<DomCard> theMultipleCards = new ArrayList<DomCard>();
+        ArrayList<DomCardName> theSingleCards = new ArrayList<>();
+        ArrayList<DomCard> theMultipleCards = new ArrayList<>();
         for (DomCard theCard : card.owner.getCardsInHand()) {
             if (theCard == card)
                 continue;
@@ -138,8 +138,8 @@ public class DomPlayer implements Comparable<DomPlayer> {
     }
 
     public DomCard findCardToRemodel(DomCard domCard, int theAmount) {
-    	ArrayList<DomCard> theCardsToConsiderTrashing=new ArrayList<DomCard>();
-    	ArrayList<DomCardName> theCardsToGain=new ArrayList<DomCardName>();
+    	ArrayList<DomCard> theCardsToConsiderTrashing=new ArrayList<>();
+    	ArrayList<DomCardName> theCardsToGain=new ArrayList<>();
     	DomCardName theDesiredCardIfRemodelNotUsed = getDesiredCard(getTotalPotentialCurrency(), false);
         for (int i=0;i< getCardsInHand().size();i++) {
             if (getCardsInHand().get(i)== domCard)
@@ -407,7 +407,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
      * @return
      */
     public ArrayList<DomCard> getCardsFromHand(DomCardName theCardName) {
-        ArrayList<DomCard> theCards = new ArrayList<DomCard>();
+        ArrayList<DomCard> theCards = new ArrayList<>();
         for (DomCard theCard : cardsInHand) {
             if (theCard.getName().equals(theCardName))
                 theCards.add(theCard);
@@ -419,7 +419,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
      * @return
      */
     public ArrayList<DomCard> getCardsFromPlay(DomCardName theCardName) {
-        ArrayList<DomCard> theCards = new ArrayList<DomCard>();
+        ArrayList<DomCard> theCards = new ArrayList<>();
         for (DomCard theCard : cardsInPlay) {
             if (theCard.getName().equals(theCardName))
                 theCards.add(theCard);
@@ -578,7 +578,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
      *
      */
     private void resolveDurationEffects() {
-        ArrayList<DomCard> theDurations = new ArrayList<DomCard>();
+        ArrayList<DomCard> theDurations = new ArrayList<>();
         for (DomCard aCard : getCardsInPlay()) {
             if (aCard.hasCardType(DomCardType.Duration) && aCard.hasCardType(DomCardType.Card_Advantage)) {
                 theDurations.add(aCard);
@@ -1316,12 +1316,12 @@ public class DomPlayer implements Comparable<DomPlayer> {
         pirateShipLevel = 0;
         victoryTokens = 0;
         pointsBeforeBuys = 3;
-        cardsInPlay = new ArrayList<DomCard>();
-        cardsInHand = new ArrayList<DomCard>();
+        cardsInPlay = new ArrayList<>();
+        cardsInHand = new ArrayList<>();
         horseTradersPile.clear();
         princedCards.clear();
         mySetAsideEncampments.clear();
-        nativeVillageMat = new ArrayList<DomCard>();
+        nativeVillageMat = new ArrayList<>();
         deck = new DomDeck(this);
         possessor = null;
         extraOutpostTurn = false;
@@ -1535,7 +1535,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
 
         int theNumberOfCardsNeededForTrashing = 2;
 
-        ArrayList<DomCard> theCardsNeededForTrashing = new ArrayList<DomCard>();
+        ArrayList<DomCard> theCardsNeededForTrashing = new ArrayList<>();
         for (DomCard card : cardsInHand) {
             if (card.getTrashPriority() < 16)
                 theCardsNeededForTrashing.add(card);
@@ -1606,7 +1606,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
     }
 
     public ArrayList<DomCard> getCardsFromHand(DomCardType aCardType) {
-        ArrayList<DomCard> theCards = new ArrayList<DomCard>();
+        ArrayList<DomCard> theCards = new ArrayList<>();
         for (DomCard theCard : cardsInHand) {
             if (theCard.hasCardType(aCardType)) {
                 theCards.add(theCard);
@@ -1616,7 +1616,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
     }
 
     public ArrayList<DomCard> getCardsFromPlay(DomCardType aCardType) {
-        ArrayList<DomCard> theCards = new ArrayList<DomCard>();
+        ArrayList<DomCard> theCards = new ArrayList<>();
         for (DomCard theCard : cardsInPlay) {
             if (theCard.hasCardType(aCardType)) {
                 theCards.add(theCard);
@@ -1922,11 +1922,11 @@ public class DomPlayer implements Comparable<DomPlayer> {
     }
 
     public ArrayList<DomPlayer> getOpponents() {
-        ArrayList<DomPlayer> theLaterOpponents = new ArrayList<DomPlayer>();
+        ArrayList<DomPlayer> theLaterOpponents = new ArrayList<>();
         ArrayList<DomPlayer> theFirstOpponents = null;
         for (DomPlayer thePlayer : getCurrentGame().getPlayers()) {
             if (thePlayer == this) {
-                theFirstOpponents = new ArrayList<DomPlayer>();
+                theFirstOpponents = new ArrayList<>();
             } else {
                 if (theFirstOpponents != null) {
                     theFirstOpponents.add(thePlayer);
@@ -1936,7 +1936,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
             }
         }
         if (theFirstOpponents == null) {
-            theFirstOpponents = new ArrayList<DomPlayer>();
+            theFirstOpponents = new ArrayList<>();
         }
         theFirstOpponents.addAll(theLaterOpponents);
         return theFirstOpponents;
@@ -2226,7 +2226,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
     }
 
     public ArrayList<DomCardName> getCardsNeededInSupply() {
-        ArrayList<DomCardName> theCards = new ArrayList<DomCardName>();
+        ArrayList<DomCardName> theCards = new ArrayList<>();
         for (DomBuyRule theRule : getBuyRules()) {
             if (theRule.getCardToBuy().hasCardType(DomCardType.Kingdom)
                     || theRule.getCardToBuy() == DomCardName.Potion
@@ -2846,7 +2846,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
     }
 
     public ArrayList<DomCard> getAllFromTavernMat(DomCardName cardName) {
-        ArrayList<DomCard> theList = new ArrayList<DomCard>();
+        ArrayList<DomCard> theList = new ArrayList<>();
         for (DomCard theCard : tavernMat) {
             if (theCard.getName() == cardName)
                 theList.add(theCard);
@@ -3034,7 +3034,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
 
     public int countInPlay(DomCardType cardType) {
         int theCount = 0;
-        ArrayList<DomCard> theCards = new ArrayList<DomCard>();
+        ArrayList<DomCard> theCards = new ArrayList<>();
         for (DomCard theCard : cardsInPlay) {
             if (theCard.hasCardType(cardType))
                 theCount++;
@@ -3140,7 +3140,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
 
     public int countInPlay(DomCardName cardName) {
         int theCount = 0;
-        ArrayList<DomCard> theCards = new ArrayList<DomCard>();
+        ArrayList<DomCard> theCards = new ArrayList<>();
         for (DomCard theCard : cardsInPlay) {
             if (theCard.getName() == cardName)
                 theCount++;
@@ -3323,7 +3323,7 @@ public class DomPlayer implements Comparable<DomPlayer> {
 
     public String[] getKeywords() {
         if (keywords == null) {
-            HashSet<String> kws = new HashSet<String>();
+            HashSet<String> kws = new HashSet<>();
             for (DomBuyRule rule : buyRules) {
                 for (String word : rule.getCardToBuy().toString().trim().split("[\\W/]+")) {
                     kws.add(word.toLowerCase(Locale.ENGLISH));

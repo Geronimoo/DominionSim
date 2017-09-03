@@ -15,7 +15,7 @@ import be.aga.dominionSimulator.enums.DomBotType;
 public final class XMLHandler extends DefaultHandler {
     private Stack stack;
     private boolean isStackReadyForText;
-    private ArrayList<DomPlayer> bots=new ArrayList<DomPlayer>();
+    private ArrayList<DomPlayer> bots=new ArrayList<>();
 
     public XMLHandler() {
       stack = new Stack();
@@ -29,7 +29,7 @@ public final class XMLHandler extends DefaultHandler {
       //if element has attributes, set them in the new instance
 //      System.out.println(localName);
       if( localName.equals( "playerCollection" ) ) {
-        stack.push( new ArrayList<DomPlayer>() );
+        stack.push( new ArrayList<>() );
       }else if( localName.equals( "player" ) ) {
           stack.push( new DomPlayer(resolveAttrib(uri, "name", attribs, null),
         		                    resolveAttrib(uri, "author", attribs, null),

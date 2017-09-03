@@ -46,7 +46,7 @@ public class GraverobberCard extends DomCard {
     }
 
     private boolean findCardToGain() {
-        ArrayList<DomCard> theCardsToConsider = new ArrayList<DomCard>();
+        ArrayList<DomCard> theCardsToConsider = new ArrayList<>();
         for (DomCard theCard:owner.getCurrentGame().getTrashedCards()) {
             if (theCard.getCoinCost(owner.getCurrentGame())>= 3 && theCard.getCoinCost(owner.getCurrentGame())<=6 && theCard.getPotionCost()==0)
                 theCardsToConsider.add(theCard);

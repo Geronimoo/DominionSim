@@ -28,8 +28,8 @@ public class SalvagerCard extends DomCard {
     }
 
     private DomCard findCardToTrash() {
-    	ArrayList<DomCard> theCardsToConsiderTrashing=new ArrayList<DomCard>();
-    	ArrayList<DomCardName> theCardsToGain=new ArrayList<DomCardName>();
+    	ArrayList<DomCard> theCardsToConsiderTrashing=new ArrayList<>();
+    	ArrayList<DomCardName> theCardsToGain=new ArrayList<>();
     	DomCardName theDesiredCardIfSalvagerNotUsed = owner.getDesiredCard(owner.getTotalPotentialCurrency(),false);
         for (int i=0;i<owner.getCardsInHand().size();i++) {
             if (owner.getCardsInHand().get(i)==this)

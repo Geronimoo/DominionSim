@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Swamp_HagCard extends DomCard {
-    private Set<DomPlayer> protectedOpponents = new HashSet<DomPlayer>();
+    private Set<DomPlayer> protectedOpponents = new HashSet<>();
 
     public Swamp_HagCard() {
       super( DomCardName.Swamp_Hag);
