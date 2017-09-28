@@ -11,7 +11,7 @@ import javax.swing.SwingConstants;
 
 import be.aga.dominionSimulator.enums.DomCardName;
 
-public class DomCardLabel extends JLabel implements MouseListener {
+public class DomCardLabel extends JLabel {
 	private static final double STANDARD_FIT = 0.9;
 	private ImageIcon myOriginalIcon;
 	private ImageIcon myScaledIcon;
@@ -20,7 +20,6 @@ public class DomCardLabel extends JLabel implements MouseListener {
 	private DomCardName myCardName;
 	
 	public DomCardLabel(DomCardName aCardName, DomGameFrame aGameFrame) {
-		addMouseListener(this);
 		myCardName = aCardName;
 		myGameFrame = aGameFrame;
 		setText("<html>"+aCardName.toHTML()+"</html>");
@@ -79,22 +78,4 @@ public class DomCardLabel extends JLabel implements MouseListener {
 	   setIcon(myOriginalIcon);
 	}
 
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		if (e.getID()==MouseEvent.MOUSE_ENTERED){
-		  getGameFrame().setBigImage(myCardName);
-		}
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {}
-	@Override
-	public void mousePressed(MouseEvent e) {}
-	@Override
-	public void mouseReleased(MouseEvent e) {}
 }

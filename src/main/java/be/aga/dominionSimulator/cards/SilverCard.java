@@ -1,8 +1,10 @@
 package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
+import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
+import be.aga.dominionSimulator.enums.DomCardType;
 import be.aga.dominionSimulator.enums.DomPlayStrategy;
 
 import java.util.Collections;
@@ -25,9 +27,14 @@ public class SilverCard extends DomCard {
             if (owner.getCardsInHand().isEmpty())
                 return;
             Collections.sort(owner.getCardsInHand(), SORT_FOR_TRASHING);
-            if (owner.getCardsInHand().get(0).getTrashPriority() <= DomCardName.Copper.getTrashPriority()) {
+            if (owner.getCardsInHand().get(0).getTrashPriority() < DomCardName.Copper.getTrashPriority()) {
                 if (DomEngine.haveToLog) DomEngine.addToLog(DomCardName.Sauna.toHTML() + " cleans the hand");
                 owner.trash(owner.removeCardFromHand(owner.getCardsInHand().get(0)));
+            } else {
+                if (owner.getCardsInHand().get(0).getName() == DomCardName.Copper && owner.getBuysLeft()==1 ) {
+                    if (owner.getDesiredCard(owner.getTotalPotentialCurrency().add(new DomCost(-1,0)), false) == owner.getDesiredCard(owner.getTotalPotentialCurrency(), false))
+                        owner.trash(owner.removeCardFromHand(owner.getCardsInHand().get(0)));
+                }
             }
         }
     }
@@ -38,6 +45,8 @@ public class SilverCard extends DomCard {
             return super.getTrashPriority();
         if (owner.getPlayStrategyFor(this)== DomPlayStrategy.trashWhenObsolete) {
             if (owner.countInDeck(DomCardName.Gold)>0 && owner.countInDeck(DomCardName.King$s_Court)>0)
+                return 15;
+            if (owner.count(DomCardType.Action)>9 || owner.countInDeck(DomCardName.Silver)>3)
                 return 15;
         }
         return super.getTrashPriority();

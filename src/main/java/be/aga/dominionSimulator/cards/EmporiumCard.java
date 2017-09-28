@@ -17,8 +17,6 @@ public class EmporiumCard extends DomCard {
 
     @Override
     public void doWhenGained() {
-        if (owner.getCardsFromPlay(DomCardType.Action).isEmpty())
-            return;
         if (owner.getCardsFromPlay(DomCardType.Action).size()>=5)
             owner.addVP(2);
     }

@@ -1,6 +1,6 @@
 package be.aga.dominionSimulator.enums;
 
-public enum DomCardType {
+public enum     DomCardType {
     Kingdom(false),
     Event(true),
     Curse(true),

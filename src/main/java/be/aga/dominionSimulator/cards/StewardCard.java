@@ -19,7 +19,7 @@ public class StewardCard extends DomCard {
 //    	  owner.drawCards( 2 );
 //    	  return;
 //    	}
-         if (!owner.getCardsFromHand(DomCardName.Curse).isEmpty() || hasTwoCrapCards()) {
+         if (!owner.getCardsFromHand(DomCardName.Curse).isEmpty() || hasTwoCrapCards() || (owner.getPlayStrategyFor(this)==DomPlayStrategy.aggressiveTrashing)) {
              if (!playForTrash())
                  if (!playForMoney())
                      if (!playForCards())

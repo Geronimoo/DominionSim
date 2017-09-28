@@ -42,7 +42,7 @@ public class AmbassadorCard extends DomCard {
           if (theRevealedCard.isFromBlackMarket())
               return;
           if (DomEngine.haveToLog) DomEngine.addToLog( owner + " reveals " + theRevealedCard );
-          if ((owner.getPlayStrategyFor(this)!=DomPlayStrategy.aggressiveTrashing
+          if (((owner.getPlayStrategyFor(this)!=DomPlayStrategy.aggressiveTrashing )
            && owner.removingReducesBuyingPower(theRevealedCard))
            || owner.getTotalMoneyInDeck()-theRevealedCard.getPotentialCoinValue() < 3
            || theRevealedCard.getTrashPriority()>DomCardName.Copper.getTrashPriority())

@@ -37,8 +37,8 @@ public class SquireCard extends DomCard {
     public int getPlayPriority() {
         if (owner.getActionsLeft()>1)
             return 32;
-        if (owner.getCardsFromHand(DomCardType.Action).size()-owner.getCardsFromHand(DomCardName.Squire).size() > owner.getCardsFromHand(DomCardType.Terminal).size())
-            return 32;
+//        if (owner.getCardsFromHand(DomCardType.Action).size()-owner.getCardsFromHand(DomCardName.Squire).size() > owner.getCardsFromHand(DomCardType.Terminal).size())
+//            return 32;
         if (owner.getCurrentGame().getBestCardInSupplyFor(owner,DomCardType.Attack,new DomCost(100,1),false)!=null
          &&owner.count(DomCardType.Attack)==0 && !owner.getCardsFromHand(DomCardName.Amulet).isEmpty())
             return 40;

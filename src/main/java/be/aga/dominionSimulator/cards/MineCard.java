@@ -1,5 +1,6 @@
 package be.aga.dominionSimulator.cards;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 import be.aga.dominionSimulator.DomCard;
@@ -17,21 +18,39 @@ public class MineCard extends DomCard {
     }
 
     public void play() {
-      if (owner.getPlayStrategyFor(this)==DomPlayStrategy.mineCopperFirst && !owner.getCardsFromHand(DomCardName.Copper).isEmpty() && owner.getCurrentGame().countInSupply(DomCardName.Silver)>0) {
-          owner.trash(owner.removeCardFromHand( owner.getCardsFromHand(DomCardName.Copper).get(0)));
-          owner.gainInHand(DomCardName.Silver);
-          return;
-      }
-      checkForCardToMine();
-      if (myCardToTrash==null)
-    	  //possible if played by Golem for instance
-    	  return;
-      owner.trash(owner.removeCardFromHand( myCardToTrash));
-      if (myDesiredCard==null) 
-        //possible if card was throne roomed
-      	myDesiredCard=owner.getCurrentGame().getBestCardInSupplyFor(owner, DomCardType.Treasure, myCardToTrash.getCost(owner.getCurrentGame()).add(new DomCost(3,0)));
-      if (myDesiredCard!=null) 
-        owner.gainInHand(myDesiredCard);
+		if (owner.isHumanOrPossessedByHuman()) {
+			ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+			for (DomCard theCard : owner.getCardsFromHand(DomCardType.Treasure))
+				theChooseFrom.add(theCard.getName());
+			if (theChooseFrom.isEmpty())
+				return;
+			DomCard theCardToMine = owner.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Select card to " + this.getName().toString(), theChooseFrom, "Mandatory!")).get(0);
+			owner.trash(owner.removeCardFromHand(theCardToMine));
+			theChooseFrom = new ArrayList<DomCardName>();
+			for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+				if (theCard.getCost(owner.getCurrentGame()).compareTo(theCardToMine.getCost(owner.getCurrentGame()).add(new DomCost(3, 0))) <= 0 && theCard.hasCardType(DomCardType.Treasure) && owner.getCurrentGame().countInSupply(theCard)>0)
+					theChooseFrom.add(theCard);
+			}
+			if (theChooseFrom.isEmpty())
+				return;
+			owner.gainInHand(owner.getEngine().getGameFrame().askToSelectOneCard("Select card to gain from " + this.getName().toString(), theChooseFrom, "Mandatory!"));
+		} else {
+			if (owner.getPlayStrategyFor(this) == DomPlayStrategy.mineCopperFirst && !owner.getCardsFromHand(DomCardName.Copper).isEmpty() && owner.getCurrentGame().countInSupply(DomCardName.Silver) > 0) {
+				owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(DomCardName.Copper).get(0)));
+				owner.gainInHand(DomCardName.Silver);
+				return;
+			}
+			checkForCardToMine();
+			if (myCardToTrash == null)
+				//possible if played by Golem for instance
+				return;
+			owner.trash(owner.removeCardFromHand(myCardToTrash));
+			if (myDesiredCard == null)
+				//possible if card was throne roomed
+				myDesiredCard = owner.getCurrentGame().getBestCardInSupplyFor(owner, DomCardType.Treasure, myCardToTrash.getCost(owner.getCurrentGame()).add(new DomCost(3, 0)));
+			if (myDesiredCard != null)
+				owner.gainInHand(myDesiredCard);
+		}
     }
     
     @Override

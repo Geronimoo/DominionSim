@@ -91,6 +91,9 @@ public class DomBuyCondition {
           case getTotalMoney:
               leftValue=owner.getTotalMoneyInDeck();
               break;
+          case actionsLeft:
+              leftValue=owner.getActionsLeft();
+              break;
           case getTotalMoneyExcludingNativeVillage:
               leftValue=owner.getTotalMoneyExcludingNativeVillage();
               break;
@@ -190,6 +193,9 @@ public class DomBuyCondition {
               break;
           case getTotalMoney:
               rightValue=owner.getTotalMoneyInDeck();
+              break;
+          case actionsLeft:
+              rightValue=owner.getActionsLeft();
               break;
           case getTotalMoneyExcludingNativeVillage:
             rightValue=owner.getTotalMoneyExcludingNativeVillage();

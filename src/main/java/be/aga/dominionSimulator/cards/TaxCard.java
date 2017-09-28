@@ -13,7 +13,7 @@ public class TaxCard extends DomCard {
 
     public void play() {
       for (DomPlayer thePlayer : owner.getOpponents()) {
-    	  //run through the buy rules of all opponents until we find a card that is not in our buy rules 
+    	  //runSimulation through the buy rules of all opponents until we find a card that is not in our buy rules
     	  for (DomBuyRule theRule : thePlayer.getBuyRules()) {
     		  DomCardName theCardToBuy = theRule.getCardToBuy();
     		  boolean sameCardFound=false;

@@ -18,4 +18,18 @@ public class FamiliarCard extends DomCard {
           }
         }
     }
+
+    @Override
+    public int getTrashPriority() {
+        if (owner.getCurrentGame().countInSupply(DomCardName.Curse)==0)
+          return 18;
+        return super.getTrashPriority();
+    }
+
+    @Override
+    public int getPlayPriority() {
+        if (owner.getCurrentGame().countInSupply(DomCardName.Curse)==0)
+            return DomCardName.Apprentice.getPlayPriority()+1;
+        return super.getPlayPriority();
+    }
 }

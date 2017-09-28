@@ -30,8 +30,16 @@ public class CrownCard extends MultiplicationCard {
         else
             if (!owner.getCardsFromHand(DomCardName.Capital).isEmpty())
                 theCardToPlayTwice=owner.removeCardFromHand(owner.getCardsFromHand(DomCardName.Capital).get(0));
-            else
-                theCardToPlayTwice = owner.removeCardFromHand(theTreasures.get(theTreasures.size()-1));
+            else {
+                int theChoice = 0;
+                for (int i = theTreasures.size() - 1; i >= 0; i--) {
+                    if (theTreasures.get(i).getName() == DomCardName.Fortune)
+                        continue;
+                    theChoice=i;
+                    break;
+                }
+                theCardToPlayTwice = owner.removeCardFromHand(theTreasures.get(theChoice));
+            }
         if (DomEngine.haveToLog) DomEngine.addToLog( owner + " chooses " + theCardToPlayTwice + " to Crown");
         owner.getCardsInPlay().add(theCardToPlayTwice);
         if (theCardToPlayTwice.getName()==DomCardName.Spoils) {
@@ -60,7 +68,7 @@ public class CrownCard extends MultiplicationCard {
 
     @Override
     public boolean wantsToBePlayed() {
-        if (owner.getPhase()==DomPhase.Action && (owner.getCardsFromHand(DomCardType.Action).size()<2 || !owner.getCardsFromHand(DomCardName.Capital).isEmpty()))
+        if (owner.getPhase()==DomPhase.Action && (owner.getCardsFromHand(DomCardType.Action).size()<2 || !owner.getCardsFromHand(DomCardName.Capital).isEmpty() || owner.getCardsFromHand(DomCardName.Crown).size()==owner.getCardsFromHand(DomCardType.Action).size()))
             return false;
         return true;
     }

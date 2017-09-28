@@ -5,6 +5,7 @@ import java.util.Collections;
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
+import be.aga.dominionSimulator.enums.DomPlayStrategy;
 
 public class TraderCard extends DomCard {
     private DomCard lastTradedCard = null;
@@ -18,7 +19,7 @@ public class TraderCard extends DomCard {
         Collections.sort( owner.getCardsInHand() , SORT_FOR_TRASHING);
         DomCard theCardToTrash = owner.getCardsInHand().get(0);
         for (DomCard card : owner.getCardsInHand()){
-        	if ((card.getCoinCost(owner.getCurrentGame())>0 && card.getTrashPriority()<=20) 
+        	if ((card.getCoinCost(owner.getCurrentGame())>0 && card.getTrashPriority()<=19)
         			|| card.getTrashPriority()==0) {
         		theCardToTrash = card;
         		break;
@@ -44,7 +45,7 @@ public class TraderCard extends DomCard {
 
      public boolean wantsToReact(DomCard aCard) {
        //TODO this way of handling Trader looks a bit dirty (= Watchtower)
-       if (lastTradedCard == aCard || owner.getCurrentGame().countInSupply(DomCardName.Silver)==0)
+       if (aCard.getName()==DomCardName.Silver || owner.getCurrentGame().countInSupply(DomCardName.Silver)==0)
          return false;
        if (aCard.getName().getTrashPriority(owner)<16) {
       	return true;
@@ -56,6 +57,8 @@ public class TraderCard extends DomCard {
     public boolean wantsToBePlayed() {
     	if (owner.getDesiredCard(owner.getTotalPotentialCurrency(), false)==DomCardName.Cache)
     		return false;
+    	if (owner.getCardsInHand().get(0).getName()==DomCardName.Silver && owner.getPlayStrategyFor(owner.getCardsInHand().get(0))== DomPlayStrategy.trashWhenObsolete)
+    	    return false;
     	return true;
     }
 }

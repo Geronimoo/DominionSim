@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 
-import be.aga.dominionSimulator.cards.Distant_LandsCard;
 import be.aga.dominionSimulator.cards.DuplicateCard;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Logger;
@@ -503,6 +502,11 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
 		drawDeck.add(theBottomCard);
 	}
 
+    public void putSecondFromTop(DomCard card) {
+        owner.setKnownTopCards(2);
+        drawDeck.add(1,card);
+    }
+
 	public ArrayList<DomCard> getPutAsideCards() {
 		ArrayList<DomCard> thePutAsideCards = putAsideCards;
 		putAsideCards=new ArrayList<DomCard>();
@@ -633,7 +637,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
 		return theCards;
 	}
 
-	public double getDrawDeckSize() {
+	public int getDrawDeckSize() {
 		return drawDeck.size();
 	}
 

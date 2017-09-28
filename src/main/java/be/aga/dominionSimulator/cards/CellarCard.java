@@ -18,15 +18,24 @@ public class CellarCard extends DomCard {
     }
 
     public void play() {
-      checkBadReshuffle();
-  	  deckSize = owner.getDeckSize();
-      drawDeckSize = owner.getDrawDeckSize();
-      owner.addActions( 1 );
-      discardCount=0;
-      discardExcessTerminalActions();
-      discardOtherCellars();
-      discardBadCards();
-      owner.drawCards( discardCount );
+      owner.addActions(1);
+      if (owner.isHumanOrPossessedByHuman()) {
+          ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+          owner.getEngine().getGameFrame().askToSelectCards("Choose cards to discard" , owner.getCardsInHand(), theChosenCards, 0);
+          for (DomCardName theCardName: theChosenCards) {
+              owner.discard(owner.getCardsFromHand(theCardName).get(0), false);
+          }
+          owner.drawCards(theChosenCards.size());
+      } else {
+          checkBadReshuffle();
+          deckSize = owner.getDeckSize();
+          drawDeckSize = owner.getDrawDeckSize();
+          discardCount = 0;
+          discardExcessTerminalActions();
+          discardOtherCellars();
+          discardBadCards();
+          owner.drawCards(discardCount);
+      }
     }
 
     private void checkBadReshuffle() {
@@ -58,7 +67,7 @@ public class CellarCard extends DomCard {
           //does not work well so removed for now
 //              && discardCount<badReshuffleTreshold) {
 		DomCard theCardToDiscard = owner.getCardsInHand().get(0);
-		if (theCardToDiscard.getDiscardPriority(1)<16) {
+		if (theCardToDiscard.getDiscardPriority(1)<=DomCardName.Silver.getDiscardPriority(1)) {
 	    	owner.discardFromHand(theCardToDiscard);
 	    	discardCount++;
 		} else {

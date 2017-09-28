@@ -58,6 +58,11 @@ public class AmuletCard extends DomCard {
             return true;
         }
 
+        if (!owner.getCardsFromHand(DomCardName.Market_Square).isEmpty() &&theCardToTrash.getTrashPriority()<=DomCardName.Copper.getTrashPriority(owner)) {
+            owner.trash(owner.removeCardFromHand(theCardToTrash));
+            return true;
+        }
+
         return false;
     }
 

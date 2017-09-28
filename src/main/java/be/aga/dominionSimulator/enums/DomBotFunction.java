@@ -13,6 +13,7 @@ public enum DomBotFunction {
    countEmptyPiles,
    countBuysLeft,
    getTotalMoney,
+   actionsLeft,
    isPlusOneBuyTokenSet,
    isPlusOneCardTokenSet,
    isPlusOneActionTokenSet,

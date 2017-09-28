@@ -1,6 +1,5 @@
 package be.aga.dominionSimulator;
 
-import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -11,11 +10,13 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Observer;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
+import com.sun.java.browser.plugin2.DOM;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -32,7 +33,6 @@ import be.aga.dominionSimulator.gui.DomBarChart;
 import be.aga.dominionSimulator.gui.DomGameFrame;
 import be.aga.dominionSimulator.gui.DomGui;
 import be.aga.dominionSimulator.gui.DomLineChart;
-import be.aga.dominionSimulator.gui.StatusBar;
 
 public class DomEngine {
     public static boolean showColoredLog = true;
@@ -43,7 +43,7 @@ public class DomEngine {
 	public static File BOT_FILE = new File(System.getProperty("user.home") + "/.domsim/userbots.xml");
 
     public static boolean haveToLog;
-    public static String myLog;
+    public static StringBuilder myLog=new StringBuilder();
     public static int logIndentation=0;
     public static int logPlayerIndentation=0;
     private static final Logger LOGGER = Logger.getLogger( DomEngine.class );
@@ -68,10 +68,29 @@ public class DomEngine {
 	private String myLastFile;
 	private double myTotalTime;
 	private int emptyPilesEndingCount=0;
-	private StatusBar myStatusBar;
-	private DomGameFrame myGameFrame;
-    
-    public DomEngine () {
+	private static DomGameFrame myGameFrame;
+	private DomGame currentGame;
+    private String myStatus;
+
+	/**
+	 * @param aString
+	 */
+	public static void addToLog( String aString ) {
+		StringBuilder theBuilder = new StringBuilder();
+		for (int i=0;i<logPlayerIndentation;i++){
+			theBuilder.append("&nbsp;&nbsp;&nbsp;");
+		}
+		for (int i=0;i<logIndentation;i++){
+			theBuilder.append("...&nbsp;");
+		}
+		theBuilder.append(aString).append("<BR>");
+		if (myGameFrame!=null) {
+			myGameFrame.addToLog(theBuilder.toString());
+		}
+		myLog.append(theBuilder);
+	}
+
+	public DomEngine () {
 		loadSystemBots();
 		createSimpleCardStrategiesBots();
 		loadCurrentUserBots();
@@ -107,7 +126,7 @@ public class DomEngine {
 			rdr.parse(src);
 			bots = saxHandler.getBots();
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(myGui, "You'll need to download Java 1.6 at www.java.com to run this program!!!");
+			JOptionPane.showMessageDialog(myGui, "You'll need to download Java 1.6 at www.java.com to runSimulation this program!!!");
 		}
 		Collections.sort( bots );
 	}
@@ -248,7 +267,11 @@ public class DomEngine {
       return bots.toArray();
     }
 
-    /**
+	public DomGame getCurrentGame() {
+		return currentGame;
+	}
+
+	/**
      * @param thePlayers
      * @param keepOrder 
      * @param aNumber 
@@ -257,7 +280,8 @@ public class DomEngine {
     public void startSimulation( ArrayList<DomPlayer> thePlayers, boolean keepOrder, int aNumber, boolean aShowLog ) {
         emptyPilesEndingCount=0;
         NUMBER_OF_GAMES = aNumber;
-        myLog="<BR><HR><B>Game Log</B><BR>";
+     	myLog = new StringBuilder();
+		myLog.append("<BR><HR><B>Game Log</B><BR>");
         long theStartTime = System.currentTimeMillis();
         players.clear();
         players.addAll(thePlayers);
@@ -272,19 +296,19 @@ public class DomEngine {
               Collections.shuffle(players);
             }
             haveToLog=false;
-            DomGame theGame = new DomGame(theBoard, players, null );
+            currentGame = new DomGame(theBoard, players, this);
             haveToLog=aShowLog;
-            theGame.run();
+            currentGame.runSimulation();
             if (DomEngine.haveToLog) {
-              writeEndOfGameLog(theGame);
+              writeEndOfGameLog(currentGame);
             }
-            playerTurnTime+=theGame.playerTurnTime;
-            checkGameFinishTime+=theGame.checkGameFinishTime;
-            emptyPilesEndingCount+=theGame.emptyPilesEnding ? 1 : 0;
+            playerTurnTime+=currentGame.playerTurnTime;
+            checkGameFinishTime+=currentGame.checkGameFinishTime;
+            emptyPilesEndingCount+=currentGame.emptyPilesEnding ? 1 : 0;
             long theTime = System.currentTimeMillis();
-            theGame.determineWinners();
+            currentGame.determineWinners();
             findWinnerTime += System.currentTimeMillis()-theTime;
-            theBoard=theGame.getBoard();
+            theBoard=currentGame.getBoard();
             theTime = System.currentTimeMillis();
 //            LOGGER.info("Game : "+ i);
 //            LOGGER.info("--------------");
@@ -300,7 +324,7 @@ public class DomEngine {
         
         myTotalTime = ((System.currentTimeMillis()-theStartTime)/100)/10.0;
         LOGGER.info("Board after all games: "+ theBoard);
-        LOGGER.info( "Totale run tijd : " + myTotalTime );
+        LOGGER.info( "Totale runSimulation tijd : " + myTotalTime );
 
         printResults();
         if (!haveToLog) 
@@ -308,7 +332,11 @@ public class DomEngine {
     }
 
 	private void writeEndOfGameLog(DomGame theGame) {
-      DomEngine.addToLog("</i>");
+		if (getCurrentGame().getBoard().countEmptyPiles() >= 3) {
+			DomEngine.addToLog("");
+			DomEngine.addToLog("Three piles depleted!");
+		}
+		DomEngine.addToLog("</i>");
 	  DomEngine.addToLog("!!!!!!!Game ends!!!!!!!!");
 	  DomEngine.addToLog("");
 	  DomEngine.addToStartOfLog("the Empty Piles : " + theGame.getEmptyPiles());
@@ -325,7 +353,7 @@ public class DomEngine {
     public static void addToStartOfLog(String string) {
         StringBuilder theBuilder = new StringBuilder();
         theBuilder.append(string).append("<BR>").append(myLog);
-        myLog=theBuilder.toString();
+        myLog=theBuilder;
 	}
 
 	/**
@@ -335,20 +363,6 @@ public class DomEngine {
         return players;
     }
     
-    /**
-     * @param aString
-     */
-    public static void addToLog( String aString ) {
-      StringBuilder theBuilder = new StringBuilder(myLog);
-      for (int i=0;i<logPlayerIndentation;i++){
-        theBuilder.append("&nbsp;&nbsp;&nbsp;");
-      }
-      for (int i=0;i<logIndentation;i++){
-        theBuilder.append("...&nbsp;");
-      }
-      theBuilder.append(aString).append("<BR>");
-      myLog=theBuilder.toString();
-    }
 
 	public void addUserBot(DomPlayer theNewPlayer) {
 		for (DomPlayer theBot : bots) {
@@ -495,44 +509,6 @@ public class DomEngine {
 		return theCards;
 	}
 
-	public ArrayList<DomCard> getHumanPlayerHand() {
-		ArrayList<DomCard> theCards = new ArrayList<DomCard>();
-		int i = 0;
-		for (DomCardName cardName : DomBoard.getRandomBoard()) {
-			theCards.add(cardName.createNewCardInstance());
-		}
-//		for (DomCardName cardName : DomBoard.getRandomBoard()) {
-//			theCards.add(cardName.createNewCardInstance());
-//		}
-//		for (DomCardName cardName : DomBoard.getRandomBoard()) {
-//			theCards.add(cardName.createNewCardInstance());
-//		}
-//		for (DomCardName cardName : DomBoard.getRandomBoard()) {
-//			theCards.add(cardName.createNewCardInstance());
-//		}
-//		for (DomCardName cardName : DomBoard.getRandomBoard()) {
-//			theCards.add(cardName.createNewCardInstance());
-//		}
-//		for (DomCardName cardName : DomBoard.getRandomBoard()) {
-//			theCards.add(cardName.createNewCardInstance());
-//		}
-		return theCards;
-	}
-
-	public ArrayList<DomCard> getCardsInPlay() {
-		ArrayList<DomCard> theCards = new ArrayList<DomCard>();
-		theCards.add(DomCardName.Woodcutter.createNewCardInstance());
-		theCards.add(DomCardName.Woodcutter.createNewCardInstance());
-		theCards.add(DomCardName.Woodcutter.createNewCardInstance());
-		return theCards;
-	}
-
-	public Component getStatusBar() {
-		myStatusBar = new StatusBar();
-		myStatusBar.setText("Alles goed");
-		return myStatusBar;
-	}
-
 	public void setGameFrame(DomGameFrame domGameFrame) {
 		myGameFrame = domGameFrame;
 	}
@@ -545,4 +521,44 @@ public class DomEngine {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void startHumanGame(DomPlayer theHumanPlayer) {
+    	myLog=new StringBuilder();
+    	logPlayerIndentation=0;
+    	logIndentation=0;
+		ArrayList<DomPlayer> thePlayers = myGui.initPlayers();
+		thePlayers.add(0,theHumanPlayer);
+		if (!myGui.getOrderBoxSelected())
+			Collections.shuffle(thePlayers);
+		emptyPilesEndingCount=0;
+		players.clear();
+		players.addAll(thePlayers);
+		DomBoard theBoard = null;
+		haveToLog=false;
+		currentGame = new DomGame(theBoard, players, this);
+		haveToLog=true;
+        setGameFrame(new DomGameFrame(this));
+		myGameFrame.setVisible(true);
+		currentGame.startUpHumanGame();
+	}
+
+	public void doEndOfHumanGameStuff() {
+		writeEndOfGameLog(currentGame);
+		emptyPilesEndingCount+=currentGame.emptyPilesEnding ? 1 : 0;
+		currentGame.determineWinners();
+//		printResults();
+		myGui.showSampleGame();
+	}
+
+	public void setStatus(String status) {
+		myStatus = status;
+	}
+
+	public DomGameFrame getGameFrame() {
+		return myGameFrame;
+	}
+
+    public String getStatus() {
+        return myStatus;
+    }
 }

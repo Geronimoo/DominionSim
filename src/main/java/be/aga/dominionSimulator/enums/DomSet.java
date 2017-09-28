@@ -5,20 +5,15 @@ import java.util.ArrayList;
 public enum DomSet {
    Base (new DomCardName[] {DomCardName.Cellar
            , DomCardName.Chapel
-           , DomCardName.Chancellor
            , DomCardName.Moat
            , DomCardName.Village
-           , DomCardName.Woodcutter
            , DomCardName.Workshop
            , DomCardName.Bureaucrat
-           , DomCardName.Feast
            , DomCardName.Gardens
            , DomCardName.Militia
            , DomCardName.Moneylender
            , DomCardName.Remodel
            , DomCardName.Smithy
-           , DomCardName.Spy
-           , DomCardName.Thief
            , DomCardName.Throne_Room
            , DomCardName.Council_Room
            , DomCardName.Festival
@@ -27,9 +22,22 @@ public enum DomSet {
            , DomCardName.Market
            , DomCardName.Mine
            , DomCardName.Witch
-           , DomCardName.Adventurer}),
+           , DomCardName.Harbinger
+           , DomCardName.Merchant
+           , DomCardName.Vassal
+           , DomCardName.Poacher
+           , DomCardName.Bandit
+           , DomCardName.Sentry
+           , DomCardName.Artisan}),
 
-   Intrigue (new DomCardName[] {DomCardName.Courtyard
+    OldBase (new DomCardName[] {DomCardName.Chancellor
+            , DomCardName.Woodcutter
+            , DomCardName.Feast
+            , DomCardName.Spy
+            , DomCardName.Thief
+            , DomCardName.Adventurer}),
+
+    Intrigue (new DomCardName[] {DomCardName.Courtyard
            , DomCardName.Pawn
            , DomCardName.Secret_Chamber
            , DomCardName.Great_Hall

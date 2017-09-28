@@ -29,12 +29,6 @@ public class CopperCard extends DomCard {
             return false;
     	if (handlePossibleGrandMarketBuy())
     	  return false;
-        if (owner.getCardsFromHand(DomCardName.Copper).size()==1
-          && owner.getBuysLeft() == 1
-          && !owner.getCardsFromPlay(DomCardName.Sauna).isEmpty()
-          && owner.getDesiredCard(owner.getTotalPotentialCurrency().add(new DomCost(-1,0)),false)==owner.getDesiredCard(owner.getTotalPotentialCurrency(),false)) {
-            return false;
-        }
     	return true;
     }
 

@@ -77,7 +77,13 @@ public class MandarinCard extends DomCard {
 
 	@Override
 	public void doWhenGained() {
-		//TODO now treasures are sorted so the best will be drawn again, but might need more handling
+        int theSum=0;
+//        while (!owner.getCardsFromPlay(DomCardType.Treasure).isEmpty() && theSum<5){
+//            DomCard theCard = owner.getCardsFromPlay(DomCardType.Treasure).get(0);
+//            theSum+=theCard.getCoinValue();
+//            owner.putOnTopOfDeck(owner.removeCardFromPlay(theCard));
+//        }
+        //TODO now treasures are sorted so the best will be drawn again, but might need more handling
 		Collections.sort(owner.getCardsInPlay(),SORT_FOR_DISCARDING);
 		while (!owner.getCardsFromPlay(DomCardType.Treasure).isEmpty()){
 			DomCard theCard = owner.removeCardFromPlay(owner.getCardsFromPlay(DomCardType.Treasure).get(0));

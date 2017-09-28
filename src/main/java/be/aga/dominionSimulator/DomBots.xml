@@ -1,5 +1,839 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <playerCollection>
+    <player name="First Game by michaeljb"
+            author="michaeljb"
+            description="This is a bot built for the First Game suggested set of 10. It utilizes 8 of the 10 available kingdom cards, and was built against HiveMindEmulator's Smithy bot for Geronimoo's First Game challenge.">
+        <type name="TwoPlayer"/>
+        <type name="Competitive"/>
+        <type name="Attacking"/>
+        <type name="Optimized"/>
+        <type name="Combo"/>
+        <type name="Engine"/>
+        <type name="Province"/>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+            <condition>
+                <left type="countVP"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="countMAXOpponentVP"/>
+                <extra_operation type="minus" attribute="20.0" />
+            </condition>
+            <condition>
+                <left type="isActionPhase"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Province"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+            <condition>
+                <left type="countVP"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="countMAXOpponentVP"/>
+            </condition>
+            <condition>
+                <left type="isActionPhase"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Province">
+            <condition>
+                <left type="countCardsInDeck" attribute="Province"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Province">
+            <condition>
+                <left type="countCardsInDeck" attribute="Smithy"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+            <condition>
+                <left type="countAvailableMoney"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="13.0"/>
+            </condition>
+            <condition>
+                <left type="countBuysLeft"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInDeck" attribute="Province"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="5.0"/>
+            </condition>
+        </buy>
+        <buy name="Estate">
+            <condition>
+                <left type="countCardsInDeck" attribute="Province"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Cellar"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Smithy"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="5.0"/>
+            </condition>
+        </buy>
+        <buy name="Estate">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Mine">
+            <condition>
+                <left type="countCardsInDeck" attribute="Mine"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Market"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Mine">
+            <condition>
+                <left type="countTurns"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Remodel">
+            <condition>
+                <left type="countCardsInDeck" attribute="Remodel"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Village">
+            <condition>
+                <left type="countCardTypeInDeck" attribute="Terminal"/>
+                <operator type="greaterThan" />
+                <right type="countCardsInDeck" attribute="Village"/>
+                <extra_operation type="plus" attribute="1.0" />
+            </condition>
+        </buy>
+        <buy name="Workshop">
+            <condition>
+                <left type="countCardsInDeck" attribute="Workshop"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Smithy"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+        </buy>
+        <buy name="Militia">
+            <condition>
+                <left type="countCardsInDeck" attribute="Militia"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Smithy"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Market">
+            <condition>
+                <left type="countCardsInDeck" attribute="Market"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Gold">
+            <condition>
+                <left type="countCardsInDeck" attribute="Gold"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Village">
+            <condition>
+                <left type="countAvailableMoney"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="7.0"/>
+            </condition>
+            <condition>
+                <left type="countBuysLeft"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="isActionPhase"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Village">
+            <condition>
+                <left type="isActionPhase"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countAvailableMoney"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="6.0"/>
+            </condition>
+            <condition>
+                <left type="countBuysLeft"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="countCardTypeInDeck" attribute="Terminal"/>
+                <operator type="greaterThan" />
+                <right type="countCardsInDeck" attribute="Village"/>
+            </condition>
+            <condition>
+                <left type="countCardsInSupply" attribute="Village"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Smithy"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Market">
+            <condition>
+                <left type="countCardsInDeck" attribute="Market"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="5.0"/>
+            </condition>
+            <condition>
+                <left type="isActionPhase"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Smithy"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Market">
+            <condition>
+                <left type="countCardsInDeck" attribute="Market"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="5.0"/>
+            </condition>
+            <condition>
+                <left type="isActionPhase"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Smithy"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="3.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Mine"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Smithy">
+            <condition>
+                <left type="isActionPhase"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Village"/>
+                <operator type="equalTo" />
+                <right type="countCardTypeInDeck" attribute="Terminal"/>
+                <extra_operation type="minus" attribute="1.0" />
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Smithy"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="6.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Copper"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="3.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Silver"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Gold"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countAvailableMoney"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Smithy">
+            <condition>
+                <left type="isActionPhase"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Village"/>
+                <operator type="equalTo" />
+                <right type="countCardTypeInDeck" attribute="Terminal"/>
+                <extra_operation type="minus" attribute="1.0" />
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Smithy"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="6.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Copper"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Silver"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Gold"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countAvailableMoney"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Smithy">
+            <condition>
+                <left type="isActionPhase"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Village"/>
+                <operator type="equalTo" />
+                <right type="countCardTypeInDeck" attribute="Terminal"/>
+                <extra_operation type="minus" attribute="1.0" />
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Smithy"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="6.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Copper"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Silver"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Gold"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countAvailableMoney"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Smithy">
+            <condition>
+                <left type="isActionPhase"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Village"/>
+                <operator type="equalTo" />
+                <right type="countCardTypeInDeck" attribute="Terminal"/>
+                <extra_operation type="minus" attribute="1.0" />
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Smithy"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="6.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Copper"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Silver"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Gold"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countAvailableMoney"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Smithy">
+            <condition>
+                <left type="isActionPhase"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Village"/>
+                <operator type="equalTo" />
+                <right type="countCardTypeInDeck" attribute="Terminal"/>
+                <extra_operation type="minus" attribute="1.0" />
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Smithy"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="6.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Copper"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Silver"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Gold"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countAvailableMoney"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Smithy">
+            <condition>
+                <left type="isActionPhase"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Village"/>
+                <operator type="equalTo" />
+                <right type="countCardTypeInDeck" attribute="Terminal"/>
+                <extra_operation type="minus" attribute="1.0" />
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Smithy"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="6.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Copper"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Silver"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Gold"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Smithy">
+            <condition>
+                <left type="isActionPhase"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Village"/>
+                <operator type="equalTo" />
+                <right type="countCardTypeInDeck" attribute="Terminal"/>
+                <extra_operation type="minus" attribute="1.0" />
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Smithy"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="6.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Copper"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Silver"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Gold"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countAvailableMoney"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="3.0"/>
+            </condition>
+        </buy>
+        <buy name="Village">
+            <condition>
+                <left type="countCardsInDeck" attribute="Village"/>
+                <operator type="smallerThan" />
+                <right type="countCardTypeInDeck" attribute="Terminal"/>
+            </condition>
+        </buy>
+        <buy name="Smithy">
+            <condition>
+                <left type="countCardsInDeck" attribute="Smithy"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="6.0"/>
+            </condition>
+        </buy>
+        <buy name="Market">
+            <condition>
+                <left type="isActionPhase"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Village">
+            <condition>
+                <left type="countCardsInDeck" attribute="Village"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="9.0"/>
+            </condition>
+        </buy>
+        <buy name="Cellar">
+            <condition>
+                <left type="countCardsInDeck" attribute="Cellar"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="isActionPhase"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Cellar">
+            <condition>
+                <left type="countCardsInDeck" attribute="Cellar"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+            <condition>
+                <left type="isActionPhase"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Smithy"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Cellar">
+            <condition>
+                <left type="countCardsInDeck" attribute="Cellar"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="isActionPhase"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Militia"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Workshop"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Mine"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Cellar">
+            <condition>
+                <left type="countCardsInDeck" attribute="Cellar"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+            <condition>
+                <left type="isActionPhase"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Militia"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Smithy"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Workshop"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInHand" attribute="Mine"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Gold">
+            <condition>
+                <left type="isActionPhase"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Silver">
+            <condition>
+                <left type="isActionPhase"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Cellar">
+            <condition>
+                <left type="countCardsInDeck" attribute="Cellar"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="3.0"/>
+            </condition>
+            <condition>
+                <left type="countCardTypeInDeck" attribute="Victory"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="3.0"/>
+            </condition>
+        </buy>
+        <buy name="Silver">
+            <condition>
+                <left type="countCardTypeInDeck" attribute="Treasure"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="7.0"/>
+            </condition>
+        </buy>
+        <buy name="Copper">
+            <condition>
+                <left type="countCardTypeInDeck" attribute="Treasure"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="5.0"/>
+            </condition>
+        </buy>
+    </player>
+
+    <player name="Burning Skull HTBD#1"
+            author="Geronimoo"
+            description="This bot emulates Burning Skull's strategy from the 'How to Base Dominion' series. XXXXHow to Base Dominion #01: https://www.youtube.com/watch?v=JpPtxyGNGcgXXXX">
+        <type name="Competitive"/>
+        <type name="Province"/>
+        <type name="TwoPlayer"/>
+        <board contents="Vassal, Mine" bane="" Mountain_Pass_Bid="0" Obelisk_Choice=""/>
+        <buy name="Province">
+            <condition>
+                <left type="countCardsInDeck" attribute="Laboratory"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Province">
+            <condition>
+                <left type="countCardsInDeck" attribute="Gold"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Laboratory"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+        </buy>
+        <buy name="Estate">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Sentry">
+            <condition>
+                <left type="countCardsInDeck" attribute="Sentry"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="3.0"/>
+            </condition>
+        </buy>
+        <buy name="Witch">
+            <condition>
+                <left type="countCardsInDeck" attribute="Witch"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Gold">
+            <condition>
+                <left type="getTotalMoney"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="8.0"/>
+            </condition>
+        </buy>
+        <buy name="Laboratory"/>
+        <buy name="Throne_Room">
+            <condition>
+                <left type="countCardsInDeck" attribute="Sentry"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Throne_Room"/>
+                <operator type="smallerThan" />
+                <right type="countCardTypeInDeck" attribute="Cycler"/>
+            </condition>
+        </buy>
+        <buy name="Militia">
+            <condition>
+                <left type="countCardsInDeck" attribute="Militia"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Silver">
+            <condition>
+                <left type="countCardsInDeck" attribute="Silver"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Poacher"/>
+        <buy name="Silver">
+            <condition>
+                <left type="getTotalMoney"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="6.0"/>
+            </condition>
+        </buy>
+        <buy name="Harbinger"/>
+        <buy name="Moat">
+            <condition>
+                <left type="countCardsInDeck" attribute="Moat"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+    </player>
+
+    <player name="Donate/Market Square"
+            author="Geronimoo"
+            description="Crazy combo that ends the game very fast.">
+        <type name="Province"/>
+        <type name="Combo"/>
+        <type name="TwoPlayer"/>
+        <type name="Competitive"/>
+        <buy name="Province"/>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+        </buy>
+        <buy name="Estate">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Donate">
+            <condition>
+                <left type="countCardsInDeck" attribute="Market_Square"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Gold"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Gold"/>
+        <buy name="Market_Square"/>
+        <buy name="Silver"/>
+    </player>
+
     <player name="Beggar/Tower"
             author="Emil"
             description="Strong combo gaining all the Coppers and Beggars for 63VP">
@@ -2228,7 +3062,7 @@
         <buy name="Silver"/>
     </player>
 
-    <player name="Journeyman engine"
+    <player name="Journeyman myEngine"
             author="Computer"
             description="This bot has been generated by the computer without any optimization. XXXXIt just buys a single Action card and money">
         <type name="Province"/>
@@ -2302,7 +3136,7 @@
 
     <player name="Hireling/KC/Monument"
             author="Geronimoo"
-            description="A massive engine powered by KC and Hireling with Monuments for payload">
+            description="A massive myEngine powered by KC and Hireling with Monuments for payload">
         <type name="TwoPlayer"/>
         <type name="Province"/>
         <buy name="Travelling_Fair">
@@ -3228,7 +4062,7 @@
 
     <player name="Council Room/Militia"
             author="Geronimoo"
-            description="Council Room engine with Militia">
+            description="Council Room myEngine with Militia">
         <type name="Competitive"/>
         <type name="Engine"/>
         <type name="TwoPlayer"/>
@@ -3303,7 +4137,7 @@
 
     <player name="Council Room/Treasure Map"
             author="Geronimoo"
-            description="This engine uses Treasure Map for payload and Militia to slow down opponents">
+            description="This myEngine uses Treasure Map for payload and Militia to slow down opponents">
         <type name="Competitive"/>
         <type name="Engine"/>
         <type name="TwoPlayer"/>
@@ -4890,7 +5724,7 @@
    <buy name="Copper"/>
 </player>
 
-<player name="Tactician/Secret Chamber" author="Geronimoo" description="This strategy strives to play Tactician every turn. Secret Chamber allows it to discard the cards for $ before Tactician does.XXXXThis bot is very similar to the Tactician/Vault bot, but it requires an extra engine part to draw cards and get to $8 each turn.XXXXIt's very strong with a $5/$2 opening, but very weak otherwise.">
+<player name="Tactician/Secret Chamber" author="Geronimoo" description="This strategy strives to play Tactician every turn. Secret Chamber allows it to discard the cards for $ before Tactician does.XXXXThis bot is very similar to the Tactician/Vault bot, but it requires an extra myEngine part to draw cards and get to $8 each turn.XXXXIt's very strong with a $5/$2 opening, but very weak otherwise.">
  <type name="Combo"/>
  <type name="TwoPlayer"/>
  <type name="Competitive"/>
@@ -6345,7 +7179,7 @@
    <buy name="Silver"/>
 </player>
 
-<player name="Festival/Watchtower" author="Geronimoo" description="A treasureless strategy. But it requires strong trashing to get going. XXXXThe engine is a bit too slow to build to make this competitive.">
+<player name="Festival/Watchtower" author="Geronimoo" description="A treasureless strategy. But it requires strong trashing to get going. XXXXThe myEngine is a bit too slow to build to make this competitive.">
  <type name="Engine"/>
  <type name="Combo"/>
  <type name="Province"/>

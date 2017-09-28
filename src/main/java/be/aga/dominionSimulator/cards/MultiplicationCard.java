@@ -3,7 +3,6 @@ package be.aga.dominionSimulator.cards;
 import java.util.ArrayList;
 
 import be.aga.dominionSimulator.DomCard;
-import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
@@ -18,11 +17,21 @@ public class MultiplicationCard extends DomCard {
 	}
 	
 	public void play(){
-      DomCard theCardToMultiply = getCardToMultiply();
+      DomCard theCardToMultiply=null;
+      if (owner.isHumanOrPossessedByHuman()) {
+	      if (!owner.getCardsFromHand(DomCardType.Action).isEmpty()) {
+              ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+	          for (DomCard theCard : owner.getCardsFromHand(DomCardType.Action))
+	              theChooseFrom.add(theCard.getName());
+	          theCardToMultiply = owner.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Select card for "+this.getName().toString(), theChooseFrom, "Don't use")).get(0);
+          }
+      } else {
+          theCardToMultiply = getCardToMultiply();
+      }
       if (theCardToMultiply == null)
-    	return;
+        return;
       //little fix for Tactician
-      if (theCardToMultiply.hasCardType(DomCardType.Duration) && theCardToMultiply.getName()!=DomCardName.Tactician){
+      if (theCardToMultiply.hasCardType(DomCardType.Duration) && theCardToMultiply.getName()!= DomCardName.Tactician){
         myDurationCards.add(theCardToMultiply);
         setDiscardAtCleanup(false);
       }
@@ -32,17 +41,17 @@ public class MultiplicationCard extends DomCard {
       //little fix for Tactician
       if (theCardToMultiply.getName()!=DomCardName.Tactician){
           play(theCardToMultiply, 2);
-	      if (getName()==DomCardName.King$s_Court) {
-	        play(theCardToMultiply, 3);
-	      }
+          if (getName()==DomCardName.King$s_Court) {
+            play(theCardToMultiply, 3);
+          }
       }
-   }
+    }
 
-	@Override
+    @Override
     public void cleanVariablesFromPreviousGames() {
       myDurationCards.clear();
       //TODO this is a test
-	  if (myDurationCards.isEmpty()) 
+	  if (myDurationCards.isEmpty())
 		return;
       if (owner==null) {
           myDurationCards.clear();
@@ -63,9 +72,9 @@ public class MultiplicationCard extends DomCard {
         if (thePlayer==null)
             thePlayer=theCardToMultiply.owner;
 		String aLogAppend = " with the " + this;
-		if (i==2) 
+		if (i==2)
 		  aLogAppend = " again";
-		if (i==3) 
+		if (i==3)
 	      aLogAppend = " a third time";
 		thePlayer.increaseActionsPlayed();
 		if (DomEngine.haveToLog ) {
@@ -119,6 +128,8 @@ public class MultiplicationCard extends DomCard {
               return theCard;
           if (theCard.hasCardType(DomCardType.Multiplier))
         	return theCard;
+          if (theCard.getName()==DomCardName.Chariot_Race) //Chariot Race is useless when deck is empty so throne it first
+              return theCard;
           if (theCard.hasCardType(DomCardType.Action) && theCard.wantsToBePlayed()){
         	if (theCard.hasCardType(DomCardType.Terminal)
                 && (owner.getActionsLeft()>0 || owner.getCardsFromHand(DomCardType.Terminal).size()==owner.getCardsFromHand(DomCardType.Action).size())
@@ -152,12 +163,24 @@ public class MultiplicationCard extends DomCard {
                 }
             }
         }
+        if (theCardToPlay!=null && owner.getDeckSize()==0 && theCardToPlay.hasCardType(DomCardType.Card_Advantage)) {
+            for (int i = 0;i<owner.getCardsInHand().size();i++) {
+                DomCard theCard = owner.getCardsInHand().get( i );
+                if (theCard.hasCardType(DomCardType.Action) && theCard.wantsToBePlayed()){
+                    if (!theCard.hasCardType(DomCardType.Card_Advantage)
+                            && (theNewCardToPlay == null ||theCard.getDiscardPriority(1)> theNewCardToPlay.getDiscardPriority(1))) {
+                        theNewCardToPlay = theCard;
+                    }
+                }
+            }
+        }
         return theNewCardToPlay;
     }
 
     @Override
     public int getPlayPriority() {
     	int theActionCount=0;
+    	int theNonTerminalCount=0;
     	for (DomCard theCard : owner.getCardsInHand()) {
     		if (theCard==this)
     			continue;
@@ -167,11 +190,15 @@ public class MultiplicationCard extends DomCard {
     			return 0;
             if (theCard.hasCardType(DomCardType.Action) && !(theCard instanceof DrawUntilXCardsCard))
             	theActionCount++;
+            if (theCard.hasCardType(DomCardType.Action) && !theCard.hasCardType(DomCardType.Terminal))
+                theNonTerminalCount++;
     	}
-    	if (theActionCount==1)
+    	if (theActionCount==1 || theNonTerminalCount==1)
     		return 0;
         if (getName()==DomCardName.Procession && !owner.getCardsFromHand(DomCardName.Fortress).isEmpty())
             return owner.getCardsFromHand(DomCardName.Fortress).get(0).getPlayPriority()-1;
+//        if (theActionCount>1 && !owner.getCardsFromHand(DomCardType.Card_Advantage).isEmpty() && owner.getDeckSize()>0)
+//            return owner.getCardsFromHand(DomCardType.Card_Advantage).get(0).getPlayPriority()-1;
     	return super.getPlayPriority();
     }
     

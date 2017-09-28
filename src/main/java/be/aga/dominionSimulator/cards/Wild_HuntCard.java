@@ -13,7 +13,7 @@ public class Wild_HuntCard extends DomCard {
     }
 
     public void play() {
-        if (owner.getCurrentGame().countInSupply(DomCardName.Estate)==0 && owner.getDeckSize()>0) {
+        if (owner.getCurrentGame().countInSupply(DomCardName.Estate)==0 || (!owner.getCardsFromHand(DomCardName.Wild_Hunt).isEmpty() && owner.actionsLeft>0)) {
             drawCards();
             return;
         }

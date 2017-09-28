@@ -17,6 +17,10 @@ public class HerbalistCard extends DomCard {
     }
     
 	public void maybeAddTagFor(ArrayList<DomCard> theCardsToHandle) {
+      if (!owner.getCardsFromPlay(DomCardName.Capital).isEmpty() && !owner.getCardsFromPlay(DomCardName.Capital).get(0).isTaggedByHerbalist()) {
+          owner.getCardsFromPlay(DomCardName.Capital).get(0).addHerbalistTag();
+          return;
+      }
       for (int i=theCardsToHandle.size()-1;i>=0;i--) {
     	DomCard theCard = theCardsToHandle.get(i);
     	if (!theCard.isTaggedByHerbalist()

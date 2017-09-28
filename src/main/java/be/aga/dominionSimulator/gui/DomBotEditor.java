@@ -329,8 +329,8 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
         formatter.setValueClass(Integer.class);
         formatter.setMinimum(0);
         formatter.setMaximum(Integer.MAX_VALUE);
-        formatter.setAllowsInvalid(false);
-        formatter.setCommitsOnValidEdit(true);
+//        formatter.setAllowsInvalid(false);
+        formatter.setCommitsOnValidEdit(false);
         myMountainPassBidField = new JFormattedTextField(formatter);
         myMountainPassBidField.setColumns(10);
         myMountainPassBidField.setValue(myChosenStrategy.getMountainPassBid());
@@ -386,7 +386,7 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
         	}
         	theTypeString.append(botType);
         }
-		return theTypeString.toString();
+		return theTypeString==null? "" : theTypeString.toString();
 	}
 
     private JList getTypeList() {

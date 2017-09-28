@@ -12,7 +12,8 @@ public class SpoilsCard extends DomCard {
     
     @Override
     public boolean wantsToBePlayed() {
-    	return owner.addingThisIncreasesBuyingPower(new DomCost(3,0));
+        return true;
+//    	return owner.removingReducesBuyingPower(this);
     }
     
     @Override
@@ -24,5 +25,10 @@ public class SpoilsCard extends DomCard {
             owner.getCardsInPlay().remove(this);
             owner.returnToSupply(this);
         }
+    }
+
+    @Override
+    public double getPotentialCoinValue() {
+        return 3;
     }
 }

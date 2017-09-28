@@ -46,7 +46,7 @@ public class CourtierCard extends DomCard {
             actionChosen=true;
             return;
         }
-        if (!buysChosen && owner.getBuysLeft()<=1 && owner.getTotalPotentialCurrency().compareTo(new DomCost(11,0))>=0) {
+        if (!buysChosen && owner.getBuysLeft()<=owner.getTotalPotentialCurrency().getCoins()/8.0-1) {
             owner.addAvailableBuys(1);
             buysChosen=true;
             return;
@@ -81,5 +81,18 @@ public class CourtierCard extends DomCard {
             buysChosen=true;
             return;
         }
+    }
+
+    @Override
+    public int getPlayPriority() {
+        for (DomCard theCard:owner.getCardsInHand()) {
+            if (theCard.getName().countTypes()>2)
+                return (theCard.getPlayPriority()-1);
+        }
+        for (DomCard theCard:owner.getCardsInHand()) {
+            if (theCard.getName().countTypes()>1)
+                return (theCard.getPlayPriority()-1);
+        }
+        return super.getPlayPriority();
     }
 }

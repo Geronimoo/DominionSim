@@ -36,8 +36,7 @@ public class Salt_the_EarthCard extends DomCard {
                 return;
             theCardToTrash = owner.getCurrentGame().takeFromSupply(theCard);
         }
-
-        theCardToTrash.setOwner(owner);
+//        theCardToTrash.setOwner(owner);
         owner.trash(theCardToTrash);
     }
 }

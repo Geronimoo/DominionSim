@@ -31,4 +31,11 @@ public class Wishing_WellCard extends DomCard {
         owner.putOnTopOfDeck(theRevealedCard);
       }
     }
+
+    @Override
+    public int getPlayPriority() {
+        if (owner.getKnownTopCards()>=2)
+            return 0;
+        return super.getPlayPriority();
+    }
 }

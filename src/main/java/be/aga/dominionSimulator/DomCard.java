@@ -123,6 +123,8 @@ public class DomCard implements Comparable< DomCard >{
      * @return
      */
     public double getPotentialCoinValue() {
+        if (owner==null)
+            return 0;
       if (owner.getActionsLeft()==0 && hasCardType( DomCardType.Action ) && owner.getCardsInHand().contains( this ) ) {
         return 0;
       } else {
@@ -329,4 +331,6 @@ public class DomCard implements Comparable< DomCard >{
     public DomCardName isFromPile() {
         return name.isFromPile();
     }
+
+    public void continuePlaying(DomCard theCard) {}
 }

@@ -1,6 +1,7 @@
 package be.aga.dominionSimulator;
 
 import java.util.ArrayList;
+import java.util.Observable;
 
 import be.aga.dominionSimulator.cards.*;
 import org.apache.log4j.ConsoleAppender;
@@ -11,7 +12,7 @@ import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 import be.aga.dominionSimulator.enums.DomPhase;
 
-public class DomGame {
+public class DomGame extends Observable{
     private static final Logger LOGGER = Logger.getLogger( DomGame.class );
     static {
         LOGGER.setLevel( DomEngine.LEVEL );
@@ -19,6 +20,8 @@ public class DomGame {
         if (DomEngine.addAppender)
             LOGGER.addAppender(new ConsoleAppender(new SimpleLayout()) );
     }
+
+    private final DomEngine myEngine;
 
   ArrayList< DomPlayer > players = new ArrayList< DomPlayer >();
   DomBoard board;
@@ -29,12 +32,16 @@ public class DomGame {
   private boolean extraTurnsTakenByActivePlayer;
   private boolean isNoProvinceGainedYet = true;
   private boolean auctionTriggered;
+    private int turn;
+    private ArrayList<DomCard> resolvingCards = new ArrayList<DomCard>();
 
 
     /**
-   * @param aPlayers
- */
-  public DomGame ( DomBoard aBoard, ArrayList< DomPlayer > aPlayers, ArrayList< DomCardName > aCardNames) {
+     * @param aPlayers
+     * @param anEngine
+     */
+  public DomGame(DomBoard aBoard, ArrayList<DomPlayer> aPlayers, DomEngine anEngine) {
+     myEngine = anEngine;
      players.addAll( aPlayers );
      if (aBoard==null){
        board = new DomBoard(DomCardName.class, players);
@@ -77,9 +84,9 @@ public DomCard takeFromSupply( DomCardName aCardName ) {
  * @return 
  * 
  */
-public void run() {
+public void runSimulation() {
     long theTime = System.currentTimeMillis();
-    int turn = 0;
+    turn = 0;
     do {
         turn++;
         DomEngine.logPlayerIndentation = 0;
@@ -112,8 +119,6 @@ public void run() {
           DomEngine.logPlayerIndentation++;
         }
     } while (!isGameFinished() );
-//    if (turn<=10)
-//        LOGGER.info("Weinig beurten: " + turn);
     DomEngine.logPlayerIndentation = 0;
 }
 
@@ -121,14 +126,14 @@ public void determineWinners() {
     int theMaxPoints = -1000;
     int theMinTurns = 10000;
     int winners = 0;
-     
+
     for (DomPlayer thePlayer : players) {
       thePlayer.handleGameEnd();
     }
     for (DomPlayer thePlayer : players) {
       if (DomEngine.haveToLog) DomEngine.addToStartOfLog( "");
       thePlayer.showDeck();
-      if (DomEngine.haveToLog) 
+      if (DomEngine.haveToLog)
     	  DomEngine.addToStartOfLog( "<B>"+thePlayer + "</B> has " +  thePlayer.countVictoryPoints() + " points "
     			  +(thePlayer.getVictoryTokens()>0 ? (" ("+thePlayer.getVictoryTokens()+"&#x25BC;) ") : "")
                   + getLandMarkText(thePlayer)
@@ -136,7 +141,7 @@ public void determineWinners() {
       theMaxPoints = thePlayer.countVictoryPoints()>theMaxPoints ? thePlayer.countVictoryPoints() : theMaxPoints;
     }
     for (DomPlayer thePlayer : players) {
-      if (thePlayer.countVictoryPoints()>=theMaxPoints) { 
+      if (thePlayer.countVictoryPoints()>=theMaxPoints) {
         theMinTurns = thePlayer.getTurns()<theMinTurns ? thePlayer.getTurns() : theMinTurns;
       }
     }
@@ -146,18 +151,22 @@ public void determineWinners() {
       }
     }
     if (DomEngine.haveToLog) DomEngine.addToStartOfLog( "");
-    for (DomPlayer thePlayer : players) {
-      if (thePlayer.countVictoryPoints()>=theMaxPoints && thePlayer.getTurns()<=theMinTurns) {
-        if (winners > 1) {
-          if (DomEngine.haveToLog) DomEngine.addToStartOfLog( thePlayer + " ties for the win !!" );
+    if (!isGameFinished()) {
+        if (DomEngine.haveToLog) DomEngine.addToStartOfLog(getHumanPlayer() + " resigned!!");
+    } else {
+        for (DomPlayer thePlayer : players) {
+            if (thePlayer.countVictoryPoints() >= theMaxPoints && thePlayer.getTurns() <= theMinTurns) {
+                if (winners > 1) {
+                    if (DomEngine.haveToLog) DomEngine.addToStartOfLog(thePlayer + " ties for the win !!");
 //          if (players.get(0).pprUsed)
-          thePlayer.addTie(1.0/winners);
-        } else {
-          if (DomEngine.haveToLog) DomEngine.addToStartOfLog( thePlayer + " wins this game!!");
+                    thePlayer.addTie(1.0 / winners);
+                } else {
+                    if (DomEngine.haveToLog) DomEngine.addToStartOfLog(thePlayer + " wins this game!!");
 //          if (players.get(0).pprUsed)
-          thePlayer.addWin();
+                    thePlayer.addWin();
+                }
+            }
         }
-      } 
     }
 }
 
@@ -203,7 +212,7 @@ public void determineWinners() {
     /**
  * @return
  */
-boolean isGameFinished() {
+    public boolean isGameFinished() {
     long theTime = System.currentTimeMillis();
     if (players.get( 0 ).getTurns()>60){
       LOGGER.debug( "Too many turns!!! Game ended!" );
@@ -227,10 +236,6 @@ boolean isGameFinished() {
     }
 
     if (board.countEmptyPiles() >= 3) {
-      if (DomEngine.haveToLog) {
-        DomEngine.addToLog("");
-        DomEngine.addToLog("Three piles depleted!");
-      }
       checkGameFinishTime+=System.currentTimeMillis()-theTime;
       emptyPilesEnding=true;
       return true;
@@ -330,15 +335,15 @@ public boolean isBuyPhase() {
 }
 
 public int getBridgesPlayed() {
-	return activePlayer.getBridgesPlayedCount();
+	return activePlayer!=null?activePlayer.getBridgesPlayedCount():0;
 }
 
 public int getPrincessesInPlay() {
-    return activePlayer.getCardsFromPlay(DomCardName.Princess).size();
+    return activePlayer!=null?activePlayer.getCardsFromPlay(DomCardName.Princess).size():0;
 }
 
 public int getQuarriesPlayed() {
-    return activePlayer.getCardsFromPlay(DomCardName.Quarry).size();
+    return activePlayer!=null?activePlayer.getCardsFromPlay(DomCardName.Quarry).size():0;
 }
 
   public int countActionsInPlay() {
@@ -359,7 +364,7 @@ public DomCardName getBestCardInSupplyNotOfType(DomPlayer aPlayer,
 }
 
 public int getHighwaysInPlay() {
-	return activePlayer.getCardsFromPlay(DomCardName.Highway).size();
+	return activePlayer!=null?activePlayer.getCardsFromPlay(DomCardName.Highway).size():0;
 }
 
 public DomPlayer getActivePlayer() {
@@ -370,7 +375,7 @@ public boolean isInKingDom(DomCardName aCard) {
         return getBoard().containsKey(aCard);
     }
 
-public int getBridge_TrollsInPlay() { return activePlayer.getCardsFromPlay(DomCardName.Bridge_Troll).size();    }
+public int getBridge_TrollsInPlay() { return activePlayer!=null?activePlayer.getCardsFromPlay(DomCardName.Bridge_Troll).size():0;    }
 
     public ArrayList<DomCard> getRogueableCardsInTrash() {
         ArrayList<DomCard> theRogueableCards = new ArrayList<DomCard>();
@@ -414,5 +419,89 @@ public int getBridge_TrollsInPlay() { return activePlayer.getCardsFromPlay(DomCa
 
     public void setAuctionTriggered(boolean auctionTriggered) {
         this.auctionTriggered = auctionTriggered;
+    }
+
+    public void startUpHumanGame() {
+        addObserver(myEngine.getGameFrame());
+        turn = 1;
+        DomEngine.addToLog("<BR><HR><B>Game Log</B><BR>");
+
+        DomEngine.logPlayerIndentation = 0;
+//        activePlayer = players.get(0).isHuman() ? players.get(1):players.get(0);
+        activePlayer=players.get(0);
+        while (!activePlayer.isHuman()&&(activePlayer.getPossessor()==null||!activePlayer.getPossessor().isHuman())) {
+            activePlayer.takeTurn();
+            activePlayer=activePlayer.getOpponents().get(0);
+            DomEngine.logPlayerIndentation++;
+        }
+//        activePlayer.gainInHand(takeFromSupply(DomCardName.Market));
+//        activePlayer.gainInHand(takeFromSupply(DomCardName.Village));
+//        activePlayer.gainInHand(takeFromSupply(DomCardName.Smithy));
+
+        initHumanOrPossessedPlayer();
+        activePlayer.addObserver(myEngine.getGameFrame());
+        setChanged();
+        notifyObservers();
+    }
+
+    public DomEngine getEngine() {
+        return myEngine;
+    }
+
+    public DomPlayer getHumanPlayer() {
+        for (DomPlayer thePlayer : players) {
+            if (thePlayer.isHuman())
+                return thePlayer;
+        }
+        return null;
+    }
+
+    public void continueHumanGame() {
+        getHumanPlayer().updateVPCurve(false);
+        if (!isGameFinished()) {
+            setChanged();
+            notifyObservers();
+            activePlayer=activePlayer.getOpponents().get(0);
+            DomEngine.logPlayerIndentation++;
+            while (!isGameFinished() && !activePlayer.isHuman()&&(activePlayer.getPossessor()==null||!activePlayer.getPossessor().isHuman())) {
+                if (activePlayer.equals(players.get(0))) {
+                    DomEngine.logPlayerIndentation=0;
+                }
+                activePlayer.takeTurn();
+                activePlayer=activePlayer.getOpponents().get(0);
+                DomEngine.logPlayerIndentation++;
+            }
+            if (!isGameFinished()) {
+                if (activePlayer.equals(players.get(0))) {
+                    DomEngine.logPlayerIndentation = 0;
+                }
+                initHumanOrPossessedPlayer();
+            } else {
+                myEngine.doEndOfHumanGameStuff();
+            }
+        } else {
+            myEngine.doEndOfHumanGameStuff();
+        }
+        setChanged();
+        notifyObservers();
+    }
+
+    private void initHumanOrPossessedPlayer() {
+        activePlayer.initializeTurn();
+        activePlayer.setPhase(DomPhase.Action);
+        if (activePlayer.getCardsFromHand(DomCardType.Action).isEmpty())
+            activePlayer.setPhase(DomPhase.Buy);
+    }
+
+    public DomCard getResolvingCard() {
+        return resolvingCards.isEmpty()?null:resolvingCards.get(0);
+    }
+
+    public void addResolvingCard(DomCard resolvingCard) {
+        resolvingCards.add(0,resolvingCard);
+    }
+
+    public void removeResolvingCard() {
+        resolvingCards.remove(0);
     }
 }

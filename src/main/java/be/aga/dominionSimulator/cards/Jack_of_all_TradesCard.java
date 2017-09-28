@@ -72,6 +72,13 @@ public class Jack_of_all_TradesCard extends DrawUntilXCardsCard {
 	}
     @Override
     public int getPlayPriority() {
-      return owner.getActionsLeft()>1 ? 5 : super.getPlayPriority();
+      return owner.getActionsLeft()>1 ? 6 : super.getPlayPriority();
+    }
+
+    @Override
+    public boolean wantsToBePlayed() {
+        if (owner.wants(DomCardName.Villa) && owner.getTotalAvailableCoins()>=4 && owner.getCardsFromHand(DomCardName.Jack_of_all_Trades).size()==1 && owner.getCardsInHand().size()>=4)
+            return false;
+        return true;
     }
 }

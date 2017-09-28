@@ -18,7 +18,7 @@ public class EngineerCard extends DomCard {
       }
       if (theDesiredCard!=null)
         owner.gain(theDesiredCard);
-      if (owner.getCurrentGame().countInSupply(theDesiredCard)<3) {
+      if (owner.getCurrentGame().countInSupply(theDesiredCard)<3 || !owner.stillInEarlyGame()) {
           DomCardName theNewDesiredCard = owner.getDesiredCard(new DomCost(4, 0), false);
           if (theDesiredCard==theNewDesiredCard) {
               DomPlayer theOwner = owner;

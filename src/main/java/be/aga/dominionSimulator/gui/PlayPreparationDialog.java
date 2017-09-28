@@ -1,8 +1,12 @@
 package be.aga.dominionSimulator.gui;
 
+import be.aga.dominionSimulator.DomBuyRule;
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
+import be.aga.dominionSimulator.enums.DomCardType;
+import be.aga.dominionSimulator.enums.DomSet;
+import org.jfree.ui.RefineryUtilities;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,8 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.*;
 
 /**
  * Created by jeroena on 19/02/2016.
@@ -20,30 +23,51 @@ public class PlayPreparationDialog extends EscapeDialog implements ActionListene
 
     private final DomEngine myEngine;
     private final ArrayList<DomPlayer> myBots;
-    private ArrayList<DomCardName> myBoard;
+    private HashSet<DomCardName> myBoard = new HashSet<DomCardName>();
     private JTextField myBoardField;
     private JTextField myBaneField;
     private ButtonGroup myBTNGroup;
+    private DomCardName myBane;
+    private HashSet<DomSet> myValidSets = new HashSet<DomSet>();
 
     public PlayPreparationDialog(DomEngine anEngine) {
+        myValidSets.add(DomSet.Base);
         myEngine=anEngine;
         myEngine.getGui().getGlassPane().setVisible(true);
         myBots = myEngine.getGui().getBots();
         if (myBots.isEmpty()){
             JOptionPane.showMessageDialog(this, "Please select (a) bot(s) to play against!", "Error", JOptionPane.ERROR_MESSAGE);
             dispose();
-            myEngine.getGui().getGlassPane().setVisible(false);
+            return;
+        }
+        resetBoard();
+        resetBane();
+        if (!checkValidSets()) {
+            JOptionPane.showMessageDialog(this, "<html>Bot not supported (yet)<br>Supported Set: Base Dominion</html>", "Error", JOptionPane.ERROR_MESSAGE);
+            dispose();
             return;
         }
         setTitle("Prepare to play against " + myBots);
         buildGUI();
         pack();
         setVisible( true );
+        RefineryUtilities.positionDialogRelativeToParent(this,1,1);
+
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 dispose();
             }
         });
+    }
+
+    private boolean checkValidSets() {
+        for (DomCardName theCard:myBoard) {
+            if (!myValidSets.contains(theCard.getSet()))
+                return false;
+        }
+        if (myBane!=null && !myValidSets.contains(myBane.getSet()))
+            return false;
+        return true;
     }
 
     private void buildGUI() {
@@ -61,18 +85,54 @@ public class PlayPreparationDialog extends EscapeDialog implements ActionListene
         thePanel.setLayout( new GridBagLayout() );
         final GridBagConstraints theCons = DomGui.getGridBagConstraints( 2 );
         thePanel.add(new JLabel("Board"),theCons);
-        myBoard = myBots.get(0).getSuggestedBoard();
         myBoardField = new JTextField(myBoard.toString().replaceAll("\\[|\\]", "") , 50);
         theCons.gridx++;
+        theCons.gridwidth=2;
         thePanel.add(myBoardField,theCons);
         theCons.gridx=0;
         theCons.gridy++;
+        theCons.gridwidth=1;
         theCons.fill=GridBagConstraints.NONE;
         thePanel.add(new JLabel("Bane Card"),theCons);
-        myBaneField = new JTextField(myBots.get(0).getBaneCardAsString(), 15);
+        resetBane();
+        myBaneField = new JTextField(myBane!=null?myBane.toString():"", 15);
         theCons.gridx++;
         thePanel.add(myBaneField,theCons);
+        //randomize board
+        JButton theBTN = new JButton("Randomize (rest of) the board");
+        theBTN.addActionListener(this);
+        theBTN.setActionCommand("Randomize");
+        theBTN.setMnemonic('R');
+        theCons.gridx++;
+        theCons.gridwidth=1;
+        theCons.anchor=GridBagConstraints.EAST;
+        thePanel.add(theBTN,theCons);
         return thePanel;
+    }
+
+    private void resetBoard() {
+        myBoard.clear();
+        for (DomPlayer theBot : myBots) {
+            if (!theBot.getSuggestedBoard().isEmpty()) {
+                myBoard.addAll(theBot.getSuggestedBoard());
+            }
+        }
+        for (DomPlayer theBot : myBots) {
+            for (DomBuyRule theRule:theBot.getBuyRules()) {
+                if (theRule.getCardToBuy().hasCardType(DomCardType.Kingdom) || theRule.getCardToBuy()== DomCardName.Platinum || theRule.getCardToBuy()==DomCardName.Colony )
+                    myBoard.add(theRule.getCardToBuy());
+            }
+        }
+    }
+
+    private void resetBane() {
+        myBane=null;
+        for (DomPlayer theBot : myBots) {
+            if (theBot.getBaneCard()!=null) {
+                myBane=theBot.getBaneCard();
+                myBaneField.setText(myBane.toString());
+            }
+        }
     }
 
     private JPanel getStartStatePanel() {
@@ -126,20 +186,41 @@ public class PlayPreparationDialog extends EscapeDialog implements ActionListene
             dispose();
             return;
         }
-
-        DomPlayer theHumanPlayer = new DomPlayer("Human");
-//        if (!theHumanPlayer.addBoard(resolveAttrib(uri, "contents", attribs, null), resolveAttrib(uri, "bane", attribs, null), myBoardField.getText(), myBaneField.getText())) {
-//            JOptionPane.showMessageDialog(this, "An error was found in the Board and/or Bane", "Error", JOptionPane.ERROR_MESSAGE);
-//            return;
-//        }
-        int j=0;
-        for ( Enumeration< AbstractButton > theEnum = myBTNGroup.getElements();theEnum.hasMoreElements();j++) {
-            if (theEnum.nextElement().isSelected() ){
-                if (j==1)
-                    theHumanPlayer.forceStart( 43 );
-                if (j==2)
-                    theHumanPlayer.forceStart( 52 );
+        if (e.getActionCommand().equals("Randomize")) {
+            resetBoard();
+            resetBane();
+            while (myBoard.size()<10) {
+                myBoard.add(DomCardName.getRandomKingdomCard());
             }
+            if (myBoard.contains(DomCardName.Young_Witch) && myBane==null){
+                Object[] theBanes = DomCardName.getPossibleBaneCards();
+                DomCardName theRandomBane = ((DomCardName) theBanes[new Random().nextInt(theBanes.length)]);
+                while (myBoard.contains(theRandomBane)) {
+                    theRandomBane = ((DomCardName) theBanes[new Random().nextInt(theBanes.length)]);
+                }
+                myBane=theRandomBane;
+            }
+            update();
+            return;
+        }
+        if (e.getActionCommand().equals("Start")) {
+            DomPlayer theHumanPlayer = new DomPlayer("Human");
+            theHumanPlayer.setHuman();
+            if (!theHumanPlayer.addBoard(myBoardField.getText(),myBaneField.getText(),"0","")) {
+              JOptionPane.showMessageDialog(this, "An error was found in the Board and/or Bane", "Error", JOptionPane.ERROR_MESSAGE);
+              return;
+            }
+            int j = 0;
+            for (Enumeration<AbstractButton> theEnum = myBTNGroup.getElements(); theEnum.hasMoreElements(); j++) {
+                if (theEnum.nextElement().isSelected()) {
+                    if (j == 1)
+                        theHumanPlayer.forceStart(43);
+                    if (j == 2)
+                        theHumanPlayer.forceStart(52);
+                }
+            }
+            myEngine.startHumanGame(theHumanPlayer);
+            dispose();
         }
     }
 
@@ -147,5 +228,10 @@ public class PlayPreparationDialog extends EscapeDialog implements ActionListene
     public void dispose() {
         myEngine.getGui().getGlassPane().setVisible(false);
         super.dispose();
+    }
+
+    public void update() {
+        myBoardField.setText(myBoard.toString().replaceAll("\\[|\\]", ""));
+        myBaneField.setText(myBane!=null?myBane.toString():"");
     }
 }

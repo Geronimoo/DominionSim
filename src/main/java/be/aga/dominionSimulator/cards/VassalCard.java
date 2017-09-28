@@ -14,10 +14,18 @@ public class VassalCard extends DomCard {
       if (owner.getDeckSize()==0)
     	return;
       DomCard theRevealedCard = owner.revealTopCards(1).get(0);
-      if (theRevealedCard.hasCardType(DomCardType.Action) && theRevealedCard.wantsToBePlayed())
-        owner.play(theRevealedCard);
-      else
-        owner.discard(theRevealedCard);
+      if (owner.isHumanOrPossessedByHuman()) {
+          if (theRevealedCard.hasCardType(DomCardType.Action) && owner.getEngine().getGameFrame().askPlayer("<html>Play " + theRevealedCard.getName().toHTML() +"?</html>", "Resolving " + this.getName().toString())) {
+              owner.play(theRevealedCard);
+          }else{
+              owner.discard(theRevealedCard);
+          }
+      } else {
+          if (theRevealedCard.hasCardType(DomCardType.Action) && theRevealedCard.wantsToBePlayed())
+              owner.play(theRevealedCard);
+          else
+              owner.discard(theRevealedCard);
+      }
     }
 
     @Override

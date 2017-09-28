@@ -24,8 +24,26 @@ public class SchemeCard extends DomCard {
     	 && theCard.hasCardType(DomCardType.Action) 
     	 && theCard.discardAtCleanUp() 
     	 && (theCard.getName()!=DomCardName.Alchemist || owner.getCardsFromPlay(DomCardName.Potion).isEmpty())) {
-    		theCard.addSchemeTag();
-    		break;
+    		int theTerminalCount = 0;
+    		int theVillageCount = 0;
+    		for (DomCard card:owner.getCardsInPlay()) {
+    			theTerminalCount+=card.hasCardType(DomCardType.Terminal) && card.isTaggedByScheme()? 1 : 0;
+    			theVillageCount+=card.hasCardType(DomCardType.Village) && card.isTaggedByScheme() ? 1 : 0;
+			}
+			if (!theCard.hasCardType(DomCardType.Terminal)&&theTerminalCount<=theVillageCount) {
+				theCard.addSchemeTag();
+				break;
+			} else {
+    			if( theTerminalCount<=theVillageCount) {
+					theCard.addSchemeTag();
+					break;
+				}else  {
+					if (theCard.hasCardType(DomCardType.Village)) {
+						theCard.addSchemeTag();
+						break;
+					}
+				}
+			}
     	}
       }
 	}

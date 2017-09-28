@@ -17,7 +17,7 @@ public class LurkerCard extends DomCard {
   public void play() {
     owner.addActions(1);
     DomCard theWantedAction = findActionInTrash();
-    if (theWantedAction!=null) {
+    if (theWantedAction!=null && theWantedAction.getName()!=DomCardName.Hunting_Grounds ) {
       owner.gain(owner.getCurrentGame().removeFromTrash(theWantedAction));
     } else {
       trashActionFromSupply();
@@ -35,14 +35,14 @@ public class LurkerCard extends DomCard {
 
     private void trashActionFromSupply() {
         for (DomBuyRule theBuyRule : owner.getBuyRules()) {
-            if (theBuyRule.getCardToBuy().hasCardType(DomCardType.Action) && owner.checkBuyConditions(theBuyRule)) {
+            if (theBuyRule.getCardToBuy().hasCardType(DomCardType.Action) && owner.checkBuyConditions(theBuyRule) && owner.getCurrentGame().countInSupply(theBuyRule.getCardToBuy())>0) {
                 DomCard theCard = owner.getCurrentGame().takeFromSupply(theBuyRule.getCardToBuy());
                 owner.trash(theCard);
                 return;
             }
         }
         for (DomBuyRule theBuyRule : owner.getBuyRules()) {
-            if (theBuyRule.getCardToBuy().hasCardType(DomCardType.Action) ) {
+            if (theBuyRule.getCardToBuy().hasCardType(DomCardType.Action) && owner.getCurrentGame().countInSupply(theBuyRule.getCardToBuy())>0) {
                 DomCard theCard = owner.getCurrentGame().takeFromSupply(theBuyRule.getCardToBuy());
                 owner.trash(theCard);
                 return;
@@ -63,7 +63,7 @@ public class LurkerCard extends DomCard {
         for (DomBuyRule theBuyRule : owner.getBuyRules()) {
             if (theActions.contains(theBuyRule.getCardToBuy())){
                 for (DomCard theCard : owner.getCurrentGame().getTrashedCards()) {
-                    if (theCard.getName()==theBuyRule.getCardToBuy())
+                    if (theCard.getName()==theBuyRule.getCardToBuy() && owner.checkBuyConditions(theBuyRule))
                         return theCard;
                 }
             }

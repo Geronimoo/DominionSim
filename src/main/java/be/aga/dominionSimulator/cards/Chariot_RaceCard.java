@@ -21,7 +21,13 @@ public class Chariot_RaceCard extends DomCard {
         DomCard theRevealedCard = owner.revealTopCards(1).get(0);
         DomCard theOppRevealedCard = theLeftOpp.revealTopCards(1).get(0);
 
-        if (theRevealedCard.getCost(owner.getCurrentGame()).compareTo(theOppRevealedCard.getCost(owner.getCurrentGame()))>0) {
+        if (theRevealedCard.getDebtCost()==0 && theOppRevealedCard.getDebtCost()==0 &&
+        theRevealedCard.getCost(owner.getCurrentGame()).compareTo(theOppRevealedCard.getCost(owner.getCurrentGame()))>0) {
+            owner.addAvailableCoins(1);
+            owner.addVP(1);
+        }
+        if (theRevealedCard.getDebtCost()>0 && theOppRevealedCard.getDebtCost()>0 &&
+                theRevealedCard.getCost(owner.getCurrentGame()).compareTo(theOppRevealedCard.getCost(owner.getCurrentGame()))>0) {
             owner.addAvailableCoins(1);
             owner.addVP(1);
         }

@@ -49,7 +49,7 @@ public class TransmuteCard extends DomCard {
         if (theCardToTrash==null){
           theCardToTrash=cardsInHand.get(0);
         }
-        if (theCardToTrash.getTrashPriority()>=20
+        if (theCardToTrash.getTrashPriority()>=DomCardName.Silver.getTrashPriority()
           || owner.removingReducesBuyingPower(theCardToTrash))
         	return null;
         return theCardToTrash;

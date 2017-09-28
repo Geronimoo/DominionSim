@@ -12,6 +12,5 @@ public class MerchantCard extends DomCard {
       owner.addActions(1);
       owner.drawCards(1);
       owner.addMerchantPlayed();
-
     }
 }

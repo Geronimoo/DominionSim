@@ -30,7 +30,7 @@ public class MenagerieCard extends DomCard {
 	    for (DomCard theCard : owner.getCardsInHand()) {
 		   if (theCard==this || theCard.getName()==DomCardName.Menagerie)
 			  continue;
-		   if (theCard.hasCardType(DomCardType.Action)&&!theCard.hasCardType(DomCardType.Terminal)&&theCard.getName()!=DomCardName.Shanty_Town)
+		   if (theCard.hasCardType(DomCardType.Action)&&!theCard.hasCardType(DomCardType.Terminal)&&theCard.getName()!=DomCardName.Shanty_Town&&theCard.wantsToBePlayed())
 //				   && theCard.wantsToBePlayed())
 			  return 1000;
 	    }

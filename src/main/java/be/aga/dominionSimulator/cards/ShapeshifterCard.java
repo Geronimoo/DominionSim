@@ -15,7 +15,7 @@ public class ShapeshifterCard extends DomCard {
     }
 
     public void play() {
-        DomCardName theChosenCard = null;
+        DomCardName theChosenCard;
         boolean chooseNonTerminal=false;
         if (owner.getActionsLeft()==0 && !owner.getCardsFromHand(DomCardType.Action).isEmpty())
           chooseNonTerminal=true;
@@ -45,6 +45,8 @@ public class ShapeshifterCard extends DomCard {
         for (DomBuyRule theRule:owner.getBuyRules()) {
             DomCardName theCard = theRule.getCardToBuy();
             if (!theCard.hasCardType(DomCardType.Action))
+                continue;
+            if (theCard.hasCardType(DomCardType.Reserve))
                 continue;
             if (owner.getCurrentGame().countInSupply(theCard)==0)
                 continue;

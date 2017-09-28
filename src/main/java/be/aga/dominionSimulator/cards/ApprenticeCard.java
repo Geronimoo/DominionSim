@@ -18,11 +18,13 @@ public class ApprenticeCard extends DomCard {
       Collections.sort( owner.getCardsInHand() , SORT_FOR_TRASHING);
       DomCard theCardToTrash = owner.getCardsInHand().get(0);
       for (DomCard theCard : owner.getCardsInHand()) {
-    	  if (getApprenticeValue(theCard) > 0 && enoughMoneyLeft(theCard) && areVPsNotInDanger(theCard) && theCard.getName()!=DomCardName.Market_Square){
+    	  if (owner.getDeck().getDeckAndDiscardSize()>0 && getApprenticeValue(theCard) > 0 && enoughMoneyLeft(theCard) && areVPsNotInDanger(theCard) && theCard.getName()!=DomCardName.Market_Square){
              theCardToTrash=theCard;
              break;
     	  }
       }
+      if (!owner.getCardsFromHand(DomCardName.Curse).isEmpty())
+          theCardToTrash=owner.getCardsFromHand(DomCardName.Curse).get(0);
       if (owner.stillInEarlyGame() && !owner.getCardsFromHand(DomCardName.Estate).isEmpty())
           theCardToTrash=owner.getCardsFromHand(DomCardName.Estate).get(0);
       if (!owner.getCardsFromHand(DomCardName.Market_Square).isEmpty() && !owner.getCardsFromHand(DomCardName.Gold).isEmpty())
@@ -54,4 +56,12 @@ public class ApprenticeCard extends DomCard {
 	private int getApprenticeValue(DomCard theCard) {
       return theCard.getCoinCost(owner.getCurrentGame())+theCard.getPotionCost()*2;
 	}
+
+    @Override
+    public boolean wantsToBePlayed() {
+        Collections.sort( owner.getCardsInHand() , SORT_FOR_TRASHING);
+        if (owner.getDeck().getDeckAndDiscardSize()==0 && owner.getCardsInHand().get(0).getTrashPriority()>DomCardName.Copper.getTrashPriority())
+            return false;
+        return true;
+    }
 }

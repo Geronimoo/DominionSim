@@ -58,7 +58,7 @@ public class DomGui extends JFrame implements ActionListener {
   private JSplitPane myBottomSplit;
   private HashMap<DomPlayer, JButton> myPlayers = new HashMap<DomPlayer, JButton>();
 
-	public DomGui(DomEngine anEngine)	{
+    public DomGui(DomEngine anEngine)	{
       myEngine=anEngine;
 //      new DomGameSetup(myEngine, null);
 //      new DomGameFrame(myEngine);
@@ -214,6 +214,7 @@ public class DomGui extends JFrame implements ActionListener {
 	    theCons.gridx=2;
 	    theCons.gridwidth=6;
 	    thePanel.add(theBTN, theCons);
+//        thePanel.add(theBTN, theCons);
         //a button to play against the sim
         theCons.gridx=0;
         theCons.gridy++;
@@ -222,7 +223,7 @@ public class DomGui extends JFrame implements ActionListener {
         theBTN.setMnemonic('P');
         theBTN.setActionCommand("Play against bots");
         theBTN.addActionListener( this );
-//        thePanel.add(theBTN, theCons);
+        thePanel.add(theBTN, theCons);
         //a button for ultimate simulation
 	    theBTN = new JButton("Ultimate Simulation (100000 games)");
 	    theBTN.setMnemonic('U');
@@ -437,7 +438,7 @@ public class DomGui extends JFrame implements ActionListener {
 	   Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
 	 }
 
-	private void showSampleGame() {
+	public void showSampleGame() {
 		File tempfile;
 		try {
 		  tempfile = File.createTempFile("SimulatorSampleGame", ".html");
@@ -482,25 +483,7 @@ public class DomGui extends JFrame implements ActionListener {
      * @param aE
      */
     private void startSimulation( ActionEvent aE ) {
-          myPlayers = new HashMap<DomPlayer, JButton>();
-          ArrayList<DomPlayer> thePlayers = new ArrayList<DomPlayer>(); 
-          for (JButton theSelector : myBotSelectors ) {
-            if (getSelectedPlayer(theSelector) == null) 
-              continue;
-            DomPlayer theSelectedBot = getSelectedPlayer(theSelector);
-            DomPlayer thePlayer = theSelectedBot.getCopy( theSelectedBot + "(Plr " + (myBotSelectors.indexOf( theSelector )+1) + ")" );
-            int j=0;
-            for ( Enumeration< AbstractButton > theEnum = myStartStateButtonGroups.get( theSelector ).getElements();theEnum.hasMoreElements();j++) {
-              if (theEnum.nextElement().isSelected() ){
-                if (j==1) 
-                  thePlayer.forceStart( 43 );
-                if (j==2) 
-                  thePlayer.forceStart( 52 );
-              }
-            }
-            myPlayers.put(thePlayer, theSelector);
-            thePlayers.add(thePlayer);
-          }
+          ArrayList<DomPlayer> thePlayers = initPlayers();
           if (!myPlayers.isEmpty()) {
             int theNumber=0;
             boolean showLog = false;
@@ -518,6 +501,29 @@ public class DomGui extends JFrame implements ActionListener {
             myEngine.startSimulation(thePlayers, myOrderBox.isSelected(), theNumber, showLog);
             setCursor( new Cursor( Cursor.DEFAULT_CURSOR) );
           }
+    }
+
+    public ArrayList<DomPlayer> initPlayers() {
+        myPlayers = new HashMap<DomPlayer, JButton>();
+        ArrayList<DomPlayer> thePlayers = new ArrayList<DomPlayer>();
+        for (JButton theSelector : myBotSelectors ) {
+          if (getSelectedPlayer(theSelector) == null)
+            continue;
+          DomPlayer theSelectedBot = getSelectedPlayer(theSelector);
+          DomPlayer thePlayer = theSelectedBot.getCopy( theSelectedBot + "(Plr " + (myBotSelectors.indexOf( theSelector )+1) + ")" );
+          int j=0;
+          for (Enumeration< AbstractButton > theEnum = myStartStateButtonGroups.get( theSelector ).getElements(); theEnum.hasMoreElements(); j++) {
+            if (theEnum.nextElement().isSelected() ){
+              if (j==1)
+                thePlayer.forceStart( 43 );
+              if (j==2)
+                thePlayer.forceStart( 52 );
+            }
+          }
+          myPlayers.put(thePlayer, theSelector);
+          thePlayers.add(thePlayer);
+        }
+        return thePlayers;
     }
 
     public static GridBagConstraints getGridBagConstraints( int anInset ) {
@@ -693,5 +699,9 @@ public class DomGui extends JFrame implements ActionListener {
             theBots.add(getSelectedPlayer(theSelector));
         }
         return theBots;
+    }
+
+    public boolean getOrderBoxSelected() {
+        return myOrderBox.isSelected();
     }
 }

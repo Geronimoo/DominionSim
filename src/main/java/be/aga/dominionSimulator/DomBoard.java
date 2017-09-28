@@ -86,6 +86,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 
     public void reset() {
         for (DomCard theCard : trashPile) {
+            theCard.setOwner(null);
             add(theCard);
         }
         trashPile.clear();
