@@ -10,8 +10,10 @@ public class WindfallCard extends DomCard {
     }
 
     public void play() {
-        owner.gain(DomCardName.Gold);
-        owner.gain(DomCardName.Gold);
-        owner.gain(DomCardName.Gold);
+        if (owner.getDeck().getDeckAndDiscardSize()==0) {
+            owner.gain(DomCardName.Gold);
+            owner.gain(DomCardName.Gold);
+            owner.gain(DomCardName.Gold);
+        }
     }
 }

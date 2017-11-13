@@ -6,6 +6,7 @@ import be.aga.dominionSimulator.enums.DomCardType;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Set;
 
 public class Secret_PassageCard extends DomCard {
     public Secret_PassageCard() {
@@ -17,6 +18,10 @@ public class Secret_PassageCard extends DomCard {
         owner.drawCards(2);
         if (owner.getCardsInHand().isEmpty())
             return;
+        if (owner.isHumanOrPossessedByHuman()) {
+            handleHuman();
+            return;
+        }
         Collections.sort(owner.getCardsInHand(), SORT_FOR_DISCARD_FROM_HAND);
         DomCard theCardToReturn = null;
         ArrayList<DomCard> theCardsInHand = owner.getCardsInHand();
@@ -45,6 +50,25 @@ public class Secret_PassageCard extends DomCard {
               owner.putOnBottomOfDeck(owner.removeCardFromHand(theCardToReturn));
             else
               owner.putOnTopOfDeck(owner.removeCardFromHand(theCardToReturn));
+    }
+
+    private void handleHuman() {
+        owner.setNeedsToUpdate();
+        Set<DomCardName> uniqueCards = owner.getUniqueCardNamesInHand();
+        ArrayList<DomCardName> theChooseFrom=new ArrayList<DomCardName>();
+        theChooseFrom.clear();
+        theChooseFrom.addAll(uniqueCards);
+        DomCard theChosenCard = owner.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Put back a card for " + this.getName().toString(), theChooseFrom, "Mandatory!")).get(0);
+        if (owner.getDrawDeckSize()==0) {
+            owner.putOnTopOfDeck(owner.removeCardFromHand(theChosenCard));
+        } else {
+            ArrayList<String> theOptions = new ArrayList<String>();
+            for (int i = 0; i < owner.getDrawDeckSize()+1; i++) {
+                theOptions.add(i == 0 ? "Top" : i == owner.getDrawDeckSize()? "Bottom" : "Here");
+            }
+            int theChoice = owner.getEngine().getGameFrame().askToSelectOption("Position?", theOptions, "Mandatory!");
+            owner.putInDeckAt(owner.removeCardFromHand(theChosenCard), theChoice);
+        }
     }
 
     @Override

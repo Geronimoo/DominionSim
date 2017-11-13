@@ -12,6 +12,10 @@ public class Trading_PostCard extends DomCard {
     }
 
     public void play() {
+    	if (owner.isHumanOrPossessedByHuman()) {
+    		handleHuman();
+    		return;
+		}
         ArrayList<DomCard> cardsInHand = owner.getCardsInHand();
         Collections.sort(cardsInHand,SORT_FOR_TRASHING);
         int i=0;
@@ -21,8 +25,26 @@ public class Trading_PostCard extends DomCard {
         if (i==2)
           owner.gainInHand(DomCardName.Silver);
     }
-    
-    @Override
+
+	private void handleHuman() {
+		if (owner.getCardsInHand().size()>2) {
+			ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+			owner.getEngine().getGameFrame().askToSelectCards("Choose 2 cards to trash", owner.getCardsInHand(), theChosenCards, 2);
+			for (DomCardName theCard:theChosenCards) {
+				owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theCard).get(0)));
+			}
+			owner.gainInHand(DomCardName.Silver);
+		} else {
+			int theSize = owner.getCardsInHand().size();
+			while (!owner.getCardsInHand().isEmpty())
+				owner.trash(owner.removeCardFromHand(owner.getCardsInHand().get(0)));
+			if (theSize==2)
+				owner.gainInHand(DomCardName.Silver);
+		}
+
+	}
+
+	@Override
     public boolean wantsToBePlayed() {
     	int theCount = 0;
     	int theSilverCount=0;

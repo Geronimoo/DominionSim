@@ -9,7 +9,7 @@ import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
 public class HavenCard extends DomCard {
-    private DomCard myHavenedCard;
+    private ArrayList<DomCard> myHavenedCards = new ArrayList<DomCard>();
 
     public HavenCard () {
       super( DomCardName.Haven);
@@ -20,6 +20,10 @@ public class HavenCard extends DomCard {
       owner.drawCards(1);
       if (owner.getCardsInHand().isEmpty())
     	  return;
+      if (owner.isHumanOrPossessedByHuman()) {
+          handleHuman();
+          return;
+      }
       if (!owner.getCardsFromHand(DomCardName.Menagerie).isEmpty()) {
           MenagerieCard theMenagerie = (MenagerieCard) owner.getCardsFromHand(DomCardName.Menagerie).get(0);
           ArrayList<DomCard> theCardsToDiscard = owner.getMultiplesInHand(theMenagerie);
@@ -49,18 +53,25 @@ public class HavenCard extends DomCard {
       havenAway(owner.getCardsInHand().get( 0 ) );
     }
 
-	private void havenAway(DomCard aCard) {
-		myHavenedCard=owner.removeCardFromHand( aCard);
-        if (DomEngine.haveToLog ) DomEngine.addToLog( owner + " puts " + myHavenedCard + " aside");
+    private void handleHuman() {
+        owner.setNeedsToUpdate();
+        ArrayList<DomCardName> theChooseFrom=new ArrayList<DomCardName>();
+        for (DomCard theCard : owner.getCardsInHand()) {
+            theChooseFrom.add(theCard.getName());
+        }
+        havenAway(owner.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Haven away:" + this.getName().toString(), theChooseFrom, "Mandatory!")).get(0));
+    }
+
+    private void havenAway(DomCard aCard) {
+		myHavenedCards.add(owner.removeCardFromHand( aCard));
+        if (DomEngine.haveToLog ) DomEngine.addToLog( owner + " puts " + myHavenedCards + " aside");
 	}
 
     public void resolveDuration() {
-      if (myHavenedCard!=null) {
-    	owner.putInHand(myHavenedCard);
-    	owner.showHand();
-      } else {
-        if (DomEngine.haveToLog ) DomEngine.addToLog( owner + " adds nothing to his hand");
+      for (DomCard theCard : myHavenedCards) {
+          owner.putInHand(theCard);
       }
-      myHavenedCard=null;
+      owner.showHand();
+      myHavenedCards.clear();
     }
 }

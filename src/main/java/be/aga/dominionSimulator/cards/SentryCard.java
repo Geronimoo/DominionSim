@@ -21,45 +21,7 @@ public class SentryCard extends DomCard {
         if (theTopCards.isEmpty())
             return;
         if (owner.isHumanOrPossessedByHuman()) {
-            ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
-            owner.getEngine().getGameFrame().askToSelectCards("Choose to trash" , theTopCards, theChosenCards, 0);
-            while (!theChosenCards.isEmpty()) {
-                DomCard theCardToTrash = null;
-                for (DomCard theCard : theTopCards) {
-                    if (theCard.getName() == theChosenCards.get(0))
-                        theCardToTrash = theCard;
-                }
-                theChosenCards.remove(0);
-                owner.trash(theTopCards.remove(theTopCards.indexOf(theCardToTrash)));
-            }
-            if (theTopCards.isEmpty())
-                return;
-            theChosenCards = new ArrayList<DomCardName>();
-            owner.getEngine().getGameFrame().askToSelectCards("Choose to discard" , theTopCards, theChosenCards, 0);
-            while (!theChosenCards.isEmpty()) {
-                DomCard theCardToDiscard= null;
-                for (DomCard theCard : theTopCards) {
-                    if (theCard.getName() == theChosenCards.get(0))
-                        theCardToDiscard = theCard;
-                }
-                theChosenCards.remove(0);
-                owner.discard(theTopCards.remove(theTopCards.indexOf(theCardToDiscard)));
-            }
-            if (theTopCards.isEmpty())
-                return;
-            if (theTopCards.size()==1) {
-              owner.putOnTopOfDeck(theTopCards.remove(0));
-              return;
-            }
-            theChosenCards = new ArrayList<DomCardName>();
-            owner.getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u> (first card = top card)</html>" , theTopCards, theChosenCards, 2);
-            if (theTopCards.get(1).getName()==theChosenCards.get(1)) {
-                owner.putOnTopOfDeck(theTopCards.get(1));
-                owner.putOnTopOfDeck(theTopCards.get(0));
-            } else {
-                owner.putOnTopOfDeck(theTopCards.get(0));
-                owner.putOnTopOfDeck(theTopCards.get(1));
-            }
+            handleHumanPlayer(theTopCards);
         } else {
             while (!theTopCards.isEmpty()) {
                 if (theTopCards.get(0).getTrashPriority() <= DomCardName.Copper.getTrashPriority()) {
@@ -74,6 +36,56 @@ public class SentryCard extends DomCard {
                             owner.putOnTopOfDeck(theTopCards.remove(0));
                     }
                 }
+            }
+        }
+    }
+
+    private void handleHumanPlayer(ArrayList<DomCard> theTopCards) {
+        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        owner.getEngine().getGameFrame().askToSelectCards("Choose to trash" , theTopCards, theChosenCards, 0);
+        while (!theChosenCards.isEmpty()) {
+            DomCard theCardToTrash = null;
+            for (DomCard theCard : theTopCards) {
+                if (theCard.getName() == theChosenCards.get(0))
+                    theCardToTrash = theCard;
+            }
+            theChosenCards.remove(0);
+            owner.trash(theTopCards.remove(theTopCards.indexOf(theCardToTrash)));
+        }
+        if (theTopCards.isEmpty())
+            return;
+        theChosenCards = new ArrayList<DomCardName>();
+        owner.getEngine().getGameFrame().askToSelectCards("Choose to discard" , theTopCards, theChosenCards, 0);
+        while (!theChosenCards.isEmpty()) {
+            DomCard theCardToDiscard= null;
+            for (DomCard theCard : theTopCards) {
+                if (theCard.getName() == theChosenCards.get(0))
+                    theCardToDiscard = theCard;
+            }
+            theChosenCards.remove(0);
+            owner.discard(theTopCards.remove(theTopCards.indexOf(theCardToDiscard)));
+        }
+        if (theTopCards.isEmpty())
+            return;
+        if (theTopCards.size()==1) {
+          owner.putOnTopOfDeck(theTopCards.remove(0));
+          return;
+        }
+        theChosenCards = new ArrayList<DomCardName>();
+        do {
+            theChosenCards=new ArrayList<DomCardName>();
+            owner.getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u> (first card = top card)</html>", theTopCards, theChosenCards, 0);
+        } while (theChosenCards.size()==1);
+        if (theChosenCards.size()<2) {
+            owner.putOnTopOfDeck(theTopCards.get(1));
+            owner.putOnTopOfDeck(theTopCards.get(0));
+        } else {
+            if (theTopCards.get(1).getName() == theChosenCards.get(1)) {
+                owner.putOnTopOfDeck(theTopCards.get(1));
+                owner.putOnTopOfDeck(theTopCards.get(0));
+            } else {
+                owner.putOnTopOfDeck(theTopCards.get(0));
+                owner.putOnTopOfDeck(theTopCards.get(1));
             }
         }
     }

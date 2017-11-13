@@ -12,6 +12,14 @@ public class Ill_Gotten_GainsCard extends DomCard {
 
     public void play() {
         owner.addAvailableCoins( 1 );
+        if (owner.isHumanOrPossessedByHuman()) {
+            if (owner.getEngine().getGameFrame().askPlayer("<html>Gain " + DomCardName.Copper.toHTML() +"</html>", "Resolving " + this.getName().toString())) {
+                DomCard theCopper = owner.getCurrentGame().takeFromSupply(DomCardName.Copper);
+                if (theCopper != null)
+                    owner.gainInHand(theCopper);
+            }
+            return;
+        }
         DomCard theCopper = DomCardName.Copper.createNewCardInstance();
         theCopper.setOwner(owner);
         DomCost theCopperCoins = new DomCost(theCopper.getCoinValue(), 0);

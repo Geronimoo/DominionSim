@@ -20,8 +20,13 @@ public class VillaCard extends DomCard {
         owner.addCardToHand(this);
         if (owner.getCurrentGame().getActivePlayer()==owner) {
             owner.addActions(1);
-            if (owner.getPhase() == DomPhase.Buy)
-                owner.triggerVilla();
+            if (owner.getPhase() == DomPhase.Buy) {
+                if (owner.isHumanOrPossessedByHuman()) {
+                    owner.setPhase(DomPhase.Action);
+                } else {
+                    owner.triggerVilla();
+                }
+            }
         }
     }
 }

@@ -16,6 +16,10 @@ public class LookoutCard extends DomCard {
       ArrayList< DomCard > theRevealedCards = owner.revealTopCards( 3 );
       if (theRevealedCards.isEmpty())
         return;
+      if (owner.isHumanOrPossessedByHuman()) {
+          handleHuman(theRevealedCards);
+          return;
+      }
       //first trash a card
       Collections.sort( theRevealedCards, SORT_FOR_TRASHING );
       owner.trash(theRevealedCards.remove( 0 ));
@@ -29,6 +33,39 @@ public class LookoutCard extends DomCard {
         owner.putOnTopOfDeck(theRevealedCards.get( 0 ));
       }
     }
+
+    private void handleHuman(ArrayList<DomCard> theRevealedCards) {
+        ArrayList<DomCardName> theChooseFrom=new ArrayList<DomCardName>();
+        for (DomCard theCard : theRevealedCards) {
+            theChooseFrom.add(theCard.getName());
+        }
+        DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!");
+        for (DomCard theCard : theRevealedCards) {
+            if (theCard.getName()==theChosenCard) {
+                theRevealedCards.remove(theCard);
+                owner.trash(theCard);
+                break;
+            }
+        }
+        if (theRevealedCards.isEmpty())
+            return;
+        theChooseFrom=new ArrayList<DomCardName>();
+        for (DomCard theCard : theRevealedCards) {
+            theChooseFrom.add(theCard.getName());
+        }
+        theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Discard a card", theChooseFrom, "Mandatory!");
+        for (DomCard theCard : theRevealedCards) {
+            if (theCard.getName()==theChosenCard) {
+                theRevealedCards.remove(theCard);
+                owner.discard(theCard);
+                break;
+            }
+        }
+        if (theRevealedCards.isEmpty())
+            return;
+        owner.putOnTopOfDeck(theRevealedCards.get(0));
+    }
+
     @Override
     public boolean wantsToBePlayed() {
     	int theCount=0;

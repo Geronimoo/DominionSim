@@ -23,13 +23,31 @@ public class Jack_of_all_TradesCard extends DrawUntilXCardsCard {
 	private void maybeTrashNonTreasureFromHand() {
 		if (owner.getCardsInHand().isEmpty())
 			  return;
-		  Collections.sort( owner.getCardsInHand(), SORT_FOR_TRASHING);
-		  DomCard theCardToTrash = findCardToTrash();
-		  if (theCardToTrash==null){
-			if (DomEngine.haveToLog) DomEngine.addToLog(owner + " trashes nothing");
-		  } else{
+		if (owner.isHumanOrPossessedByHuman()) {
+			handleHuman();
+			return;
+		}
+        Collections.sort( owner.getCardsInHand(), SORT_FOR_TRASHING);
+	    DomCard theCardToTrash = findCardToTrash();
+	    if (theCardToTrash==null){
+	    	if (DomEngine.haveToLog) DomEngine.addToLog(owner + " trashes nothing");
+		} else{
 			owner.trash(owner.removeCardFromHand(theCardToTrash));
-		  }
+		}
+	}
+
+	private void handleHuman() {
+    	owner.setNeedsToUpdate();
+		ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+		for (DomCard theCard : owner.getCardsInHand()) {
+			if (!theCard.hasCardType(DomCardType.Treasure))
+			  theChooseFrom.add(theCard.getName());
+		}
+		if (theChooseFrom.isEmpty())
+			return;
+		DomCardName theCardToTrash = owner.getEngine().getGameFrame().askToSelectOneCard("Trash ?", theChooseFrom, "Don't trash");
+		if (theCardToTrash!=null)
+		  owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theCardToTrash).get(0)));
 	}
 
 	private DomCard findCardToTrash() {
@@ -56,18 +74,26 @@ public class Jack_of_all_TradesCard extends DrawUntilXCardsCard {
 	  ArrayList<DomCard> theRevealedCard = owner.revealTopCards(1);
 	  if (theRevealedCard.isEmpty())
 		  return;
-	  DomCard theCard = theRevealedCard.get(0);
-	  if (theCard.getDiscardPriority(owner.getActionsLeft())>=16
-              || (owner.getCardsInHand().size()>=5 && theCard.getDiscardPriority(1)>=16)
-			     || (findCardToTrash()==null 
-				         && theCard.getTrashPriority()<16 
-				         && !theCard.hasCardType(DomCardType.Treasure))
-		     || (findCardToTrash()!=null 
-		    		 && findCardToTrash().getName()!=DomCardName.Curse
-			         && theCard.getName()==DomCardName.Curse)){
-	    owner.putOnTopOfDeck(theCard);    		
+	  if (owner.isHumanOrPossessedByHuman()) {
+		  if (owner.getEngine().getGameFrame().askPlayer("<html>Discard " + theRevealedCard.get(0).getName().toHTML() +" ?</html>", "Resolving " + this.getName().toString())){
+			  owner.discard(theRevealedCard.get(0));
+		  } else {
+			  owner.putOnTopOfDeck(theRevealedCard.get(0));
+		  }
 	  } else {
-	    owner.discard(theCard);
+		  DomCard theCard = theRevealedCard.get(0);
+		  if (theCard.getDiscardPriority(owner.getActionsLeft()) >= 16
+				  || (owner.getCardsInHand().size() >= 5 && theCard.getDiscardPriority(1) >= 16)
+				  || (findCardToTrash() == null
+				  && theCard.getTrashPriority() < 16
+				  && !theCard.hasCardType(DomCardType.Treasure))
+				  || (findCardToTrash() != null
+				  && findCardToTrash().getName() != DomCardName.Curse
+				  && theCard.getName() == DomCardName.Curse)) {
+			  owner.putOnTopOfDeck(theCard);
+		  } else {
+			  owner.discard(theCard);
+		  }
 	  }
 	}
     @Override

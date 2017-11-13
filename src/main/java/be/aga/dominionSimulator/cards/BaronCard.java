@@ -10,12 +10,25 @@ public class BaronCard extends DomCard {
 
     public void play() {
         owner.addAvailableBuys( 1 );
-        if (owner.discardFromHand(DomCardName.Estate)){
-          owner.addAvailableCoins( 4 );
-        } else {
-          DomCard theEstate = owner.getCurrentGame().takeFromSupply(DomCardName.Estate);
-          if (theEstate!=null)
-            owner.gain(theEstate);
+        if (owner.isHumanOrPossessedByHuman()) {
+            if (owner.getCardsFromHand(DomCardName.Estate).isEmpty()) {
+              owner.gain(DomCardName.Estate);
+            }else {
+                if (owner.getEngine().getGameFrame().askPlayer("<html>Discard " + DomCardName.Estate.toHTML() + " ?</html>", "Resolving " + this.getName().toString())) {
+                    owner.discardFromHand(DomCardName.Estate);
+                    owner.addAvailableCoins(4);
+                } else {
+                    owner.gain(DomCardName.Estate);
+                }
+            }
+        }else {
+            if (owner.discardFromHand(DomCardName.Estate)) {
+                owner.addAvailableCoins(4);
+            } else {
+                DomCard theEstate = owner.getCurrentGame().takeFromSupply(DomCardName.Estate);
+                if (theEstate != null)
+                    owner.gain(theEstate);
+            }
         }
     }
 

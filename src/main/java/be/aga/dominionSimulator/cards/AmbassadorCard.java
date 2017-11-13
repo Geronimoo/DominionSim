@@ -18,6 +18,10 @@ public class AmbassadorCard extends DomCard {
     public void play() {
     	if (owner.getCardsInHand().isEmpty())
           return;
+    	if (owner.isHumanOrPossessedByHuman()) {
+    	    handleHuman();
+    	    return;
+        }
         if (owner.getPlayStrategyFor(this)==DomPlayStrategy.ambassadorWar) {
             handleAmbassadorWar();
             return;
@@ -53,6 +57,28 @@ public class AmbassadorCard extends DomCard {
         }
         attackOpponents( theRevealedCard.getName() );
         owner.addCardsToHand(setAsideShelters);
+    }
+
+    private void handleHuman() {
+        ArrayList<DomCardName> theChooseFrom=new ArrayList<DomCardName>();
+        for (DomCard theCard : owner.getCardsInHand()) {
+            theChooseFrom.add(theCard.getName());
+        }
+        DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Reveal a card", theChooseFrom, "Mandatory!");
+        ArrayList<DomCard> theChooseToReturn = new ArrayList<DomCard>();
+        for (DomCard theCard : owner.getCardsFromHand(theChosenCard)) {
+            theChooseToReturn.add(theCard);
+        }
+        ArrayList<DomCardName> theChosenCards;
+        do {
+            theChosenCards = new ArrayList<DomCardName>();
+            owner.getEngine().getGameFrame().askToSelectCards("Return these: ", theChooseToReturn, theChosenCards, 0);
+        } while (theChosenCards.size()>2);
+
+        for (DomCardName theCard:theChosenCards) {
+            owner.returnToSupply(owner.removeCardFromHand(owner.getCardsFromHand(theCard).get(0)));
+        }
+        attackOpponents( theChosenCard );
     }
 
     private void handleAmbassadorWar() {

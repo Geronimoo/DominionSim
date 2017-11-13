@@ -1,5 +1,6 @@
 package be.aga.dominionSimulator.gui;
 
+import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.gui.util.CardRenderer;
 
@@ -8,6 +9,7 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class OneCardSelector extends JDialog implements ActionListener {
     private final ArrayList<DomCardName> myChooseFrom;
@@ -26,6 +28,7 @@ public class OneCardSelector extends JDialog implements ActionListener {
      });
 	 myChosenCard = null;
 	 myChooseFrom = chooseFrom;
+	 Collections.sort(myChooseFrom);
 	 myButtonMessage = aButtonMessage;
 	 myQuestion = aTitle;
 	 buildGUI();
@@ -70,7 +73,7 @@ private JPanel getChooseFromPanel() {
     final GridBagConstraints theCons = DomGui.getGridBagConstraints( 2 );
     JScrollPane theChooseFromScroller = new JScrollPane(getChooseFromList(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     theChooseFromScroller.setBorder(new TitledBorder( "Choose a card" ));
-    theChooseFromScroller.setPreferredSize(new Dimension(150,300));
+    theChooseFromScroller.setPreferredSize(new Dimension(150,200));
     thePanel.add(theChooseFromScroller, theCons);
     return thePanel;
 }
@@ -97,6 +100,11 @@ private JList getChooseFromList() {
                         }
                     }
                 }
+            }
+            if (e.getButton()==MouseEvent.BUTTON3) {
+                int index = myChooseFromList.locationToIndex(e.getPoint());
+                if (index >= 0)
+                    DomGameFrame.showWiki( myChooseFromList.getModel().getElementAt(index));
             }
         }
     });

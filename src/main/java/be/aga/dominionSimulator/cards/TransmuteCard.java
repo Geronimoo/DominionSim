@@ -13,12 +13,21 @@ public class TransmuteCard extends DomCard {
     }
 
     public void play() {
-    	DomCard theCardToTrash = findCardToTrash();
-        if (theCardToTrash==null) {
-	    	//possible if played with Throne Room/KC
-	        if (owner.getCardsInHand().isEmpty())
-	          return;
-	        theCardToTrash=owner.getCardsInHand().get(0);
+    	DomCard theCardToTrash;
+        if (owner.isHumanOrPossessedByHuman()) {
+            ArrayList<DomCardName> theChooseFrom=new ArrayList<DomCardName>();
+            for (DomCard theCard : owner.getCardsInHand()) {
+                theChooseFrom.add(theCard.getName());
+            }
+            theCardToTrash=owner.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!")).get(0);
+        } else {
+            theCardToTrash = findCardToTrash();
+            if (theCardToTrash==null) {
+                //possible if played with Throne Room/KC
+                if (owner.getCardsInHand().isEmpty())
+                    return;
+                theCardToTrash=owner.getCardsInHand().get(0);
+            }
         }
         owner.trash(owner.removeCardFromHand(theCardToTrash));
         if (theCardToTrash.hasCardType(DomCardType.Action)

@@ -7,6 +7,7 @@ import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 import be.aga.dominionSimulator.enums.DomPlayStrategy;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 public class SilverCard extends DomCard {
@@ -26,14 +27,26 @@ public class SilverCard extends DomCard {
         for (DomCard theSauna : owner.getCardsFromPlay(DomCardName.Sauna)) {
             if (owner.getCardsInHand().isEmpty())
                 return;
-            Collections.sort(owner.getCardsInHand(), SORT_FOR_TRASHING);
-            if (owner.getCardsInHand().get(0).getTrashPriority() < DomCardName.Copper.getTrashPriority()) {
-                if (DomEngine.haveToLog) DomEngine.addToLog(DomCardName.Sauna.toHTML() + " cleans the hand");
-                owner.trash(owner.removeCardFromHand(owner.getCardsInHand().get(0)));
+            if (owner.isHumanOrPossessedByHuman()) {
+                owner.setNeedsToUpdate();
+                ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+                for (DomCard theCard : owner.getCardsInHand()) {
+                    theChooseFrom.add(theCard.getName());
+                }
+                DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Don't trash!");
+                if (theChosenCard==null)
+                    return;
+                owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
             } else {
-                if (owner.getCardsInHand().get(0).getName() == DomCardName.Copper && owner.getBuysLeft()==1 ) {
-                    if (owner.getDesiredCard(owner.getTotalPotentialCurrency().add(new DomCost(-1,0)), false) == owner.getDesiredCard(owner.getTotalPotentialCurrency(), false))
-                        owner.trash(owner.removeCardFromHand(owner.getCardsInHand().get(0)));
+                Collections.sort(owner.getCardsInHand(), SORT_FOR_TRASHING);
+                if (owner.getCardsInHand().get(0).getTrashPriority() < DomCardName.Copper.getTrashPriority()) {
+                    if (DomEngine.haveToLog) DomEngine.addToLog(DomCardName.Sauna.toHTML() + " cleans the hand");
+                    owner.trash(owner.removeCardFromHand(owner.getCardsInHand().get(0)));
+                } else {
+                    if (owner.getCardsInHand().get(0).getName() == DomCardName.Copper && owner.getBuysLeft() == 1) {
+                        if (owner.getDesiredCard(owner.getTotalPotentialCurrency().add(new DomCost(-1, 0)), false) == owner.getDesiredCard(owner.getTotalPotentialCurrency(), false))
+                            owner.trash(owner.removeCardFromHand(owner.getCardsInHand().get(0)));
+                    }
                 }
             }
         }

@@ -10,41 +10,59 @@ import be.aga.dominionSimulator.enums.DomCardType;
 
 public class MultiplicationCard extends DomCard {
 
-	private final ArrayList<DomCard> myDurationCards = new ArrayList<DomCard>();
+    private final ArrayList<DomCard> myDurationCards = new ArrayList<DomCard>();
 
-	public MultiplicationCard(DomCardName aCardName) {
+    protected DomCard myCardToMultiply;
+
+    public MultiplicationCard(DomCardName aCardName) {
 	  super(aCardName);
 	}
-	
-	public void play(){
-      DomCard theCardToMultiply=null;
+
+    public DomCard getMyCardToMultiply() {
+        return myCardToMultiply;
+    }
+
+    public void play(){
+      myCardToMultiply =null;
       if (owner.isHumanOrPossessedByHuman()) {
-	      if (!owner.getCardsFromHand(DomCardType.Action).isEmpty()) {
-              ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
-	          for (DomCard theCard : owner.getCardsFromHand(DomCardType.Action))
-	              theChooseFrom.add(theCard.getName());
-	          theCardToMultiply = owner.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Select card for "+this.getName().toString(), theChooseFrom, "Don't use")).get(0);
-          }
+          myCardToMultiply = handleHumanPlayer();
       } else {
-          theCardToMultiply = getCardToMultiply();
+          myCardToMultiply = getCardToMultiply();
       }
-      if (theCardToMultiply == null)
+      if (myCardToMultiply == null)
         return;
       //little fix for Tactician
-      if (theCardToMultiply.hasCardType(DomCardType.Duration) && theCardToMultiply.getName()!= DomCardName.Tactician){
-        myDurationCards.add(theCardToMultiply);
+      if (myCardToMultiply.hasCardType(DomCardType.Duration) && myCardToMultiply.getName()!= DomCardName.Tactician){
+        myDurationCards.add(myCardToMultiply);
         setDiscardAtCleanup(false);
       }
-      owner.removeCardFromHand(theCardToMultiply);
-      owner.getCardsInPlay().add(theCardToMultiply);
-      play(theCardToMultiply, 1);
+      owner.removeCardFromHand(myCardToMultiply);
+      owner.handleUrchins(myCardToMultiply);
+      owner.getCardsInPlay().add(myCardToMultiply);
+      play(myCardToMultiply, 1);
       //little fix for Tactician
-      if (theCardToMultiply.getName()!=DomCardName.Tactician){
-          play(theCardToMultiply, 2);
+      if (myCardToMultiply.getName()!=DomCardName.Tactician){
+          play(myCardToMultiply, 2);
           if (getName()==DomCardName.King$s_Court) {
-            play(theCardToMultiply, 3);
+            play(myCardToMultiply, 3);
           }
       }
+    }
+
+    protected DomCard handleHumanPlayer() {
+	    owner.setNeedsToUpdate();
+        DomCard theCardToMultiply = null;
+        if (!owner.getCardsFromHand(DomCardType.Action).isEmpty()) {
+            ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+            for (DomCard theCard : owner.getCardsFromHand(DomCardType.Action))
+                theChooseFrom.add(theCard.getName());
+            theCardToMultiply = owner.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Select card for " + this.getName().toString(), theChooseFrom, "Don't use")).get(0);
+        }
+        return theCardToMultiply;
+    }
+
+    public ArrayList<DomCard> getDurationCards() {
+        return myDurationCards;
     }
 
     @Override
@@ -237,8 +255,6 @@ public class MultiplicationCard extends DomCard {
 
     @Override
     public boolean mustStayInPlay() {
-        if (myDurationCards.isEmpty())
-            return false;
         for (DomCard theDuration : myDurationCards) {
             if (theDuration.mustStayInPlay())
                 return true;
@@ -248,5 +264,17 @@ public class MultiplicationCard extends DomCard {
 
     public boolean areDurationsEmpty() {
         return myDurationCards.isEmpty();
+    }
+
+    public String getDurationsString() {
+        if (myDurationCards.isEmpty())
+            return null;
+        String theTxt = "";
+        String thePrefix="";
+        for (DomCard theCard: myDurationCards) {
+            theTxt+=thePrefix+theCard.getName().toHTML();
+            thePrefix=", ";
+        }
+        return theTxt;
     }
 }

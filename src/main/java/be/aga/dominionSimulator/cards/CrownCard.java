@@ -24,22 +24,35 @@ public class CrownCard extends MultiplicationCard {
         if (theTreasures.isEmpty())
             return;
         Collections.sort(theTreasures, SORT_FOR_DISCARDING);
-        DomCard theCardToPlayTwice;
-        if (!owner.getCardsFromHand(DomCardName.Spoils).isEmpty())
-            theCardToPlayTwice=owner.removeCardFromHand(owner.getCardsFromHand(DomCardName.Spoils).get(0));
-        else
-            if (!owner.getCardsFromHand(DomCardName.Capital).isEmpty())
-                theCardToPlayTwice=owner.removeCardFromHand(owner.getCardsFromHand(DomCardName.Capital).get(0));
+        DomCard theCardToPlayTwice=null;
+        if (owner.isHumanOrPossessedByHuman()) {
+            owner.setNeedsToUpdate();
+            ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+            for (DomCard theCard : owner.getCardsFromHand(DomCardType.Treasure)) {
+                theChooseFrom.add(theCard.getName());
+            }
+            DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Crown a card", theChooseFrom, "Don't Crown");
+            if (theChosenCard != null) {
+                theCardToPlayTwice = owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0));
+            }
+        } else {
+            if (!owner.getCardsFromHand(DomCardName.Spoils).isEmpty())
+                theCardToPlayTwice = owner.removeCardFromHand(owner.getCardsFromHand(DomCardName.Spoils).get(0));
+            else if (!owner.getCardsFromHand(DomCardName.Capital).isEmpty())
+                theCardToPlayTwice = owner.removeCardFromHand(owner.getCardsFromHand(DomCardName.Capital).get(0));
             else {
                 int theChoice = 0;
                 for (int i = theTreasures.size() - 1; i >= 0; i--) {
                     if (theTreasures.get(i).getName() == DomCardName.Fortune)
                         continue;
-                    theChoice=i;
+                    theChoice = i;
                     break;
                 }
                 theCardToPlayTwice = owner.removeCardFromHand(theTreasures.get(theChoice));
             }
+        }
+        if (theCardToPlayTwice==null)
+            return;
         if (DomEngine.haveToLog) DomEngine.addToLog( owner + " chooses " + theCardToPlayTwice + " to Crown");
         owner.getCardsInPlay().add(theCardToPlayTwice);
         if (theCardToPlayTwice.getName()==DomCardName.Spoils) {

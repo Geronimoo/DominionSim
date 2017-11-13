@@ -31,11 +31,27 @@ public class GolemCard extends DomCard {
       //adding 2 actions = fix to make sure the Golemed cards can be played
       owner.actionsLeft+=2;
       Collections.sort(theRevealedActions,SORT_FOR_PLAYING);
+      if (theRevealedActions.size()>1 && owner.isHumanOrPossessedByHuman()) {
+          handleHuman(theRevealedActions);
+      }
       while (!theRevealedActions.isEmpty()) {
         owner.play(theRevealedActions.remove(0));
       }
       owner.actionsLeft-=2;
 //      if (DomEngine.haveToLog) DomEngine.addToLog( owner + " reveals " + theRevealedCards );
+    }
+
+    private void handleHuman(ArrayList<DomCard> theRevealedActions) {
+        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        do {
+            owner.getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u></html>", theRevealedActions, theChosenCards, 0);
+        } while (theChosenCards.size() == 1);
+        if (theChosenCards.size() == 2) {
+            if (theRevealedActions.get(1).getName() == theChosenCards.get(0)) {
+                theRevealedActions.add(0, theRevealedActions.get(1));
+                theRevealedActions.remove(2);
+            }
+        }
     }
 
     @Override

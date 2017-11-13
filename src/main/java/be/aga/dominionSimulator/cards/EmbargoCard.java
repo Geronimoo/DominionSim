@@ -1,10 +1,9 @@
 package be.aga.dominionSimulator.cards;
 
-import be.aga.dominionSimulator.DomBuyRule;
-import be.aga.dominionSimulator.DomCard;
-import be.aga.dominionSimulator.DomEngine;
-import be.aga.dominionSimulator.DomPlayer;
+import be.aga.dominionSimulator.*;
 import be.aga.dominionSimulator.enums.DomCardName;
+
+import java.util.ArrayList;
 
 public class EmbargoCard extends DomCard {
     public EmbargoCard () {
@@ -13,6 +12,10 @@ public class EmbargoCard extends DomCard {
 
     public void play() {
       owner.addAvailableCoins(2);
+      if (owner.isHumanOrPossessedByHuman()) {
+		  handleHumanPlayer();
+		  return;
+	  }
       for (DomPlayer thePlayer : owner.getOpponents()) {
     	  //runSimulation through the buy rules of all opponents until we find a card that is not in our buy rules
     	  for (DomBuyRule theRule : thePlayer.getBuyRules()) {
@@ -38,13 +41,24 @@ public class EmbargoCard extends DomCard {
       putEmbargoTokenOn(owner.getCurrentGame().getBoard().getRandomCardWithEmbargoToken());
     }
 
-	private void putEmbargoTokenOn(DomCardName cardToBuy) {
+	private void handleHumanPlayer() {
+		ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+		for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+			if (owner.getCurrentGame().countInSupply(theCard)>0)
+				theChooseFrom.add(theCard);
+		}
+		if (theChooseFrom.isEmpty())
+			return;
+		putEmbargoTokenOn(owner.getEngine().getGameFrame().askToSelectOneCard("Put Embargo token", theChooseFrom, "Mandatory!"));
+	}
+
+	private void putEmbargoTokenOn(DomCardName cardToEmbargo) {
 		//trashing makes owner=null, so make a local variable
 		DomPlayer theOwner = owner;
         if (owner.getCardsInPlay().contains(this))
           owner.trash(owner.removeCardFromPlay(this));
-		theOwner.getCurrentGame().putEmbargoTokenOn(cardToBuy);
+		theOwner.getCurrentGame().putEmbargoTokenOn(cardToEmbargo);
         if (DomEngine.haveToLog) 
-	      DomEngine.addToLog( theOwner + " puts an Embargo Token on " + cardToBuy.toHTML());
+	      DomEngine.addToLog( theOwner + " puts an Embargo Token on " + cardToEmbargo.toHTML());
 	}
 }

@@ -17,6 +17,10 @@ public class HermitCard extends DomCard {
     }
 
     public void play() {
+        if (owner.isHumanOrPossessedByHuman()) {
+            handleHuman();
+            return;
+        }
         if (owner.getPlayStrategyFor(this) != DomPlayStrategy.MarketSquareCombo || moreThanOneCardToTrash()) {
             maybeTrashACard();
         }else {
@@ -28,6 +32,37 @@ public class HermitCard extends DomCard {
             theCardToGain = owner.getCurrentGame().getBestCardInSupplyFor(owner,null,new DomCost(3,0));
         }
         owner.gain(theCardToGain);
+    }
+
+    private void handleHuman() {
+        ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCard theCard : owner.getCardsFromDiscard()) {
+            if (!theCard.hasCardType(DomCardType.Treasure))
+                theChooseFrom.add(theCard.getName());
+        }
+        if (!theChooseFrom.isEmpty() && owner.getEngine().getGameFrame().askPlayer("<html>Trash from discard :" + theChooseFrom +" ?</html>", "Resolving " + this.getName().toString())) {
+            owner.trash(owner.removeCardFromDiscard(owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!")));
+        } else {
+            theChooseFrom = new ArrayList<DomCardName>();
+            for (DomCard theCard : owner.getCardsInHand()) {
+                if (!theCard.hasCardType(DomCardType.Treasure))
+                    theChooseFrom.add(theCard.getName());
+            }
+            if (!theChooseFrom.isEmpty()) {
+                DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card ?", theChooseFrom, "Don't trash");
+                if (theChosenCard != null) {
+                    owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
+                }
+            }
+        }
+        theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+            if (new DomCost(3,0).compareTo(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0)
+                theChooseFrom.add(theCard);
+        }
+        if (theChooseFrom.isEmpty())
+            return;
+        owner.gain(owner.getCurrentGame().takeFromSupply(owner.getEngine().getGameFrame().askToSelectOneCard("Select card to gain for "+this.getName().toString(), theChooseFrom, "Mandatory!")));
     }
 
     private boolean moreThanOneCardToTrash() {

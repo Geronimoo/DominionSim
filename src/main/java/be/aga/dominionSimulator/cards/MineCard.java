@@ -19,21 +19,7 @@ public class MineCard extends DomCard {
 
     public void play() {
 		if (owner.isHumanOrPossessedByHuman()) {
-			ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
-			for (DomCard theCard : owner.getCardsFromHand(DomCardType.Treasure))
-				theChooseFrom.add(theCard.getName());
-			if (theChooseFrom.isEmpty())
-				return;
-			DomCard theCardToMine = owner.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Select card to " + this.getName().toString(), theChooseFrom, "Mandatory!")).get(0);
-			owner.trash(owner.removeCardFromHand(theCardToMine));
-			theChooseFrom = new ArrayList<DomCardName>();
-			for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-				if (theCard.getCost(owner.getCurrentGame()).compareTo(theCardToMine.getCost(owner.getCurrentGame()).add(new DomCost(3, 0))) <= 0 && theCard.hasCardType(DomCardType.Treasure) && owner.getCurrentGame().countInSupply(theCard)>0)
-					theChooseFrom.add(theCard);
-			}
-			if (theChooseFrom.isEmpty())
-				return;
-			owner.gainInHand(owner.getEngine().getGameFrame().askToSelectOneCard("Select card to gain from " + this.getName().toString(), theChooseFrom, "Mandatory!"));
+			handleHumanPlayer();
 		} else {
 			if (owner.getPlayStrategyFor(this) == DomPlayStrategy.mineCopperFirst && !owner.getCardsFromHand(DomCardName.Copper).isEmpty() && owner.getCurrentGame().countInSupply(DomCardName.Silver) > 0) {
 				owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(DomCardName.Copper).get(0)));
@@ -52,8 +38,26 @@ public class MineCard extends DomCard {
 				owner.gainInHand(myDesiredCard);
 		}
     }
-    
-    @Override
+
+	private void handleHumanPlayer() {
+		ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+		for (DomCard theCard : owner.getCardsFromHand(DomCardType.Treasure))
+            theChooseFrom.add(theCard.getName());
+		if (theChooseFrom.isEmpty())
+            return;
+		DomCard theCardToMine = owner.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Select card to " + this.getName().toString(), theChooseFrom, "Mandatory!")).get(0);
+		owner.trash(owner.removeCardFromHand(theCardToMine));
+		theChooseFrom = new ArrayList<DomCardName>();
+		for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+            if (theCard.getCost(owner.getCurrentGame()).compareTo(theCardToMine.getCost(owner.getCurrentGame()).add(new DomCost(3, 0))) <= 0 && theCard.hasCardType(DomCardType.Treasure) && owner.getCurrentGame().countInSupply(theCard)>0)
+                theChooseFrom.add(theCard);
+        }
+		if (theChooseFrom.isEmpty())
+            return;
+		owner.gainInHand(owner.getEngine().getGameFrame().askToSelectOneCard("Select card to gain from " + this.getName().toString(), theChooseFrom, "Mandatory!"));
+	}
+
+	@Override
     public boolean wantsToBePlayed() {
     	checkForCardToMine();
     	return myDesiredCard!=null;

@@ -5,6 +5,8 @@ import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
+import java.util.ArrayList;
+
 public class Border_VillageCard extends DomCard {
     public Border_VillageCard () {
       super( DomCardName.Border_Village);
@@ -19,6 +21,10 @@ public class Border_VillageCard extends DomCard {
     public void doWhenGained() {
     	//determine the cost of the card we're going to gain
     	DomCost theCost = getCost(owner.getCurrentGame()).add(new DomCost(-1, 0));
+    	if (owner.isHumanOrPossessedByHuman()) {
+    	    handleHuman(theCost);
+    	    return;
+        }
     	//try to gain a card that player wants according to his buy rules
         DomCardName theDesiredCard = owner.getDesiredCardWithRestriction(null,theCost,false,DomCardName.Stonemason);
         if (theDesiredCard==null) {
@@ -28,6 +34,18 @@ public class Border_VillageCard extends DomCard {
         if (theDesiredCard!=null)
           owner.gain(theDesiredCard);
     }
+
+    private void handleHuman(DomCost theCost) {
+        ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+            if (theCost.compareTo(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0)
+                theChooseFrom.add(theCard);
+        }
+        if (theChooseFrom.isEmpty())
+            return;
+        owner.gain(owner.getEngine().getGameFrame().askToSelectOneCard("Select card to gain from "+this.getName().toString(), theChooseFrom, "Mandatory!"));
+    }
+
     @Override
     public boolean wantsToBePlayed() {
     	int numberOfBorderVillagesInHand = owner.getCardsFromHand(DomCardName.Border_Village).size();

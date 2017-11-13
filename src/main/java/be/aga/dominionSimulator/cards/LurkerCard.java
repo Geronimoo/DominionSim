@@ -6,6 +6,7 @@ import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 import be.aga.dominionSimulator.enums.DomPlayStrategy;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,6 +17,10 @@ public class LurkerCard extends DomCard {
 
   public void play() {
     owner.addActions(1);
+    if (owner.isHumanOrPossessedByHuman()){
+        handleHuman();
+        return;
+    }
     DomCard theWantedAction = findActionInTrash();
     if (theWantedAction!=null && theWantedAction.getName()!=DomCardName.Hunting_Grounds ) {
       owner.gain(owner.getCurrentGame().removeFromTrash(theWantedAction));
@@ -23,6 +28,27 @@ public class LurkerCard extends DomCard {
       trashActionFromSupply();
     }
   }
+
+    private void handleHuman() {
+        if (!owner.getCurrentGame().getTrashedCards().isEmpty()) {
+            ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+            for (DomCard theCard : owner.getCurrentGame().getTrashedCards()) {
+               if (theCard.hasCardType(DomCardType.Action))
+                   theChooseFrom.add(theCard.getName());
+            }
+            DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Gain from Trash?", theChooseFrom, "Don't gain from trash");
+            if (theChosenCard!=null) {
+                owner.gain(owner.getCurrentGame().removeFromTrash(theChosenCard));
+                return;
+            }
+        }
+        ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+            if (theCard.hasCardType(DomCardType.Action) && owner.getCurrentGame().countInSupply(theCard)>0)
+                theChooseFrom.add(theCard);
+        }
+        owner.trash(owner.getCurrentGame().takeFromSupply(owner.getEngine().getGameFrame().askToSelectOneCard("Trash:", theChooseFrom, "Mandatory!")));
+    }
 
     @Override
     public boolean wantsToBePlayed() {

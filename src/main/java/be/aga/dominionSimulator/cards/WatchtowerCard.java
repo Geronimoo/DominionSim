@@ -18,11 +18,18 @@ public class WatchtowerCard extends DrawUntilXCardsCard {
     public boolean react(DomCard aCard) {
        if (DomEngine.haveToLog) DomEngine.addToLog( owner + " reveals " + this );
        lastWatchtoweredCard = aCard;
-       if (aCard.getName().getTrashPriority(owner)<16) {
-         owner.trash( aCard );
-       } else {
-         owner.gainOnTopOfDeck( aCard );
-       }
+        if (owner.isHumanOrPossessedByHuman()) {
+            if (owner.getEngine().getGameFrame().askPlayer("<html>Trash " + aCard.getName().toHTML() +" ?</html>", "Resolving " + this.getName().toString()))
+              owner.trash(aCard);
+            else
+              owner.gainOnTopOfDeck(aCard);
+        } else {
+            if (aCard.getName().getTrashPriority(owner) < 16) {
+                owner.trash(aCard);
+            } else {
+                owner.gainOnTopOfDeck(aCard);
+            }
+        }
        return true;
     }
 
@@ -36,10 +43,15 @@ public class WatchtowerCard extends DrawUntilXCardsCard {
       //TODO this way of handling Watchtower looks a bit dirty
       if (lastWatchtoweredCard == aCard)
         return false;
-      if (aCard.getName().getTrashPriority(owner)<35) {
-     	return true;
+      if (owner.isHumanOrPossessedByHuman()) {
+          owner.setNeedsToUpdate();
+          return owner.getEngine().getGameFrame().askPlayer("<html>React with " + this.getName().toHTML() +" ?</html>", "Resolving " + this.getName().toString());
       } else {
-    	return false;
+          if (aCard.getName().getTrashPriority(owner) < 35) {
+              return true;
+          } else {
+              return false;
+          }
       }
     }
     @Override

@@ -3,8 +3,8 @@ package be.aga.dominionSimulator.gui;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -27,10 +27,10 @@ import be.aga.dominionSimulator.gui.util.HandCardRenderer;
 import be.aga.dominionSimulator.gui.util.TableCardRenderer;
 
 public class DomGameFrame extends JFrame implements ActionListener, ListSelectionListener, Observer {
-	private DomEngine myEngine;
+    public static final int LIST_HEIGHT = 360;
+    private DomEngine myEngine;
 	private JLabel myActionsValue;
 	private JLabel myBuysValue;
-	private HashMap<JLabel, DomCardName> myBoardCards = new HashMap<JLabel, DomCardName>();
 	private JTextPane myLogPane;
 	private JList myInPlayList;
 	private JButton myEndTurnBTN;
@@ -46,18 +46,28 @@ public class DomGameFrame extends JFrame implements ActionListener, ListSelectio
     private JLabel myOppsVPLabel;
     private JLabel myDrawDeckLabel;
     private JLabel myDiscardLabel;
+    private JButton myHintButton;
+    private ArrayList<String> logStack=new ArrayList<String>();
+    private int myDelay;
+    private JButton mySpendCoinTokensBTN;
+    private JButton myPayOffDebtBTN;
 
-    public DomGameFrame(DomEngine anEngine) {
+    public DomGameFrame(DomEngine anEngine, String delay) {
 	 myEngine=anEngine;
-	 buildGUI();
+        try {
+            myDelay=Integer.valueOf(delay);
+        } catch (NumberFormatException e) {
+            myDelay=300;
+        }
+        buildGUI();
 	 setTitle("Play Dominion");
 //     setPreferredSize(RefineryUtilities.getMaximumWindowBounds().getSize());
-     setPreferredSize(new Dimension(800,950));
+     setPreferredSize(new Dimension(850,750));
 	 pack();
 	 setVisible(true);
      addWindowListener(new WindowAdapter() {
         public void windowClosing(WindowEvent e) {
-            if (myEngine.getCurrentGame()!=null)
+            if (myEngine.getCurrentGame()!=null && !myEngine.getCurrentGame().isGameFinished())
                 myEngine.doEndOfHumanGameStuff();
         }
      });
@@ -67,8 +77,8 @@ private void buildGUI() {
 	setLayout(new BorderLayout());
     JSplitPane theSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false, getTopSplit(), getBottomPanel());
     theSplit.setResizeWeight(0.5);
-    theSplit.setDividerLocation(450);
-    theSplit.setDividerSize(1);
+    theSplit.setDividerLocation(320);
+    theSplit.setDividerSize(3);
 //    theSplit.resetToPreferredSizes();
 	getContentPane().add(theSplit, BorderLayout.CENTER);
 	getContentPane().add(getStatusBar(), BorderLayout.SOUTH);
@@ -116,14 +126,26 @@ private JPanel getBottomPanel() {
 
 	//hand list
 	myHandList = new JList();
+	myHandList.setFixedCellHeight(20);
 	myHandList.setLayoutOrientation(JList.VERTICAL);
-	myHandList.setPreferredSize(new Dimension(150,350));
-	myHandList.setVisibleRowCount(25);
+	myHandList.setPreferredSize(new Dimension(100, LIST_HEIGHT));
+//	myHandList.setVisibleRowCount(40);
 	myHandList.setModel(new DefaultListModel());
 //	myHandList.setMinimumSize(new Dimension(60,400));
 	myHandList.setCellRenderer(new HandCardRenderer());
     myHandList.setFont(new Font("Arial",Font.PLAIN,12));
 	myHandList.addListSelectionListener(this);
+    myHandList.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if (e.getButton()==MouseEvent.BUTTON3) {
+                int index = myHandList.locationToIndex(e.getPoint());
+                if (index >= 0)
+                    showWiki( ((DomCard)myHandList.getModel().getElementAt(index)).getName());
+            }
+            super.mouseClicked(e);
+        }
+    });
     JScrollPane theScrollPane = new JScrollPane(myHandList);
     theScrollPane.setBorder(new TitledBorder("Hand"));
     theScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -133,9 +155,20 @@ private JPanel getBottomPanel() {
 	myInPlayList.setModel(new DefaultListModel());
 //	myInPlayList.setBorder(new TitledBorder("In play"));
 //	myInPlayList.setMinimumSize(new Dimension(60,400));
-	myInPlayList.setPreferredSize(new Dimension(150,350));
-	myInPlayList.setVisibleRowCount(25);
+	myInPlayList.setPreferredSize(new Dimension(100,LIST_HEIGHT));
+//	myInPlayList.setVisibleRowCount(40);
 	myInPlayList.setCellRenderer(new CardRenderer());
+    myInPlayList.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if (e.getButton()==MouseEvent.BUTTON3) {
+                int index = myInPlayList.locationToIndex(e.getPoint());
+                if (index >= 0)
+                    showWiki( myInPlayList.getModel().getElementAt(index));
+            }
+            super.mouseClicked(e);
+        }
+    });
     ((DefaultListModel)myInPlayList.getModel()).addElement("");
     theScrollPane = new JScrollPane(myInPlayList);
     theScrollPane.setBorder(new TitledBorder("In play"));
@@ -158,38 +191,57 @@ private JPanel getBottomPanel() {
             if (e.getButton()==MouseEvent.BUTTON1) {
                 int row = myBoardTable.rowAtPoint(e.getPoint());
                 int col = myBoardTable.columnAtPoint(e.getPoint());
-                tryToBuyOrGainFromSupply(myBoardTable.getModel().getValueAt(row,col));
+                DomCardName theCardName = (DomCardName) myBoardTable.getModel().getValueAt(row, col);
+                ArrayList<DomCard> thePile = myEngine.getCurrentGame().getBoard().get(theCardName);
+                if (thePile.isEmpty() && !theCardName.hasCardType(DomCardType.Event))
+                    return;
+                if (!theCardName.hasCardType(DomCardType.Event))
+                  theCardName=thePile.get(0).getName();
+                tryToBuyOrGainFromSupply(theCardName);
+            }
+            if (e.getButton()==MouseEvent.BUTTON3) {
+                int row = myBoardTable.rowAtPoint(e.getPoint());
+                int col = myBoardTable.columnAtPoint(e.getPoint());
+                DomCardName theCardName = (DomCardName) myBoardTable.getModel().getValueAt(row, col);
+//                ArrayList<DomCard> thePile = myEngine.getCurrentGame().getBoard().get(theCardName);
+//                if (thePile.isEmpty() && !theCardName.hasCardType(DomCardType.Event))
+//                    return;
+//                if (!theCardName.hasCardType(DomCardType.Event))
+//                    theCardName=thePile.get(0).getName();
+                showWiki(theCardName);
             }
             super.mouseClicked(e);
         }
     });
     JScrollPane theBoardPanel = new JScrollPane(myBoardTable);
-    theBoardPanel.setPreferredSize(new Dimension(250,350));
+    theBoardPanel.setPreferredSize(new Dimension(300,LIST_HEIGHT));
     theBoardPanel.setBorder(new TitledBorder("Kingdom"));
 	theCons.gridx++;
 	thePanel.add(theBoardPanel,theCons);
 	return thePanel;
 }
 
+    public static void showWiki(Object valueAt) {
+        DomCardName theCardName = (DomCardName) valueAt;
+        String theString = theCardName.toString().replaceAll("\\s+", "_");
+        try {
+            Desktop.getDesktop().browse(new URI("http://wiki.dominionstrategy.com/index.php/"+theString));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Can not open web site!", "", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     private void tryToBuyOrGainFromSupply(Object aCardName) {
         DomCardName theCard = (DomCardName) aCardName;
         DomPlayer activePlayer = myEngine.getCurrentGame().getActivePlayer();
-        activePlayer.tryToBuyFromSupplyAsHuman(theCard);
+        activePlayer.attemptToBuyFromSupplyAsHuman(theCard);
     }
 
-    private JPanel getInfoPanel() {
+  private JPanel getInfoPanel() {
 	JPanel thePanel = new JPanel();
 	thePanel.setLayout(new GridBagLayout());
 	GridBagConstraints theCons = DomGui.getGridBagConstraints(2);
 	theCons.fill=GridBagConstraints.NONE;
-	//turn indicator
-//	myTurnLabel = new JLabel("Your turn");
-//	thePanel.add(myTurnLabel, theCons);
-	//$ indicator
-//	myDollarLabel = new JLabel("Money: $5 + P");
-////	theCons.gridy++;
-//	thePanel.add(myDollarLabel, theCons);
-	//draw and discardpile
     myDrawDeckLabel = new JLabel();
     theCons.gridx++;
     thePanel.add(myDrawDeckLabel, theCons);
@@ -217,14 +269,23 @@ private JPanel getBottomPanel() {
     theCons.gridx++;
     thePanel.add(myOppsVPLabel, theCons);
     theCons.gridx++;
-    JButton theShowTrashBTN = new JButton("Show Trash");
-    theShowTrashBTN.setActionCommand("Show Trash");
-    theShowTrashBTN.addActionListener(this);
-    thePanel.add(theShowTrashBTN, theCons);
-	theCons.weightx=100;
+    JButton theInfoButton = new JButton("Game Info");
+    theInfoButton.setActionCommand("Game Info");
+    theInfoButton.addActionListener(this);
+    thePanel.add(theInfoButton, theCons);
+//    theCons.gridx++;
+//    myOppTextLabel = new JLabel();
+//    thePanel.add(myOppTextLabel, theCons);
+    theCons.weightx=100;
 	theCons.gridx++;
 	thePanel.add(new JLabel(), theCons);
 	theCons.weightx=1;
+    theCons.gridx++;
+    myHintButton = new JButton("Hint!");
+    myHintButton.setActionCommand("Hint");
+    myHintButton.addActionListener(this);
+    myHintButton.setVisible(false);
+    thePanel.add(myHintButton, theCons);
     theCons.gridx++;
     myPlayAllTreasurersBTN = new JButton("Play all treasures");
     myPlayAllTreasurersBTN.setActionCommand("Play all treasures");
@@ -232,7 +293,22 @@ private JPanel getBottomPanel() {
     myPlayAllTreasurersBTN.setVisible(false);
     thePanel.add(myPlayAllTreasurersBTN, theCons);
 	theCons.gridx++;
-	myEndActions = new JButton("End Actions");
+    mySpendCoinTokensBTN = new JButton("$0");
+    mySpendCoinTokensBTN.setActionCommand("Spend Coin Tokens");
+    mySpendCoinTokensBTN.setToolTipText("Spend Coin Tokens");
+    mySpendCoinTokensBTN.addActionListener(this);
+    mySpendCoinTokensBTN.setVisible(false);
+    thePanel.add(mySpendCoinTokensBTN, theCons);
+    theCons.gridx++;
+    myPayOffDebtBTN = new JButton("$0");
+    myPayOffDebtBTN.setForeground(Color.red);
+    myPayOffDebtBTN.setActionCommand("Pay off debt");
+    myPayOffDebtBTN.setToolTipText("Pay off debt");
+    myPayOffDebtBTN.addActionListener(this);
+    myPayOffDebtBTN.setVisible(false);
+    thePanel.add(myPayOffDebtBTN, theCons);
+    theCons.gridx++;
+    myEndActions = new JButton("End Actions");
 	myEndActions.setActionCommand("End Actions");
 	myEndActions.addActionListener(this);
 	thePanel.add(myEndActions, theCons);
@@ -241,29 +317,96 @@ private JPanel getBottomPanel() {
     myEndTurnBTN.setActionCommand("End turn");
     myEndTurnBTN.addActionListener(this);
     thePanel.add(myEndTurnBTN, theCons);
-
 	return thePanel;
-}
+  }
 
 @Override
 public void actionPerformed(ActionEvent e) {
 	if (e.getActionCommand().equals("Cancel")){
 		dispose();
 	}
-	if (e.getActionCommand().equals("Show Trash")) {
-	    StringBuilder theTrash = new StringBuilder();
-	    theTrash.append(myEngine.getCurrentGame().getBoard().getTrashedCards());
-	    JOptionPane.showMessageDialog(this, theTrash.toString());
+	if (e.getActionCommand().equals("Game Info")) {
+	    StringBuilder theInfo = new StringBuilder("<html>");
+	    theInfo.append("Trash: ").append(myEngine.getCurrentGame().getBoard().getTrashedCardsString());
+        if (!myEngine.getCurrentGame().getActivePlayer().getTavernMat().isEmpty()) {
+            theInfo.append("<br>");
+            theInfo.append("Tavern Mat: ").append(myEngine.getCurrentGame().getActivePlayer().getTavernMatAsString());
+        }
+        if (!myEngine.getCurrentGame().getActivePlayer().getNativeVillageMatToString().isEmpty()) {
+            theInfo.append("<br>");
+            theInfo.append("Native Village Mat: ").append(myEngine.getCurrentGame().getActivePlayer().getNativeVillageMatToString());
+        }
+        if (!myEngine.getCurrentGame().getActivePlayer().getIslandMatString().isEmpty()) {
+            theInfo.append("<br>");
+            theInfo.append("Island Mat:").append(myEngine.getCurrentGame().getActivePlayer().getIslandMatString());
+        }
+        if (myEngine.getCurrentGame().getActivePlayer().getPirateShipLevel()>0) {
+            theInfo.append("<br>");
+            theInfo.append("Pirate Ship Level: $").append(myEngine.getCurrentGame().getActivePlayer().getPirateShipLevel());
+        }
+        theInfo.append("<br>");
+        theInfo.append("Journey token: ");
+        if (myEngine.getCurrentGame().getActivePlayer().isJourneyTokenFaceUp())
+            theInfo.append("face up");
+        else
+            theInfo.append("face down");
+        if (myEngine.getCurrentGame().getActivePlayer().isMinusOneCardToken()) {
+            theInfo.append("<br>");
+            theInfo.append("-1 Card Token!");
+        }
+        theInfo.append("<br>");
+        theInfo.append("<br>");
+        theInfo.append("Opponent's cards in play: ");
+        for (DomPlayer theOpps : myEngine.getCurrentGame().getActivePlayer().getOpponents()) {
+            theInfo.append(theOpps.getCardsInPlay());
+        }
+        theInfo.append("</html>");
+	    JOptionPane.showMessageDialog(this, theInfo.toString());
     }
     if (e.getActionCommand().equals("Play all treasures")) {
-        if (!myEngine.getCurrentGame().isGameFinished())
-            myEngine.getCurrentGame().getActivePlayer().attemptToPlayAllTreasures();
+      myEngine.getCurrentGame().getActivePlayer().attemptToPlayAllTreasures();
+    }
+    if (e.getActionCommand().equals("Spend Coin Tokens")) {
+	    int i=1;
+	    if (myEngine.getCurrentGame().getActivePlayer().getCoinTokens()>4) {
+            String theStr = JOptionPane.showInputDialog(this, "Spend how many coin tokens?");
+            if (!theStr.equals("") && Integer.valueOf(theStr)>0)
+                i=Integer.valueOf(theStr);
+        }
+        myEngine.getCurrentGame().getActivePlayer().spendCoinTokens(i);
+        myEngine.getCurrentGame().getActivePlayer().addAvailableCoins(i);
+        myEngine.getCurrentGame().getActivePlayer().setNeedsToUpdate();
+    }
+    if (e.getActionCommand().equals("Pay off debt")) {
+        myEngine.getCurrentGame().getActivePlayer().payOffDebt(1);
+        myEngine.getCurrentGame().getActivePlayer().addAvailableCoins(-1);
+        myEngine.getCurrentGame().getActivePlayer().setNeedsToUpdate();
     }
     if (e.getActionCommand().equals("End Actions")) {
-        myEngine.getCurrentGame().getHumanPlayer().endActions();
+        myEngine.getCurrentGame().getActivePlayer().endActions();
     }
     if (e.getActionCommand().equals("End turn")) {
-        myEngine.getCurrentGame().getHumanPlayer().endTurn();
+        myEngine.getCurrentGame().getActivePlayer().humanEndsTurn();
+    }
+    if (e.getActionCommand().equals("End Buy")) {
+        myEngine.getCurrentGame().getActivePlayer().setPhase(DomPhase.Night);
+        myEngine.getCurrentGame().getActivePlayer().setNeedsToUpdate();
+    }
+    if (e.getActionCommand().equals("Hint")) {
+	    if (myEngine.getCurrentGame().getActivePlayer().getPhase()==DomPhase.Action) {
+            DomCard theCard = myEngine.getCurrentGame().getActivePlayer().getNextActionToPlay();
+            if (theCard!=null)
+              JOptionPane.showMessageDialog(null, "<html>Play " + theCard.getName().toHTML()+"</html>");
+            else
+                JOptionPane.showMessageDialog(null, "<html>End Actions</html>");
+        }
+        if (myEngine.getCurrentGame().getActivePlayer().getPhase()==DomPhase.Buy) {
+            DomCardName theCard = myEngine.getCurrentGame().getHumanPlayer().getDesiredCard(myEngine.getCurrentGame().getHumanPlayer().getTotalPotentialCurrency(),false);
+            if (theCard!=null)
+              JOptionPane.showMessageDialog(null, "<html>Buy " + theCard.toHTML()+"</html>");
+            else
+              JOptionPane.showMessageDialog(null, "<html>Buy nothing</html>");
+        }
     }
 }
 
@@ -275,15 +418,32 @@ public void actionPerformed(ActionEvent e) {
 	}
 
 	public void addToLog(final String s) {
-		try {
-		    if (!s.contains("cards in Hand:")) {
-                editorKit.insertHTML(gameLog, gameLog.getLength(), s, 0, 0, null);
-            }
-		} catch (BadLocationException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+        if (logStack.isEmpty()) {
+            Timer theTimer = new Timer(myDelay, getListener());
+            theTimer.start();
         }
+        logStack.add(s);
+    }
+
+    private ActionListener getListener() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent o) {
+                try {
+                    if (!logStack.isEmpty()) {
+                        String t = logStack.remove(0);
+                        if (!t.contains("cards in Hand:")) {
+                          editorKit.insertHTML(gameLog, gameLog.getLength(), t, 0, 0, null);
+                        }
+                        ((Timer)o.getSource()).restart();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (BadLocationException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
     }
 
     @Override
@@ -291,22 +451,27 @@ public void actionPerformed(ActionEvent e) {
         updateHandList();
         updateInPlayList();
         myBoardTable.setModel(new KingdomTableModel(myEngine));
-        myBoardTable.setModel(new KingdomTableModel(myEngine));
         myStatusBar.setText(myEngine.getStatus());
-        DomPlayer theHuman = myEngine.getCurrentGame().getHumanPlayer();
-        myActionsValue.setText("<html><FONT style=\"BACKGROUND-COLOR: #D9D9D9\">"+theHuman.actionsLeft+"</font></html>");
-        myActionsValue.setToolTipText(theHuman.actionsLeft + " actions left");
+        DomPlayer theActivePlayer = myEngine.getCurrentGame().getActivePlayer();
+        myActionsValue.setText("<html><FONT style=\"BACKGROUND-COLOR: #D9D9D9\">"+theActivePlayer.actionsLeft+"</font></html>");
+        myActionsValue.setToolTipText(theActivePlayer.actionsLeft + " actions left");
         ImageIcon imageIcon = new ImageIcon(getClass().getResource("images/Randomizer.jpg"));
         Image image = imageIcon.getImage(); // transform it
         Image newimg = image.getScaledInstance(12, 18,  Image.SCALE_DEFAULT); // scale it the smooth way
         myDrawDeckLabel.setIcon(new ImageIcon(newimg));  // transform it back
-        myDrawDeckLabel.setText(""+myEngine.getCurrentGame().getHumanPlayer().getDrawDeckSize());
+        myDrawDeckLabel.setText(""+myEngine.getCurrentGame().getActivePlayer().getDrawDeckSize());
         imageIcon = new ImageIcon(getClass().getResource("images/openDominion.jpg"));
         image = imageIcon.getImage(); // transform it
         newimg = image.getScaledInstance(12, 18,  Image.SCALE_DEFAULT); // scale it the smooth way
         myDiscardLabel.setIcon(new ImageIcon(newimg));  // transform it back
-        myDiscardLabel.setText(""+myEngine.getCurrentGame().getHumanPlayer().getCardsFromDiscard().size());
-        myBuysValue.setText("<html>"+theHuman.getBuysLeft() + " $" + "<FONT style=\"BACKGROUND-COLOR: #F3F584\">"+ theHuman.getAvailableCoins() +"</font> ($<FONT style=\"BACKGROUND-COLOR: #F3F584\">"+ theHuman.getTotalPotentialCurrency().getCoins()+"</font>?)");
+        myDiscardLabel.setText(""+myEngine.getCurrentGame().getActivePlayer().getCardsFromDiscard().size());
+
+        String text = "<html>" + theActivePlayer.getBuysLeft() + " $" + "<FONT style=\"BACKGROUND-COLOR: #F3F584\">"
+                + theActivePlayer.getAvailableCoinsWithoutTokens() + "</font> ($<FONT style=\"BACKGROUND-COLOR: #F3F584\">" + theActivePlayer.getTotalPotentialCurrency().getCoins() + "</font>?)";
+        if (theActivePlayer.getAvailableCoinsWithoutTokens()==theActivePlayer.getTotalPotentialCurrency().getCoins())
+            text = "<html>" + theActivePlayer.getBuysLeft() + " $" + "<FONT style=\"BACKGROUND-COLOR: #F3F584\">"
+                    + theActivePlayer.getAvailableCoinsWithoutTokens() + "</font>";
+        myBuysValue.setText(text);
         myVPLabel.setText("<html>"+myEngine.getCurrentGame().getHumanPlayer().countVictoryPoints()+"&#x25BC;</font></html>");
         String theOppVPString = "(Opp.: ";
         for (DomPlayer thePlayer : myEngine.getPlayers()) {
@@ -315,44 +480,92 @@ public void actionPerformed(ActionEvent e) {
         }
         myOppsVPLabel.setText("<html>"+theOppVPString+")</html>");
         myOppsVPLabel.setFont(new Font("", Font.PLAIN, 10));
-        if (theHuman.getPhase()==DomPhase.Action)
+        if (theActivePlayer.getPhase()==DomPhase.Action)
             myEndActions.setVisible(true);
         else
             myEndActions.setVisible(false);
-        if (theHuman.getPhase()==DomPhase.Buy && theHuman.getBoughtCards().isEmpty() && !theHuman.getCardsFromHand(DomCardType.Treasure).isEmpty())
+        if (theActivePlayer.getPhase()==DomPhase.Buy && theActivePlayer.getBoughtCards().isEmpty() && !theActivePlayer.getCardsFromHand(DomCardType.Treasure).isEmpty())
             myPlayAllTreasurersBTN.setVisible(true);
         else
             myPlayAllTreasurersBTN.setVisible(false);
+        if (theActivePlayer.getCoinTokens()>0) {
+            mySpendCoinTokensBTN.setText("$"+theActivePlayer.getCoinTokens());
+            mySpendCoinTokensBTN.setVisible(true);
+            mySpendCoinTokensBTN.setEnabled(false);
+        } else {
+            mySpendCoinTokensBTN.setVisible(false);
+        }
+        if (theActivePlayer.getPhase()==DomPhase.Buy && theActivePlayer.getBoughtCards().isEmpty() && theActivePlayer.getCoinTokens()>0) {
+            mySpendCoinTokensBTN.setEnabled(true);
+        } else {
+            mySpendCoinTokensBTN.setEnabled(false);
+        }
+        if (theActivePlayer.getDebt()>0) {
+            myPayOffDebtBTN.setText("$"+theActivePlayer.getDebt());
+            myPayOffDebtBTN.setVisible(true);
+            myPayOffDebtBTN.setEnabled(false);
+        } else {
+            myPayOffDebtBTN.setVisible(false);
+        }
+        if (theActivePlayer.getPhase()==DomPhase.Buy && theActivePlayer.getDebt()>0 && theActivePlayer.getAvailableCoinsWithoutTokens()>0) {
+            myPayOffDebtBTN.setEnabled(true);
+        } else {
+            myPayOffDebtBTN.setEnabled(false);
+        }
+        if (theActivePlayer.getPhase()==DomPhase.Action || theActivePlayer.getPhase()==DomPhase.Buy)
+            myHintButton.setVisible(true);
+        else
+            myHintButton.setVisible(false);
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 myLogScroll.getVerticalScrollBar().setValue(myLogScroll.getVerticalScrollBar().getMaximum());
             }
         });
+        if (!myEngine.getCurrentGame().getActivePlayer().getCardsFromHand(DomCardType.Night).isEmpty() && myEngine.getCurrentGame().getActivePlayer().getPhase()!=DomPhase.Night) {
+            myEndTurnBTN.setText("End Buy");
+            myEndTurnBTN.setActionCommand("End Buy");
+        }else {
+            myEndTurnBTN.setText("End Turn");
+            myEndTurnBTN.setActionCommand("End turn");
+        }
     }
 
     private void updateInPlayList() {
-        ((DefaultListModel)myInPlayList.getModel()).removeAllElements();
-        for (DomCard theCard : myEngine.getCurrentGame().getHumanPlayer().getCardsInPlay()) {
-            ((DefaultListModel)myInPlayList.getModel()).addElement(theCard.getName());
+        DomPlayer thePlayer;
+        if (myEngine.getCurrentGame().getActivePlayer().isHumanOrPossessedByHuman()) {
+            thePlayer = myEngine.getCurrentGame().getActivePlayer();
+        } else {
+            thePlayer = myEngine.getCurrentGame().getHumanPlayer();
         }
-        if (myEngine.getCurrentGame().getHumanPlayer().getCardsInPlay().isEmpty())
-            ((DefaultListModel)myInPlayList.getModel()).addElement("");
+        ((DefaultListModel) myInPlayList.getModel()).removeAllElements();
+        for (DomCard theCard : thePlayer.getCardsInPlay()) {
+            ((DefaultListModel) myInPlayList.getModel()).addElement(theCard);
+        }
+        if (thePlayer.getCardsInPlay().isEmpty())
+            ((DefaultListModel) myInPlayList.getModel()).addElement("");
         Runnable doRun = new Runnable() {
             @Override
             public void run() {
-                myInPlayList.ensureIndexIsVisible(((DefaultListModel)myInPlayList.getModel()).size()-1);
+                myInPlayList.ensureIndexIsVisible(((DefaultListModel) myInPlayList.getModel()).size() - 1);
             }
         };
         SwingUtilities.invokeLater(doRun);
 }
 
     private void updateHandList() {
-        ((DefaultListModel)myHandList.getModel()).removeAllElements();
-        for (DomCardName theCard : myEngine.getCurrentGame().getHumanPlayer().getUniqueCardsInHand()) {
-            ((DefaultListModel)myHandList.getModel()).addElement(myEngine.getCurrentGame().getHumanPlayer().getCardsFromHand(theCard).get(0));
+        DomPlayer thePlayer;
+        if (myEngine.getCurrentGame().getActivePlayer().isHumanOrPossessedByHuman()) {
+            thePlayer = myEngine.getCurrentGame().getActivePlayer();
+        } else {
+            thePlayer = myEngine.getCurrentGame().getHumanPlayer();
+        }
+        ((DefaultListModel) myHandList.getModel()).removeAllElements();
+        for (DomCardName theCard : thePlayer.getUniqueCardNamesInHand()) {
+            ((DefaultListModel) myHandList.getModel()).addElement(thePlayer.getCardsFromHand(theCard).get(0));
         }
         myHandList.setSelectedIndex(-1);
+
     }
 
     public boolean askPlayer(String question, String title) {
@@ -360,11 +573,25 @@ public void actionPerformed(ActionEvent e) {
     }
 
     public void askToSelectCards(String s, ArrayList<DomCard> chooseFrom, ArrayList<DomCardName> theChosenCards, int aNumber) {
-        new CardSelector(myHandList,s, theChosenCards, chooseFrom, aNumber);
+        new CardSelector(myInPlayList,s, theChosenCards, chooseFrom, aNumber);
     }
 
     public DomCardName askToSelectOneCard(String title, ArrayList<DomCardName> cards, String buttonMessage) {
-        OneCardSelector theSelector = new OneCardSelector(myHandList, title, cards, buttonMessage);
+        OneCardSelector theSelector = new OneCardSelector(myInPlayList, title, cards, buttonMessage);
         return theSelector.getChosenCard();
+    }
+
+    public DomCard askToSelectOneCardWithDomCard(String title, ArrayList<DomCard> cards, String buttonMessage) {
+        OneCardSelectorWithDomCard theSelector = new OneCardSelectorWithDomCard(myInPlayList, title, cards, buttonMessage);
+        return theSelector.getChosenCard();
+    }
+
+    public int askToSelectOption(String title, ArrayList<String> options, String buttonMessage) {
+        ButtonSelector theSelector = new ButtonSelector(myInPlayList, title, options, buttonMessage);
+        return theSelector.getChosenOption();
+    }
+
+    public void hover(String s) {
+        myLogPane.setToolTipText(s);
     }
 }

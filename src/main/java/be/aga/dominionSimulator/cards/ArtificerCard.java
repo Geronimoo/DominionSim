@@ -4,6 +4,7 @@ import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.enums.DomCardName;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 public class ArtificerCard extends DomCard {
@@ -17,6 +18,10 @@ public class ArtificerCard extends DomCard {
       owner.drawCards(1);
       if (owner.getCardsInHand().isEmpty())
           return;
+      if (owner.isHumanOrPossessedByHuman()) {
+          handleHuman();
+          return;
+      }
       Collections.sort(owner.getCardsInHand(),SORT_FOR_DISCARD_FROM_HAND);
       int i=0;
       DomCard theNextCard = owner.getCardsInHand().get(i);
@@ -45,5 +50,25 @@ public class ArtificerCard extends DomCard {
           owner.discard(owner.getCardsInHand().remove(0));
       }
       owner.gainOnTopOfDeck(owner.getCurrentGame().takeFromSupply(theDesiredCard));
+    }
+
+    private void handleHuman() {
+        owner.setNeedsToUpdate();
+        if (!owner.getEngine().getGameFrame().askPlayer("<html>Use " + DomCardName.Artificer.toHTML() +"?</html>", "Resolving " + this.getName().toString()))
+           return;
+        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        owner.getEngine().getGameFrame().askToSelectCards("Choose cards to discard" , owner.getCardsInHand(), theChosenCards, 0);
+        for (DomCardName theCardName: theChosenCards) {
+            owner.discardFromHand(owner.getCardsFromHand(theCardName).get(0));
+        }
+        owner.setNeedsToUpdate();
+        ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+            if (new DomCost(theChosenCards.size(),0).compareTo(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0)
+                theChooseFrom.add(theCard);
+        }
+        if (theChooseFrom.isEmpty())
+            return;
+        owner.gainOnTopOfDeck(owner.getCurrentGame().takeFromSupply(owner.getEngine().getGameFrame().askToSelectOneCard("Select card to gain for "+this.getName().toString(), theChooseFrom, "Mandatory!")));
     }
 }

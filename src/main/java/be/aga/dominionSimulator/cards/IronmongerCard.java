@@ -26,10 +26,18 @@ public class IronmongerCard extends DomCard {
             willdraw=true;
         if (theTopCard.hasCardType(DomCardType.Action))
             owner.addActions(1);
-        if (theTopCard.getDiscardPriority(owner.getActionsLeft())>=16)
-            owner.putOnTopOfDeck(theTopCard);
-        else
-            owner.discard(theTopCard);
+        if (owner.isHumanOrPossessedByHuman()) {
+            owner.setNeedsToUpdate();
+            if (owner.getEngine().getGameFrame().askPlayer("<html>Discard " + theTopCard.getName().toHTML() +" ?</html>", "Resolving " + this.getName().toString()))
+                owner.discard(theTopCard);
+            else
+                owner.putOnTopOfDeck(theTopCard);
+        } else {
+            if (theTopCard.getDiscardPriority(owner.getActionsLeft()) >= 16)
+                owner.putOnTopOfDeck(theTopCard);
+            else
+                owner.discard(theTopCard);
+        }
         if (willdraw)
             owner.drawCards(1);
     }

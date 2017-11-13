@@ -16,15 +16,7 @@ public class LibraryCard extends DrawUntilXCardsCard {
 
     public void play() {
       if (owner.isHumanOrPossessedByHuman()) {
-          while (owner.getCardsInHand().size() < 7 && !owner.isDeckEmpty()) {
-              DomCard theRevealedCard = owner.revealTopCards(1).get(0);
-              if (theRevealedCard.hasCardType(DomCardType.Action) && owner.getEngine().getGameFrame().askPlayer("<html>Skip " + theRevealedCard.getName().toHTML() + " ?</html>", "Resolving " + this.getName().toString())) {
-                 putCardAside(theRevealedCard);
-              } else {
-                 owner.putInHand(theRevealedCard);
-              }
-          }
-          discardPutAsideCards();
+          handleHumanPlayer();
       } else {
           while (owner.getCardsInHand().size() < 7 && !owner.isDeckEmpty()) {
               DomCard theRevealedCard = owner.revealTopCards(1).get(0);
@@ -41,7 +33,19 @@ public class LibraryCard extends DrawUntilXCardsCard {
       }
     }
 
-	private void discardPutAsideCards() {
+    private void handleHumanPlayer() {
+        while (owner.getCardsInHand().size() < 7 && !owner.isDeckEmpty()) {
+            DomCard theRevealedCard = owner.revealTopCards(1).get(0);
+            if (theRevealedCard.hasCardType(DomCardType.Action) && owner.getEngine().getGameFrame().askPlayer("<html>Skip " + theRevealedCard.getName().toHTML() + " ?</html>", "Resolving " + this.getName().toString())) {
+               putCardAside(theRevealedCard);
+            } else {
+               owner.putInHand(theRevealedCard);
+            }
+        }
+        discardPutAsideCards();
+    }
+
+    private void discardPutAsideCards() {
 		owner.discard(myPutAsideCards);
 		myPutAsideCards.clear();
 	}

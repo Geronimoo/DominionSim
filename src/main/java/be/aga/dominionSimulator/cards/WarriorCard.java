@@ -8,9 +8,10 @@ import be.aga.dominionSimulator.enums.DomCardType;
 
 import java.util.ArrayList;
 
-public class WarriorCard extends DomCard {
+public class WarriorCard extends TravellerCard {
     public WarriorCard() {
       super( DomCardName.Warrior);
+      myUpgrade=DomCardName.Hero;
     }
 
     public void play() {
@@ -30,17 +31,5 @@ public class WarriorCard extends DomCard {
               }
             }
         }
-    }
-    @Override
-    public void handleCleanUpPhase() {
-        if (owner==null)
-            return;
-        if (owner.wants(DomCardName.Hero)) {
-            DomPlayer theOwner = owner;
-            owner.returnToSupply(this);
-            theOwner.gain(DomCardName.Hero);
-            return;
-        }
-        super.handleCleanUpPhase();
     }
 }

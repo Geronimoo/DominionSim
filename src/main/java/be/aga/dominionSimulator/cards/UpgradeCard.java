@@ -1,5 +1,6 @@
 package be.aga.dominionSimulator.cards;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 import be.aga.dominionSimulator.DomCard;
@@ -16,6 +17,10 @@ public class UpgradeCard extends DomCard {
         owner.drawCards( 1 );
         if (owner.getCardsInHand().isEmpty())
         	return;
+        if (owner.isHumanOrPossessedByHuman()) {
+            handleHuman();
+            return;
+        }
         Collections.sort( owner.getCardsInHand(), SORT_FOR_TRASHING);
         if (owner.getCardsInHand().get(0).getName()==DomCardName.Curse || owner.getCardsInHand().get(0).getName()==DomCardName.Copper) {
             owner.trash( owner.removeCardFromHand( owner.getCardsInHand().get(0) ) );
@@ -40,5 +45,28 @@ public class UpgradeCard extends DomCard {
         DomCardName theCardToGain = owner.getCurrentGame().getBestCardInSupplyFor(owner, null, theCost,true);
         if (theCardToGain!=null)
 		  owner.gain(theCardToGain);
+    }
+
+    private void handleHuman() {
+        owner.setNeedsToUpdate();
+        ArrayList<DomCardName> theChooseFrom=new ArrayList<DomCardName>();
+        for (DomCard theCard : owner.getCardsInHand()) {
+            theChooseFrom.add(theCard.getName());
+        }
+        DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!");
+        owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
+        owner.setNeedsToUpdate();
+        theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+            if (theCard.getCost(owner.getCurrentGame()).compareTo(theChosenCard.getCost(owner.getCurrentGame()).add(new DomCost(1,0)))==0 && owner.getCurrentGame().countInSupply(theCard)>0)
+                theChooseFrom.add(theCard);
+        }
+        if (theChooseFrom.isEmpty())
+            return;
+        if (theChooseFrom.size()==1) {
+            owner.gain(owner.getCurrentGame().takeFromSupply(theChooseFrom.get(0)));
+        } else {
+            owner.gain(owner.getCurrentGame().takeFromSupply(owner.getEngine().getGameFrame().askToSelectOneCard("Gain a card for " + this.getName().toString(), theChooseFrom, "Mandatory!")));
+        }
     }
 }

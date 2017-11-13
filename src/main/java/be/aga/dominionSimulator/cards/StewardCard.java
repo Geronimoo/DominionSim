@@ -15,6 +15,10 @@ public class StewardCard extends DomCard {
     }
 
     public void play() {
+        if (owner.isHumanOrPossessedByHuman()) {
+            handleHuman();
+            return;
+        }
 //    	if (owner.getActionsLeft()>0 && owner.getDeckSize()>0) {
 //    	  owner.drawCards( 2 );
 //    	  return;
@@ -42,7 +46,31 @@ public class StewardCard extends DomCard {
         	 owner.addAvailableCoins(2);
     }
 
-        private boolean hasTwoCrapCards() {
+    private void handleHuman() {
+        ArrayList<String> theOptions = new ArrayList<String>();
+        theOptions.add("+$2");
+        theOptions.add("+2 Cards");
+        theOptions.add("Trash 2 cards");
+        int theChoice = owner.getEngine().getGameFrame().askToSelectOption("Select for Steward", theOptions, "Mandatory!");
+        if (theChoice == 0)
+            owner.addAvailableCoins(2);
+        if (theChoice == 1)
+            owner.drawCards(2);
+        if (theChoice == 2) {
+            if (owner.getCardsInHand().size()>2) {
+                ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+                owner.getEngine().getGameFrame().askToSelectCards("Choose 2 cards to trash", owner.getCardsInHand(), theChosenCards, 2);
+                for (DomCardName theCard:theChosenCards) {
+                    owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theCard).get(0)));
+                }
+            } else {
+                while (!owner.getCardsInHand().isEmpty())
+                    owner.trash(owner.removeCardFromHand(owner.getCardsInHand().get(0)));
+            }
+        }
+    }
+
+    private boolean hasTwoCrapCards() {
             int counter = 0;
             for (DomCard theCard : owner.getCardsInHand()) {
                 if (theCard.getTrashPriority()<DomCardName.Copper.getTrashPriority())

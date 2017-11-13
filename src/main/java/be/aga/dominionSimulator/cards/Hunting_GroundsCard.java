@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class Hunting_GroundsCard extends DomCard {
     public Hunting_GroundsCard() {
-      super( DomCardName.Hunting_Grounds);
+        super(DomCardName.Hunting_Grounds);
     }
 
     public void play() {
@@ -17,14 +17,26 @@ public class Hunting_GroundsCard extends DomCard {
 
     @Override
     public void doWhenTrashed() {
-        if (owner.wants(DomCardName.Gardens) && owner.wants(DomCardName.Estate)) {
-            gainEstates();
-            return;
+        if (owner.isHumanOrPossessedByHuman()) {
+            ArrayList<String> theOptions = new ArrayList<String>();
+            theOptions.add("Gain a Duchy");
+            theOptions.add("Gain 3 Estates");
+            int theChoice = owner.getEngine().getGameFrame().askToSelectOption("Select for Hunting Grounds", theOptions, "Mandatory!");
+            if (theChoice == 0) {
+                owner.gain(DomCardName.Duchy);
+            } else {
+                gainEstates();
+            }
+        } else {
+            if (owner.wants(DomCardName.Gardens) && owner.wants(DomCardName.Estate)) {
+                gainEstates();
+            } else {
+                if (owner.getCurrentGame().countInSupply(DomCardName.Duchy) > 0)
+                    owner.gain(DomCardName.Duchy);
+                else
+                    gainEstates();
+            }
         }
-        if (owner.getCurrentGame().countInSupply(DomCardName.Duchy)>0)
-            owner.gain(DomCardName.Duchy);
-        else
-            gainEstates();
     }
 
     private void gainEstates() {
@@ -35,6 +47,6 @@ public class Hunting_GroundsCard extends DomCard {
 
     @Override
     public int getPlayPriority() {
-        return owner.getActionsLeft()>1 ? 6 : super.getPlayPriority();
+        return owner.getActionsLeft() > 1 ? 6 : super.getPlayPriority();
     }
 }

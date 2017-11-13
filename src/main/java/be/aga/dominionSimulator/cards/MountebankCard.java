@@ -25,10 +25,17 @@ public class MountebankCard extends DomCard {
 	private boolean discardsCurse(DomPlayer thePlayer) {
 		if (thePlayer.getCardsFromHand(DomCardName.Curse).isEmpty())
 	       return false;
-		if (thePlayer.getCurrentGame().countInSupply(DomCardName.Curse)==0
-		  && !thePlayer.getCardsFromHand(DomCardType.Trasher).isEmpty())
-			return false;
-		thePlayer.discardFromHand(DomCardName.Curse);		
-		return true;
+		if (thePlayer.isHumanOrPossessedByHuman()) {
+            if (!owner.getEngine().getGameFrame().askPlayer("<html>Discard " + DomCardName.Curse.toHTML() +" ?</html>", "Resolving " + this.getName().toString()))
+                return false;
+            thePlayer.discardFromHand(DomCardName.Curse);
+            return true;
+        } else {
+            if (thePlayer.getCurrentGame().countInSupply(DomCardName.Curse) == 0
+                    && !thePlayer.getCardsFromHand(DomCardType.Trasher).isEmpty())
+                return false;
+            thePlayer.discardFromHand(DomCardName.Curse);
+            return true;
+        }
 	}
 }

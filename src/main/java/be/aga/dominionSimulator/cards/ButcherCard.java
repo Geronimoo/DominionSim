@@ -5,6 +5,8 @@ import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
 
+import java.util.ArrayList;
+
 public class ButcherCard extends DomCard {
     public ButcherCard() {
       super( DomCardName.Butcher);
@@ -14,6 +16,10 @@ public class ButcherCard extends DomCard {
       owner.addCoinTokens(2);
       if (owner.getCardsInHand().isEmpty())
     	return;
+      if (owner.isHumanOrPossessedByHuman()) {
+          handleHumanPlayer();
+          return;
+      }
       DomCard theCardToTrash = findCardToTrash();
       if (theCardToTrash==null) {
         if (DomEngine.haveToLog) DomEngine.addToLog( this + " trashes nothing." );
@@ -31,7 +37,33 @@ public class ButcherCard extends DomCard {
           owner.gain(theDesiredCard);
       }
     }
-    
+
+    private void handleHumanPlayer() {
+        owner.setNeedsToUpdate();
+        ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCard theCard : owner.getCardsInHand())
+            theChooseFrom.add(theCard.getName());
+        DomCard theCardToButcher = owner.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Select card to " + this.getName().toString(), theChooseFrom, "Don't trash anything!")).get(0);
+        if (theCardToButcher==null)
+            return;
+        owner.trash(owner.removeCardFromHand(theCardToButcher));
+        theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+            if (theCardToButcher.getCost(owner.getCurrentGame()).add(new DomCost(owner.getCoinTokens(),0)).compareTo(theCard.getCost(owner.getCurrentGame()))>=0
+                    && owner.getCurrentGame().countInSupply(theCard)>0 )
+//                    && theCard.getCost(owner.getCurrentGame()).getDebt()==theCardToButcher.getCost(owner.getCurrentGame()).getDebt())
+                theChooseFrom.add(theCard);
+        }
+        if (theChooseFrom.isEmpty())
+            return;
+        DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Select card to gain from " + this.getName().toString(), theChooseFrom, "Mandatory!");
+
+        int theCoinTokensToSpend = theChosenCard.getCoinCost(owner.getCurrentGame()) - theCardToButcher.getCoinCost(owner.getCurrentGame());
+        if (theCoinTokensToSpend>0)
+          owner.spendCoinTokens(theCoinTokensToSpend);
+        owner.gain(theChosenCard);
+    }
+
     private DomCard findCardToTrash() {
         if (!owner.getCardsFromHand(DomCardName.Curse).isEmpty())
             return owner.getCardsFromHand(DomCardName.Curse).get(0);

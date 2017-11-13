@@ -22,9 +22,12 @@ public class MadmanCard extends DomCard {
 
     @Override
     public boolean wantsToBePlayed() {
+        if (owner.getCardsInHand().size()<5)
+            return false;
         if (owner.getPlayStrategyFor(this)== DomPlayStrategy.MarketSquareCombo) {
           if ((owner.countInDeck(DomCardName.Madman)>4 || owner.getCardsInHand().size()>5)
-                  && owner.countInDeck(DomCardName.Market_Square)-owner.countInPlay(DomCardName.Market_Square)>5 && owner.getDeck().getDeckAndDiscardSize() > 3 )
+                  && (owner.countInDeck(DomCardName.Market_Square)-owner.countInPlay(DomCardName.Market_Square)>5 || owner.getCurrentGame().countInSupply(DomCardName.Market_Square)==0)
+                  && owner.getDeck().getDeckAndDiscardSize() > 3 )
               return true;
           else
               if (owner.getCardsInHand().size()>10 && owner.getDeck().getDeckAndDiscardSize() > 3 )

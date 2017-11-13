@@ -14,25 +14,26 @@ public class DiscipleCard extends MultiplicationCard {
     }
 
     public void play() {
-        DomCard theCardToMultiply = getCardToMultiply();
-        if (theCardToMultiply==null)
-            return;
         super.play();
-        if (theCardToMultiply.hasCardType(DomCardType.Kingdom))
-          owner.gain(theCardToMultiply.getName());
+        if (myCardToMultiply!=null && myCardToMultiply.hasCardType(DomCardType.Kingdom))
+          owner.gain(myCardToMultiply.getName());
     }
 
     @Override
     public void handleCleanUpPhase() {
-        if (owner==null)
+        if (owner==null || !areDurationsEmpty())
             return;
-        if (owner.wants(DomCardName.Teacher) && areDurationsEmpty()) {
+        if ((!owner.isHumanOrPossessedByHuman() && owner.wants(DomCardName.Teacher))
+                || (owner.isHumanOrPossessedByHuman()
+                && owner.getCurrentGame().countInSupply(DomCardName.Teacher)>0
+                && owner.getEngine().getGameFrame().askPlayer("<html>Exchange "+ this.getName()+" for " + DomCardName.Teacher.toHTML() +"</html>", "Resolving " + this.getName().toString()))){
             DomPlayer theOwner = owner;
             owner.returnToSupply(this);
-            theOwner.gain(DomCardName.Teacher);
+            DomCard theTraveller = theOwner.getCurrentGame().takeFromSupply(DomCardName.Teacher);
+            theOwner.getDeck().addPhysicalCardWhenNotGained(theTraveller);
+            theOwner.getDeck().justAddToDiscard(theTraveller);
             return;
         }
         super.handleCleanUpPhase();
     }
-
 }

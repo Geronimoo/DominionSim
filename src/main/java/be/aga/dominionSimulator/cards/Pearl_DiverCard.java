@@ -18,10 +18,17 @@ public class Pearl_DiverCard extends DomCard {
     	  return;
       }
       if (DomEngine.haveToLog) DomEngine.addToLog(owner + " looks at the bottom card");
-      if (theBottomCard.getDiscardPriority(owner.actionsLeft)>=16){
-    	  owner.putOnTopOfDeck(theBottomCard);
+      if (owner.isHumanOrPossessedByHuman()) {
+          if (owner.getEngine().getGameFrame().askPlayer("<html>Put on top of deck: " + theBottomCard.getName().toHTML() +" ?</html>", "Resolving " + this.getName().toString()))
+              owner.putOnTopOfDeck(theBottomCard);
+          else
+              owner.putOnBottomOfDeck(theBottomCard);
       } else {
-    	  owner.putOnBottomOfDeck(theBottomCard);
+          if (theBottomCard.getDiscardPriority(owner.actionsLeft) >= 16) {
+              owner.putOnTopOfDeck(theBottomCard);
+          } else {
+              owner.putOnBottomOfDeck(theBottomCard);
+          }
       }
     }
 }

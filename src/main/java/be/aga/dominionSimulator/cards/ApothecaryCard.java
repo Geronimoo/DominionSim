@@ -35,10 +35,37 @@ public class ApothecaryCard extends DomCard {
       if (!theRevealedCards.isEmpty() 
         && owner.getPlayStrategyFor(this)==DomPlayStrategy.ApothecaryNativeVillage)
     	checkForTheCombo(theRevealedCards);
-      for (DomCard theCard : theRevealedCards) {
-    	owner.putOnTopOfDeck(theCard);
-      }
+      if (owner.isHumanOrPossessedByHuman()) {
+      	handleHuman(theRevealedCards);
+	  } else {
+		  for (DomCard theCard : theRevealedCards) {
+			  owner.putOnTopOfDeck(theCard);
+		  }
+	  }
     }
+
+	private void handleHuman(ArrayList<DomCard> theRevealedCards) {
+    	if (theRevealedCards.isEmpty())
+    		return;
+    	owner.setNeedsToUpdate();
+		ArrayList<DomCardName> theChosenCards=new ArrayList<DomCardName>();
+		owner.getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u> (first card = top card)</html>" , theRevealedCards, theChosenCards, 0);
+		if (theChosenCards.size()<theRevealedCards.size()) {
+			for (DomCard theCard : theRevealedCards) {
+				owner.putOnTopOfDeck(theCard);
+			}
+		} else {
+			for (int i = theChosenCards.size() - 1; i >= 0; i--) {
+				for (DomCard theCard : theRevealedCards) {
+					if (theChosenCards.get(i) == theCard.getName()) {
+						owner.putOnTopOfDeck(theCard);
+						theRevealedCards.remove(theCard);
+						break;
+					}
+				}
+			}
+		}
+	}
 
 	private void checkForTheCombo(ArrayList<DomCard> theRevealedCards) {
   	  if (owner.getCardsFromHand(DomCardName.Native_Village).isEmpty())

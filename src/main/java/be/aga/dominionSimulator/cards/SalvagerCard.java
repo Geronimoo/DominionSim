@@ -17,6 +17,10 @@ public class SalvagerCard extends DomCard {
         owner.addAvailableBuys( 1 );
         if (owner.getCardsInHand().isEmpty())
           return;
+        if (owner.isHumanOrPossessedByHuman()) {
+            handleHuman();
+            return;
+        }
         DomCard theCardToTrash=findCardToTrash();
         if (theCardToTrash==null) {
           //this is needed when card is played with Throne Room effect
@@ -25,6 +29,17 @@ public class SalvagerCard extends DomCard {
         }
         owner.trash(owner.removeCardFromHand( theCardToTrash));
         owner.addAvailableCoins( theCardToTrash.getCost(owner.getCurrentGame()).getCoins() );
+    }
+
+    private void handleHuman() {
+        owner.setNeedsToUpdate();
+        ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCard theCard : owner.getCardsInHand()) {
+            theChooseFrom.add(theCard.getName());
+        }
+        DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!");
+        owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
+        owner.addAvailableCoins(theChosenCard.getCoinCost(owner.getCurrentGame()));
     }
 
     private DomCard findCardToTrash() {

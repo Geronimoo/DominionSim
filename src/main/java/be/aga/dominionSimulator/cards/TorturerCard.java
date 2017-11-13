@@ -19,6 +19,10 @@ public class TorturerCard extends DomCard {
       for (DomPlayer thePlayer : owner.getOpponents()) {
           if (thePlayer.checkDefense()) 
          	continue;
+          if (thePlayer.isHumanOrPossessedByHuman()) {
+              handleHuman(thePlayer);
+              return;
+          }
 	      boolean trashCardPresent=false;
 	      if (owner.getCurrentGame().countInSupply(DomCardName.Curse )==0){
 	         if (DomEngine.haveToLog) 
@@ -40,6 +44,22 @@ public class TorturerCard extends DomCard {
             else
                 thePlayer.doForcedDiscard(2, false);
       }
+    }
+
+    private void handleHuman(DomPlayer thePlayer) {
+        thePlayer.setNeedsToUpdate();
+        ArrayList<String> theOptions = new ArrayList<String>();
+        theOptions.add("Discard 2 cards");
+        if (owner.getCurrentGame().countInSupply(DomCardName.Curse) == 0)
+            theOptions.add("Don't Discard");
+        else
+            theOptions.add("Gain a Curse in hand");
+        int theChoice = owner.getEngine().getGameFrame().askToSelectOption("Torturer attacks", theOptions, "Mandatory!");
+        if (theChoice == 0) {
+            thePlayer.doForcedDiscard(2, false);
+        } else {
+            thePlayer.gainInHand(DomCardName.Curse);
+        }
     }
 
     private boolean isHandTooStrongToDiscard(DomPlayer aPlayer) {

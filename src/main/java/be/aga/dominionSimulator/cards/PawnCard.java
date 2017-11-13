@@ -4,12 +4,18 @@ import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.enums.DomCardName;
 
+import java.util.ArrayList;
+
 public class PawnCard extends DomCard {
     public PawnCard () {
       super( DomCardName.Pawn);
     }
 
     public void play() {
+      if (owner.isHumanOrPossessedByHuman()) {
+          handleHuman();
+          return;
+      }
       int theChoicesCount=0;
       boolean coinsChosen=false;
       boolean actionChosen=false;
@@ -59,5 +65,40 @@ public class PawnCard extends DomCard {
     	  owner.addActions(1);
           theChoicesCount++;
       }
+    }
+
+    private void handleHuman() {
+        ArrayList<String> theOptions = new ArrayList<String>();
+        theOptions.add("+Action/+Card");
+        theOptions.add("+Action/+Coin");
+        theOptions.add("+Action/+Buy");
+        theOptions.add("+Coin/+Buy");
+        theOptions.add("+Coin/+Card");
+        theOptions.add("+Card/+Buy");
+        int theChoice = owner.getEngine().getGameFrame().askToSelectOption("Select for Pawn", theOptions, "Mandatory!");
+        if (theChoice==0) {
+            owner.addActions(1);
+            owner.drawCards(1);
+        }
+        if (theChoice==1) {
+            owner.addActions(1);
+            owner.addAvailableCoins(1);
+        }
+        if (theChoice==2) {
+            owner.addActions(1);
+            owner.addAvailableBuys(1);
+        }
+        if (theChoice==3) {
+            owner.addAvailableCoins(1);
+            owner.addAvailableBuys(1);
+        }
+        if (theChoice==4) {
+            owner.addAvailableCoins(1);
+            owner.drawCards(1);
+        }
+        if (theChoice==5) {
+            owner.addAvailableBuys(1);
+            owner.drawCards(1);
+        }
     }
 }

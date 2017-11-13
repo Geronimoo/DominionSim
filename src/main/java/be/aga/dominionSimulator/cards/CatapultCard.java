@@ -5,6 +5,7 @@ import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 
@@ -15,10 +16,20 @@ public class CatapultCard extends DomCard {
 
     public void play() {
         owner.addAvailableCoins(1);
-        if (owner.getCardsInHand().size()==0)
+        if (owner.getCardsInHand().isEmpty())
             return;
-        Collections.sort(owner.getCardsInHand(),SORT_FOR_TRASHING);
-        DomCard theCardToTrash = owner.getCardsInHand().get(0);
+        DomCard theCardToTrash=null;
+        if (owner.isHumanOrPossessedByHuman()) {
+            owner.setNeedsToUpdate();
+            ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+            for (DomCard theCard : owner.getCardsInHand()) {
+                theChooseFrom.add(theCard.getName());
+            }
+            theCardToTrash = owner.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!")).get(0);
+        } else {
+            Collections.sort(owner.getCardsInHand(), SORT_FOR_TRASHING);
+            theCardToTrash = owner.getCardsInHand().get(0);
+        }
         if (!owner.getCardsFromHand(DomCardName.Rocks).isEmpty())
             theCardToTrash=owner.getCardsFromHand(DomCardName.Rocks).get(0);
         owner.trash(owner.removeCardFromHand(theCardToTrash));

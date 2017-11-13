@@ -17,21 +17,39 @@ public class Scrying_PoolCard extends DomCard {
       ArrayList< DomCard > theCards = owner.revealTopCards(1);
       if (!theCards.isEmpty()){
     	  DomCard theTopCard = theCards.get(0);
-    	  if (theTopCard.hasCardType(DomCardType.Action)||theTopCard.getDiscardPriority(1)>29){
-    		  owner.putOnTopOfDeck(theTopCard);
-    	  }else{
-    		  owner.discard(theTopCard);
-    	  }
+    	  if (owner.isHumanOrPossessedByHuman()) {
+              if (owner.getEngine().getGameFrame().askPlayer("<html>Put Back " + theTopCard.getName().toHTML() +" ?</html>", "Resolving " + this.getName().toString())) {
+                  owner.putOnTopOfDeck(theTopCard);
+              }else {
+                  owner.discard(theTopCard);
+              }
+          } else {
+              if (theTopCard.hasCardType(DomCardType.Action) || theTopCard.getDiscardPriority(1) > 29) {
+                  owner.putOnTopOfDeck(theTopCard);
+              } else {
+                  owner.discard(theTopCard);
+              }
+          }
       }
       for (DomPlayer player : owner.getOpponents()){
+        if (player.checkDefense())
+            continue;
         theCards = player.revealTopCards(1);
         if (!theCards.isEmpty()){
           DomCard theTopCard = theCards.get(0);
-          if (theTopCard.getDiscardPriority(1)<16){
-            player.putOnTopOfDeck(theTopCard);
-          }else{
-        	player.discard(theTopCard);
-          }
+            if (owner.isHumanOrPossessedByHuman()) {
+                if (owner.getEngine().getGameFrame().askPlayer("<html>Put Back for Opponent " + theTopCard.getName().toHTML() +" ?</html>", "Resolving " + this.getName().toString())) {
+                    player.putOnTopOfDeck(theTopCard);
+                }else {
+                    player.discard(theTopCard);
+                }
+            } else {
+                if (theTopCard.getDiscardPriority(1) < 16) {
+                    player.putOnTopOfDeck(theTopCard);
+                } else {
+                    player.discard(theTopCard);
+                }
+            }
         }
       }
       do {

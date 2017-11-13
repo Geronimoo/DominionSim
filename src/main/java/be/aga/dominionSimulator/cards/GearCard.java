@@ -19,6 +19,10 @@ public class GearCard extends DomCard {
       owner.drawCards(2);
       if (owner.getCardsInHand().isEmpty())
     	  return;
+      if (owner.isHumanOrPossessedByHuman()) {
+          handleHuman();
+          return;
+      }
       Collections.sort(owner.getCardsInHand(), DomCard.SORT_FOR_DISCARD_FROM_HAND);
       if (owner.getCardsInHand().get(0).hasCardType(DomCardType.Action) && owner.actionsLeft==0) {
           mySetAsideCards.add(owner.getCardsInHand().remove(0));
@@ -65,6 +69,22 @@ public class GearCard extends DomCard {
       theTreasures.remove(i);
       if (DomEngine.haveToLog) DomEngine.addToLog(owner + " has set aside " + mySetAsideCards);
 
+    }
+
+    private void handleHuman() {
+        owner.setNeedsToUpdate();
+        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        owner.getEngine().getGameFrame().askToSelectCards("Set aside cards", owner.getCardsInHand(), theChosenCards, 0);
+        for (DomCardName theCardName: theChosenCards) {
+            for (DomCard theCard:owner.getCardsInHand()) {
+                if (theCard.getName()==theCardName) {
+                    mySetAsideCards.add(owner.removeCardFromHand(theCard));
+                    break;
+                }
+            }
+        }
+        if (!mySetAsideCards.isEmpty())
+            if (DomEngine.haveToLog) DomEngine.addToLog(owner + " has set aside " + mySetAsideCards);
     }
 
     private void checkForOtherJunk() {

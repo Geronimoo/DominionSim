@@ -21,13 +21,31 @@ public class ArchiveCard extends DomCard {
       if (myArchivedCards.isEmpty())
           return;
       Collections.sort(myArchivedCards,SORT_FOR_DISCARDING);
-      owner.addCardToHand(myArchivedCards.remove(myArchivedCards.size()-1));
+      addCardToHandFromArchive();
+    }
+
+    private void addCardToHandFromArchive() {
+        if (owner.isHumanOrPossessedByHuman()) {
+            ArrayList<DomCardName> theChooseFrom=new ArrayList<DomCardName>();
+            for (DomCard theCard : myArchivedCards) {
+                theChooseFrom.add(theCard.getName());
+            }
+            DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Take in hand", theChooseFrom, "Mandatory!");
+            for (DomCard theCard : myArchivedCards) {
+                if (theCard.getName()==theChosenCard) {
+                    owner.addCardToHand(myArchivedCards.remove(myArchivedCards.indexOf(theCard)));
+                    break;
+                }
+            }
+        } else {
+            owner.addCardToHand(myArchivedCards.remove(myArchivedCards.size() - 1));
+        }
     }
 
     public void resolveDuration() {
       if (myArchivedCards.isEmpty())
           return;
-      owner.addCardToHand(myArchivedCards.remove(myArchivedCards.size()-1));
+      addCardToHandFromArchive();
     }
 
     @Override

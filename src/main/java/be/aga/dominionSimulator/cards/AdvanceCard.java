@@ -20,11 +20,33 @@ public class AdvanceCard extends DomCard {
             if (DomEngine.haveToLog) DomEngine.addToLog( owner + " has no actions in hand so " + this +" does nothing");
             return;
         }
+        if (owner.isHumanOrPossessedByHuman()) {
+            handleHuman();
+            return;
+        }
         owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(DomCardType.Action).get(0)));
         DomCardName theCardToGain = owner.getDesiredCard(DomCardType.Action, new DomCost(6, 0), false,false,null);
         if (theCardToGain==null)
             theCardToGain=owner.getCurrentGame().getBestCardInSupplyFor(owner,DomCardType.Action,new DomCost(6,0));
         if (theCardToGain != null)
             owner.gain(theCardToGain);
+    }
+
+    private void handleHuman() {
+        ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCard theCard : owner.getCardsInHand()) {
+            if (theCard.hasCardType(DomCardType.Action))
+                theChooseFrom.add(theCard.getName());
+        }
+        DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!");
+        owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
+        theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+            if (theCard.hasCardType(DomCardType.Action) && new DomCost(6,0).compareTo(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0)
+                theChooseFrom.add(theCard);
+        }
+        if (theChooseFrom.isEmpty())
+            return;
+        owner.gain(owner.getCurrentGame().takeFromSupply(owner.getEngine().getGameFrame().askToSelectOneCard("Select card to gain for " + this.getName().toString(), theChooseFrom, "Mandatory!")));
     }
 }

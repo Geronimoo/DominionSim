@@ -18,9 +18,23 @@ public class EnvoyCard extends DomCard {
     }
 
     private final void discardBestCard( ArrayList< DomCard > aCardList) {
-        if (!aCardList.isEmpty()){
-          Collections.sort(aCardList,SORT_FOR_DISCARD_FROM_HAND);
-          owner.discard( aCardList.remove( aCardList.size()-1 ) );
+        if (aCardList.isEmpty())
+            return;
+        if (!owner.getOpponents().isEmpty() && owner.getOpponents().get(0).isHuman()) {
+            ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+            for (DomCard theCard : aCardList) {
+                theChooseFrom.add(theCard.getName());
+            }
+            DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Let opponent discard a card", theChooseFrom, "Mandatory!");
+            for (DomCard theCard : aCardList) {
+                if (theCard.getName()==theChosenCard) {
+                    owner.discard(aCardList.remove(aCardList.indexOf(theCard)));
+                    break;
+                }
+            }
+        } else {
+            Collections.sort(aCardList,SORT_FOR_DISCARD_FROM_HAND);
+            owner.discard( aCardList.remove( aCardList.size()-1 ) );
         }
     }
     

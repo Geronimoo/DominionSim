@@ -11,9 +11,16 @@ public class TunnelCard extends DomCard {
 
     @Override
     public void doWhenDiscarded() {
-    	if (owner.getCurrentGame().getActivePlayer().getPhase()!=DomPhase.CleanUp)
-    		if (owner.getCurrentGame().countInSupply(DomCardName.Gold)>0)
-    			owner.gain(DomCardName.Gold);
+    	if (owner.getCurrentGame().getActivePlayer().getPhase()!=DomPhase.CleanUp) {
+    	    if (owner.isHumanOrPossessedByHuman()) {
+                if (owner.getEngine().getGameFrame().askPlayer("<html>Gain " + DomCardName.Gold.toHTML() +" ?</html>", "Resolving " + this.getName().toString()))
+                    if (owner.getCurrentGame().countInSupply(DomCardName.Gold)>0)
+                        owner.gain(DomCardName.Gold);
+            } else {
+                if (owner.getCurrentGame().countInSupply(DomCardName.Gold) > 0)
+                    owner.gain(DomCardName.Gold);
+            }
+        }
     }
     
     @Override

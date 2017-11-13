@@ -14,15 +14,7 @@ public class ChapelCard extends DomCard {
 
     public void play() {
         if (owner.isHumanOrPossessedByHuman()) {
-            ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
-            owner.getEngine().getGameFrame().askToSelectCards("Choose up to 4 cards to trash" , owner.getCardsInHand(), theChosenCards, 0);
-            while(theChosenCards.size()>4) {
-                theChosenCards=new ArrayList<DomCardName>();
-                owner.getEngine().getGameFrame().askToSelectCards("Choose up to 4 cards to trash", owner.getCardsInHand(), theChosenCards, 0);
-            }
-            for (DomCardName theCardName: theChosenCards) {
-                owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theCardName).get(0)));
-            }
+            handleHumanPlayer();
         } else {
             int theMin$Indeck = owner.getPlayStrategyFor(this) == DomPlayStrategy.aggressiveTrashing ? 4 : 6;
             if (owner.getPlayStrategyFor(this) == DomPlayStrategy.keepPayload)
@@ -45,8 +37,20 @@ public class ChapelCard extends DomCard {
                 owner.trash(owner.removeCardFromHand(theCardToTrash));
             }
         }
-    } 
-    
+    }
+
+    private void handleHumanPlayer() {
+        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        owner.getEngine().getGameFrame().askToSelectCards("Choose up to 4 cards to trash" , owner.getCardsInHand(), theChosenCards, 0);
+        while(theChosenCards.size()>4) {
+            theChosenCards=new ArrayList<DomCardName>();
+            owner.getEngine().getGameFrame().askToSelectCards("Choose up to 4 cards to trash", owner.getCardsInHand(), theChosenCards, 0);
+        }
+        for (DomCardName theCardName: theChosenCards) {
+            owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theCardName).get(0)));
+        }
+    }
+
     @Override
     public int getPlayPriority() {
     	if (owner.getPlayStrategyFor(this)!=DomPlayStrategy.aggressiveTrashing)

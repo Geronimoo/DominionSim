@@ -6,12 +6,19 @@ import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
 
+import java.util.ArrayList;
+
 public class MinionCard extends DomCard {
     public MinionCard () {
       super( DomCardName.Minion );
     }
 
     public void play() {
+      owner.addActions( 1 );
+      if (owner.isHumanOrPossessedByHuman()) {
+          handleHuman();
+          return;
+      }
       if (!owner.getCardsFromHand( DomCardName.Minion ).isEmpty()) {
         //if there are more Minions in hand, always play for +$2
         playForMoney();
@@ -42,8 +49,19 @@ public class MinionCard extends DomCard {
       playForMoney();
    }
 
+    private void handleHuman() {
+        ArrayList<String> theOptions = new ArrayList<String>();
+        theOptions.add("+$2");
+        theOptions.add("Attack!");
+        int theChoice = owner.getEngine().getGameFrame().askToSelectOption("Minion", theOptions, "Mandatory!");
+        if (theChoice==0) {
+            playForMoney();
+        } else {
+            playForCards();
+        }
+    }
+
     private final void playForMoney() {
-      owner.addActions( 1 );
       owner.addAvailableCoins( 2 );
       //although we don't attack, opponents are still allowed to use reaction cards
       for (DomPlayer thePlayer:owner.getOpponents()) {
@@ -52,7 +70,6 @@ public class MinionCard extends DomCard {
     }
 
     private final void playForCards() {
-      owner.addActions( 1 );
       owner.discardHand();
       owner.drawCards( 4 );
       for (DomPlayer thePlayer : owner.getOpponents()) {

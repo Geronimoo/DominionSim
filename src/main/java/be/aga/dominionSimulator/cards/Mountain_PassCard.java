@@ -20,7 +20,7 @@ public class Mountain_PassCard extends DomCard {
         int highestBid = 0;
         DomPlayer highestBidder = null;
         for (DomPlayer thePlayer : owner.getOpponents()) {
-            int theBid = thePlayer.getMountainPassBid();
+            int theBid = thePlayer.getMountainPassBid(highestBid);
             if (theBid > highestBid) {
                 highestBid = theBid;
                 highestBidder = thePlayer;
@@ -29,8 +29,9 @@ public class Mountain_PassCard extends DomCard {
                 if (DomEngine.haveToLog) DomEngine.addToLog(thePlayer + " bids too low: $" + theBid);
             }
         }
-        int theBid = owner.getMountainPassBid();
+        int theBid = owner.getMountainPassBid(highestBid);
         if (theBid > highestBid) {
+            theBid=highestBid+1;
             highestBid = theBid;
             highestBidder = owner;
             if (DomEngine.haveToLog) DomEngine.addToLog(owner + " bids highest: $" + theBid);

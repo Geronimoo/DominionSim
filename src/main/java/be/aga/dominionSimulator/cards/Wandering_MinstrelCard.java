@@ -20,6 +20,10 @@ public class Wandering_MinstrelCard extends DomCard {
       if (owner.getDeckSize()==0)
     	return;
       ArrayList<DomCard> theRevealedCards = owner.revealTopCards(3);
+      if (owner.isHumanOrPossessedByHuman()) {
+          handleHuman(theRevealedCards);
+          return;
+      }
       Collections.sort(theRevealedCards,SORT_FOR_DISCARDING);
       for (DomCard theCard : theRevealedCards){
           if (theCard.hasCardType(DomCardType.Action))
@@ -27,5 +31,37 @@ public class Wandering_MinstrelCard extends DomCard {
           else
               owner.discard(theCard);
       }
+    }
+
+    private void handleHuman(ArrayList<DomCard> aRevealedCards) {
+        owner.setNeedsToUpdate();
+        ArrayList<DomCard> theChooseFrom = new ArrayList<DomCard>();
+        for (DomCard theCard : aRevealedCards) {
+            if (theCard.hasCardType(DomCardType.Action))
+                theChooseFrom.add(theCard);
+            else
+                owner.discard(theCard);
+        }
+        if (theChooseFrom.isEmpty())
+            return;
+        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        owner.getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u> (first card = top card)</html>", theChooseFrom, theChosenCards, 0);
+        if (theChosenCards.size() < theChooseFrom.size()) {
+            for (DomCard theCard : theChooseFrom) {
+                owner.putOnTopOfDeck(theCard);
+            }
+        } else {
+            for (int i = theChosenCards.size() - 1; i >= 0; i--) {
+                for (DomCard theCard : theChooseFrom) {
+                    if (theChosenCards.get(i) == theCard.getName()) {
+                        owner.putOnTopOfDeck(theCard);
+                        theChooseFrom.remove(theCard);
+                        break;
+                    }
+                }
+            }
+        }
+
+
     }
 }

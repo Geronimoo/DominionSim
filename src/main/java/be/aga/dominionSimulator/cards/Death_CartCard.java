@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import be.aga.dominionSimulator.DomCard;
+import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
@@ -19,11 +20,31 @@ public class Death_CartCard extends DomCard {
         if (owner.getCardsInPlay().indexOf(this)!=-1)
     	  owner.trash(owner.removeCardFromPlay(this));
       } else {
-    	Collections.sort(theActions,SORT_FOR_TRASHING);
-    	owner.trash(owner.removeCardFromHand(theActions.get(0)));
+          if (owner.isHumanOrPossessedByHuman()) {
+              handleHuman();
+              return;
+          } else {
+              Collections.sort(theActions, SORT_FOR_TRASHING);
+              owner.trash(owner.removeCardFromHand(theActions.get(0)));
+          }
       }
     }
-    
+
+    private void handleHuman() {
+        ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCard theCard : owner.getCardsInHand()) {
+            if (theCard.hasCardType(DomCardType.Action))
+              theChooseFrom.add(theCard.getName());
+        }
+        DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card ?", theChooseFrom, "Don't trash");
+        if (theChosenCard!=null) {
+            owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
+        } else {
+            if (owner.getCardsInPlay().indexOf(this)!=-1)
+                owner.trash(owner.removeCardFromPlay(this));
+        }
+    }
+
     @Override
     public void doWhenGained() {
         owner.gain(DomCardName.Ruins);

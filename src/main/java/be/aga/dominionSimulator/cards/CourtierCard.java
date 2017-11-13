@@ -5,6 +5,9 @@ import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
 
+import java.util.ArrayList;
+import java.util.Set;
+
 public class CourtierCard extends DomCard {
     private boolean coinsChosen;
     private boolean actionChosen;
@@ -18,14 +21,18 @@ public class CourtierCard extends DomCard {
     public void play() {
       if (owner.getCardsInHand().isEmpty())
           return;
+      if (owner.isHumanOrPossessedByHuman()) {
+          handleHuman();
+          return;
+      }
       DomCard theChosenCard = null;
       for (DomCard theCard : owner.getCardsInHand()) {
-          if (theChosenCard==null || theCard.getName().countLegalCardTypes()>theChosenCard.getName().countLegalCardTypes())
+          if (theChosenCard==null || theCard.countTypes()>theChosenCard.countTypes())
               theChosenCard=theCard;
       }
       if (DomEngine.haveToLog)
           DomEngine.addToLog(owner + " reveals " + theChosenCard);
-      int theChoicesLeft = theChosenCard.getName().countLegalCardTypes();
+      int theChoicesLeft = theChosenCard.countTypes();
       coinsChosen=false;
       actionChosen=false;
       buysChosen = false;
@@ -39,6 +46,47 @@ public class CourtierCard extends DomCard {
       }
     }
 
+    private void handleHuman() {
+        Set<DomCardName> uniqueCards = owner.getUniqueCardNamesInHand();
+        ArrayList<DomCardName> theChooseFrom=new ArrayList<DomCardName>();
+        theChooseFrom.clear();
+        theChooseFrom.addAll(uniqueCards);
+        DomCard theChosenCard = owner.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Reveal a card for " + this.getName().toString(), theChooseFrom, "Mandatory!")).get(0);
+        ArrayList<String> theOptions = new ArrayList<String>();
+        if (theChosenCard.countTypes()==1) {
+            theOptions.add("+Action");
+            theOptions.add("+Buy");
+            theOptions.add("+$3");
+            theOptions.add("Gain Gold");
+        }
+        if (theChosenCard.countTypes()==2) {
+            theOptions.add("+Action/+Buy");
+            theOptions.add("+Action/+$3");
+            theOptions.add("+Action/Gain Gold");
+            theOptions.add("+Buy/+$3");
+            theOptions.add("+Buy/Gain Gold");
+            theOptions.add("+$3/Gain Gold");
+        }
+        if (theChosenCard.countTypes()==3) {
+            theOptions.add("+Action/+Buy/+$3");
+            theOptions.add("+Action/+Buy/Gain Gold");
+            theOptions.add("+Action/+$3/Gain Gold");
+            theOptions.add("+Buy/+$3/Gain Gold");
+        }
+        if (theChosenCard.countTypes()==4) {
+            theOptions.add("+Action/+Buy/+$3/Gain Gold");
+        }
+        int theChoice = owner.getEngine().getGameFrame().askToSelectOption("Select option", theOptions, "Mandatory!");
+        if (theOptions.get(theChoice).contains("+Action"))
+            owner.addActions(1);
+        if (theOptions.get(theChoice).contains("+Buy"))
+            owner.addAvailableBuys(1);
+        if (theOptions.get(theChoice).contains("+$3"))
+            owner.addAvailableCoins(3);
+        if (theOptions.get(theChoice).contains("Gain Gold"))
+            owner.gain(DomCardName.Gold);
+    }
+
     private void chooseOption() {
         //standard handling
         if (!actionChosen && owner.getNextActionToPlay()!=null && owner.getActionsLeft()==0) {
@@ -46,7 +94,7 @@ public class CourtierCard extends DomCard {
             actionChosen=true;
             return;
         }
-        if (!buysChosen && owner.getBuysLeft()<=owner.getTotalPotentialCurrency().getCoins()/8.0-1) {
+        if (!buysChosen && owner.getBuysLeft()<=owner.getTotalPotentialCurrency().getCoins()/8.0) {
             owner.addAvailableBuys(1);
             buysChosen=true;
             return;
@@ -86,11 +134,15 @@ public class CourtierCard extends DomCard {
     @Override
     public int getPlayPriority() {
         for (DomCard theCard:owner.getCardsInHand()) {
-            if (theCard.getName().countTypes()>2)
+            if (theCard.countTypes()>3)
                 return (theCard.getPlayPriority()-1);
         }
         for (DomCard theCard:owner.getCardsInHand()) {
-            if (theCard.getName().countTypes()>1)
+            if (theCard.countTypes()>2)
+                return (theCard.getPlayPriority()-1);
+        }
+        for (DomCard theCard:owner.getCardsInHand()) {
+            if (theCard.countTypes()>1)
                 return (theCard.getPlayPriority()-1);
         }
         return super.getPlayPriority();

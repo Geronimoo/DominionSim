@@ -15,6 +15,10 @@ public class AmuletCard extends DomCard {
     }
 
     public void play() {
+        if (owner.isHumanOrPossessedByHuman()) {
+            handleHuman();
+            return;
+        }
         if (owner.getPlayStrategyFor(this) == DomPlayStrategy.aggressiveTrashing) {
             if (!owner.getCardsFromHand(DomCardName.Squire).isEmpty() && owner.count(DomCardType.Attack)==0) {
                 owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(DomCardName.Squire).get(0)));
@@ -43,6 +47,27 @@ public class AmuletCard extends DomCard {
          if (!playForMoney())
            if (!playForTrash())
               owner.gain(DomCardName.Silver);
+    }
+
+    private void handleHuman() {
+        ArrayList<String> theOptions = new ArrayList<String>();
+        theOptions.add("Trash a card");
+        theOptions.add("+$1");
+        theOptions.add("Gain a Silver");
+        int theChoice = owner.getEngine().getGameFrame().askToSelectOption("Select for Amulet", theOptions, "Mandatory!");
+        if (theChoice == 1)
+            owner.addAvailableCoins(1);
+        if (theChoice == 2)
+            owner.gain(DomCardName.Silver);
+        if (theChoice == 0) {
+            if (owner.getCardsInHand().size()>0) {
+                ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+                owner.getEngine().getGameFrame().askToSelectCards("Choose a card to trash", owner.getCardsInHand(), theChosenCards, 1);
+                for (DomCardName theCard:theChosenCards) {
+                    owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theCard).get(0)));
+                }
+            }
+        }
     }
 
     private boolean playForTrashEstatesOrWorse() {

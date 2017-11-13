@@ -16,4 +16,10 @@ public class Caravan_GuardCard extends DomCard {
     public void resolveDuration() {
       owner.addAvailableCoins(1);
     }
+
+    @Override
+    public boolean reactForHuman() {
+        owner.play(owner.removeCardFromHand(this));
+        return false;
+    }
 }

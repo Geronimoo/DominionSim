@@ -7,6 +7,7 @@ import be.aga.dominionSimulator.enums.DomCardType;
 import be.aga.dominionSimulator.enums.DomPlayStrategy;
 
 import javax.swing.*;
+import java.util.ArrayList;
 
 public class SquireCard extends DomCard {
     public SquireCard() {
@@ -15,6 +16,10 @@ public class SquireCard extends DomCard {
 
     public void play() {
         owner.addAvailableCoins(1);
+        if (owner.isHumanOrPossessedByHuman()) {
+            handleHuman();
+            return;
+        }
         if ((owner.getActionsLeft()-owner.getCardsFromHand(DomCardType.Action).size()<1)&&!owner.getCardsFromHand(DomCardType.Action).isEmpty()) {
             owner.addActions(2);
             return;
@@ -26,11 +31,36 @@ public class SquireCard extends DomCard {
         owner.addAvailableBuys(2);
     }
 
+    private void handleHuman() {
+        ArrayList<String> theOptions = new ArrayList<String>();
+        theOptions.add("+2 Actions");
+        theOptions.add("+2 Buys");
+        theOptions.add("Gain a Silver");
+        int theChoice = owner.getEngine().getGameFrame().askToSelectOption("Select for Squire", theOptions, "Mandatory!");
+        if (theChoice == 0)
+            owner.addActions(2);
+        if (theChoice == 1)
+            owner.addAvailableBuys(2);
+        if (theChoice == 2)
+            owner.gain(DomCardName.Silver);
+    }
+
     @Override
     public void doWhenTrashed() {
-        DomCardName theCard = owner.getDesiredCard(DomCardType.Attack, new DomCost(100, 1), false, false, null);
-        if (theCard!=null)
-          owner.gain(theCard);
+        if (owner.isHumanOrPossessedByHuman()) {
+            ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+            for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+                if (theCard.hasCardType(DomCardType.Attack) && theCard.hasCardType(DomCardType.Action) && owner.getCurrentGame().countInSupply(theCard)>0)
+                    theChooseFrom.add(theCard);
+            }
+            if (theChooseFrom.isEmpty())
+                return;
+            owner.gain(owner.getEngine().getGameFrame().askToSelectOneCard("Select card to gain from "+this.getName().toString(), theChooseFrom, "Mandatory!"));
+        } else {
+            DomCardName theCard = owner.getDesiredCard(DomCardType.Attack, new DomCost(100, 1), false, false, null);
+            if (theCard != null)
+                owner.gain(theCard);
+        }
     }
 
     @Override

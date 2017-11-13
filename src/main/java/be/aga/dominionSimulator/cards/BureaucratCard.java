@@ -22,25 +22,7 @@ public class BureaucratCard extends DomCard {
     	   if (thePlayer.checkDefense())
     		   continue;
     	   if (thePlayer.isHuman()) {
-			   ArrayList<DomCard> victoriesInHand = new ArrayList<DomCard>();
-			   Set<DomCardName> uniqueCards = thePlayer.getUniqueCardsInHand();
-			   for (DomCardName theCard:uniqueCards) {
-			   	 if (theCard.hasCardType(DomCardType.Victory))
-			   	 	victoriesInHand.add(thePlayer.getCardsFromHand(theCard).get(0));
-			   }
-			   DomCard theChosenCard = null;
-			   if (victoriesInHand.size()==1) {
-			   	  theChosenCard = victoriesInHand.get(0);
-			   }
-			   if (victoriesInHand.size()>1) {
-				   ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
-				   for (DomCard theCard : victoriesInHand)
-					   theChooseFrom.add(theCard.getName());
-				   theChosenCard = thePlayer.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Put back a card for "+this.getName().toString(), theChooseFrom, "Mandatory!")).get(0);
-			   }
-               if (theChosenCard!=null) {
-				   thePlayer.putOnTopOfDeck(thePlayer.removeCardFromHand(theChosenCard));
-			   }
+			   handleHumanOpponent(thePlayer);
 		   } else {
 			   ArrayList<DomCard> victoriesInHand = thePlayer.getCardsFromHand(DomCardType.Victory);
 			   Collections.sort(victoriesInHand,SORT_FOR_DISCARDING);
@@ -52,4 +34,26 @@ public class BureaucratCard extends DomCard {
 		   }
     	}
     }
+
+	private void handleHumanOpponent(DomPlayer thePlayer) {
+		ArrayList<DomCard> victoriesInHand = new ArrayList<DomCard>();
+		Set<DomCardName> uniqueCards = thePlayer.getUniqueCardNamesInHand();
+		for (DomCardName theCard:uniqueCards) {
+             if (theCard.hasCardType(DomCardType.Victory))
+                 victoriesInHand.add(thePlayer.getCardsFromHand(theCard).get(0));
+        }
+		DomCard theChosenCard = null;
+		if (victoriesInHand.size()==1) {
+              theChosenCard = victoriesInHand.get(0);
+        }
+		if (victoriesInHand.size()>1) {
+            ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+            for (DomCard theCard : victoriesInHand)
+                theChooseFrom.add(theCard.getName());
+            theChosenCard = thePlayer.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Put back a card for "+this.getName().toString(), theChooseFrom, "Mandatory!")).get(0);
+        }
+		if (theChosenCard!=null) {
+            thePlayer.putOnTopOfDeck(thePlayer.removeCardFromHand(theChosenCard));
+        }
+	}
 }

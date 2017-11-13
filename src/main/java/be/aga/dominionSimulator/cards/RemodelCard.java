@@ -3,7 +3,6 @@ package be.aga.dominionSimulator.cards;
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.enums.DomCardName;
-import be.aga.dominionSimulator.enums.DomCardType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,19 +16,7 @@ public class RemodelCard extends DomCard {
       if (owner.getCardsInHand().isEmpty())
     	return;
       if (owner.isHumanOrPossessedByHuman()) {
-          ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
-          for (DomCard theCard : owner.getCardsInHand())
-              theChooseFrom.add(theCard.getName());
-          DomCard theCardToRemodel = owner.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Select card to " + this.getName().toString(), theChooseFrom, "Mandatory!")).get(0);
-          owner.trash(owner.removeCardFromHand(theCardToRemodel));
-          theChooseFrom = new ArrayList<DomCardName>();
-          for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-              if (theCard.getCost(owner.getCurrentGame()).compareTo(theCardToRemodel.getCost(owner.getCurrentGame()).add(new DomCost(2,0)))<=0 && owner.getCurrentGame().countInSupply(theCard)>0)
-                  theChooseFrom.add(theCard);
-          }
-          if (theChooseFrom.isEmpty())
-              return;
-          owner.gain(owner.getEngine().getGameFrame().askToSelectOneCard("Select card to gain from "+this.getName().toString(), theChooseFrom, "Mandatory!"));
+          handleHumanPlayer();
       } else {
             DomCard theCardToTrash = owner.findCardToRemodel(this, 2);
             if (theCardToTrash == null) {
@@ -45,6 +32,23 @@ public class RemodelCard extends DomCard {
             if (theDesiredCard != null)
                 owner.gain(theDesiredCard);
         }
+    }
+
+    private void handleHumanPlayer() {
+        ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCard theCard : owner.getCardsInHand())
+            theChooseFrom.add(theCard.getName());
+        DomCard theCardToRemodel = owner.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Select card to " + this.getName().toString(), theChooseFrom, "Mandatory!")).get(0);
+        owner.trash(owner.removeCardFromHand(theCardToRemodel));
+        theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+            if (theCardToRemodel.getCost(owner.getCurrentGame()).add(new DomCost(2,0)).compareTo(theCard.getCost(owner.getCurrentGame()))>=0
+                    && owner.getCurrentGame().countInSupply(theCard)>0)
+                theChooseFrom.add(theCard);
+        }
+        if (theChooseFrom.isEmpty())
+            return;
+        owner.gain(owner.getEngine().getGameFrame().askToSelectOneCard("Select card to gain from "+this.getName().toString(), theChooseFrom, "Mandatory!"));
     }
 
     @Override

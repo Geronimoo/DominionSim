@@ -1,5 +1,6 @@
 package be.aga.dominionSimulator.cards;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 import be.aga.dominionSimulator.DomCard;
@@ -14,10 +15,19 @@ public class VaultCard extends DomCard {
 
     public void play() {
       owner.drawCards( 2 );
-      if (owner.getActionsLeft()>0 && !owner.getCardsFromHand(DomCardName.Tactician).isEmpty() && owner.getCardsInHand().size()>=2) {
-    	handleTactician();
+      if (owner.isHumanOrPossessedByHuman()) {
+          ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+          owner.getEngine().getGameFrame().askToSelectCards("<html>Discard for +$1</html>" , owner.getCardsInHand(), theChosenCards, 0);
+          for (DomCardName theCard : theChosenCards) {
+             owner.discardFromHand(theCard);
+             owner.addAvailableCoins(1);
+          }
       } else {
-        playNormal();
+          if (owner.getActionsLeft() > 0 && !owner.getCardsFromHand(DomCardName.Tactician).isEmpty() && owner.getCardsInHand().size() >= 2) {
+              handleTactician();
+          } else {
+              playNormal();
+          }
       }
       handleOpponents();
     }
@@ -36,6 +46,20 @@ public class VaultCard extends DomCard {
 
 	private void handleOpponents() {
       for (DomPlayer thePlayer : owner.getOpponents()) {
+        if (thePlayer.isHumanOrPossessedByHuman()) {
+            ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+            do {
+                theChosenCards=new ArrayList<DomCardName>();
+                owner.getEngine().getGameFrame().askToSelectCards("Discard 2?", thePlayer.getCardsInHand(), theChosenCards, 0);
+            } while (!(theChosenCards.size()==2 || theChosenCards.size()==0));
+            if (theChosenCards.size()==2) {
+                for (DomCardName theCard : theChosenCards) {
+                    thePlayer.discardFromHand(theCard);
+                }
+                thePlayer.drawCards(1);
+            }
+            continue;
+        }
     	if (!thePlayer.getCardsFromHand(DomCardName.Vault).isEmpty()) {
     	  //when the opponent has a Vault in hand he will in most cases prefer to keep more cards in hand
     	  if (DomEngine.haveToLog) DomEngine.addToLog( thePlayer + " discards nothing!" );

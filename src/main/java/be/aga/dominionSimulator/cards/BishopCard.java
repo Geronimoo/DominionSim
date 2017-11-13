@@ -18,18 +18,31 @@ public class BishopCard extends DomCard {
       owner.addVP( 1);
       DomCard theCardToTrash = null;
       if (!owner.getCardsInHand().isEmpty()) {
-        theCardToTrash = findCardToTrash();
-        if (theCardToTrash==null) {
-          //this is needed when card is played with Throne Room effect
-          Collections.sort(owner.getCardsInHand(),SORT_FOR_TRASHING);
-          theCardToTrash=owner.getCardsInHand().get(0);
-        }
+      	if (owner.isHumanOrPossessedByHuman()) {
+      		theCardToTrash=handleHuman();
+		} else {
+			theCardToTrash = findCardToTrash();
+			if (theCardToTrash == null) {
+				//this is needed when card is played with Throne Room effect
+				Collections.sort(owner.getCardsInHand(), SORT_FOR_TRASHING);
+				theCardToTrash = owner.getCardsInHand().get(0);
+			}
+		}
         owner.trash(owner.removeCardFromHand( theCardToTrash ));
         if (theCardToTrash.getCost(owner.getCurrentGame()).getCoins()>0)
           owner.addVP(theCardToTrash.getCost(owner.getCurrentGame()).getCoins()/2);
       }
       handleOpponents();
     }
+
+	private DomCard handleHuman() {
+		ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+		for (DomCard theCard : owner.getCardsInHand()) {
+			theChooseFrom.add(theCard.getName());
+		}
+		DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!");
+		return owner.getCardsFromHand(theChosenCard).get(0);
+	}
 
 	private DomCard findCardToTrash() {
       Collections.sort( owner.getCardsInHand(), SORT_FOR_TRASHING);
@@ -52,14 +65,27 @@ public class BishopCard extends DomCard {
 		for (DomPlayer thePlayer : owner.getOpponents()) {
 		    boolean trashes=false;
 		    if (thePlayer.getCardsInHand().size()>0) {
-		      Collections.sort( thePlayer.getCardsInHand() , SORT_FOR_TRASHING);
-		      DomCard theCardToTrash = thePlayer.getCardsInHand().get( 0 );
-		      if (theCardToTrash.getTrashPriority()<16) {
-		        if (!thePlayer.removingReducesBuyingPower( theCardToTrash )){
-		          thePlayer.trash(thePlayer.removeCardFromHand( theCardToTrash));
-		          trashes=true;
-		        }
-		      }
+		      if (thePlayer.isHumanOrPossessedByHuman()) {
+				  thePlayer.setNeedsToUpdate();
+				  ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+				  for (DomCard theCard : thePlayer.getCardsInHand()) {
+					  theChooseFrom.add(theCard.getName());
+				  }
+				  DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Don't trash");
+				  if (theChosenCard != null) {
+					  thePlayer.trash(thePlayer.removeCardFromHand(thePlayer.getCardsFromHand(theChosenCard).get(0)));
+					  trashes = true;
+				  }
+			  } else {
+				  Collections.sort(thePlayer.getCardsInHand(), SORT_FOR_TRASHING);
+				  DomCard theCardToTrash = thePlayer.getCardsInHand().get(0);
+				  if (theCardToTrash.getTrashPriority() < 16) {
+					  if (!thePlayer.removingReducesBuyingPower(theCardToTrash)) {
+						  thePlayer.trash(thePlayer.removeCardFromHand(theCardToTrash));
+						  trashes = true;
+					  }
+				  }
+			  }
 		    }
 		    if (DomEngine.haveToLog && !trashes) DomEngine.addToLog( thePlayer + " trashes nothing");
 		  }

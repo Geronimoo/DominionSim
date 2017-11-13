@@ -22,10 +22,18 @@ public class DuchessCard extends DomCard {
 	  ArrayList<DomCard> theRevealedCard = player.revealTopCards(1);
 	  if (theRevealedCard.isEmpty()) 
 		return;
-	  if (theRevealedCard.get(0).getDiscardPriority(1)<16) {
-		player.discard(theRevealedCard.get(0));
+	  if (player.isHumanOrPossessedByHuman()) {
+		  if (owner.getEngine().getGameFrame().askPlayer("<html>Discard " + theRevealedCard.get(0).getName().toHTML() +" ?</html>", "Resolving " + this.getName().toString())) {
+			  player.discard(theRevealedCard.get(0));
+		  } else {
+			  player.putOnTopOfDeck(theRevealedCard.get(0));
+		  }
 	  } else {
-        player.putOnTopOfDeck(theRevealedCard.get(0));    		
+		  if (theRevealedCard.get(0).getDiscardPriority(1) < 16) {
+			  player.discard(theRevealedCard.get(0));
+		  } else {
+			  player.putOnTopOfDeck(theRevealedCard.get(0));
+		  }
 	  }
 	}
 }

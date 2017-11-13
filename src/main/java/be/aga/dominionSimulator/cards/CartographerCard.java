@@ -21,6 +21,10 @@ public class CartographerCard extends DomCard {
 	  ArrayList<DomCard> theRevealedCards = owner.revealTopCards(4);
 	  if (theRevealedCards.isEmpty()) 
 	    return;
+	  if (owner.isHumanOrPossessedByHuman()) {
+	  	handleHuman(theRevealedCards);
+	  	return;
+	  }
 	  Collections.sort(theRevealedCards,SORT_FOR_DISCARDING);
 	  for (DomCard theRevealedCard : theRevealedCards){
 		  if (theRevealedCard.getDiscardPriority(1)<16) {
@@ -30,6 +34,41 @@ public class CartographerCard extends DomCard {
 		  }
 	  }
 	}
+
+	private void handleHuman(ArrayList<DomCard> theRevealedCards) {
+		owner.setNeedsToUpdate();
+		ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+		owner.getEngine().getGameFrame().askToSelectCards("<html>Discard ?</html>", theRevealedCards, theChosenCards, 0);
+		for (int i = theChosenCards.size() - 1; i >= 0; i--) {
+			for (DomCard theCard : theRevealedCards) {
+				if (theChosenCards.get(i) == theCard.getName()) {
+					owner.discard(theCard);
+					theRevealedCards.remove(theCard);
+					break;
+				}
+			}
+		}
+		if (theRevealedCards.isEmpty())
+			return;
+		theChosenCards = new ArrayList<DomCardName>();
+		owner.getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u> (first card = top card)</html>", theRevealedCards, theChosenCards, 0);
+		if (theChosenCards.size() < theRevealedCards.size()) {
+			for (DomCard theCard : theRevealedCards) {
+				owner.putOnTopOfDeck(theCard);
+			}
+		} else {
+			for (int i = theChosenCards.size() - 1; i >= 0; i--) {
+				for (DomCard theCard : theRevealedCards) {
+					if (theChosenCards.get(i) == theCard.getName()) {
+						owner.putOnTopOfDeck(theCard);
+						theRevealedCards.remove(theCard);
+						break;
+					}
+				}
+			}
+		}
+	}
+
 	@Override
 	public int getPlayPriority() {
 		if (owner.getKnownTopCards()==0)

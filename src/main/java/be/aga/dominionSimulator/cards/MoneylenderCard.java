@@ -3,7 +3,6 @@ package be.aga.dominionSimulator.cards;
 import java.util.ArrayList;
 
 import be.aga.dominionSimulator.DomCard;
-import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
 
 public class MoneylenderCard extends DomCard {
@@ -14,11 +13,9 @@ public class MoneylenderCard extends DomCard {
     public void play() {
       ArrayList<DomCard> theCoppers = owner.getCardsFromHand(DomCardName.Copper); 
       if (!theCoppers.isEmpty()) {
-        if (owner.isHumanOrPossessedByHuman()) {
-            if (!owner.getEngine().getGameFrame().askPlayer("<html>Trash " + DomCardName.Copper.toHTML() +"</html>", "Resolving " + this.getName().toString())) {
+        if (owner.isHumanOrPossessedByHuman())
+            if (!owner.getEngine().getGameFrame().askPlayer("<html>Trash " + DomCardName.Copper.toHTML() +"</html>", "Resolving " + this.getName().toString()))
                 return;
-            }
-        }
     	owner.trash(owner.removeCardFromHand(theCoppers.get(0)));
     	owner.addAvailableCoins(3);
       }

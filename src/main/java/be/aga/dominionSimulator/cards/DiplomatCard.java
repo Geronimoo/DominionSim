@@ -16,12 +16,27 @@ public class DiplomatCard extends DomCard {
           owner.addActions(2);
     }
 
-    public void react() {
+    @Override
+    public boolean reactForHuman() {
+        return react();
+    }
+
+    @Override
+    public boolean canReact() {
+        return owner.getCardsInHand().size()>=5;
+    }
+
+    public boolean react() {
+        setReacted(true);
        if (owner.getCardsInHand().size()<5)
-           return;
+           return false;
        if (DomEngine.haveToLog) DomEngine.addToLog( owner + " reveals " + this );
        owner.drawCards(2);
+       if (owner.isHumanOrPossessedByHuman()) {
+           owner.setNeedsToUpdate();
+       }
        owner.doForcedDiscard(3,false);
+       return false;
     }
 
     @Override

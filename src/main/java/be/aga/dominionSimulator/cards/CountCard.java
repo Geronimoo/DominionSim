@@ -2,9 +2,12 @@ package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomCost;
+import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Set;
 
 public class CountCard extends DomCard {
     public CountCard() {
@@ -12,6 +15,10 @@ public class CountCard extends DomCard {
     }
 
     public void play() {
+        if (owner.isHumanOrPossessedByHuman()) {
+            handleHuman();
+            return;
+        }
         //first look at trashing!
         if (owner.stillInEarlyGame()) {
             int theCrapCount=0;
@@ -88,6 +95,41 @@ public class CountCard extends DomCard {
         //just gain a Copper and add $3
         owner.gain(DomCardName.Copper);
         owner.addAvailableCoins(3);
+    }
+
+    private void handleHuman() {
+        ArrayList<String> theOptions = new ArrayList<String>();
+        theOptions.add("Discard 2 cards");
+        theOptions.add("Put back on top");
+        theOptions.add("<html>Gain a " + DomCardName.Copper.toHTML() + "</html>");
+        int theChoice = owner.getEngine().getGameFrame().askToSelectOption("Select for Count", theOptions, "Mandatory!");
+        if (theChoice == 0)
+            owner.doForcedDiscard(2, false);
+        if (theChoice == 1) {
+            ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+            for (DomCard theCard : owner.getCardsInHand()) {
+                theChooseFrom.add(theCard.getName());
+            }
+            DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Put on top", theChooseFrom, "Mandatory!");
+            owner.putOnTopOfDeck(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
+        }
+        if (theChoice == 2) {
+            owner.gain(DomCardName.Copper);
+        }
+        owner.setNeedsToUpdate();
+        theOptions = new ArrayList<String>();
+        theOptions.add("+$3");
+        theOptions.add("Trash hand");
+        theOptions.add("<html>Gain a " + DomCardName.Duchy.toHTML() + "</html>");
+        theChoice = owner.getEngine().getGameFrame().askToSelectOption("Select for Count", theOptions, "Mandatory!");
+        if (theChoice == 0)
+            owner.addAvailableCoins(3);
+        if (theChoice == 1) {
+            while (!owner.getCardsInHand().isEmpty())
+                owner.trash(owner.removeCardFromHand(owner.getCardsInHand().get(0)));
+        }
+        if (theChoice == 2)
+            owner.gain(DomCardName.Duchy);
     }
 
     private void trashHand() {

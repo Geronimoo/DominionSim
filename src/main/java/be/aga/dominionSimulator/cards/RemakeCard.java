@@ -1,5 +1,6 @@
 package be.aga.dominionSimulator.cards;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 import be.aga.dominionSimulator.DomCard;
@@ -13,6 +14,10 @@ public class RemakeCard extends DomCard {
     }
 
     public void play() {
+        if (owner.isHumanOrPossessedByHuman()) {
+            handleHuman();
+            return;
+        }
         int theTrashCount=0;
         Collections.sort( owner.getCardsInHand(), SORT_FOR_TRASHING);
         while (theTrashCount<2 && !owner.getCardsInHand().isEmpty()) {
@@ -30,7 +35,33 @@ public class RemakeCard extends DomCard {
         }
     }
 
-	@Override
+    private void handleHuman() {
+        int theCount=0;
+        while (!owner.getCardsInHand().isEmpty() && theCount<2) {
+            owner.setNeedsToUpdate();
+            ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+            for (DomCard theCard : owner.getCardsInHand()) {
+                theChooseFrom.add(theCard.getName());
+            }
+            DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!");
+            owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
+            theCount++;
+            theChooseFrom = new ArrayList<DomCardName>();
+            for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+                if (theCard.getCost(owner.getCurrentGame()).compareTo(theChosenCard.getCost(owner.getCurrentGame()).add(new DomCost(1, 0))) == 0 && owner.getCurrentGame().countInSupply(theCard) > 0)
+                    theChooseFrom.add(theCard);
+            }
+            if (theChooseFrom.isEmpty())
+                continue;
+            if (theChooseFrom.size() == 1) {
+                owner.gain(owner.getCurrentGame().takeFromSupply(theChooseFrom.get(0)));
+            } else {
+                owner.gain(owner.getCurrentGame().takeFromSupply(owner.getEngine().getGameFrame().askToSelectOneCard("Gain a card for " + this.getName().toString(), theChooseFrom, "Mandatory!")));
+            }
+        }
+    }
+
+    @Override
     public boolean wantsToBePlayed() {
         int theTrashCount=0;
         for (DomCard theCard : owner.getCardsInHand()) {

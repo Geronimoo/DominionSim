@@ -14,6 +14,9 @@ public class LegionaryCard extends DomCard {
       owner.addAvailableCoins(3);
       if (owner.getCardsFromHand(DomCardName.Gold).isEmpty())
         return;
+      if (owner.isHumanOrPossessedByHuman()
+         && !owner.getEngine().getGameFrame().askPlayer("<html>Reveal " + DomCardName.Gold.toHTML() +"?</html>", "Resolving " + this.getName().toString()))
+         return;
       if (DomEngine.haveToLog) DomEngine.addToLog( owner + " reveals " + owner.getCardsFromHand(DomCardName.Gold).get(0));
       for (DomPlayer thePlayer : owner.getOpponents()) {
           if (!thePlayer.checkDefense()) {

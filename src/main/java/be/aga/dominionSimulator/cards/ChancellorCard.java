@@ -9,8 +9,13 @@ public class ChancellorCard extends DomCard {
     }
 
     public void play() {
-      owner.addAvailableCoins(2);
-      owner.putDeckInDiscard();
+        owner.addAvailableCoins(2);
+        if (owner.isHumanOrPossessedByHuman()) {
+            if (owner.getEngine().getGameFrame().askPlayer("Put deck in discard?" , "Resolving " + this.getName().toString()))
+                owner.putDeckInDiscard();
+        } else {
+            owner.putDeckInDiscard();
+        }
     }
     @Override
     public int getPlayPriority() {

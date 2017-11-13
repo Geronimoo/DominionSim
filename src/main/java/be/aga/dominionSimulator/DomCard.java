@@ -16,6 +16,13 @@ public class DomCard implements Comparable< DomCard >{
 	private boolean isTaggedByScheme;
 	private boolean discardAtCleanUp=true;
 
+    public static final Comparator SORT_BY_NAME = new Comparator<DomCard>(){
+        @Override
+        public int compare( DomCard aO1, DomCard aO2 ) {
+            return aO1.getName().compareTo(aO2.getName());
+        }
+    };
+
     public static final Comparator SORT_BY_COST = new Comparator<DomCard>(){
         @Override
         public int compare( DomCard aO1, DomCard aO2 ) {
@@ -70,6 +77,7 @@ public class DomCard implements Comparable< DomCard >{
     private boolean markedForPrince=false;
     private DomCard shapeshifterCard =null;
     private EstateCard estateCard;
+    private boolean hasReacted;
 
     /**
      * @param aCardName
@@ -211,10 +219,43 @@ public class DomCard implements Comparable< DomCard >{
         }
 
         if (isTaggedByHerbalist() || isTaggedByScheme()) {
-            if (shapeshifterCard !=null)
-                owner.putOnTopOfDeck(shapeshifterCard);
-            else
-                owner.putOnTopOfDeck(this);
+            if (getName()==DomCardName.Hermit && owner.getBoughtCards().isEmpty()) {
+                if (owner.isHumanOrPossessedByHuman()) {
+                    if (owner.getEngine().getGameFrame().askPlayer("<html>Trash " + DomCardName.Hermit.toHTML() +" ? (Scheme interaction!!)</html>", "Resolving " + this.getName().toString()))
+                        if (shapeshifterCard!=null)
+                          owner.trash(shapeshifterCard);
+                        else
+                            if (estateCard!=null)
+                              owner.trash(estateCard);
+                            else
+                              owner.trash(this);
+                    else
+                        if (shapeshifterCard!=null)
+                          owner.putOnTopOfDeck(shapeshifterCard);
+                        else
+                          if (estateCard!=null)
+                            owner.putOnTopOfDeck(estateCard);
+                          else
+                            owner.putOnTopOfDeck(this);
+                } else {
+                    if (shapeshifterCard!=null)
+                        owner.putOnTopOfDeck(shapeshifterCard);
+                    else
+                      if (estateCard!=null)
+                          owner.putOnTopOfDeck(estateCard);
+                      else
+                          owner.putOnTopOfDeck(this);
+                }
+                owner.gain(DomCardName.Madman);
+            } else {
+                if (shapeshifterCard != null)
+                    owner.putOnTopOfDeck(shapeshifterCard);
+                else
+                    if (estateCard!=null)
+                      owner.putOnTopOfDeck(estateCard);
+                    else
+                      owner.putOnTopOfDeck(this);
+            }
             //reset this boolean
             isTaggedByHerbalist = false;
             isTaggedByScheme = false;
@@ -333,4 +374,32 @@ public class DomCard implements Comparable< DomCard >{
     }
 
     public void continuePlaying(DomCard theCard) {}
+
+    public boolean react() {
+        return false;
+    }
+
+    public boolean hasReacted() {
+        return hasReacted;
+    }
+
+    public boolean reactForHuman() {
+        return true;
+    }
+
+    public void setReacted(boolean reacted) {
+        this.hasReacted = reacted;
+    }
+
+    public boolean canReact() {
+        return true;
+    }
+
+    public int countTypes() {
+        int theCount = 0;
+        for (DomCardType theType : DomCardType.values()) {
+            theCount+=theType.isLegal() && hasCardType(theType) ? 1 : 0;
+        }
+        return theCount;
+    }
 }

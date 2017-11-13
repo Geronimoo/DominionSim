@@ -19,6 +19,10 @@ public class Junk_DealerCard extends DomCard {
       owner.drawCards(1);
       if (owner.getCardsInHand().isEmpty())
           return;
+      if (owner.isHumanOrPossessedByHuman()) {
+          handleHuman();
+          return;
+      }
       if (!owner.getCardsFromHand(DomCardName.Menagerie).isEmpty() && !DomPlayer.getMultiplesInHand((MenagerieCard) owner.getCardsFromHand(DomCardName.Menagerie).get(0)).isEmpty()) {
           ArrayList<DomCard> theMultiples = DomPlayer.getMultiplesInHand((MenagerieCard) owner.getCardsFromHand(DomCardName.Menagerie).get(0));
           Collections.sort(theMultiples, SORT_FOR_TRASHING);
@@ -32,5 +36,15 @@ public class Junk_DealerCard extends DomCard {
           Collections.sort(owner.getCardsInHand(), SORT_FOR_TRASHING);
           owner.trash(owner.removeCardFromHand(owner.getCardsInHand().get(0)));
       }
+    }
+
+    private void handleHuman() {
+        owner.setNeedsToUpdate();
+        ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCard theCard : owner.getCardsInHand()) {
+            theChooseFrom.add(theCard.getName());
+        }
+        DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!");
+        owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
     }
 }

@@ -5,6 +5,7 @@ import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 public class MercenaryCard extends DomCard {
@@ -13,6 +14,10 @@ public class MercenaryCard extends DomCard {
     }
 
     public void play() {
+      if (owner.isHumanOrPossessedByHuman()) {
+          handleHuman();
+          return;
+      }
       if (!hasTwoCrapCards()) {
           if (owner.getCardsInHand().size()==1 && owner.getCardsInHand().get(0).getTrashPriority()<=DomCardName.Copper.getTrashPriority()) {
               owner.trash(owner.removeCardFromHand(owner.getCardsInHand().get(0)));
@@ -32,6 +37,26 @@ public class MercenaryCard extends DomCard {
           }
       }
 
+    }
+
+    private void handleHuman() {
+        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        do {
+            theChosenCards = new ArrayList<DomCardName>();
+            owner.getEngine().getGameFrame().askToSelectCards("Trash 2 ?", owner.getCardsInHand(), theChosenCards, 0);
+        } while (theChosenCards.size()>2);
+        for (DomCardName theCard : theChosenCards) {
+            owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theCard).get(0)));
+        }
+        if (theChosenCards.size()==2) {
+            owner.addAvailableCoins(2);
+            owner.drawCards(2);
+            for (DomPlayer thePlayer : owner.getOpponents()) {
+                if (!thePlayer.checkDefense()) {
+                  thePlayer.doForcedDiscard(thePlayer.getCardsInHand().size()-3, false);
+                }
+            }
+        }
     }
 
     private boolean hasTwoCrapCards() {
