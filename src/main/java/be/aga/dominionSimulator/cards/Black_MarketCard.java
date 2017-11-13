@@ -27,11 +27,15 @@ public class Black_MarketCard extends DomCard {
     }
 
     public void play() {
-      owner.addAvailableCoins(2);
-      ArrayList<DomCard> theRevealedCards = owner.getCurrentGame().revealFromBlackMarketDeck();
-      if (DomEngine.haveToLog) DomEngine.addToLog( owner + " reveals " + theRevealedCards );
-      if (theRevealedCards.isEmpty())
-    	return;
+        owner.addAvailableCoins(2);
+        ArrayList<DomCard> theRevealedCards = owner.getCurrentGame().revealFromBlackMarketDeck();
+        if (DomEngine.haveToLog) DomEngine.addToLog( owner + " reveals " + theRevealedCards );
+        if (theRevealedCards.isEmpty() || owner.getDebt()>0)
+        	return;
+        if (owner.isHumanOrPossessedByHuman()) {
+            handleHuman(theRevealedCards);
+            return;
+        }
         DomCard theCardToPlay;
         do {
             theCardToPlay = null;
@@ -74,5 +78,52 @@ public class Black_MarketCard extends DomCard {
       	DomCard theCard = theRevealedCards.get(i);
       	owner.getCurrentGame().returnToBlackMarketDeck(theCard);
       }
+    }
+
+    private void handleHuman(ArrayList<DomCard> aRevealedCards) {
+        ArrayList<DomCardName> theChooseFrom;
+        int theCount=0;
+        DomCardName theCardToPlay;
+        do {
+            owner.setNeedsToUpdate();
+            theChooseFrom = new ArrayList<DomCardName>();
+            for (DomCard theCard : owner.getCardsFromHand(DomCardType.Treasure))
+                theChooseFrom.add(theCard.getName());
+            if (theChooseFrom.isEmpty())
+                break;
+            theCardToPlay = owner.getEngine().getGameFrame().askToSelectOneCard("Play Treasures", theChooseFrom, "Stop playing Treasures!");
+            if (theCardToPlay != null) {
+                owner.play(owner.removeCardFromHand(owner.getCardsFromHand(theCardToPlay).get(0)));
+                if (owner.previousPlayedCardName != null) {
+                    DomEngine.addToLog(owner + " plays " + (owner.sameCardCount + 1) + " " + owner.previousPlayedCardName.toHTML()
+                            + (owner.sameCardCount > 0 ? "s" : ""));
+                    owner.previousPlayedCardName = null;
+                    owner.sameCardCount = 0;
+                }
+            }
+        } while (theCardToPlay != null && !owner.getCardsFromHand(DomCardType.Treasure).isEmpty()) ;
+        theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCard theCard : aRevealedCards) {
+            if (owner.getAvailableCoinsWithoutTokens()>=theCard.getCoinCost(owner.getCurrentGame()) && owner.availablePotions>=theCard.getPotionCost())
+                theChooseFrom.add(theCard.getName());
+        }
+        if (!theChooseFrom.isEmpty()) {
+            DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Buy a card", theChooseFrom, "Don't buy!");
+            if (theChosenCard!=null) {
+                for (int i = aRevealedCards.size() - 1; i >= 0; i--) {
+                    DomCard theCard = aRevealedCards.get(i);
+                    if (theChosenCard == theCard.getName()) {
+                        owner.buy(aRevealedCards.remove(i));
+                        break;
+                    }
+                }
+            }
+        }
+        if (DomEngine.haveToLog)
+            DomEngine.addToLog( owner + " returns " + aRevealedCards +" to the Black Market Deck");
+        for (int i=aRevealedCards.size()-1 ; i>=0 ; i--) {
+            DomCard theCard = aRevealedCards.get(i);
+            owner.getCurrentGame().returnToBlackMarketDeck(theCard);
+        }
     }
 }

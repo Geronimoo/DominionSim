@@ -3,6 +3,7 @@ package be.aga.dominionSimulator.cards;
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.enums.DomCardName;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 
@@ -13,6 +14,12 @@ public class TempleCard extends DomCard {
 
     public void play() {
         owner.addVP(1);
+        if (owner.getCardsInHand().isEmpty())
+            return;
+        if (owner.isHumanOrPossessedByHuman()) {
+            handleHuman();
+            return;
+        }
         HashSet<DomCardName> theCardsTrashed = new HashSet<DomCardName>();
         Collections.sort(owner.getCardsInHand(),SORT_FOR_TRASHING);
         for (int i=0;i<owner.getCardsInHand().size() && theCardsTrashed.size()<3;i++) {
@@ -31,6 +38,22 @@ public class TempleCard extends DomCard {
         }
         for (DomCardName theCardname : theCardsTrashed) {
             owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theCardname).get(0)));
+        }
+        owner.getCurrentGame().getBoard().addVPon(DomCardName.Temple);
+    }
+
+    private void handleHuman() {
+        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        do {
+            theChosenCards = new ArrayList<DomCardName>();
+            ArrayList<DomCard> theChooseFrom = new ArrayList<DomCard>();
+            for (DomCardName theName : owner.getUniqueCardNamesInHand()) {
+                theChooseFrom.add(owner.getCardsFromHand(theName).get(0));
+            }
+            owner.getEngine().getGameFrame().askToSelectCards("Trash 1 to 3", theChooseFrom, theChosenCards, 0);
+        } while (theChosenCards.size() > 3 || theChosenCards.size() < 1);
+        for (DomCardName theCard : theChosenCards) {
+            owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theCard).get(0)));
         }
         owner.getCurrentGame().getBoard().addVPon(DomCardName.Temple);
     }

@@ -24,9 +24,20 @@ public class RatcatcherCard extends DomCard {
 
     @Override
     public void doWhenCalled() {
-        Collections.sort(owner.getCardsInHand(),SORT_FOR_TRASHING);
-        DomCard theCardToTrash = owner.getCardsInHand().get(0);
-        owner.trash(owner.removeCardFromHand(theCardToTrash));
+        if (owner.isHumanOrPossessedByHuman()) {
+            ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+            for (DomCard theCard : owner.getCardsInHand()) {
+                theChooseFrom.add(theCard.getName());
+            }
+            DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!");
+            if (theChosenCard != null) {
+                owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
+            }
+        } else {
+            Collections.sort(owner.getCardsInHand(), SORT_FOR_TRASHING);
+            DomCard theCardToTrash = owner.getCardsInHand().get(0);
+            owner.trash(owner.removeCardFromHand(theCardToTrash));
+        }
     }
 
     public boolean wantsToBeCalled() {

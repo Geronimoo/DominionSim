@@ -26,13 +26,7 @@ public class ObeliskCard extends DomCard {
     }
 
     public static int countVP(DomPlayer aPlayer) {
-      DomCardName cardForObelisk = null;
-      for (DomPlayer thePlayer : aPlayer.getCurrentGame().getPlayers()) {
-          if (thePlayer.getObeliskChoice()!=null && thePlayer.getObeliskChoice().length()>0) {
-              cardForObelisk=thePlayer.getCardForObelisk();
-              break;
-          }
-      }
+      DomCardName cardForObelisk = aPlayer.getCurrentGame().getObeliskChoice();
       if (cardForObelisk == null)
           return 0;
       return aPlayer.countInDeck(cardForObelisk)*2;

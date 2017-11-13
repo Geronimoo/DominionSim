@@ -21,6 +21,10 @@ public class CounterfeitCard extends DomCard {
         ArrayList<DomCard> theTreasures = owner.getCardsFromHand(DomCardType.Treasure);
         if (theTreasures.isEmpty())
             return;
+        if (owner.isHumanOrPossessedByHuman()) {
+            handleHuman(theTreasures);
+            return;
+        }
         Collections.sort(theTreasures,SORT_FOR_TRASHING);
         DomCard theCardToPlayTwice;
         if (!owner.getCardsFromHand(DomCardName.Spoils).isEmpty())
@@ -45,5 +49,22 @@ public class CounterfeitCard extends DomCard {
         if (!owner.getCardsFromPlay(theCardToPlayTwice.getName()).isEmpty())
             owner.trash(owner.removeCardFromPlay(theCardToPlayTwice));
         theCardToPlayTwice.owner=null;
+    }
+
+    private void handleHuman(ArrayList<DomCard> theTreasures) {
+        owner.setNeedsToUpdate();
+        ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCard theCard : theTreasures) {
+            theChooseFrom.add(theCard.getName());
+        }
+        DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Don't trash");
+        if (theChosenCard != null) {
+            DomCard theCard = owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0));
+            owner.play(theCard);
+            owner.play(owner.removeCardFromPlay(theCard));
+            owner.trash(owner.removeCardFromPlay(theCard));
+        } else {
+            if (DomEngine.haveToLog) DomEngine.addToLog(owner + " trashes nothing");
+        }
     }
 }

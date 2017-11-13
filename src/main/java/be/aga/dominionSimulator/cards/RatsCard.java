@@ -19,6 +19,10 @@ public class RatsCard extends DomCard {
       owner.gain(DomCardName.Rats);
       if (owner.getCardsInHand().isEmpty())
           return;
+      if (owner.isHumanOrPossessedByHuman()) {
+          handleHuman();
+          return;
+      }
       if (!owner.getCardsFromHand(DomCardName.Menagerie).isEmpty() && !DomPlayer.getMultiplesInHand((MenagerieCard) owner.getCardsFromHand(DomCardName.Menagerie).get(0)).isEmpty()) {
           ArrayList<DomCard> theMultiples = DomPlayer.getMultiplesInHand((MenagerieCard) owner.getCardsFromHand(DomCardName.Menagerie).get(0));
           Collections.sort(theMultiples, SORT_FOR_TRASHING);
@@ -33,6 +37,19 @@ public class RatsCard extends DomCard {
           i++;
       if (i<owner.getCardsInHand().size())
         owner.trash(owner.removeCardFromHand(owner.getCardsInHand().get(i)));
+    }
+
+    private void handleHuman() {
+        owner.setNeedsToUpdate();
+        ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCard theCard : owner.getCardsInHand()) {
+            if (theCard.getName()!=DomCardName.Rats)
+              theChooseFrom.add(theCard.getName());
+        }
+        if (theChooseFrom.isEmpty())
+            return;
+        DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!");
+        owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
     }
 
     @Override

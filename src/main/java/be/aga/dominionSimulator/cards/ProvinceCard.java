@@ -4,6 +4,8 @@ import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
 
+import java.util.ArrayList;
+
 public class ProvinceCard extends DomCard {
     public ProvinceCard () {
       super( DomCardName.Province);
@@ -32,6 +34,17 @@ public class ProvinceCard extends DomCard {
 		//first check if player has a Fool's Gold in hand
 		if (thePlayer.getCardsFromHand(DomCardName.Fool$s_Gold).isEmpty())
 		  continue;
+		if (thePlayer.isHumanOrPossessedByHuman()) {
+            ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+            owner.getEngine().getGameFrame().askToSelectCards("Trash for Gold? " , thePlayer.getCardsFromHand(DomCardName.Fool$s_Gold), theChosenCards, 0);
+            for (DomCardName theCardName: theChosenCards) {
+                thePlayer.trash(thePlayer.removeCardFromHand(thePlayer.getCardsFromHand(theCardName).get(0)));
+                DomCard theGold = thePlayer.getCurrentGame().takeFromSupply(DomCardName.Gold);
+                if (theGold!=null)
+                  thePlayer.gainOnTopOfDeck(theGold);
+            }
+            return;
+        }
 		//if player has some Gold in deck already it probably means he prefers 'real' Gold
 		if (thePlayer.countInDeck(DomCardName.Gold)==0)
 			continue;

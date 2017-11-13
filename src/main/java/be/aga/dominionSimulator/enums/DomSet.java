@@ -39,8 +39,13 @@ public enum DomSet {
 
     Intrigue (new DomCardName[] {DomCardName.Courtyard
            , DomCardName.Pawn
-           , DomCardName.Secret_Chamber
-           , DomCardName.Great_Hall
+           , DomCardName.Lurker
+           , DomCardName.Diplomat
+           , DomCardName.Mill
+           , DomCardName.Secret_Passage
+           , DomCardName.Courtier
+           , DomCardName.Patrol
+           , DomCardName.Replace
            , DomCardName.Masquerade
            , DomCardName.Shanty_Town
            , DomCardName.Steward
@@ -49,20 +54,25 @@ public enum DomSet {
            , DomCardName.Baron
            , DomCardName.Bridge
            , DomCardName.Conspirator
-           , DomCardName.Coppersmith
            , DomCardName.Ironworks
            , DomCardName.Mining_Village
-           , DomCardName.Scout
            , DomCardName.Duke
            , DomCardName.Minion
-           , DomCardName.Saboteur
            , DomCardName.Torturer
            , DomCardName.Trading_Post
-           , DomCardName.Tribute
            , DomCardName.Upgrade
            , DomCardName.Harem
            , DomCardName.Nobles}),
-   
+
+    OldIntrigue (new DomCardName[] {
+            DomCardName.Secret_Chamber
+            , DomCardName.Great_Hall
+            , DomCardName.Coppersmith
+            , DomCardName.Scout
+            , DomCardName.Saboteur
+            , DomCardName.Tribute
+    }),
+
    Seaside (new DomCardName[] {DomCardName.Embargo
            , DomCardName.Haven
            , DomCardName.Lighthouse
@@ -176,12 +186,185 @@ public enum DomSet {
            , DomCardName.Trader
            , DomCardName.Tunnel
            }),
-           
-   Promo (new DomCardName[] {DomCardName.Black_Market
+
+   Dark_Ages (new DomCardName[] {DomCardName.Poor_House
+           , DomCardName.Beggar
+           , DomCardName.Squire
+           , DomCardName.Vagrant
+           , DomCardName.Forager
+           , DomCardName.Hermit
+           , DomCardName.Market_Square
+           , DomCardName.Sage
+           , DomCardName.Storeroom
+           , DomCardName.Urchin
+           , DomCardName.Armory
+           , DomCardName.Death_Cart
+           , DomCardName.Feodum
+           , DomCardName.Fortress
+           , DomCardName.Ironmonger
+           , DomCardName.Marauder
+           , DomCardName.Procession
+           , DomCardName.Rats
+           , DomCardName.Scavenger
+           , DomCardName.Wandering_Minstrel
+           , DomCardName.Band_of_Misfits
+           , DomCardName.Bandit_Camp
+           , DomCardName.Catacombs
+           , DomCardName.Count
+           , DomCardName.Counterfeit
+           , DomCardName.Cultist
+           , DomCardName.Graverobber
+           , DomCardName.Junk_Dealer
+           , DomCardName.Knights
+           , DomCardName.Mystic
+           , DomCardName.Pillage
+           , DomCardName.Rebuild
+           , DomCardName.Rogue
+           , DomCardName.Altar
+           , DomCardName.Hunting_Grounds
+           }),
+
+   Guilds (new DomCardName[]{DomCardName.Candlestick_Maker
+           , DomCardName.Stonemason
+           , DomCardName.Doctor
+           , DomCardName.Masterpiece
+           , DomCardName.Advisor
+           , DomCardName.Plaza
+           , DomCardName.Taxman
+           , DomCardName.Herald
+           , DomCardName.Baker
+           , DomCardName.Butcher
+           , DomCardName.Journeyman
+           , DomCardName.Merchant_Guild
+           , DomCardName.Soothsayer
+          }),
+
+   Adventures (new DomCardName[]{DomCardName.Coin_of_the_Realm
+           , DomCardName.Page
+           , DomCardName.Peasant
+           , DomCardName.Ratcatcher
+           , DomCardName.Raze
+           , DomCardName.Amulet
+           , DomCardName.Caravan_Guard
+           , DomCardName.Dungeon
+           , DomCardName.Gear
+           , DomCardName.Guide
+           , DomCardName.Duplicate
+           , DomCardName.Magpie
+           , DomCardName.Messenger
+           , DomCardName.Miser
+           , DomCardName.Port
+           , DomCardName.Ranger
+           , DomCardName.Transmogrify
+           , DomCardName.Artificer
+           , DomCardName.Bridge_Troll
+           , DomCardName.Distant_Lands
+           , DomCardName.Giant
+           , DomCardName.Haunted_Woods
+           , DomCardName.Lost_City
+           , DomCardName.Relic
+           , DomCardName.Royal_Carriage
+           , DomCardName.Storyteller
+           , DomCardName.Swamp_Hag
+           , DomCardName.Treasure_Trove
+           , DomCardName.Wine_Merchant
+           , DomCardName.Hireling
+           , DomCardName.Alms
+           , DomCardName.Borrow
+           , DomCardName.Quest
+           , DomCardName.Save
+           , DomCardName.Scouting_Party
+           , DomCardName.Travelling_Fair
+           , DomCardName.Bonfire
+           , DomCardName.Expedition
+           , DomCardName.Ferry
+           , DomCardName.Plan
+           , DomCardName.Mission
+           , DomCardName.Pilgrimage
+           , DomCardName.Ball
+           , DomCardName.Raid
+           , DomCardName.Seaway
+           , DomCardName.Trade
+           , DomCardName.Lost_Arts
+           , DomCardName.Training
+           , DomCardName.Inheritance
+           , DomCardName.Pathfinding}),
+
+   Empires (new DomCardName[] {DomCardName.Engineer
+           ,DomCardName.City_Quarter
+           ,DomCardName.Overlord
+           ,DomCardName.Royal_Blacksmith
+           ,DomCardName.Encampment
+           ,DomCardName.Patrician
+           ,DomCardName.Settlers
+           ,DomCardName.Castles
+           ,DomCardName.Catapult
+           ,DomCardName.Chariot_Race
+           ,DomCardName.Enchantress
+           ,DomCardName.Farmers$_Market
+           ,DomCardName.Gladiator
+           ,DomCardName.Sacrifice
+           ,DomCardName.Temple
+           ,DomCardName.Villa
+           ,DomCardName.Archive
+           ,DomCardName.Capital
+           ,DomCardName.Charm
+           ,DomCardName.Crown
+           ,DomCardName.Forum
+           ,DomCardName.Groundskeeper
+           ,DomCardName.Legionary
+           ,DomCardName.Wild_Hunt
+           ,DomCardName.Triumph
+           ,DomCardName.Annex
+           ,DomCardName.Donate
+           ,DomCardName.Advance
+           ,DomCardName.Delve
+           ,DomCardName.Tax
+           ,DomCardName.Banquet
+           ,DomCardName.Ritual
+           ,DomCardName.Salt_the_Earth
+           ,DomCardName.Wedding
+           ,DomCardName.Windfall
+           ,DomCardName.Conquest
+           ,DomCardName.Dominate
+           ,DomCardName.Aqueduct
+           ,DomCardName.Arena
+           ,DomCardName.Bandit_Fort
+           ,DomCardName.Basilica
+           ,DomCardName.Baths
+           ,DomCardName.Battlefield
+           ,DomCardName.Colonnade
+           ,DomCardName.Defiled_Shrine
+           ,DomCardName.Fountain
+           ,DomCardName.Keep
+           ,DomCardName.Labyrinth
+           ,DomCardName.Mountain_Pass
+           ,DomCardName.Museum
+           ,DomCardName.Obelisk
+           ,DomCardName.Orchard
+           ,DomCardName.Palace
+           ,DomCardName.Tomb
+           ,DomCardName.Tower
+           ,DomCardName.Triumphal_Arch
+           ,DomCardName.Wall
+           ,DomCardName.Wolf_Den   }),
+
+    Nocturne (new DomCardName[]{DomCardName.Ghost_Town
+            ,DomCardName.Devil$s_Workshop
+            ,DomCardName.Raider
+            ,DomCardName.Necromancer
+            ,DomCardName.Crypt
+            ,DomCardName.Shepherd
+            ,DomCardName.Pooka}),
+
+    Promo (new DomCardName[] {DomCardName.Black_Market
            , DomCardName.Envoy
            , DomCardName.Governor
            , DomCardName.Walled_Village
-           , DomCardName.Stash}),
+           , DomCardName.Stash
+           , DomCardName.Summon
+           , DomCardName.Sauna
+           , DomCardName.Dismantle}),
                
    Common (new DomCardName[] {DomCardName.Copper
            , DomCardName.Silver
@@ -194,7 +377,6 @@ public enum DomSet {
            , DomCardName.Province
            , DomCardName.Colony
            }),
-
    ;
    
    private final ArrayList< DomCardName> cards = new ArrayList< DomCardName>();
@@ -212,4 +394,9 @@ public enum DomSet {
 	public  ArrayList<DomCardName> getCards() {
 		return cards;
 	}
+
+    @Override
+    public String toString() {
+        return super.toString().replaceAll("_","");
+    }
 }

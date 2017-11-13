@@ -38,17 +38,17 @@ public class Secret_ChamberCard extends DomCard {
 		  } while (!owner.getCardsInHand().isEmpty());
 	}
 
-    public void react() {
+    public boolean react() {
        if (DomEngine.haveToLog) DomEngine.addToLog( owner + " reveals " + this );
        owner.drawCards(2);
        for (DomPlayer player : owner.getOpponents()){
     	   if (!player.getCardsFromPlay(DomCardName.Mountebank).isEmpty()){
     		   reactForMountebank();
-    		   return;
+               return false;
     	   }
     	   if (!player.getCardsFromPlay(DomCardName.Pirate_Ship).isEmpty()){
     		   reactForPirate_Ship();
-    		   return;
+               return false;
     	   }
     	   //TODO Rabble
     	   //TODO Saboteur
@@ -57,6 +57,7 @@ public class Secret_ChamberCard extends DomCard {
     	   //TODO Menagerie in hand!
        }
        owner.doForcedDiscard(2,true);
+        return false;
     }
 
 	private void reactForPirate_Ship() {

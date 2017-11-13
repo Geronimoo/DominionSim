@@ -1,6 +1,7 @@
 package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
+import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomPlayStrategy;
@@ -16,11 +17,14 @@ public class RazeCard extends DomCard {
     public void play() {
         DomPlayer theOwner = owner;
         owner.addActions(1);
+        if (owner.isHumanOrPossessedByHuman()) {
+            handleHuman();
+            return;
+        }
         if (owner.getCardsInHand().isEmpty()) {
             trashItself(theOwner);
             return;
         }
-
         Collections.sort(owner.getCardsInHand(),SORT_FOR_TRASHING);
         DomCard theCardToTrash = owner.getCardsInHand().get(0);
         if (!owner.removingReducesBuyingPower(theCardToTrash)) {
@@ -31,6 +35,43 @@ public class RazeCard extends DomCard {
         }
         if (!owner.getCurrentGame().getBoard().getTrashedCards().contains(this))
           trashItself(theOwner);
+    }
+
+    private void handleHuman() {
+        DomPlayer theOwner = owner;
+        owner.setNeedsToUpdate();
+        ArrayList<DomCardName> theChooseFrom=new ArrayList<DomCardName>();
+        for (DomCard theCard : owner.getCardsInHand()) {
+            theChooseFrom.add(theCard.getName());
+        }
+        DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Trash Raze itself");
+        if (theChosenCard!=null) {
+            owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
+        } else {
+            theChosenCard=this.getName();
+            if (owner.getCardsInPlay().contains(this))
+              owner.trash(owner.removeCardFromPlay(this));
+            else
+              return;
+        }
+        int theAmount = theChosenCard.getCoinCost(theOwner.getCurrentGame());
+        if (theAmount==0)
+            return;
+        ArrayList<DomCard> theRevealedCards = theOwner.revealTopCards(theAmount);
+        if (theRevealedCards.isEmpty())
+            return;
+        theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCard theCard : theRevealedCards) {
+            theChooseFrom.add(theCard.getName());
+        }
+        theChosenCard = theOwner.getEngine().getGameFrame().askToSelectOneCard("Choose a card", theChooseFrom, "Mandatory!");
+        for (DomCard theCard : theRevealedCards) {
+            if (theCard.getName()==theChosenCard) {
+                theOwner.addCardToHand(theRevealedCards.remove(theRevealedCards.indexOf(theCard)));
+                break;
+            }
+        }
+        theOwner.discard(theRevealedCards);
     }
 
     private void trashItself(DomPlayer theOwner) {

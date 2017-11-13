@@ -5,6 +5,8 @@ import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
+import java.util.ArrayList;
+
 public class UniversityCard extends DomCard {
     public UniversityCard () {
       super( DomCardName.University);
@@ -12,6 +14,10 @@ public class UniversityCard extends DomCard {
 
   public void play() {
     owner.addActions(2);
+    if (owner.isHumanOrPossessedByHuman()) {
+        handleHuman();
+        return;
+    }
     DomCardName theDesiredCard = owner.getDesiredCard(DomCardType.Action
     		                                               ,new DomCost(5,0) 
      													   ,false
@@ -20,4 +26,18 @@ public class UniversityCard extends DomCard {
     if (theDesiredCard!=null)
 	  owner.gain(theDesiredCard);
   }
+
+    private void handleHuman() {
+        ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+            if (theCard.hasCardType(DomCardType.Action) && new DomCost(5,0).compareTo(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0)
+                theChooseFrom.add(theCard);
+        }
+        if (theChooseFrom.isEmpty())
+            return;
+        DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Select card to gain for " + this.getName().toString(), theChooseFrom, "Don't gain anything");
+        if (theChosenCard == null)
+            return;
+        owner.gain(owner.getCurrentGame().takeFromSupply(theChosenCard));
+    }
 }

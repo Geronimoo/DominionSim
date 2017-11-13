@@ -1,5 +1,252 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <playerCollection>
+    <player name="KOTW_1105"
+            author="Geronimoo"
+            description="">
+        <type name="TwoPlayer"/>
+        <type name="Province"/>
+        <board contents="Caravan Guard, Castles, Coin of the Realm, Courtier, Cultist, Enchantress, Harem, Mill, Page, Sacrifice, Training, Aqueduct" bane="" Mountain_Pass_Bid="0" Obelisk_Choice="" Shelters="true"/>
+        <buy name="Castles">
+            <condition>
+                <left type="countCardsInDeck" attribute="Courtier"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Province">
+            <condition>
+                <left type="countCardsInDeck" attribute="Courtier"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Province">
+            <condition>
+                <left type="countCardsInDeck" attribute="Courtier"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+            <condition>
+                <left type="countVP"/>
+                <operator type="greaterOrEqualThan" />
+                <right type="countMAXOpponentVP"/>
+                <extra_operation type="minus" attribute="5.0" />
+            </condition>
+        </buy>
+        <buy name="Duchy">
+            <condition>
+                <left type="countVPon" attribute="Aqueduct"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+        </buy>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+        </buy>
+        <buy name="Estate">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Courtier">
+            <condition>
+                <left type="countCardsInDeck" attribute="Courtier"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Cultist">
+            <condition>
+                <left type="countCardsInDeck" attribute="Cultist"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="3.0"/>
+            </condition>
+        </buy>
+        <buy name="Sacrifice">
+            <condition>
+                <left type="countCardsInDeck" attribute="Sacrifice"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Champion"/>
+        <buy name="Hero"/>
+        <buy name="Warrior"/>
+        <buy name="Treasure_Hunter"/>
+        <buy name="Page">
+            <condition>
+                <left type="countCardTypeInDeck" attribute="Traveller"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Mill"/>
+        <buy name="Caravan_Guard"/>
+        <buy name="Gold"/>
+        <buy name="Silver"/>
+    </player>
+
+    <player name="KOTW_1029"
+            author="Geronimoo"
+            description="https://www.reddit.com/r/dominion/comments/79lloy/kotw_1029_candlestick_maker_contraband_fishing/">
+        <type name="TwoPlayer"/>
+        <type name="Province"/>
+        <board contents="Watchtower, Taxman, Stonemason, Plaza, Monument, Island, Ghost Ship, Fishing Village, Contraband, Candlestick Maker" bane="" Mountain_Pass_Bid="0" Obelisk_Choice="" Shelters="false"/>
+        <buy name="Province">
+            <condition>
+                <left type="countCardsInDeck" attribute="Monument"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+        </buy>
+        <buy name="Estate">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Stonemason">
+            <condition>
+                <left type="countAvailableMoney"/>
+                <operator type="greaterOrEqualThan" />
+                <right type="constant" attribute="5.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Stonemason"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Ghost_Ship">
+            <condition>
+                <left type="countCardsInDeck" attribute="Ghost_Ship"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Watchtower">
+            <condition>
+                <left type="countCardsInDeck" attribute="Watchtower"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="countCardTypeInDeck" attribute="Village"/>
+                <extra_operation type="divideBy" attribute="3.0" />
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Watchtower"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="countCardsInDeck" attribute="Monument"/>
+            </condition>
+        </buy>
+        <buy name="Monument">
+            <condition>
+                <left type="countCardsInDeck" attribute="Watchtower"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="countCardTypeInDeck" attribute="Village"/>
+                <extra_operation type="divideBy" attribute="3.0" />
+            </condition>
+        </buy>
+        <buy name="Fishing_Village"/>
+        <buy name="Plaza"/>
+        <buy name="Candlestick_Maker"/>
+        <buy name="Silver"/>
+    </player>
+
+    <player name="KOTW_1015"
+            author="Geronimoo"
+            description="A baseline bot for the KOTW: https://www.reddit.com/r/dominion/comments/76ujuf/kotw_1015_bandit_caravan_guard_courtier_diplomat/">
+        <type name="Province"/>
+        <type name="Combo"/>
+        <type name="TwoPlayer"/>
+        <board contents="Inheritance, Expedition, Wine Merchant, Walled Village, Replace, Moat, Mint, Fool's Gold, Diplomat, Courtier, Caravan Guard, Bandit" bane="" Mountain_Pass_Bid="0" Obelisk_Choice=""/>
+        <buy name="Inheritance">
+            <condition>
+                <left type="isEstateTokenPlaced" attribute="Caravan_Guard"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Province">
+            <condition>
+                <left type="countCardsInDeck" attribute="Courtier"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Duchy">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="4.0"/>
+            </condition>
+        </buy>
+        <buy name="Estate">
+            <condition>
+                <left type="countCardsInSupply" attribute="Province"/>
+                <operator type="smallerOrEqualThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Courtier">
+            <condition>
+                <left type="countCardsInDeck" attribute="Courtier"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Mint">
+            <condition>
+                <left type="countCardsInPlay" attribute="Copper"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="3.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Mint"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+        <buy name="Courtier">
+            <condition>
+                <left type="countCardsInDeck" attribute="Courtier"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="2.0"/>
+            </condition>
+        </buy>
+        <buy name="Estate">
+            <condition>
+                <left type="isEstateTokenPlaced" attribute="Caravan_Guard"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+        </buy>
+        <buy name="Expedition">
+            <condition>
+                <left type="isEstateTokenPlaced" attribute="Caravan_Guard"/>
+                <operator type="equalTo" />
+                <right type="constant" attribute="0.0"/>
+            </condition>
+        </buy>
+    </player>
+
     <player name="First Game by michaeljb"
             author="michaeljb"
             description="This is a bot built for the First Game suggested set of 10. It utilizes 8 of the 10 available kingdom cards, and was built against HiveMindEmulator's Smithy bot for Geronimoo's First Game challenge.">
@@ -695,20 +942,8 @@
         <type name="Competitive"/>
         <type name="Province"/>
         <type name="TwoPlayer"/>
-        <board contents="Vassal, Mine" bane="" Mountain_Pass_Bid="0" Obelisk_Choice=""/>
+        <board contents="Vassal, Mine, Witch, Moat" bane="" Mountain_Pass_Bid="0" Obelisk_Choice=""/>
         <buy name="Province">
-            <condition>
-                <left type="countCardsInDeck" attribute="Laboratory"/>
-                <operator type="greaterThan" />
-                <right type="constant" attribute="2.0"/>
-            </condition>
-        </buy>
-        <buy name="Province">
-            <condition>
-                <left type="countCardsInDeck" attribute="Gold"/>
-                <operator type="greaterThan" />
-                <right type="constant" attribute="0.0"/>
-            </condition>
             <condition>
                 <left type="countCardsInDeck" attribute="Laboratory"/>
                 <operator type="greaterThan" />
@@ -733,14 +968,7 @@
             <condition>
                 <left type="countCardsInDeck" attribute="Sentry"/>
                 <operator type="smallerThan" />
-                <right type="constant" attribute="3.0"/>
-            </condition>
-        </buy>
-        <buy name="Witch">
-            <condition>
-                <left type="countCardsInDeck" attribute="Witch"/>
-                <operator type="equalTo" />
-                <right type="constant" attribute="0.0"/>
+                <right type="constant" attribute="4.0"/>
             </condition>
         </buy>
         <buy name="Gold">
@@ -748,6 +976,30 @@
                 <left type="getTotalMoney"/>
                 <operator type="smallerThan" />
                 <right type="constant" attribute="8.0"/>
+            </condition>
+        </buy>
+        <buy name="Vassal">
+            <condition>
+                <left type="getTotalMoney"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="6.0"/>
+            </condition>
+        </buy>
+        <buy name="Throne_Room">
+            <condition>
+                <left type="countCardsInDeck" attribute="Sentry"/>
+                <operator type="greaterThan" />
+                <right type="constant" attribute="1.0"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Throne_Room"/>
+                <operator type="smallerThan" />
+                <right type="countCardTypeInDeck" attribute="Cycler"/>
+            </condition>
+            <condition>
+                <left type="countCardsInDeck" attribute="Throne_Room"/>
+                <operator type="smallerThan" />
+                <right type="constant" attribute="1.0"/>
             </condition>
         </buy>
         <buy name="Laboratory"/>
@@ -770,29 +1022,15 @@
                 <right type="constant" attribute="0.0"/>
             </condition>
         </buy>
-        <buy name="Silver">
+        <buy name="Vassal">
             <condition>
-                <left type="countCardsInDeck" attribute="Silver"/>
+                <left type="countCardsInDeck" attribute="Vassal"/>
                 <operator type="equalTo" />
                 <right type="constant" attribute="0.0"/>
             </condition>
         </buy>
         <buy name="Poacher"/>
-        <buy name="Silver">
-            <condition>
-                <left type="getTotalMoney"/>
-                <operator type="smallerThan" />
-                <right type="constant" attribute="6.0"/>
-            </condition>
-        </buy>
         <buy name="Harbinger"/>
-        <buy name="Moat">
-            <condition>
-                <left type="countCardsInDeck" attribute="Moat"/>
-                <operator type="equalTo" />
-                <right type="constant" attribute="0.0"/>
-            </condition>
-        </buy>
     </player>
 
     <player name="Donate/Market Square"
@@ -4002,17 +4240,17 @@
     <player name="Duplicat/Duke"
             author="Geronimoo"
             description="Gain a bunch of Duplicates to empty the Duchy and Duke piles in a few turns.">
-        <type name="TwoPlayer"/>
         <type name="Province"/>
+        <type name="Optimized"/>
+        <type name="TwoPlayer"/>
+        <type name="Competitive"/>
         <type name="SingleCard"/>
         <type name="Combo"/>
-        <type name="Optimized"/>
-        <type name="Competitive"/>
         <buy name="Duchy">
             <condition>
                 <left type="countOnTavernMat" attribute="Duplicate"/>
                 <operator type="greaterThan" />
-                <right type="constant" attribute="4.0"/>
+                <right type="constant" attribute="1.0"/>
             </condition>
         </buy>
         <buy name="Duchy">
@@ -4026,7 +4264,7 @@
             <condition>
                 <left type="countOnTavernMat" attribute="Duplicate"/>
                 <operator type="greaterThan" />
-                <right type="constant" attribute="2.0"/>
+                <right type="constant" attribute="1.0"/>
             </condition>
             <condition>
                 <left type="countCardsInSupply" attribute="Duchy"/>

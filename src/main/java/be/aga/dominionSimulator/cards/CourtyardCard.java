@@ -4,6 +4,9 @@ import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
 
+import java.util.ArrayList;
+import java.util.Set;
+
 public class CourtyardCard extends DomCard {
     public CourtyardCard () {
       super( DomCardName.Courtyard);
@@ -16,9 +19,23 @@ public class CourtyardCard extends DomCard {
             DomEngine.addToLog( owner + "'s hand is empty, so returns nothing");
           return;
     	}
-        owner.putCardFromHandOnTop();
+    	if (owner.isHumanOrPossessedByHuman()) {
+            handleHuman();
+        } else {
+            owner.putCardFromHandOnTop();
+        }
     }
-    
+
+    private void handleHuman() {
+        Set<DomCardName> uniqueCards = owner.getUniqueCardNamesInHand();
+        ArrayList<DomCardName> theChooseFrom=new ArrayList<DomCardName>();
+        theChooseFrom.clear();
+        theChooseFrom.addAll(uniqueCards);
+        owner.setNeedsToUpdate();
+        DomCard theChosenCard = owner.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Put back a card for " + this.getName().toString(), theChooseFrom, "Mandatory!")).get(0);
+        owner.putOnTopOfDeck(owner.removeCardFromHand(theChosenCard));
+    }
+
     @Override
     public boolean wantsToBePlayed() {
       return !owner.isDeckEmpty();

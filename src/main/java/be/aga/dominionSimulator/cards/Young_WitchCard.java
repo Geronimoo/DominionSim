@@ -18,8 +18,15 @@ public class Young_WitchCard extends DomCard {
 	      return;
 		for (DomCard card : thePlayer.getCardsInHand()){
 	      if (card.isBane()) {
-	        if (DomEngine.haveToLog) DomEngine.addToLog( thePlayer + " reveals the Bane card "+card );
-            return;
+	      	if (thePlayer.isHuman()) {
+				if (owner.getEngine().getGameFrame().askPlayer("<html>Reveal Bane " + card.getName().toHTML() +"?</html>", "Resolving " + this.getName().toString())) {
+					if (DomEngine.haveToLog) DomEngine.addToLog(thePlayer + " reveals the Bane card " + card);
+					return;
+				}
+			} else{
+				  if (DomEngine.haveToLog) DomEngine.addToLog(thePlayer + " reveals the Bane card " + card);
+				  return;
+			  }
 	      }
 	    }  
 		thePlayer.gain(DomCardName.Curse);

@@ -1,5 +1,6 @@
 package be.aga.dominionSimulator.cards;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 import be.aga.dominionSimulator.DomCard;
@@ -15,6 +16,10 @@ public class GovernorCard extends DomCard {
 
     public void play() {
       owner.addActions(1);
+      if (owner.isHumanOrPossessedByHuman()) {
+      	handleHuman();
+      	return;
+	  }
       if (owner.getPlayStrategyFor(this)==DomPlayStrategy.GoldEarlyTrashMid) {
     	playGoldEarlyTrashMid();
     	return;
@@ -43,6 +48,24 @@ public class GovernorCard extends DomCard {
       else
     	  gainGold();
     }
+
+	private void handleHuman() {
+		ArrayList<String> theOptions = new ArrayList<String>();
+		theOptions.add("Draw 3 cards");
+		theOptions.add("Gain a Gold");
+		theOptions.add("Remodel");
+		int theChoice = owner.getEngine().getGameFrame().askToSelectOption("Select for Governor", theOptions, "Mandatory!");
+		if (theChoice == 0) {
+			drawCards();
+		}
+		if (theChoice==1) {
+			gainGold();
+		}
+		if (theChoice==2) {
+			remodelSomething();
+		}
+
+	}
 
 	private boolean tryToRemodel() {
 		if (owner.getCardsInHand().isEmpty())
@@ -114,6 +137,10 @@ public class GovernorCard extends DomCard {
 	private void upgradeOrRemodel(DomPlayer player, int i) {
 		if (player.getCardsInHand().isEmpty())
 	      return;
+		if (player.isHumanOrPossessedByHuman()) {
+			handleHumanRemodel(player,i);
+			return;
+		}
 		if (player==owner && owner.getPlayStrategyFor(this)==DomPlayStrategy.GoldEarlyTrashMid) {
 			if (!owner.getCardsFromHand(DomCardName.Gold).isEmpty() && owner.getCurrentGame().countInSupply(DomCardName.Province)>0){
 	            player.trash( player.removeCardFromHand( owner.getCardsFromHand(DomCardName.Gold).get(0) ) );
@@ -139,6 +166,26 @@ public class GovernorCard extends DomCard {
         DomCardName theCardToGain = player.getCurrentGame().getBestCardInSupplyFor(player, null, theCost,true);
         if (theCardToGain!=null)
 		  player.gain(theCardToGain);
+	}
+
+	private void handleHumanRemodel(DomPlayer player, int i) {
+		ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+		for (DomCard theCard : player.getCardsInHand())
+			theChooseFrom.add(theCard.getName());
+		DomCardName theChosenCardToRemodel = player.getEngine().getGameFrame().askToSelectOneCard("Select card to " + this.getName().toString(), theChooseFrom, player == owner ? "Mandatory!" : "Don't trash");
+		if (theChosenCardToRemodel==null)
+			return;
+		DomCard theCardToRemodel = player.getCardsFromHand(theChosenCardToRemodel).get(0);
+		player.trash(player.removeCardFromHand(theCardToRemodel));
+		theChooseFrom = new ArrayList<DomCardName>();
+		for (DomCardName theCard : player.getCurrentGame().getBoard().keySet()) {
+			if (theCardToRemodel.getCost(player.getCurrentGame()).add(new DomCost(i,0)).compareTo(theCard.getCost(player.getCurrentGame()))>=0
+					&& player.getCurrentGame().countInSupply(theCard)>0)
+				theChooseFrom.add(theCard);
+		}
+		if (theChooseFrom.isEmpty())
+			return;
+		player.gain(player.getEngine().getGameFrame().askToSelectOneCard("Select card to gain from "+this.getName().toString(), theChooseFrom, "Mandatory!"));
 	}
 
 	private void gainGold() {

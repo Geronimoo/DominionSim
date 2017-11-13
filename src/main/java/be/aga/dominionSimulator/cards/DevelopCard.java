@@ -1,5 +1,6 @@
 package be.aga.dominionSimulator.cards;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 import be.aga.dominionSimulator.DomCard;
@@ -15,6 +16,10 @@ public class DevelopCard extends DomCard {
     public void play() {
         if (owner.getCardsInHand().isEmpty())
         	return;
+        if (owner.isHumanOrPossessedByHuman()) {
+            handleHuman();
+            return;
+        }
         Collections.sort( owner.getCardsInHand(), SORT_FOR_TRASHING);
         //find a card that will gain 2 cards
         for (DomCard theCard : owner.getCardsInHand()) {
@@ -31,7 +36,60 @@ public class DevelopCard extends DomCard {
         develop(owner.removeCardFromHand( owner.getCardsInHand().get( 0 ) )); 
     }
 
-	private void develop(DomCard aCardToTrash) {
+    private void handleHuman() {
+        ArrayList<DomCardName> theChooseFrom=new ArrayList<DomCardName>();
+        for (DomCard theCard : owner.getCardsInHand()) {
+            theChooseFrom.add(theCard.getName());
+        }
+        DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!");
+        owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
+        theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+            if (theCard.getCost(owner.getCurrentGame()).compareTo(theChosenCard.getCost(owner.getCurrentGame()).add(new DomCost(1,0)))==0 && owner.getCurrentGame().countInSupply(theCard)>0)
+                theChooseFrom.add(theCard);
+            if (theCard.getCost(owner.getCurrentGame()).compareTo(theChosenCard.getCost(owner.getCurrentGame()).add(new DomCost(-1,0)))==0 && owner.getCurrentGame().countInSupply(theCard)>0)
+                theChooseFrom.add(theCard);
+        }
+        if (theChooseFrom.isEmpty())
+            return;
+        if (theChooseFrom.size()==1) {
+            owner.gainOnTopOfDeck(owner.getCurrentGame().takeFromSupply(theChooseFrom.get(0)));
+        } else {
+            DomCardName theFirstChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Gain a card for " + this.getName().toString(), theChooseFrom, "Mandatory!");
+            owner.gainOnTopOfDeck(owner.getCurrentGame().takeFromSupply(theFirstChosenCard));
+            if (theFirstChosenCard.getCost(owner.getCurrentGame()).compareTo(theChosenCard.getCost(owner.getCurrentGame()))>0) {
+                theChooseFrom = new ArrayList<DomCardName>();
+                for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+                    if (theCard.getCost(owner.getCurrentGame()).compareTo(theChosenCard.getCost(owner.getCurrentGame()).add(new DomCost(-1,0)))==0 && owner.getCurrentGame().countInSupply(theCard)>0)
+                        theChooseFrom.add(theCard);
+                }
+                if (theChooseFrom.isEmpty())
+                    return;
+                if (theChooseFrom.size()==1) {
+                    owner.gainOnTopOfDeck(owner.getCurrentGame().takeFromSupply(theChooseFrom.get(0)));
+                } else {
+                    DomCardName theLowerChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Gain a card for " + this.getName().toString(), theChooseFrom, "Mandatory!");
+                    owner.gainOnTopOfDeck(owner.getCurrentGame().takeFromSupply(theLowerChosenCard));
+                }
+            } else {
+                theChooseFrom = new ArrayList<DomCardName>();
+                for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+                    if (theCard.getCost(owner.getCurrentGame()).compareTo(theChosenCard.getCost(owner.getCurrentGame()).add(new DomCost(1, 0))) == 0 && owner.getCurrentGame().countInSupply(theCard) > 0)
+                        theChooseFrom.add(theCard);
+                }
+                if (theChooseFrom.isEmpty())
+                    return;
+                if (theChooseFrom.size() == 1) {
+                    owner.gainOnTopOfDeck(owner.getCurrentGame().takeFromSupply(theChooseFrom.get(0)));
+                } else {
+                    DomCardName theHigherChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Gain a card for " + this.getName().toString(), theChooseFrom, "Mandatory!");
+                    owner.gainOnTopOfDeck(owner.getCurrentGame().takeFromSupply(theHigherChosenCard));
+                }
+            }
+        }
+    }
+
+    private void develop(DomCard aCardToTrash) {
         DomCost theUpCost = aCardToTrash.getName().getCost(owner.getCurrentGame()).add(new DomCost(1,0 )) ;
         DomCost theDownCost = aCardToTrash.getName().getCost(owner.getCurrentGame()).add(new DomCost(-1,0 )) ;
         owner.trash( aCardToTrash );

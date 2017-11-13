@@ -1,5 +1,6 @@
 package be.aga.dominionSimulator.cards;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 import be.aga.dominionSimulator.DomCard;
@@ -15,7 +16,18 @@ public class Trade_RouteCard extends DomCard {
       owner.addAvailableCoins(owner.getCurrentGame().getBoard().countTradeRouteTokens());
       if (!owner.getCardsInHand().isEmpty()) {
         Collections.sort( owner.getCardsInHand() , SORT_FOR_TRASHING);
-        owner.trash(owner.removeCardFromHand( owner.getCardsInHand().get( 0 ) ));
+        if (owner.isHumanOrPossessedByHuman()) {
+            ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+            for (DomCard theCard : owner.getCardsInHand()) {
+                theChooseFrom.add(theCard.getName());
+            }
+            DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!");
+            if (theChosenCard != null) {
+                owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
+            }
+        } else {
+            owner.trash(owner.removeCardFromHand(owner.getCardsInHand().get(0)));
+        }
       }
     }
 }

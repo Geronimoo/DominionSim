@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.EnumMap;
 
 import be.aga.dominionSimulator.cards.DuplicateCard;
+import be.aga.dominionSimulator.enums.DomPhase;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
@@ -60,9 +61,33 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
 		}
 	  }
 	  for (DomCard card : theStashes){
-		owner.putOnTopOfDeck(drawDeck.remove(drawDeck.indexOf(card)));
+		drawDeck.remove(drawDeck.indexOf(card));
 	  }
-	}
+      if (owner.isHumanOrPossessedByHuman()) {
+          if (owner.getDrawDeckSize() == 0) {
+              for (DomCard card : theStashes) {
+                  owner.putOnTopOfDeck(owner.removeCardFromHand(card));
+              }
+          } else {
+              for (DomCard card : theStashes) {
+                  ArrayList<String> theOptions = new ArrayList<String>();
+                  for (int i = 0; i < owner.getDrawDeckSize() + 1; i++) {
+                      if (i<owner.getDrawDeckSize() && drawDeck.get(i).getName()==DomCardName.Stash)
+                        theOptions.add("Stash");
+                      else
+                        theOptions.add(i == 0 ? "Top" : i == owner.getDrawDeckSize() ? "Bottom" : "Here");
+                  }
+                  int theChoice = owner.getEngine().getGameFrame().askToSelectOption("Position?", theOptions, "Mandatory!");
+                  owner.putInDeckAt(card, theChoice);
+              }
+          }
+      } else {
+          for (DomCard card : theStashes) {
+              owner.putOnTopOfDeck(card);
+          }
+      }
+
+    }
 
     private void doOverhandShuffle() {
       for (int j=0;j<2+Math.random()*4;j++){
@@ -152,42 +177,71 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
         return theTotalMoney;
     }
 
-    public void addToDiscardPile( ArrayList< DomCard > aPile ) {
-    	for (DomCard card : aPile)
-    	  discard(card);
-    }
-
     public void discard( DomCard aCard ) {
-      if (aCard.getShapeshifterCard()!=null)
-        discardPile.add(aCard.getShapeshifterCard());
-      else
-        if (aCard.getEstateCard()!=null) {
-            discardPile.add(aCard.getEstateCard());
-        }
-        else
-            discardPile.add(aCard);
-      aCard.doWhenDiscarded();
+      if (owner.getPhase()== DomPhase.CleanUp && aCard.getName()==DomCardName.Hermit && owner.getBoughtCards().isEmpty()) {
+          if (aCard.getShapeshifterCard() != null)
+              owner.trash(aCard.getShapeshifterCard());
+          else if (aCard.getEstateCard() != null) {
+              owner.trash(aCard.getEstateCard());
+          } else
+              owner.trash(aCard);
+          owner.gain(DomCardName.Madman);
+      } else {
+          if (aCard.getShapeshifterCard() != null)
+              discardPile.add(aCard.getShapeshifterCard());
+          else if (aCard.getEstateCard() != null) {
+              discardPile.add(aCard.getEstateCard());
+          } else
+              discardPile.add(aCard);
+          aCard.doWhenDiscarded();
+      }
     }
 
     public void gain( DomCard aCard , int aLocation) {
 		if (gainIfPossessed(aCard) || !addPhysicalCard(aCard))
 		  return;
-		if (aLocation==HAND && aCard.getName()!=DomCardName.Villa){
+		if (aLocation==HAND && aCard.getName()!=DomCardName.Villa && aCard.getName()!=DomCardName.Ghost_Town){
 	      owner.getCardsInHand().add( aCard );
 	      if (DomEngine.haveToLog) DomEngine.addToLog( owner + " gains a " + aCard + " in hand" );
 		}
-		if (aLocation==TOP_OF_DECK && aCard.getName()!=DomCardName.Villa){
+		if (aLocation==TOP_OF_DECK && aCard.getName()!=DomCardName.Villa && aCard.getName()!=DomCardName.Ghost_Town){
 		  owner.putOnTopOfDeck(aCard);      	
 		}
-		if (aLocation==DISCARD && aCard.getName()!=DomCardName.Villa){
-	    	if (aCard.getName()==DomCardName.Nomad_Camp
-	    	 || (!owner.getCardsFromPlay(DomCardName.Royal_Seal).isEmpty() && aCard.getDiscardPriority(1)>=16)
-             || (owner.isTravellingFairActive() && (aCard.getDiscardPriority(1)>DomCardName.Copper.getDiscardPriority(1) || (aCard.getName()==DomCardName.Copper && getDrawDeckSize()<8)))) {
+		if (aLocation==DISCARD && aCard.getName()!=DomCardName.Villa && aCard.getName()!=DomCardName.Ghost_Town) {
+            if (aCard.getName() == DomCardName.Nomad_Camp) {
                 owner.putOnTopOfDeck(aCard);
             } else {
-               discardPile.add(0,aCard);
+                if (!owner.getCardsFromPlay(DomCardName.Royal_Seal).isEmpty()) {
+                    if (owner.isHumanOrPossessedByHuman()) {
+                        if (owner.getEngine().getGameFrame().askPlayer("<html>On Top of Deck: " + aCard.getName().toHTML() + "</html>", "Resolving Royal Seal"))
+                            owner.putOnTopOfDeck(aCard);
+                        else
+                            discardPile.add(0, aCard);
+                    } else {
+                        if (aCard.getDiscardPriority(1) >= 16)
+                            owner.putOnTopOfDeck(aCard);
+                        else
+                            discardPile.add(0, aCard);
+                    }
+                } else {
+                    if (owner.isTravellingFairActive()) {
+                        if (owner.isHumanOrPossessedByHuman()) {
+                            if (owner.getEngine().getGameFrame().askPlayer("<html>On Top of Deck: " + aCard.getName().toHTML() + "</html>", "Resolving Travelling Fair"))
+                                owner.putOnTopOfDeck(aCard);
+                            else
+                                discardPile.add(0, aCard);
+                        } else {
+                            if (aCard.getDiscardPriority(1) > DomCardName.Copper.getDiscardPriority(1) || (aCard.getName() == DomCardName.Copper && owner.getDrawDeckSize() < 8))
+                                owner.putOnTopOfDeck(aCard);
+                            else
+                                discardPile.add(0, aCard);
+                        }
+                    } else {
+                        discardPile.add(0, aCard);
+                    }
+                }
             }
-		}
+        }
         if (aCard.hasCardType(DomCardType.Victory)) {
             if (owner.isCardInPlay(DomCardName.Groundskeeper)) {
                 for (DomCard theKeeper : owner.getCardsFromPlay(DomCardName.Groundskeeper)) {
@@ -231,7 +285,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
 
     public boolean addPhysicalCard( DomCard aCard ) {
       //TODO Trader might conflict with Watchtower ????
-      if (owner.countInDeck( DomCardName.Trader )>0 && owner.usesTrader(aCard))
+      if (aCard.getName()!=DomCardName.Silver && owner.countInDeck( DomCardName.Trader )>0 && owner.usesTrader(aCard))
         return false;
     	
       if (owner.countInDeck( DomCardName.Watchtower )>0 && owner.usesWatchtower(aCard))
@@ -617,7 +671,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
 		gain(aCard,DISCARD);
 	}
 
-	public void addPhysicalCardFromMasquerade(DomCard aCard) {
+	public void addPhysicalCardWhenNotGained(DomCard aCard) {
 		//cards that were passed are not considered 'gained' so can not be watchtowered...
         if (!containsKey( aCard.getName() )) 
           put(aCard.getName(), new ArrayList< DomCard >());
@@ -824,5 +878,24 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
         if (drawDeck.isEmpty())
             return null;
         return drawDeck.get(0);
+    }
+
+    public void putInDeckAt(DomCard domCard, int theChoice) {
+        drawDeck.add(theChoice,domCard);
+    }
+
+    public void removeFromDiscard(DomCard card) {
+        discardPile.remove(card);
+    }
+
+    public void justAddToDiscard(DomCard card) {
+	    if (DomEngine.haveToLog)
+	        DomEngine.addToLog(owner +" adds " + card.getName().toHTML()+" to discard");
+        discardPile.add(card);
+    }
+
+    public void addHandToDiscardPile() {
+        while (!owner.getCardsInHand().isEmpty())
+            discard(owner.getCardsInHand().remove(0));
     }
 }

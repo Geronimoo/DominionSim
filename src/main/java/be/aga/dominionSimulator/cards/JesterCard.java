@@ -28,10 +28,17 @@ public class JesterCard extends DomCard {
           }
           if (owner.getCurrentGame().countInSupply(theCards.get(0).getName())==0)
         	continue;
-          if (theCards.get(0).getTrashPriority()<16) {
-            thePlayer.gain(theCards.get(0).getName());
+          if (owner.isHumanOrPossessedByHuman())  {
+              if (owner.getEngine().getGameFrame().askPlayer("<html>Gain " + theCards.get(0).getName().toHTML() +" ?</html>", "Resolving " + this.getName().toString()))
+                  owner.gain(theCards.get(0).getName());
+              else
+                  thePlayer.gain(theCards.get(0).getName());
           } else {
-            owner.gain(theCards.get(0).getName());
+              if (theCards.get(0).getTrashPriority() < 16) {
+                  thePlayer.gain(theCards.get(0).getName());
+              } else {
+                  owner.gain(theCards.get(0).getName());
+              }
           }
       }
     }

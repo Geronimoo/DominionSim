@@ -25,6 +25,10 @@ public class OracleCard extends DomCard {
 	      ArrayList<DomCard> theRevealedCards = thePlayer.revealTopCards(2);
 	      if (theRevealedCards.isEmpty()) 
 	    	continue;
+	      if (owner.isHumanOrPossessedByHuman()) {
+	      	handleOpponentAsHuman(thePlayer, theRevealedCards);
+	      	return;
+		  }
 	      Collections.sort(theRevealedCards, SORT_FOR_DISCARDING);
 	      int theTotalValue=0;
 		  for (DomCard theCard : theRevealedCards) {
@@ -33,17 +37,51 @@ public class OracleCard extends DomCard {
 	      if (theTotalValue>=32){
 	    	thePlayer.discard(theRevealedCards);
 	      }else{
-		      for (DomCard theCard : theRevealedCards) {
-		    	  thePlayer.putOnTopOfDeck(theCard); 
-		      }
+	      	  if (thePlayer.isHuman() && theRevealedCards.size()>1) {
+				  ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+				  do {
+					  owner.getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u> (first card = top card)</html>", theRevealedCards, theChosenCards, 0);
+				  } while (theChosenCards.size()==1);
+				  if (theChosenCards.size()<2) {
+					  thePlayer.putOnTopOfDeck(theRevealedCards.get(1));
+					  thePlayer.putOnTopOfDeck(theRevealedCards.get(0));
+				  } else {
+					  if (theRevealedCards.get(1).getName() == theChosenCards.get(1)) {
+						  thePlayer.putOnTopOfDeck(theRevealedCards.get(1));
+						  thePlayer.putOnTopOfDeck(theRevealedCards.get(0));
+					  } else {
+						  thePlayer.putOnTopOfDeck(theRevealedCards.get(0));
+						  thePlayer.putOnTopOfDeck(theRevealedCards.get(1));
+					  }
+				  }
+			  } else {
+				  for (DomCard theCard : theRevealedCards) {
+					  thePlayer.putOnTopOfDeck(theCard);
+				  }
+			  }
 	      }
 	    }
+	}
+
+	private void handleOpponentAsHuman(DomPlayer thePlayer, ArrayList<DomCard> theRevealedCards) {
+		if (owner.getEngine().getGameFrame().askPlayer("<html>Discard Opponent's " + theRevealedCards +" ?</html>", "Resolving " + this.getName().toString())) {
+			thePlayer.discard(theRevealedCards);
+		} else {
+			Collections.sort(theRevealedCards, SORT_FOR_DISCARDING);
+			for (DomCard theCard : theRevealedCards) {
+ 			  thePlayer.putOnTopOfDeck(theCard);
+			}
+		}
 	}
 
 	private void oracleYourself() {
 	  ArrayList<DomCard> theRevealedCards = owner.revealTopCards(2);
       if (theRevealedCards.isEmpty()) 
     	return;
+      if (owner.isHumanOrPossessedByHuman()) {
+			handleHuman(theRevealedCards);
+			return;
+	  }
       int theTotalValue = 0;
       for (DomCard theCard : theRevealedCards) {
     	theTotalValue+=theCard.getDiscardPriority(owner.getActionsLeft()); 
@@ -55,5 +93,32 @@ public class OracleCard extends DomCard {
 	    	  owner.putOnTopOfDeck(theCard); 
 	      }
       }
+	}
+
+	private void handleHuman(ArrayList<DomCard> theRevealedCards) {
+		if (owner.getEngine().getGameFrame().askPlayer("<html>Discard " + theRevealedCards +" ?</html>", "Resolving " + this.getName().toString())) {
+			owner.discard(theRevealedCards);
+		} else {
+			if (theRevealedCards.size()==1) {
+				owner.putOnTopOfDeck(theRevealedCards.get(0));
+				return;
+			}
+			ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+			do {
+				owner.getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u> (first card = top card)</html>", theRevealedCards, theChosenCards, 0);
+			} while (theChosenCards.size()==1);
+			if (theChosenCards.size()<2) {
+				owner.putOnTopOfDeck(theRevealedCards.get(1));
+				owner.putOnTopOfDeck(theRevealedCards.get(0));
+			} else {
+				if (theRevealedCards.get(1).getName() == theChosenCards.get(1)) {
+					owner.putOnTopOfDeck(theRevealedCards.get(1));
+					owner.putOnTopOfDeck(theRevealedCards.get(0));
+				} else {
+					owner.putOnTopOfDeck(theRevealedCards.get(0));
+					owner.putOnTopOfDeck(theRevealedCards.get(1));
+				}
+			}
+		}
 	}
 }

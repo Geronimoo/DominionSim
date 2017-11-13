@@ -18,6 +18,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,7 +35,7 @@ public class CardSelector extends JDialog implements ActionListener {
      setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
      addWindowListener(new WindowAdapter() {
         public void windowClosing(WindowEvent we) {
-            JOptionPane.showMessageDialog(null,"sorry, can't close");
+           JOptionPane.showMessageDialog(null,"sorry, can't close");
         }
      });
 	 myChosenCards = aChosenCards;
@@ -94,7 +95,7 @@ private JPanel getChooseFromPanel() {
     final GridBagConstraints theCons = DomGui.getGridBagConstraints( 2 );
     JScrollPane theChooseFromScroller = new JScrollPane(getChooseFromList(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     theChooseFromScroller.setBorder(new TitledBorder( "Choose from these" ));
-    theChooseFromScroller.setPreferredSize(new Dimension(150,300));
+    theChooseFromScroller.setPreferredSize(new Dimension(150,200));
     thePanel.add(theChooseFromScroller, theCons);
     return thePanel;
 }
@@ -105,12 +106,13 @@ private JPanel getChosenPanel() {
     final GridBagConstraints theCons = DomGui.getGridBagConstraints( 2 );
     JScrollPane theChosenScroller = new JScrollPane(getChosenList(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     theChosenScroller.setBorder(new TitledBorder( "Chosen cards" ));
-    theChosenScroller.setPreferredSize(new Dimension(150,300));
+    theChosenScroller.setPreferredSize(new Dimension(150,200));
     thePanel.add(theChosenScroller, theCons);
     return thePanel;
 }
 
 private JList getChooseFromList() {
+    Collections.sort(myChooseFrom,DomCard.SORT_BY_NAME);
     myChooseFromList = new JList();
 //    myChooseFromList.setPreferredSize(new Dimension(100,200));
     myChooseFromList.setCellRenderer(new CardRenderer());
@@ -129,6 +131,11 @@ private JList getChooseFromList() {
                     ((DefaultListModel)myChooseFromList.getModel()).removeElement(o);
                     ((DefaultListModel)myChosenList.getModel()).addElement(o);
                 }
+            }
+            if (e.getButton()==MouseEvent.BUTTON3) {
+                int index = myChooseFromList.locationToIndex(e.getPoint());
+                if (index >= 0)
+                    DomGameFrame.showWiki( myChooseFromList.getModel().getElementAt(index));
             }
         }
     });
@@ -152,6 +159,11 @@ private JList getChosenList() {
                     ((DefaultListModel)myChosenList.getModel()).removeElement(o);
                     ((DefaultListModel)myChooseFromList.getModel()).addElement(o);
                 }
+            }
+            if (e.getButton()==MouseEvent.BUTTON3) {
+                int index = myChosenList.locationToIndex(e.getPoint());
+                if (index >= 0)
+                    DomGameFrame.showWiki( myChosenList.getModel().getElementAt(index));
             }
         }
     });

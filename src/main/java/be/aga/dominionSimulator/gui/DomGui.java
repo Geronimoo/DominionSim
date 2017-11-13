@@ -1,15 +1,6 @@
 package be.aga.dominionSimulator.gui;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Desktop;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
@@ -29,6 +20,7 @@ import java.util.HashMap;
 
 import javax.swing.*;
 
+import be.aga.dominionSimulator.gui.util.KingdomViewer;
 import org.jfree.ui.RefineryUtilities;
 import org.xml.sax.InputSource;
 
@@ -45,7 +37,7 @@ public class DomGui extends JFrame implements ActionListener {
   private HashMap< JButton, ButtonGroup > myStartStateButtonGroups = new HashMap< JButton, ButtonGroup >();
   private HashMap< JButton, JButton > myEditCreateButtons = new HashMap<JButton, JButton>();
   private HashMap< JButton, JButton > myCopyPasteButtons = new HashMap<JButton, JButton>();
-  private HashMap< JButton, JButton > myColonizeButtons = new HashMap<JButton, JButton>();
+  private HashMap< JButton, JButton > myKingdomViewerButtons = new HashMap<JButton, JButton>();
   private JCheckBox myOrderBox;
   private JButton myEditedSelector;
   private HashMap< JComponent, JComponent> myWinPercentageLBLs=new HashMap<JComponent, JComponent>();
@@ -104,7 +96,7 @@ public class DomGui extends JFrame implements ActionListener {
       myTopSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, new JScrollPane(getControlPanel()), myVPLineChart.getChartPanel());
       myBottomSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, myBarChart.getChartPanel(), myMoneyLineChart.getChartPanel());
 	  myBigSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, myTopSplit, myBottomSplit);
-      myBigSplit.setResizeWeight(0.54);
+      myBigSplit.setResizeWeight(0.8);
       myTopSplit.setResizeWeight(0.50);
       myBottomSplit.setResizeWeight(0.5);
       myBottomSplit.setDividerSize(5);
@@ -162,17 +154,29 @@ public class DomGui extends JFrame implements ActionListener {
 	      thePanel.add(getCopyPasteButton(theBotSelector), theCons);
           //the colonize button
 	      theCons.gridx++;
-	      thePanel.add(getColonizeButton(theBotSelector), theCons);
+	      thePanel.add(getKingdomViewerButton(theBotSelector), theCons);
 	    }
   	    myBotSelectors.get(0).requestFocus();
+	    JPanel theSmallPanel = new JPanel();
+	    theSmallPanel.setLayout(new FlowLayout());
         //check box to determine player order 	
 	    myOrderBox = new JCheckBox("Keep this player order for all games");
 	    myOrderBox.setToolTipText("If unchecked, the players will be moved to a new random position for each game");
 	    myOrderBox.setMnemonic('K');
-	    theCons.gridx=0;
-	    theCons.gridy++;
-	    theCons.gridwidth=2;
-	    thePanel.add(myOrderBox, theCons);
+//	    theCons.gridx=0;
+//	    theCons.gridy++;
+	    theSmallPanel.add(myOrderBox);
+        //a button to play against the sim
+//        theCons.gridx++;
+        theBTN = new JButton("Play against the bot(s)");
+        theBTN.setMnemonic('P');
+        theBTN.setActionCommand("Play against bots");
+        theBTN.addActionListener( this );
+        theSmallPanel.add(theBTN);
+        theCons.gridx=0;
+        theCons.gridy++;
+        theCons.gridwidth=2;
+        thePanel.add(theSmallPanel,theCons);
         //more buttons to play with
 	    theCons.gridx=0;
 	    theCons.gridy++;
@@ -215,21 +219,13 @@ public class DomGui extends JFrame implements ActionListener {
 	    theCons.gridwidth=6;
 	    thePanel.add(theBTN, theCons);
 //        thePanel.add(theBTN, theCons);
-        //a button to play against the sim
-        theCons.gridx=0;
-        theCons.gridy++;
-        theCons.gridwidth=2;
-        theBTN = new JButton("Play against the bot(s)");
-        theBTN.setMnemonic('P');
-        theBTN.setActionCommand("Play against bots");
-        theBTN.addActionListener( this );
-        thePanel.add(theBTN, theCons);
         //a button for ultimate simulation
 	    theBTN = new JButton("Ultimate Simulation (100000 games)");
 	    theBTN.setMnemonic('U');
 	    theBTN.setActionCommand("Start Ultimate Simulations");
 	    theBTN.addActionListener( this );
         theCons.gridx=2;
+        theCons.gridy++;
         theCons.gridwidth=6;
 	    thePanel.add(theBTN, theCons);
 	    //allow "tab"-key to travel between the bot selectors
@@ -275,15 +271,14 @@ public class DomGui extends JFrame implements ActionListener {
 	  return theBTN;
 	}
 
-	private Component getColonizeButton(JButton theBotSelector) {
-	  JButton theBTN=myColonizeButtons.get(theBotSelector);
+	private Component getKingdomViewerButton(JButton theBotSelector) {
+	  JButton theBTN= myKingdomViewerButtons.get(theBotSelector);
 	  if (theBTN==null) {
-        theBTN = new JButton("Colonize");
-        theBTN.setToolTipText("Colony and Platinum will be added to the bot's buy rules");
+        theBTN = new JButton("Kingdom Viewer");
         theBTN.addActionListener(this);
-        theBTN.setActionCommand("Colonize");
-        myColonizeButtons.put(theBotSelector, theBTN);
-        myColonizeButtons.put(theBTN, theBotSelector);
+        theBTN.setActionCommand("Kingdom Viewer");
+        myKingdomViewerButtons.put(theBotSelector, theBTN);
+        myKingdomViewerButtons.put(theBTN, theBotSelector);
 	  }
 	  return theBTN;
 	}
@@ -396,12 +391,13 @@ public class DomGui extends JFrame implements ActionListener {
         myEngine.orderBots();
         refreshBotSelectors(null);
       }
-      if (aE.getActionCommand().startsWith( "Colonize" )) {
-          myEditedSelector=myColonizeButtons.get(aE.getSource());
+      if (aE.getActionCommand().startsWith( "Kingdom Viewer" )) {
+          myEditedSelector= myKingdomViewerButtons.get(aE.getSource());
           if (getSelectedPlayer(myEditedSelector) == null)
         	  return; 
           DomPlayer theSelectedBot = getSelectedPlayer(myEditedSelector);
-          refreshBotSelectors(colonize(theSelectedBot));
+          KingdomViewer.showKingDom(theSelectedBot);
+//          refreshBotSelectors(colonize(theSelectedBot));
       }
     }
 
@@ -470,8 +466,8 @@ public class DomGui extends JFrame implements ActionListener {
         theCons.gridy++;
         JTextArea a = new JTextArea( 250, 260 );
         a.setText( "\n Geronimoo's Dominion Simulator \n\n"
-            + " Version:\n      1.2.14\n" + " Written by:\n      Jeroen Aga\n"
-            + " Released:\n      january 2017\n\n"
+            + " Version:\n      2.1.2\n" + " Written by:\n      Jeroen Aga\n"
+            + " Released:\n      november 2017\n\n"
             + " Website:\n      http://dominionsimulator.wordpress.com\n" 
             + " Report bugs/Sing Praise:\n      jeroen_aga@yahoo.com\n" );
         theAboutPanel.add( a, theCons );

@@ -1,5 +1,6 @@
 package be.aga.dominionSimulator.cards;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 import be.aga.dominionSimulator.DomCard;
@@ -18,12 +19,20 @@ public class TraderCard extends DomCard {
       if (!owner.getCardsInHand().isEmpty()) {
         Collections.sort( owner.getCardsInHand() , SORT_FOR_TRASHING);
         DomCard theCardToTrash = owner.getCardsInHand().get(0);
-        for (DomCard card : owner.getCardsInHand()){
-        	if ((card.getCoinCost(owner.getCurrentGame())>0 && card.getTrashPriority()<=19)
-        			|| card.getTrashPriority()==0) {
-        		theCardToTrash = card;
-        		break;
-        	}
+        if (owner.isHumanOrPossessedByHuman()) {
+            ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+            for (DomCard theCard : owner.getCardsInHand()) {
+                theChooseFrom.add(theCard.getName());
+            }
+            theCardToTrash = owner.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!")).get(0);
+        } else {
+            for (DomCard card : owner.getCardsInHand()) {
+                if ((card.getCoinCost(owner.getCurrentGame()) > 0 && card.getTrashPriority() <= 19)
+                        || card.getTrashPriority() == 0) {
+                    theCardToTrash = card;
+                    break;
+                }
+            }
         }
         owner.trash(owner.removeCardFromHand( theCardToTrash ));
         for (int i=0;i<theCardToTrash.getCoinCost(owner.getCurrentGame());i++) {
@@ -44,14 +53,19 @@ public class TraderCard extends DomCard {
     }
 
      public boolean wantsToReact(DomCard aCard) {
-       //TODO this way of handling Trader looks a bit dirty (= Watchtower)
-       if (aCard.getName()==DomCardName.Silver || owner.getCurrentGame().countInSupply(DomCardName.Silver)==0)
-         return false;
-       if (aCard.getName().getTrashPriority(owner)<16) {
-      	return true;
-       } else {
-     	return false;
-       }
+         if (owner.isHumanOrPossessedByHuman()) {
+             owner.setNeedsToUpdate();
+             return owner.getEngine().getGameFrame().askPlayer("<html>React with " + this.getName().toHTML() +" ?</html>", "Resolving " + this.getName().toString());
+         } else {
+             //TODO this way of handling Trader looks a bit dirty (= Watchtower)
+             if (aCard.getName() == DomCardName.Silver || owner.getCurrentGame().countInSupply(DomCardName.Silver) == 0)
+                 return false;
+             if (aCard.getName().getTrashPriority(owner) < 16) {
+                 return true;
+             } else {
+                 return false;
+             }
+         }
      }
      @Override
     public boolean wantsToBePlayed() {

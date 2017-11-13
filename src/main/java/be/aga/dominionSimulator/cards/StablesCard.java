@@ -22,6 +22,18 @@ public class StablesCard extends DomCard {
     private boolean discardTreasureFromHand() {
     	if (owner.getCardsFromHand(DomCardType.Treasure).isEmpty())
     		return false;
+    	if (owner.isHumanOrPossessedByHuman()){
+			ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+			for (DomCard theCard : owner.getCardsInHand()) {
+				if (theCard.hasCardType(DomCardType.Treasure))
+					theChooseFrom.add(theCard.getName());
+			}
+			DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Discard ?", theChooseFrom, "Don't discard");
+			if (theChosenCard==null)
+				return false;
+			owner.discard(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
+			return true;
+		}
     	ArrayList<DomCard> theCards = owner.getCardsFromHand(DomCardType.Treasure);
 		Collections.sort(theCards, SORT_FOR_DISCARDING);
 	    owner.discardFromHand(theCards.get(0));
@@ -31,7 +43,7 @@ public class StablesCard extends DomCard {
 	@Override
     public int getPlayPriority() {
     	if (owner.getCardsFromHand(DomCardType.Treasure).isEmpty())
-    		return 1000;
+    		return 10000;
     	return super.getPlayPriority();
     }
 }

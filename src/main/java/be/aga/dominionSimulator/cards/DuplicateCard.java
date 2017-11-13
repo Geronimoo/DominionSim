@@ -12,7 +12,7 @@ public class DuplicateCard extends DomCard {
 
     public void play() {
         if (owner.getCardsFromPlay(getName()).contains(this))
-            owner.putOnTavernMat(owner.removeCardFromPlay(this));
+          owner.putOnTavernMat(owner.removeCardFromPlay(this));
     }
 
     @Override
@@ -21,16 +21,21 @@ public class DuplicateCard extends DomCard {
     }
 
     public boolean wantsToGain(DomCard aCard) {
-        if (owner.getCurrentGame().countInSupply(aCard.getName())==0)
-            return false;
-        if (owner.getPlayStrategyFor(this)== DomPlayStrategy.dukeEnabler) {
-            if (aCard.getName()==DomCardName.Duchy ||aCard.getName()==DomCardName.Duke)
+        if (owner.isHumanOrPossessedByHuman() &&
+            new DomCost(6, 0).compareTo(aCard.getCost(owner.getCurrentGame()))>=0) {
+            owner.setNeedsToUpdate();
+            return owner.getEngine().getGameFrame().askPlayer("<html>Duplicate " + aCard.getName().toHTML() +" ?</html>", "Resolving " + this.getName().toString());
+        } else {
+            if (owner.getCurrentGame().countInSupply(aCard.getName()) == 0)
+                return false;
+            if (owner.getPlayStrategyFor(this) == DomPlayStrategy.dukeEnabler) {
+                if (aCard.getName() == DomCardName.Duchy || aCard.getName() == DomCardName.Duke)
+                    return true;
+                return false;
+            }
+            if (new DomCost(6, 0).compareTo(aCard.getCost(owner.getCurrentGame()))>=0 && owner.wants(aCard.getName()) && aCard.getTrashPriority() > DomCardName.Silver.getTrashPriority())
                 return true;
-            return false;
         }
-        if (aCard.getCost(owner.getCurrentGame()).compareTo(new DomCost(6,0))<=0 && owner.wants(aCard.getName()) && aCard.getTrashPriority()>DomCardName.Silver.getTrashPriority())
-          return true;
-
         return false;
     }
 }

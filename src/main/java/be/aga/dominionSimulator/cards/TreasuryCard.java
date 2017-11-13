@@ -23,6 +23,12 @@ public class TreasuryCard extends DomCard {
           return;
         }
       }
+      if (owner.isHumanOrPossessedByHuman()) {
+          if (!owner.getEngine().getGameFrame().askPlayer("<html>Put on top " + DomCardName.Treasury.toHTML() +" ?</html>", "Resolving " + this.getName().toString())) {
+              super.handleCleanUpPhase();
+              return;
+          }
+      }
       owner.putOnTopOfDeck( this );
     }
 }

@@ -21,6 +21,12 @@ public class RitualCard extends DomCard {
             return;
         }
         owner.gain(theCurse);
+        if (owner.getCardsInHand().isEmpty())
+            return;
+        if (owner.isHumanOrPossessedByHuman()){
+            handleHuman();
+            return;
+        }
         Collections.sort(owner.getCardsInHand(), SORT_BY_COST);
         for (int i = owner.getCardsInHand().size() - 1; i >= 0; i--) {
             DomCard theCard = owner.getCardsInHand().get(i);
@@ -33,5 +39,17 @@ public class RitualCard extends DomCard {
         DomCard theCard = owner.getCardsInHand().get(owner.getCardsInHand().size()-1);
         owner.trash(owner.removeCardFromHand(theCard));
         owner.addVP(theCard.getCoinCost(owner.getCurrentGame()));
+    }
+
+    private void handleHuman() {
+        ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCard theCard : owner.getCardsInHand()) {
+            theChooseFrom.add(theCard.getName());
+        }
+        DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!");
+        if (theChosenCard != null) {
+            owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
+            owner.addVP(theChosenCard.getCoinCost(owner.getCurrentGame()));
+        }
     }
 }

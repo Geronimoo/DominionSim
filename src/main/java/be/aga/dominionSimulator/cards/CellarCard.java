@@ -20,12 +20,7 @@ public class CellarCard extends DomCard {
     public void play() {
       owner.addActions(1);
       if (owner.isHumanOrPossessedByHuman()) {
-          ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
-          owner.getEngine().getGameFrame().askToSelectCards("Choose cards to discard" , owner.getCardsInHand(), theChosenCards, 0);
-          for (DomCardName theCardName: theChosenCards) {
-              owner.discard(owner.getCardsFromHand(theCardName).get(0), false);
-          }
-          owner.drawCards(theChosenCards.size());
+          handleHumanPlayer();
       } else {
           checkBadReshuffle();
           deckSize = owner.getDeckSize();
@@ -36,6 +31,14 @@ public class CellarCard extends DomCard {
           discardBadCards();
           owner.drawCards(discardCount);
       }
+    }
+
+    private void handleHumanPlayer() {
+        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        owner.getEngine().getGameFrame().askToSelectCards("Choose cards to discard" , owner.getCardsInHand(), theChosenCards, 0);
+        for (DomCardName theCardName: theChosenCards)
+            owner.discard(owner.getCardsFromHand(theCardName).get(0), false);
+        owner.drawCards(theChosenCards.size());
     }
 
     private void checkBadReshuffle() {

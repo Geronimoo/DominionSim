@@ -15,14 +15,23 @@ public class LoanCard extends DomCard {
         owner.addAvailableCoins(1);
         ArrayList< DomCard > theCards = owner.revealUntilType(DomCardType.Treasure);
         for (DomCard theCard : theCards) {
-          if (theCard.getName()==DomCardName.Copper 
-           || (theCard.getName()==DomCardName.Silver && owner.countInDeck(DomCardName.Venture)>3)
-           || (theCard.getName()==DomCardName.Silver && owner.countInDeck(DomCardName.Platinum)>0)
-           || (theCard.getName()==DomCardName.Loan && owner.countInDeck(DomCardName.Copper)<2)) {
-            owner.trash(theCard);
-          } else {
-            owner.discard( theCard );
-          }
+            if (owner.isHumanOrPossessedByHuman()) {
+                if (theCard.hasCardType(DomCardType.Treasure)
+                     && owner.getEngine().getGameFrame().askPlayer("<html>Trash " + theCard.getName().toHTML() +" ?</html>", "Resolving " + this.getName().toString())) {
+                    owner.trash(theCard);
+                }else {
+                    owner.discard(theCard);
+                }
+            } else {
+                if (theCard.getName() == DomCardName.Copper
+                        || (theCard.getName() == DomCardName.Silver && owner.countInDeck(DomCardName.Venture) > 3)
+                        || (theCard.getName() == DomCardName.Silver && owner.countInDeck(DomCardName.Platinum) > 0)
+                        || (theCard.getName() == DomCardName.Loan && owner.countInDeck(DomCardName.Copper) < 2)) {
+                    owner.trash(theCard);
+                } else {
+                    owner.discard(theCard);
+                }
+            }
         }
     }
 }

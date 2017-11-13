@@ -1,10 +1,6 @@
 package be.aga.dominionSimulator;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.HashSet;
+import java.util.*;
 
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
@@ -23,9 +19,14 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     private EnumMap< DomCardName, Integer > gatheringVPTokens = new EnumMap<DomCardName, Integer>(DomCardName.class);
     private HashSet<DomCardName> tradeRouteMat = new HashSet<DomCardName>();
     private HashSet<DomCardName> activeLandmarks = new HashSet<DomCardName>();
+    private ArrayList<DomCardName> boons = new ArrayList<DomCardName>();
+    private ArrayList<DomCardName> boonsDiscard = new ArrayList<DomCardName>();
     private int gainsNeededToEndGame;
     private EnumMap< DomCardName, Integer > taxTokens = new EnumMap<DomCardName, Integer>(DomCardName.class);
     private EnumMap< DomCardName, Integer > landmarkTokens = new EnumMap<DomCardName, Integer>(DomCardName.class);
+    private DomCard myZombieApprentice;
+    private DomCard myZombieMason;
+    private DomCard myZombieSpy;
 
     public DomBoard ( Class< DomCardName > aKeyType, ArrayList< DomPlayer > aPlayers ) {
       super( aKeyType );
@@ -90,6 +91,11 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
             add(theCard);
         }
         trashPile.clear();
+        if (myZombieApprentice!=null) {
+            trashPile.add(myZombieApprentice);
+            trashPile.add(myZombieMason);
+            trashPile.add(myZombieSpy);
+        }
         for (DomPlayer thePlayer : players) {
             ArrayList<DomCard> theCards = thePlayer.collectAllCards();
             if (thePlayer.isEstateTokenPlaced())
@@ -149,7 +155,8 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 
     private void putTaxTokensOnAll() {
         for (DomCardName theCard : keySet()) {
-            putTaxOn(theCard,1);
+            if (!theCard.hasCardType(DomCardType.Event))
+              putTaxOn(theCard,1);
         }
     }
 
@@ -208,74 +215,107 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 
     private void addCustomKingdoms() {
         for (DomPlayer thePlayer : players) {
-          for (DomCardName theCard : thePlayer.getCardsNeededInSupply()){
-            switch (theCard) {
-                case Knights:
-                    addKnightsPile();
-                    break;
-                case Castles:
-                    addCastlesPile(players.size());
-                    break;
-                case Fortune:
-                case Gladiator:
-                    addGladiatorPile();
-                    break;
-                case Settlers:
-                case Bustling_Village:
-                    addSettlersPile();
-                    break;
-                case Catapult:
-                case Rocks:
-                    addCatapultPile();
-                    break;
-                case Patrician:
-                case Emporium:
-                    addPatricianPile();
-                case Encampment:
-                case Plunder:
-                    addEncampmentPile();
-                case Sauna:
-                case Avanto:
-                    addSaunaPile();
-                default:
-                    addCardPile(theCard);
-                    break;
-            }
-            if (theCard.hasCardType(DomCardType.Looter)){
-                addRuinsPile();
-            }
-
-            if (theCard==DomCardName.Marauder || theCard==DomCardName.Bandit_Camp || theCard==DomCardName.Pillage)
-                addSeparatePile(DomCardName.Spoils,15);
-
-            if (theCard==DomCardName.Urchin)
-                addSeparatePile(DomCardName.Mercenary, 10);
-            if (theCard==DomCardName.Hermit)
-                addSeparatePile(DomCardName.Madman, 10);
-            if (theCard==DomCardName.Page) {
-                addSeparatePile(DomCardName.Treasure_Hunter,5);
-                addSeparatePile(DomCardName.Warrior,5);
-                addSeparatePile(DomCardName.Hero,5);
-                addSeparatePile(DomCardName.Champion,5);
-            }
-            if (theCard==DomCardName.Peasant) {
-                addSeparatePile(DomCardName.Soldier,5);
-                addSeparatePile(DomCardName.Fugitive,5);
-                addSeparatePile(DomCardName.Disciple,5);
-                addSeparatePile(DomCardName.Teacher,5);
-            }
-          }
-          for (DomCardName cardName : thePlayer.getSuggestedBoard()){
-                if (cardName.hasCardType(DomCardType.Landmark)) {
-                    addLandmark(cardName);
+            ArrayList<DomCardName> theNeedsPerPlayer = new ArrayList<DomCardName>();
+            theNeedsPerPlayer.addAll(thePlayer.getCardsNeededInSupply());
+            theNeedsPerPlayer.addAll(thePlayer.getSuggestedBoard());
+            for (DomCardName theCard : theNeedsPerPlayer) {
+                switch (theCard) {
+                    case Knights:
+                        addKnightsPile();
+                        break;
+                    case Castles:
+                        addCastlesPile(players.size());
+                        break;
+                    case Fortune:
+                    case Gladiator:
+                        addGladiatorPile();
+                        break;
+                    case Settlers:
+                    case Bustling_Village:
+                        addSettlersPile();
+                        break;
+                    case Catapult:
+                    case Rocks:
+                        addCatapultPile();
+                        break;
+                    case Patrician:
+                    case Emporium:
+                        addPatricianPile();
+                    case Encampment:
+                    case Plunder:
+                        addEncampmentPile();
+                    case Sauna:
+                    case Avanto:
+                        addSaunaPile();
+                    default:
+                        addCardPile(theCard);
+                        break;
                 }
-                addCardPile(cardName);
-                if (thePlayer.getBaneCard()!=null) {
+                if (theCard.hasCardType(DomCardType.Looter))
+                    addRuinsPile();
+
+                if (theCard==DomCardName.Necromancer)
+                    addZombiesToTrash();
+
+                if (theCard.getCost().potions>0)
+                    addCardPile(DomCardName.Potion);
+
+                if (theCard == DomCardName.Marauder || theCard == DomCardName.Bandit_Camp || theCard == DomCardName.Pillage)
+                    addSeparatePile(DomCardName.Spoils, 15);
+
+                if (theCard == DomCardName.Devil$s_Workshop)
+                    addSeparatePile(DomCardName.Imp, 13);
+
+                if (theCard == DomCardName.Urchin)
+                    addSeparatePile(DomCardName.Mercenary, 10);
+                if (theCard == DomCardName.Hermit)
+                    addSeparatePile(DomCardName.Madman, 10);
+                if (theCard == DomCardName.Page) {
+                    addSeparatePile(DomCardName.Treasure_Hunter, 5);
+                    addSeparatePile(DomCardName.Warrior, 5);
+                    addSeparatePile(DomCardName.Hero, 5);
+                    addSeparatePile(DomCardName.Champion, 5);
+                }
+                if (theCard == DomCardName.Peasant) {
+                    addSeparatePile(DomCardName.Soldier, 5);
+                    addSeparatePile(DomCardName.Fugitive, 5);
+                    addSeparatePile(DomCardName.Disciple, 5);
+                    addSeparatePile(DomCardName.Teacher, 5);
+                }
+                if (theCard.hasCardType(DomCardType.Landmark)) {
+                    addLandmark(theCard);
+                }
+                if (thePlayer.getBaneCard() != null) {
                     addCardPile(thePlayer.getBaneCard());
                     markAsBane(thePlayer.getBaneCard());
                 }
+                if (theCard.hasCardType(DomCardType.Fate)) {
+                    createBoonsDeck();
+                }
+                if (theCard==DomCardName.Shepherd) {
+                    addCardPile(DomCardName.Pasture);
+                }
+                if (theCard== DomCardName.Pooka) {
+                    addCardPile(DomCardName.Cursed_Gold);
+                }
             }
         }
+    }
+
+    private void addZombiesToTrash() {
+        if (myZombieApprentice == null) {
+            myZombieApprentice = DomCardName.Zombie_Apprentice.createNewCardInstance();
+            trashPile.add(myZombieApprentice);
+            myZombieMason = DomCardName.Zombie_Mason.createNewCardInstance();
+            trashPile.add(myZombieMason);
+            myZombieSpy = DomCardName.Zombie_Spy.createNewCardInstance();
+            trashPile.add(myZombieSpy);
+        }
+    }
+
+    private void createBoonsDeck() {
+        if (!boons.isEmpty())
+            return;
     }
 
     private void addSaunaPile() {
@@ -432,8 +472,8 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
         put( aCardName, new ArrayList< DomCard >() );
         int theNumber = 10;
 
-        if (aCardName.hasCardType(DomCardType.Event))
-            theNumber=1;
+        if (aCardName.hasCardType(DomCardType.Event) || aCardName.hasCardType(DomCardType.Landmark))
+            theNumber=0;
         if (aCardName.hasCardType(DomCardType.Victory)) {
           theNumber = players.size()<3 ? 8 : 12;
         }
@@ -442,12 +482,10 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
         }
         switch (aCardName) {
 		case Estate:
-            boolean shelters = false;
-            if (players.get(0).getStartState()!=null) {
-                for (DomCardName theCard : players.get(0).getStartState().getDrawDeck()) {
-                    if (theCard.hasCardType(DomCardType.Shelter))
-                        shelters = true;
-                }
+		    boolean shelters = false;
+		    for (DomPlayer thePlayer : players){
+		        if (thePlayer.getShelters())
+		            shelters=true;
             }
 			if (!shelters)
                 theNumber+=players.size()*3;
@@ -470,6 +508,10 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 			break;
         case Rats:
             theNumber=20;
+            break;
+        case Pasture:
+        case Cursed_Gold:
+            theNumber=players.size();
             break;
 		default:
 			break;
@@ -523,7 +565,8 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
             theList = get(DomCardName.Encampment);
         if (aCardName==DomCardName.Avanto)
             theList = get(DomCardName.Sauna);
-
+        if (aCardName.hasCardType(DomCardType.Castle))
+            theList = get(DomCardName.Castles);
         if (theList==null || theList.isEmpty())
         	return null;
     	if (aCardName.hasCardType(DomCardType.Victory)){
@@ -551,7 +594,8 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     public int countEmptyPiles() {
         int theEmptyPiles=0;
         for (DomCardName theCardName : keySet()) {
-            theEmptyPiles+=get(theCardName).size()==0 ? 1 : 0 ;
+            if (!theCardName.hasCardType(DomCardType.Event)&&!theCardName.hasCardType(DomCardType.Heirloom)&&!theCardName.hasCardType(DomCardType.Landmark))
+              theEmptyPiles+=get(theCardName).size()==0 ? 1 : 0 ;
         }
         return theEmptyPiles;
     }
@@ -572,15 +616,22 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
             aCardName=DomCardName.Encampment;
         if (aCardName==DomCardName.Avanto)
             aCardName=DomCardName.Sauna;
+        if (aCardName.hasCardType(DomCardType.Castle))
+            aCardName=DomCardName.Castles;
         ArrayList<DomCard> theList = get(aCardName);
         if (theList==null || theList.isEmpty())
             return 0;
-        if (theList.get(0).getName()!=theCardName && aCardName.hasCardType(DomCardType.Split_Pile) )
-            return 0;
+//        if (theList.get(0).getName()!=theCardName && aCardName.hasCardType(DomCardType.Split_Pile) )
+//            return 0;
         return theList.size();
     }
 
     public void add( DomCard aCard ) {
+       if (aCard==myZombieApprentice || aCard==myZombieMason || aCard==myZombieSpy) {
+           if (!trashPile.contains(aCard))
+               trashPile.add(aCard);
+           return;
+       }
        if (aCard.isFromBlackMarket()) {
            blackMarketDeck.add(aCard);
            return;
@@ -645,6 +696,8 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     public ArrayList< String > getEmptyPiles() {
         ArrayList< String > theList = new ArrayList< String >();
         for (DomCardName theCardName : keySet()) {
+            if (theCardName.hasCardType(DomCardType.Event) || theCardName.hasCardType(DomCardType.Heirloom) || theCardName.hasCardType(DomCardType.Landmark))
+                continue;
           if (get(theCardName).size()== 0){
               theList.add( theCardName.toHTML() );
           }
@@ -931,5 +984,35 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
             addVPTokensTo(toCard,1);
             if (DomEngine.haveToLog) DomEngine.addToLog( "1&#x25BC; flows "+fromCard.toHTML()+" to " + toCard.toHTML());
         }
+    }
+
+    public String getTrashedCardsString() {
+        Map<DomCardName,Integer> theMap = new HashMap<DomCardName, Integer>();
+        for (DomCard theCard:getTrashedCards()) {
+            if (theMap.get(theCard.getName())!=null) {
+                theMap.put(theCard.getName(), theMap.get(theCard.getName())+1);
+            } else {
+                theMap.put(theCard.getName(), 1);
+            }
+        }
+        StringBuilder theStr = new StringBuilder();
+        String thePrefix = "";
+        for (DomCardName theName : theMap.keySet()) {
+            theStr.append(thePrefix).append(theMap.get(theName)).append(" ").append(theName.toHTML());
+            thePrefix=", ";
+        }
+        return theStr.length()==0? "<i>empty</i>" : theStr.toString();
+    }
+
+    public Set getTradeRouteMat() {
+        return tradeRouteMat;
+    }
+
+    public ArrayList<DomCard> getPrizes() {
+        return prizePile;
+    }
+
+    public EnumMap<DomCardName, ArrayList<DomCard>> getSeperatePiles() {
+        return separatePiles;
     }
 }

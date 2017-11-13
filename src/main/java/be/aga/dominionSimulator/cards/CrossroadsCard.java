@@ -3,6 +3,7 @@ package be.aga.dominionSimulator.cards;
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
+import com.sun.javafx.scene.control.skin.VirtualContainerBase;
 
 public class CrossroadsCard extends DomCard {
     public CrossroadsCard () {
@@ -17,6 +18,8 @@ public class CrossroadsCard extends DomCard {
     
     @Override
     public int getPlayPriority() {
+        if (owner.getCardsFromHand(DomCardType.Victory).size()>2 && owner.actionsLeft>1)
+            return 1;
     	//TODO probably doesn't cover everything
     	if (owner.getCardsFromHand(DomCardType.Action).size()
     	    -owner.getCardsFromHand(DomCardName.Crossroads).size()
@@ -34,6 +37,8 @@ public class CrossroadsCard extends DomCard {
             return true;
         if (owner.getActionsLeft()==1 && !owner.getCardsFromHand(DomCardName.Secret_Chamber).isEmpty())
           return false;
+        if (owner.getActionsLeft()==1 && !owner.getCardsFromHand(DomCardName.Storeroom).isEmpty())
+            return false;
         return true;
     }
 }

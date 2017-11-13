@@ -4,6 +4,7 @@ import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.enums.DomCardName;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 public class AltarCard extends DomCard {
@@ -12,6 +13,10 @@ public class AltarCard extends DomCard {
     }
 
     public void play() {
+      if (owner.isHumanOrPossessedByHuman()) {
+          handleHuman();
+          return;
+      }
       if (!owner.getCardsInHand().isEmpty()) {
         Collections.sort( owner.getCardsInHand() , SORT_FOR_TRASHING);
         owner.trash(owner.removeCardFromHand( owner.getCardsInHand().get( 0 ) ));
@@ -22,6 +27,23 @@ public class AltarCard extends DomCard {
       }
       if (theDesiredCard!=null)
          owner.gain(theDesiredCard);
+    }
+
+    private void handleHuman() {
+        ArrayList<DomCardName> theChooseFrom=new ArrayList<DomCardName>();
+        for (DomCard theCard : owner.getCardsInHand()) {
+            theChooseFrom.add(theCard.getName());
+        }
+        DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!");
+        owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
+        theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+            if (new DomCost(5,0).compareTo(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0)
+                theChooseFrom.add(theCard);
+        }
+        if (theChooseFrom.isEmpty())
+            return;
+        owner.gain(owner.getCurrentGame().takeFromSupply(owner.getEngine().getGameFrame().askToSelectOneCard("Select card to gain for "+this.getName().toString(), theChooseFrom, "Mandatory!")));
     }
 
     @Override

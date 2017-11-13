@@ -8,6 +8,8 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
 
+import java.util.ArrayList;
+
 public class StorytellerCard extends DomCard {
    protected static final Logger LOGGER = Logger.getLogger( StorytellerCard.class );
    static {
@@ -25,7 +27,10 @@ public class StorytellerCard extends DomCard {
         owner.addActions(1);
         owner.addAvailableCoins(1);
         DomCard theCardToPlay;
-
+        if (owner.isHumanOrPossessedByHuman()) {
+            handleHuman();
+            return;
+        }
         if (owner.getAvailableCoins()<owner.getDeckSize()) {
             int thePlayCount = 0;
             do {
@@ -53,6 +58,33 @@ public class StorytellerCard extends DomCard {
               owner.setSameCardCount(0);
             }
         }
+        owner.drawCards(owner.getAvailableCoinsWithoutTokens());
+        owner.setAvailableCoins(0);
+    }
+
+    private void handleHuman() {
+        ArrayList<DomCardName> theChooseFrom;
+        int theCount=0;
+        DomCardName theCardToPlay;
+        do {
+            owner.setNeedsToUpdate();
+            theChooseFrom = new ArrayList<DomCardName>();
+            for (DomCard theCard : owner.getCardsFromHand(DomCardType.Treasure))
+                theChooseFrom.add(theCard.getName());
+            if (theChooseFrom.isEmpty())
+                break;
+            theCardToPlay = owner.getEngine().getGameFrame().askToSelectOneCard("Select card to " + this.getName().toString(), theChooseFrom, "Stop playing Treasures!");
+            if (theCardToPlay != null) {
+                owner.play(owner.removeCardFromHand(owner.getCardsFromHand(theCardToPlay).get(0)));
+                if (owner.previousPlayedCardName != null) {
+                    DomEngine.addToLog(owner + " plays " + (owner.sameCardCount + 1) + " " + owner.previousPlayedCardName.toHTML()
+                            + (owner.sameCardCount > 0 ? "s" : ""));
+                    owner.previousPlayedCardName = null;
+                    owner.sameCardCount = 0;
+                }
+            }
+            theCount++;
+        } while (theCount < 3 && theCardToPlay != null && !owner.getCardsFromHand(DomCardType.Treasure).isEmpty()) ;
         owner.drawCards(owner.getAvailableCoinsWithoutTokens());
         owner.setAvailableCoins(0);
     }

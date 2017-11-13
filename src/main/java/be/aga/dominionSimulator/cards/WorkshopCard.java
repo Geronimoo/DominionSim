@@ -14,14 +14,7 @@ public class WorkshopCard extends DomCard {
 
     public void play() {
       if (owner.isHumanOrPossessedByHuman()) {
-          ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
-          for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-              if (theCard.getCost(owner.getCurrentGame()).compareTo(new DomCost(4,0))<=0 && owner.getCurrentGame().countInSupply(theCard)>0)
-                  theChooseFrom.add(theCard);
-          }
-          if (theChooseFrom.isEmpty())
-              return;
-          owner.gain(owner.getCurrentGame().takeFromSupply(owner.getEngine().getGameFrame().askToSelectOneCard("Select card to gain for "+this.getName().toString(), theChooseFrom, "Mandatory!")));
+          handleHumanPlayer();
       }else {
           DomCardName theDesiredCard = owner.getDesiredCard(new DomCost(4, 0), false);
           if (theDesiredCard == null) {
@@ -32,7 +25,18 @@ public class WorkshopCard extends DomCard {
               owner.gain(theDesiredCard);
       }
     }
-    
+
+    private void handleHumanPlayer() {
+        ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+            if (new DomCost(4,0).compareTo(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0 )
+                theChooseFrom.add(theCard);
+        }
+        if (theChooseFrom.isEmpty())
+            return;
+        owner.gain(owner.getCurrentGame().takeFromSupply(owner.getEngine().getGameFrame().askToSelectOneCard("Select card to gain for "+this.getName().toString(), theChooseFrom, "Mandatory!")));
+    }
+
     @Override
     public boolean wantsToBePlayed() {
        return owner.getDesiredCard(new DomCost( 4, 0), false) != null ;

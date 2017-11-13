@@ -50,6 +50,7 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
   private JTextField myStartingDiscardPile;
   private JFormattedTextField myMountainPassBidField;
     private JTextField myObeliskChoice;
+    private JCheckBox myShelters;
 
     public DomBotEditor ( final DomEngine anEngine , final DomPlayer aStrategy ) {
         myEngine=anEngine;
@@ -82,13 +83,14 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
     	} else {
     	  theNewPlayer.setStartState(theStartState);
     	}
-    	if (!theNewPlayer.addBoard(myBoardField.getText(), myBaneField.getText(),myMountainPassBidField.getText(),myObeliskChoice.getText())){
+    	if (!theNewPlayer.addBoard(myBoardField.getText(), myBaneField.getText(),myMountainPassBidField.getText(),myObeliskChoice.getText(), Boolean.toString(myShelters.isSelected()))){
             JOptionPane.showMessageDialog(this, "An error was found in the Board", "Error", JOptionPane.ERROR_MESSAGE);
             return;
     	}
         for (DomBuyRulePanel theRulePanel : myBuyRulePanels) {
     	  theNewPlayer.addBuyRule(theRulePanel.getBuyRule(theNewPlayer));
     	}
+    	theNewPlayer.setShelters(myShelters.isSelected());
     	theNewPlayer.setTypes(myTypes);
     	theNewPlayer.addType(DomBotType.UserCreated);
     	if (!theNewPlayer.hasType(DomBotType.ThreePlayer) && ! theNewPlayer.hasType(DomBotType.FourPlayer))
@@ -333,7 +335,7 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
         formatter.setCommitsOnValidEdit(false);
         myMountainPassBidField = new JFormattedTextField(formatter);
         myMountainPassBidField.setColumns(10);
-        myMountainPassBidField.setValue(myChosenStrategy.getMountainPassBid());
+        myMountainPassBidField.setValue(myChosenStrategy.getMountainPassBid(0));
         theCons.gridx++;
         thePanel.add(myMountainPassBidField,theCons);
         //Obelisk card
@@ -344,6 +346,12 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
         myObeliskChoice = new JTextField(myChosenStrategy.getObeliskChoice(), 20);
         theCons.gridx++;
         thePanel.add(myObeliskChoice,theCons);
+        //Shelters
+        theCons.gridx=0;
+        theCons.gridy++;
+        theCons.fill=GridBagConstraints.NONE;
+        myShelters = new JCheckBox("Shelters", myChosenStrategy.getShelters());
+        thePanel.add(myShelters,theCons);
         //info button
         JButton theInfoBTN = new JButton("Info");
         theInfoBTN.setMnemonic('I');

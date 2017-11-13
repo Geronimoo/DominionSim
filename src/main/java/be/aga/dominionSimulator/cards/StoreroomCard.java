@@ -15,6 +15,10 @@ public class StoreroomCard extends DomCard {
 
     public void play() {
       owner.addAvailableBuys(1);
+      if (owner.isHumanOrPossessedByHuman()) {
+          handleHuman();
+          return;
+      }
       if (owner.getPlayStrategyFor(this)==DomPlayStrategy.cityQuarterCombo && !owner.getCardsFromHand(DomCardName.City_Quarter).isEmpty() && owner.getDeckSize()==0){
           Collections.sort(owner.getCardsInHand(), SORT_FOR_DISCARD_FROM_HAND);
           int i=0;
@@ -24,8 +28,30 @@ public class StoreroomCard extends DomCard {
           }
           owner.addAvailableCoins(i);
       } else {
-          playNormal();
+          if (owner.getPlayStrategyFor(this)==DomPlayStrategy.crossroadsCombo){
+              int theSize = owner.getCardsInHand().size();
+              owner.discardHand();
+              owner.addAvailableCoins(theSize);
+          } else {
+              playNormal();
+          }
       }
+    }
+
+    private void handleHuman() {
+        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        owner.getEngine().getGameFrame().askToSelectCards("Discard cards" , owner.getCardsInHand(), theChosenCards, 0);
+        for (DomCardName theCard : theChosenCards) {
+            owner.discardFromHand(theCard);
+        }
+        owner.drawCards(theChosenCards.size());
+        owner.setNeedsToUpdate();
+        theChosenCards = new ArrayList<DomCardName>();
+        owner.getEngine().getGameFrame().askToSelectCards("Discard for +$1" , owner.getCardsInHand(), theChosenCards, 0);
+        for (DomCardName theCard : theChosenCards) {
+            owner.discardFromHand(theCard);
+        }
+        owner.addAvailableCoins(theChosenCards.size());
     }
 
     private void playNormal() {
@@ -42,7 +68,7 @@ public class StoreroomCard extends DomCard {
 
         Collections.sort(owner.getCardsInHand(),SORT_FOR_DISCARD_FROM_HAND);
         for (i=0;i<owner.getCardsInHand().size();i++) {
-            if (owner.getCardsInHand().get(i).getDiscardPriority(owner.getActionsLeft())>DomCardName.Copper.getDiscardPriority(1))
+            if (owner.getCardsInHand().get(i).getName()!=DomCardName.Storeroom && owner.getCardsInHand().get(i).getDiscardPriority(owner.getActionsLeft())>DomCardName.Copper.getDiscardPriority(1))
                 break;
         }
         for (int j=0;j<i;j++)

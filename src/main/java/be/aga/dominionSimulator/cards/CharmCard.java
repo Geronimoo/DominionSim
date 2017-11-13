@@ -5,6 +5,8 @@ import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
 
+import java.util.ArrayList;
+
 public class CharmCard extends DomCard {
 
     public CharmCard() {
@@ -13,6 +15,10 @@ public class CharmCard extends DomCard {
 
     @Override
     public void play() {
+        if (owner.isHumanOrPossessedByHuman()){
+            handleHuman();
+            return;
+        }
         if (owner.addingThisIncreasesBuyingPower(new DomCost(2,0))) {
             addMoney();
             return;
@@ -24,6 +30,20 @@ public class CharmCard extends DomCard {
         }
         owner.addCharmReminder();
         if (DomEngine.haveToLog) DomEngine.addToLog( this + " will try to gain an extra card later in the turn (" + owner.getDesiredCardWithRestriction(null,theDesiredCard.getCost(owner.getCurrentGame()),true,theDesiredCard).toHTML() + ")");
+    }
+
+    private void handleHuman() {
+        ArrayList<String> theOptions = new ArrayList<String>();
+        theOptions.add("+$2, +Buy");
+        theOptions.add("Gain an extra card");
+        int theChoice = owner.getEngine().getGameFrame().askToSelectOption("Select for Steward", theOptions, "Mandatory!");
+        if (theChoice == 0)
+            addMoney();
+        if (theChoice == 1) {
+            owner.addCharmReminder();
+            if (DomEngine.haveToLog)
+                DomEngine.addToLog(this + " will try to gain an extra card later in the turn");
+        }
     }
 
     private void addMoney() {

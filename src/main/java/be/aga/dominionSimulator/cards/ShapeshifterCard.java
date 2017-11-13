@@ -38,10 +38,14 @@ public class ShapeshifterCard extends DomCard {
                 break;
             }
         }
+        owner.handleUrchins(theCopy);
         owner.play(theCopy);
     }
 
     private DomCardName chooseCardToShapeShift(boolean chooseNonTerminal) {
+        if (owner.isHumanOrPossessedByHuman()) {
+            return handleHuman();
+        }
         for (DomBuyRule theRule:owner.getBuyRules()) {
             DomCardName theCard = theRule.getCardToBuy();
             if (!theCard.hasCardType(DomCardType.Action))
@@ -65,5 +69,21 @@ public class ShapeshifterCard extends DomCard {
             return theCard;
         }
         return null;
+    }
+
+    private DomCardName handleHuman() {
+        ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+            if (getName()==DomCardName.Overlord) {
+                if (new DomCost(5,0).compareTo(theCard.getCost(owner.getCurrentGame())) >= 0 && owner.getCurrentGame().countInSupply(theCard) > 0 && theCard.hasCardType(DomCardType.Action))
+                    theChooseFrom.add(theCard);
+            } else {
+                if (getCost(owner.getCurrentGame()).compareTo(theCard.getCost(owner.getCurrentGame())) > 0 && owner.getCurrentGame().countInSupply(theCard) > 0 && theCard.hasCardType(DomCardType.Action))
+                    theChooseFrom.add(theCard);
+            }
+        }
+        if (theChooseFrom.isEmpty())
+            return null;
+        return owner.getEngine().getGameFrame().askToSelectOneCard("Select card to immitate for "+this.getName().toString(), theChooseFrom, "Mandatory!");
     }
 }

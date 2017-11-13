@@ -1,5 +1,6 @@
 package be.aga.dominionSimulator.cards;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 import be.aga.dominionSimulator.DomCard;
@@ -15,6 +16,10 @@ public class ApprenticeCard extends DomCard {
       owner.addActions( 1 );
       if (owner.getCardsInHand().isEmpty())
     	  return;
+      if (owner.isHumanOrPossessedByHuman()) {
+          handleHuman();
+          return;
+      }
       Collections.sort( owner.getCardsInHand() , SORT_FOR_TRASHING);
       DomCard theCardToTrash = owner.getCardsInHand().get(0);
       for (DomCard theCard : owner.getCardsInHand()) {
@@ -33,7 +38,20 @@ public class ApprenticeCard extends DomCard {
       owner.drawCards(getApprenticeValue(theCardToTrash));
     }
 
-	private boolean areVPsNotInDanger(DomCard theCard) {
+    private void handleHuman() {
+        ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCard theCard : owner.getCardsInHand()) {
+            theChooseFrom.add(theCard.getName());
+        }
+        DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!");
+        if (theChosenCard != null) {
+            DomCard theCard = owner.getCardsFromHand(theChosenCard).get(0);
+            owner.trash(owner.removeCardFromHand(theCard));
+            owner.drawCards(getApprenticeValue(theCard));
+        }
+    }
+
+    private boolean areVPsNotInDanger(DomCard theCard) {
 		if (theCard.getName()==DomCardName.Estate)
 			return true;
 		if (!theCard.hasCardType(DomCardType.Victory))

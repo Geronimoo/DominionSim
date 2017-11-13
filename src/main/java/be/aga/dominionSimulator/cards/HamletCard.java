@@ -24,7 +24,11 @@ public class HamletCard extends DomCard {
         ArrayList<DomCard> cardsInHand = owner.getCardsInHand();
         if (cardsInHand.isEmpty())
       	  return;
-  	    Collections.sort(cardsInHand, SORT_FOR_DISCARD_FROM_HAND);
+		if (owner.isHumanOrPossessedByHuman()) {
+			handleHuman();
+			return;
+		}
+		Collections.sort(cardsInHand, SORT_FOR_DISCARD_FROM_HAND);
   	    //fix for Menagerie which will often be played in combo with Hamlet
         if (!owner.getCardsFromHand(DomCardName.Menagerie).isEmpty()){
           processMenagerie();
@@ -59,6 +63,27 @@ public class HamletCard extends DomCard {
         //we might have Duchies, Provinces and others in hand that we have no use for, so just discard them
         discardGarbage(cardsInHand);
     }
+
+	private void handleHuman() {
+		owner.setNeedsToUpdate();
+		ArrayList<String> theOptions = new ArrayList<String>();
+		theOptions.add("Discard for +1 Action");
+		theOptions.add("Discard for +1 Buy");
+		if (owner.getCardsInHand().size()>1)
+		  theOptions.add("Discard 2 for both");
+		int theChoice = owner.getEngine().getGameFrame().askToSelectOption("Select for Hamlet", theOptions, "Don't discard");
+		if (theChoice==-1)
+			return;
+		ArrayList<DomCardName> theChosenCards=new ArrayList<DomCardName>();
+		owner.getEngine().getGameFrame().askToSelectCards("Discard" , owner.getCardsInHand(), theChosenCards, theChoice==0||theChoice==1 ? 1 : 2);
+		for (DomCardName theCardName: theChosenCards) {
+			owner.discard(owner.getCardsFromHand(theCardName).get(0), false);
+		}
+		if (theChoice==0 || theChoice==2)
+			owner.addActions(1);
+		if (theChoice==1 || theChoice==2)
+			owner.addAvailableBuys(1);
+	}
 
 	private void checkForGardens() {
 		for (DomBuyRule rule : owner.getBuyRules()){

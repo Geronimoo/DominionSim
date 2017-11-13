@@ -4,7 +4,6 @@ import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
-import com.sun.java.browser.plugin2.DOM;
 
 import java.util.ArrayList;
 
@@ -30,19 +29,7 @@ public class BanditCard extends DomCard {
                 continue;
             }
             if (thePlayer.isHuman()) {
-                ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
-                for (DomCard theCard : theTreasures)
-                  if (theCard.hasCardType(DomCardType.Treasure) && theCard.getName() != DomCardName.Copper)
-                    theChooseFrom.add(theCard.getName());
-                if (!theChooseFrom.isEmpty()) {
-                    DomCardName theChosenCard = theChooseFrom.get(0);
-                    if (theChooseFrom.size()>1) {
-                      theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Select card for " + this.getName().toString(), theChooseFrom, "Mandatory!");
-                    }
-                    for (DomCard theCard : theTreasures)
-                        if (theCard.getName() == theChosenCard)
-                            theCardToTrash = theCard;
-                }
+                theCardToTrash = handleHumanOpponent(theCardToTrash, theTreasures);
             } else {
                 for (DomCard theCard : theCards) {
                     if (theCard.hasCardType(DomCardType.Treasure) && theCard.getName() != DomCardName.Copper) {
@@ -59,5 +46,22 @@ public class BanditCard extends DomCard {
             }
             thePlayer.discard( theCards);
           }
+    }
+
+    private DomCard handleHumanOpponent(DomCard theCardToTrash, ArrayList<DomCard> theTreasures) {
+        ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCard theCard : theTreasures)
+          if (theCard.hasCardType(DomCardType.Treasure) && theCard.getName() != DomCardName.Copper)
+            theChooseFrom.add(theCard.getName());
+        if (!theChooseFrom.isEmpty()) {
+            DomCardName theChosenCard = theChooseFrom.get(0);
+            if (theChooseFrom.size()>1) {
+              theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Select card for " + this.getName().toString(), theChooseFrom, "Mandatory!");
+            }
+            for (DomCard theCard : theTreasures)
+                if (theCard.getName() == theChosenCard)
+                    theCardToTrash = theCard;
+        }
+        return theCardToTrash;
     }
 }

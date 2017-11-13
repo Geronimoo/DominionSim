@@ -1,5 +1,6 @@
 package be.aga.dominionSimulator;
 
+import java.awt.*;
 import java.util.*;
 
 import be.aga.dominionSimulator.cards.*;
@@ -15,6 +16,8 @@ import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 import be.aga.dominionSimulator.enums.DomPhase;
 import be.aga.dominionSimulator.enums.DomPlayStrategy;
+
+import javax.swing.*;
 
 public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     protected static final Logger LOGGER = Logger.getLogger(DomPlayer.class);
@@ -35,7 +38,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     private ArrayList<DomCard> cardsInPlay = new ArrayList<DomCard>();
     private ArrayList<DomCard> cardsInHand = new ArrayList<DomCard>();
     private ArrayList<DomCard> nativeVillageMat = new ArrayList<DomCard>();
-    private ArrayList<DomCard> horseTradersPile = new ArrayList<DomCard>();
+    public ArrayList<DomCard> horseTradersPile = new ArrayList<DomCard>();
     private ArrayList<DomCard> cardsToSummon = new ArrayList<DomCard>();
 
     protected String name;
@@ -65,8 +68,8 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     private ArrayList<DomPlayer> possessionTurns = new ArrayList<DomPlayer>();
     DomPlayer possessor;
     private ArrayList<DomCardName> cardsGainedLastTurn = new ArrayList<DomCardName>();
-    private int sameCardCount = 0;
-    private DomCardName previousPlayedCardName = null;
+    public int sameCardCount = 0;
+    public DomCardName previousPlayedCardName = null;
     public boolean pprUsed = false;
     private HashSet<DomBotType> types = new HashSet<DomBotType>();
     private String description = "No description available";
@@ -111,6 +114,9 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     private DomCard savedCard;
     private boolean isHuman;
     private DomEngine myEngine;
+    private char[] tavernMatAsString;
+    private ArrayList<DomCard> beginningOfTurnTriggers=new ArrayList<DomCard>();
+    private boolean shelters=false;
 
     public DomPlayer(String aString) {
         name = aString;
@@ -214,6 +220,9 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                     if (!wantsEvent(theBuyRule.getCardToBuy()))
                         continue;
                     resolveEvent(theBuyRule.getCardToBuy());
+                    if (debt > 0) {
+                        payOffDebt();
+                    }
                     return;
                 }
                 if (!hasExtraMissionTurn() && tryToBuy(theBuyRule.getCardToBuy(), true)) {
@@ -452,14 +461,8 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         handleTransmogrify();
         doActionPhase();
         doBuyPhase();
+        doNightPhase();
         doCleanUpPhase();
-        if (getCardsGainedLastTurn().isEmpty() && getCurrentGame().getBoard().isLandmarkActive(DomCardName.Baths)) {
-            int theVP = getCurrentGame().getBoard().removeVPFrom(DomCardName.Baths, 2);
-            if (theVP > 0) {
-                if (DomEngine.haveToLog) DomEngine.addToLog(this + " takes VP from " + DomCardName.Baths.toHTML());
-                addVP(theVP);
-            }
-        }
 
         //actually this is not part of the turn so we set Possessor to null
         possessor = null;
@@ -473,6 +476,18 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         updateVPCurve(false);
         //TODO needed fixing
         actionsLeft=1;
+        getCurrentGame().setPreviousTurnTakenBy(this);
+    }
+
+    private void doNightPhase() {
+        setPhase(DomPhase.Night);
+        DomCard theCardToPlay = null;
+        do {
+            theCardToPlay = getNextNightActionToPlay();
+            if (theCardToPlay != null) {
+                play(removeCardFromHand(theCardToPlay));
+            }
+        } while (theCardToPlay != null);
     }
 
     private void handleTransmogrify() {
@@ -534,6 +549,13 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         //reset variables needed for total money checking in other player's turns
         availableCoins=0;
         availablePotions=0;
+        if (getCardsGainedLastTurn().isEmpty() && getCurrentGame().getBoard().isLandmarkActive(DomCardName.Baths)) {
+            int theVP = getCurrentGame().getBoard().removeVPFrom(DomCardName.Baths, 2);
+            if (theVP > 0) {
+                if (DomEngine.haveToLog) DomEngine.addToLog(this + " takes VP from " + DomCardName.Baths.toHTML());
+                addVP(theVP);
+            }
+        }
     }
 
     public void showBeginningOfTurnLog() {
@@ -556,6 +578,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         actionsplayed = 0;
         merchantsPlayed=0;
         pointsBeforeBuys = countVictoryPoints();
+        getCurrentGame().resetFaceDownCards();
     }
 
     private void resolveHorseTraders() {
@@ -616,12 +639,12 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
 
     public void discardHand() {
         if (DomEngine.haveToLog) DomEngine.addToLog(this + " discards all cards in hand");
-        deck.addToDiscardPile(cardsInHand);
+        deck.addHandToDiscardPile();
         cardsInHand.clear();
     }
 
     protected void discardAll() {
-        deck.addToDiscardPile(cardsInHand);
+        deck.addHandToDiscardPile();
         cardsInHand.clear();
         for (DomCard theCard : cardsInPlay) {
             theCard.handleCleanUpPhase();
@@ -727,12 +750,6 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                 doBuyPhase();
             }
         }
-        if (boughtCards.isEmpty()) {
-            while (!getCardsFromPlay(DomCardName.Hermit).isEmpty()) {
-                trash(removeCardFromPlay(getCardsFromPlay(DomCardName.Hermit).get(0)));
-                gain(DomCardName.Madman);
-            }
-        }
         if (coinTokensToAdd > 0) {
             addCoinTokens(coinTokensToAdd);
             coinTokensToAdd = 0;
@@ -770,6 +787,17 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     private void handleWineMerchants() {
         if (availableCoins >= 2) {
             while (getFromTavernMat(DomCardName.Wine_Merchant) != null) {
+                DomCard theCard = getFromTavernMat(DomCardName.Wine_Merchant);
+                tavernMat.remove(theCard);
+                discard(theCard);
+            }
+        }
+    }
+
+    private void handleWineMerchantsForHuman() {
+        if (availableCoins >= 2) {
+            while (getFromTavernMat(DomCardName.Wine_Merchant) != null &&
+                    getEngine().getGameFrame().askPlayer("<html>Discard " + DomCardName.Wine_Merchant.toHTML() +" ?</html>", "Resolving " + this.getName().toString())) {
                 DomCard theCard = getFromTavernMat(DomCardName.Wine_Merchant);
                 tavernMat.remove(theCard);
                 discard(theCard);
@@ -864,7 +892,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         if (aCardName == DomCardName.Grand_Market && !getCardsFromPlay(DomCardName.Copper).isEmpty())
             return false;
 
-        if (coinTokens > 0 && getDesiredCard(getAvailableCurrencyWithoutTokens(), false) != aCardName && checkIfWantsToHoardCoinTokens() && !wants(DomCardName.Gardens)) {
+        if (!isHumanOrPossessedByHuman() && coinTokens > 0 && getDesiredCard(getAvailableCurrencyWithoutTokens(), false) != aCardName && checkIfWantsToHoardCoinTokens() && !wants(DomCardName.Gardens)) {
             return false;
         }
 
@@ -883,9 +911,6 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
             availableCoins = 0;
         }
         addDebt(aCardName.getCost(getCurrentGame()).getDebt());
-        if (debt > 0) {
-            payOffDebt();
-        }
     }
 
     /**
@@ -893,11 +918,28 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
      */
     public void handleSpecialBuyEffects(DomCard aCard) {
         while (charmReminder > 0) {
-            DomCardName theDifferentCard = getDesiredCardWithRestriction(null, aCard.getCost(getCurrentGame()), true, aCard.getName());
-            if (theDifferentCard == null)
-                break;
-            gain(theDifferentCard);
-            charmReminder--;
+            if (isHumanOrPossessedByHuman()) {
+                ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+                for (DomCardName theCard : getCurrentGame().getBoard().keySet()) {
+                    if (theCard.getCost(getCurrentGame()).compareTo(aCard.getCost(getCurrentGame()))==0 && getCurrentGame().countInSupply(theCard)>0 && theCard!=aCard.getName())
+                        theChooseFrom.add(theCard);
+                }
+                if (theChooseFrom.isEmpty())
+                    break;
+                DomCardName theChosenCard = getEngine().getGameFrame().askToSelectOneCard("Gain a card for " + this.getName().toString(), theChooseFrom, "Don't gain anything!");
+                if (theChosenCard!=null) {
+                    gain(theChosenCard);
+                    charmReminder--;
+                } else {
+                    break;
+                }
+            } else {
+                DomCardName theDifferentCard = getDesiredCardWithRestriction(null, aCard.getCost(getCurrentGame()), true, aCard.getName());
+                if (theDifferentCard == null)
+                    break;
+                gain(theDifferentCard);
+                charmReminder--;
+            }
         }
         for (DomCard theHaggler : getCardsFromPlay(DomCardName.Haggler)) {
             ((HagglerCard) theHaggler).haggleFor(aCard);
@@ -915,15 +957,8 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                 }
             }
         }
-        if (aCard.getName() == DomCardName.Messenger && boughtCards.size() == 1) {
-            DomCardName theDesiredCard = getDesiredCard(new DomCost(4, 0), false);
-            if (theDesiredCard == null)
-                theDesiredCard = getCurrentGame().getBestCardInSupplyFor(this, null, new DomCost(4, 0));
-            if (theDesiredCard != null) {
-                gain(theDesiredCard);
-                for (DomPlayer thePlayer : getOpponents())
-                    thePlayer.gain(theDesiredCard);
-            }
+        if (aCard.getName() == DomCardName.Messenger && boughtCards.size() == 0) {
+            ((MessengerCard)aCard).handleFirstBuy();
         }
         for (int i = 0; i < hoardCount; i++) {
             if (aCard.hasCardType(DomCardType.Victory)) {
@@ -966,17 +1001,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
             ((Noble_BrigandCard) aCard).attack(this);
         }
         if (aCard.getName() == DomCardName.Stonemason) {
-            DomCardName theDesiredCard = getDesiredCardWithRestriction(DomCardType.Action, getTotalAvailableCurrency(), false, DomCardName.Stonemason);
-            if (theDesiredCard != null) {
-                availableCoins -= theDesiredCard.getCoinCost(getCurrentGame());
-                availablePotions -= theDesiredCard.getPotionCost();
-                if (DomEngine.haveToLog)
-                    DomEngine.addToLog(this + " overpays " + theDesiredCard.getCost(getCurrentGame()));
-                gain(theDesiredCard);
-                theDesiredCard = getDesiredCardWithRestriction(DomCardType.Action, theDesiredCard.getCost(getCurrentGame()), true, DomCardName.Stonemason);
-                if (theDesiredCard != null)
-                    gain(theDesiredCard);
-            }
+            ((StonemasonCard)aCard).doWhenBought();
         }
         if (aCard.getName() == DomCardName.Port) {
             ((PortCard) aCard).doWhenBought();
@@ -1005,13 +1030,15 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
             }
         }
         addDebt(aCard.getCost(getCurrentGame()).getDebt());
+        //a bit dirty to set the owner here, but needed for the buy effects
+        aCard.owner=this;
+        handleSpecialBuyEffects(aCard);
         deck.gain(aCard);
         boughtCards.add(aCard);
 
         if (getTrashingTokenOn() == aCard.isFromPile())
-            maybeTrashACardFromHand();
-        handleSpecialBuyEffects(aCard);
-        if (debt > 0) {
+            maybeTrashACardForPlan();
+        if (debt > 0 && !isHumanOrPossessedByHuman()) {
             payOffDebt();
         }
         if (aCard.hasCardType(DomCardType.Action) && getCurrentGame().getBoard().isLandmarkActive(DomCardName.Colonnade) && !getCardsFromPlay(aCard.getName()).isEmpty()) {
@@ -1031,8 +1058,13 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         }
         handleSwampHags();
         handleHauntedWoods();
-        if (aCard.hasCardType(DomCardType.Victory) && !getCardsFromHand(DomCardName.Hovel).isEmpty())
+        if (aCard.hasCardType(DomCardType.Victory) && !getCardsFromHand(DomCardName.Hovel).isEmpty()) {
+          if (isHumanOrPossessedByHuman()
+            && getEngine().getGameFrame().askPlayer("<html>Trash " + DomCardName.Hovel.toHTML() +" ?</html>", "Resolving Hovel" ))
+                trash(removeCardFromHand(getCardsFromHand(DomCardName.Hovel).get(0)));
+          else
             trash(removeCardFromHand(getCardsFromHand(DomCardName.Hovel).get(0)));
+        }
     }
 
     private void handleSwampHags() {
@@ -1068,12 +1100,23 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         return false;
     }
 
-    private void maybeTrashACardFromHand() {
+    private void maybeTrashACardForPlan() {
         if (getCardsInHand().isEmpty())
             return;
-        Collections.sort(getCardsInHand(), DomCard.SORT_FOR_TRASHING);
-        if (getCardsInHand().get(0).getTrashPriority() <= DomCardName.Copper.getTrashPriority())
-            trash(removeCardFromHand(getCardsInHand().get(0)));
+        if (isHumanOrPossessedByHuman()) {
+            ArrayList<DomCardName> theChooseFrom=new ArrayList<DomCardName>();
+            for (DomCard theCard : getCardsInHand()) {
+                theChooseFrom.add(theCard.getName());
+            }
+            DomCardName theChosenCard = getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Don't trash");
+            if (theChosenCard!=null) {
+                trash(removeCardFromHand(getCardsFromHand(theChosenCard).get(0)));
+            }
+        } else {
+            Collections.sort(getCardsInHand(), DomCard.SORT_FOR_TRASHING);
+            if (getCardsInHand().get(0).getTrashPriority() <= DomCardName.Copper.getTrashPriority())
+                trash(removeCardFromHand(getCardsInHand().get(0)));
+        }
     }
 
     private void handleHauntedWoods() {
@@ -1085,8 +1128,22 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                 if (((Haunted_WoodsCard) theHauntedWoods).hasProtectedOpponent(this)) {
                     if (DomEngine.haveToLog) DomEngine.addToLog(this + " is protected from " + theHauntedWoods);
                 } else {
-                    for (DomCard theCard : cardsInHand) {
-                        putOnTopOfDeck(theCard);
+                    if (isHumanOrPossessedByHuman()) {
+                        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+                        getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u> (first card = top card)</html>" , getCardsInHand(), theChosenCards, getCardsInHand().size());
+                        for (int i=theChosenCards.size()-1;i>=0;i--) {
+                            for (DomCard theCard : getCardsInHand()) {
+                                if (theChosenCards.get(i)==theCard.getName()) {
+                                    putOnTopOfDeck(theCard);
+                                    cardsInHand.remove(theCard);
+                                    break;
+                                }
+                            }
+                        }
+                    } else {
+                        for (DomCard theCard : cardsInHand) {
+                            putOnTopOfDeck(theCard);
+                        }
                     }
                     cardsInHand.clear();
                     return;
@@ -1111,26 +1168,39 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
             theCardToPlay = getNextActionToPlay();
             if (theCardToPlay != null) {
                 actionsLeft--;
-                getCurrentGame().addResolvingCard(theCardToPlay);
-                play(removeCardFromHand(theCardToPlay));
                 handleUrchins(theCardToPlay);
+                play(removeCardFromHand(theCardToPlay));
                 maybeHandleRoyalCarriage(theCardToPlay);
                 if (actionsLeft == 0 && getFromTavernMat(DomCardName.Coin_of_the_Realm) != null && getNextActionToPlay() != null) {
                     handleCoinOfTheRealm();
                 }
-                getCurrentGame().removeResolvingCard();
             }
         } while (actionsLeft > 0 && theCardToPlay != null);
         actionTime += System.currentTimeMillis() - theTime;
     }
 
     private void maybeHandleRoyalCarriage(DomCard theCardToPlay) {
-        if (cardsInPlay.contains(theCardToPlay) && theCardToPlay.getName() != DomCardName.Tactician && theCardToPlay.getName()!=DomCardName.Bridge_Troll && getFromTavernMat(DomCardName.Royal_Carriage) != null) {
-            if (getPlayStrategyFor(getFromTavernMat(DomCardName.Royal_Carriage)) == DomPlayStrategy.bigTurnBridge) {
-                if (theCardToPlay.getName() == DomCardName.Bridge && countOnTavernMat(DomCardName.Royal_Carriage) >= 5)
+        if (getFromTavernMat(DomCardName.Royal_Carriage) != null && isHumanOrPossessedByHuman()) {
+            do {
+                setNeedsToUpdate();
+                if (getEngine().getGameFrame().askPlayer("<html>Call " + DomCardName.Royal_Carriage.toHTML() + " ?</html>", "Call Royal Carriage")) {
+                    DomCard theRoyalCarriage = removeFromTavernMat(getFromTavernMat(DomCardName.Royal_Carriage));
+                    cardsInPlay.add(theRoyalCarriage);
+                    if (DomEngine.haveToLog)
+                        DomEngine.addToLog(this + " calls " + DomCardName.Royal_Carriage.toHTML() + " from the tavern mat");
+                    ((Royal_CarriageCard)theRoyalCarriage).doWhenCalled();
+                } else {
+                    break;
+                }
+            } while (getFromTavernMat(DomCardName.Royal_Carriage) != null);
+        } else {
+            if (cardsInPlay.contains(theCardToPlay) && theCardToPlay.getName() != DomCardName.Tactician && theCardToPlay.getName()!=DomCardName.Bridge_Troll && getFromTavernMat(DomCardName.Royal_Carriage) != null) {
+                if (getPlayStrategyFor(getFromTavernMat(DomCardName.Royal_Carriage)) == DomPlayStrategy.bigTurnBridge) {
+                    if (theCardToPlay.getName() == DomCardName.Bridge && countOnTavernMat(DomCardName.Royal_Carriage) >= 5)
+                        handleRoyalCarriages();
+                } else {
                     handleRoyalCarriages();
-            } else {
-                handleRoyalCarriages();
+                }
             }
         }
     }
@@ -1148,22 +1218,45 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         }
     }
 
-    private void handleUrchins(DomCard theCardToPlay) {
+    public void handleUrchins(DomCard theCardToPlay) {
         if (!theCardToPlay.hasCardType(DomCardType.Attack))
             return;
-        while (!getCardsFromPlay(DomCardName.Urchin).isEmpty() && wants(DomCardName.Mercenary)) {
-            if (getCardsFromPlay(DomCardName.Urchin).get(0)==theCardToPlay)
-                break;
-            trash(removeCardFromPlay(getCardsFromPlay(DomCardName.Urchin).get(0)));
-            gain(DomCardName.Mercenary);
+        if (getCardsFromPlay(DomCardName.Urchin).isEmpty())
+            return;
+        if (isHumanOrPossessedByHuman()) {
+            while (!getCardsFromPlay(DomCardName.Urchin).isEmpty() && getEngine().getGameFrame().askPlayer("<html>Trash " + DomCardName.Urchin.toHTML() +" to gain "+DomCardName.Mercenary.toHTML()+" ?</html>", "Resolving " + this.getName().toString())){
+                trash(removeCardFromPlay(getCardsFromPlay(DomCardName.Urchin).get(0)));
+                gain(DomCardName.Mercenary);
+            }
+        } else {
+            while (!getCardsFromPlay(DomCardName.Urchin).isEmpty() && wants(DomCardName.Mercenary)) {
+                trash(removeCardFromPlay(getCardsFromPlay(DomCardName.Urchin).get(0)));
+                gain(DomCardName.Mercenary);
+            }
         }
     }
 
     private void handleCoinOfTheRealm() {
-        getCardsInPlay().add(removeFromTavernMat(getFromTavernMat(DomCardName.Coin_of_the_Realm)));
-        if (DomEngine.haveToLog)
-            DomEngine.addToLog(this + " calls " + DomCardName.Coin_of_the_Realm.toHTML() + " from the tavern mat");
-        addActions(2);
+        if (isHumanOrPossessedByHuman()) {
+            do {
+                setNeedsToUpdate();
+                if (getEngine().getGameFrame().askPlayer("<html>Call " + DomCardName.Coin_of_the_Realm.toHTML() + " ?</html>", "Call CotR")) {
+                    cardsInPlay.add(removeFromTavernMat(getFromTavernMat(DomCardName.Coin_of_the_Realm)));
+                    if (DomEngine.haveToLog)
+                        DomEngine.addToLog(this + " calls " + DomCardName.Coin_of_the_Realm.toHTML() + " from the tavern mat");
+                    addActions(2);
+                } else {
+                    break;
+                }
+            } while (getFromTavernMat(DomCardName.Coin_of_the_Realm)!=null);
+            if (actionsLeft==0 || getCardsFromHand(DomCardType.Action).isEmpty())
+                setPhase(DomPhase.Buy);
+        } else {
+            getCardsInPlay().add(removeFromTavernMat(getFromTavernMat(DomCardName.Coin_of_the_Realm)));
+            if (DomEngine.haveToLog)
+                DomEngine.addToLog(this + " calls " + DomCardName.Coin_of_the_Realm.toHTML() + " from the tavern mat");
+            addActions(2);
+        }
     }
 
     private void resolvePrincedCards() {
@@ -1178,12 +1271,43 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     }
 
     public void setPhase(DomPhase aPhase) {
+        if (aPhase==DomPhase.Buy)
+          maybeHandleArena();
         currentPhase = aPhase;
         myEngine.setStatus("Now in " + currentPhase + " Phase");
     }
 
+    private void maybeHandleArena() {
+        if ( isHumanOrPossessedByHuman() && getCurrentGame().getBoard().isLandmarkActive(DomCardName.Arena)
+                && !getCardsFromHand(DomCardType.Action).isEmpty() && getEngine().getGameFrame().askPlayer("<html>Discard an action?</html>", "Resolving " + this.getName().toString())){
+            ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+            for (DomCard theCard : getCardsFromHand(DomCardType.Action)) {
+                theChooseFrom.add(theCard.getName());
+            }
+            DomCardName theChosenCard = getEngine().getGameFrame().askToSelectOneCard("Discard", theChooseFrom, "Mandatory!");
+            discardFromHand(theChosenCard);
+            int theVP = getCurrentGame().getBoard().removeVPFrom(DomCardName.Arena, 2);
+            if (theVP > 0) {
+                if (DomEngine.haveToLog) DomEngine.addToLog(this + " takes VP from " + DomCardName.Arena.toHTML());
+                addVP(theVP);
+            }
+        }
+    }
+
     public DomCard getNextActionToPlay() {
         ArrayList<DomCard> theActionsToConsider = getCardsFromHand(DomCardType.Action);
+        if (theActionsToConsider.isEmpty())
+            return null;
+        Collections.sort(theActionsToConsider, DomCard.SORT_FOR_PLAYING);
+        for (DomCard card : theActionsToConsider) {
+            if (card.wantsToBePlayed())
+                return card;
+        }
+        return null;
+    }
+
+    public DomCard getNextNightActionToPlay() {
+        ArrayList<DomCard> theActionsToConsider = getCardsFromHand(DomCardType.Night);
         if (theActionsToConsider.isEmpty())
             return null;
         Collections.sort(theActionsToConsider, DomCard.SORT_FOR_PLAYING);
@@ -1226,7 +1350,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                 DomEngine.addToLog(name + " plays " + (sameCardCount + 1) + " " + previousPlayedCardName.toHTML()
                         + (sameCardCount > 0 ? "s" : ""));
             }
-            if (!aCard.hasCardType(DomCardType.Kingdom) && !aCard.hasCardType(DomCardType.Prize) && aCard.getName() != DomCardName.Mercenary && !aCard.hasCardType(DomCardType.Traveller) && aCard.getName() != DomCardName.Champion && aCard.getName() != DomCardName.Madman && aCard.getName() != DomCardName.Necropolis) {
+            if (!aCard.hasCardType(DomCardType.Kingdom) && !aCard.hasCardType(DomCardType.Prize) && aCard.getName() != DomCardName.Mercenary && !aCard.hasCardType(DomCardType.Traveller) && aCard.getName() != DomCardName.Champion && aCard.getName() != DomCardName.Madman && aCard.getName() != DomCardName.Necropolis && aCard.getName() != DomCardName.Estate && aCard.getName() !=DomCardName.Imp) {
                 previousPlayedCardName = aCard.getName();
             } else {
                 previousPlayedCardName = null;
@@ -1235,7 +1359,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         } else {
             sameCardCount++;
         }
-        if (aCard.hasCardType(DomCardType.Kingdom) || aCard.hasCardType(DomCardType.Prize) || aCard.getName() == DomCardName.Mercenary || aCard.hasCardType(DomCardType.Traveller) || aCard.getName() == DomCardName.Champion || aCard.getName() == DomCardName.Necropolis || aCard.getName() == DomCardName.Madman) {
+        if (aCard.hasCardType(DomCardType.Kingdom) || aCard.hasCardType(DomCardType.Prize) || aCard.getName() == DomCardName.Mercenary || aCard.hasCardType(DomCardType.Traveller) || aCard.getName() == DomCardName.Champion || aCard.getName() == DomCardName.Necropolis || aCard.getName() == DomCardName.Madman ||aCard.getName()==DomCardName.Imp) {
             DomEngine.addToLog(name + " plays " + aCard);
         }
         DomEngine.logIndentation++;
@@ -1263,7 +1387,8 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
             if (DomEngine.haveToLog) DomEngine.addToLog(this + " activates +$1 Token on " + aCard.isFromPile());
             addAvailableCoins(1);
         }
-
+        if (isHumanOrPossessedByHuman())
+            setNeedsToUpdate();
         if (aCard.hasCardType(DomCardType.Duration))
             aCard.setDiscardAtCleanup(false);
         aCard.play();
@@ -1480,7 +1605,8 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     public void doForcedDiscard(int discardsLeft, boolean discardToTopOfDeck) {
         if (discardsLeft==0)
             return;
-        if (isHuman) {
+        if (isHumanOrPossessedByHuman()) {
+            setNeedsToUpdate();
             ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
             myEngine.getGameFrame().askToSelectCards("Choose "+discardsLeft+" cards to discard" +(discardToTopOfDeck?" to top of deck":""), cardsInHand, theChosenCards, discardsLeft);
             for (DomCardName theCardName: theChosenCards) {
@@ -1718,10 +1844,18 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
             if (DomEngine.haveToLog) DomEngine.addToLog(this + " trashes a " + aCardToTrash);
             game.addToTrash(aCardToTrash);
         }
-        if (!getCardsFromHand(DomCardName.Market_Square).isEmpty() && getCardsFromPlay(DomCardName.Forge).isEmpty()) {
+        if (!getCardsFromHand(DomCardName.Market_Square).isEmpty() && getCardsFromPlay(DomCardName.Forge).isEmpty()&&aCardToTrash.owner!=null) {
             for (DomCard theMS : getCardsFromHand(DomCardName.Market_Square)) {
-                discardFromHand(theMS);
-                gain(DomCardName.Gold);
+                if (isHumanOrPossessedByHuman()) {
+                    if (getEngine().getGameFrame().askPlayer("<html>Discard " + DomCardName.Market_Square.toHTML() +" ?</html>", "Resolving " + this.getName().toString())) {
+                        discardFromHand(theMS);
+                        gain(DomCardName.Gold);
+                    } else
+                        break;
+                } else {
+                    discardFromHand(theMS);
+                    gain(DomCardName.Gold);
+                }
             }
         }
         if (aCardToTrash.owner != null) {
@@ -1735,7 +1869,9 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         }
         if (aCardToTrash.getName() == DomCardName.Fortress) {
             game.getTrashedCards().remove(aCardToTrash);
-            gainInHand(aCardToTrash);
+            deck.addPhysicalCardWhenNotGained(aCardToTrash);
+            if (DomEngine.haveToLog) DomEngine.addToLog(this + " adds " +DomCardName.Fortress.toHTML() +" to hand");
+            cardsInHand.add(aCardToTrash);
         }
         if (getCurrentGame().getBoard().isLandmarkActive(DomCardName.Tomb)) {
             if (DomEngine.haveToLog) DomEngine.addToLog("Landmark " + DomCardName.Tomb.toHTML() + " is active");
@@ -1911,13 +2047,154 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     }
 
     private boolean checkHumanDefense() {
-        if (!getCardsFromHand(DomCardName.Moat).isEmpty()) {
-            if (myEngine.getGameFrame().askPlayer("<html>Reveal " + DomCardName.Moat.toHTML() +"</html>", "Resolving " + getCurrentGame().getResolvingCard().toString())) {
-               DomEngine.addToLog(this + " reveals a " + DomCardName.Moat.toHTML() + " from hand and prevents the attack");
-               return true;
+        boolean defense = false;
+        if (!getCardsFromPlay(DomCardName.Champion).isEmpty() || !getCardsFromPlay(DomCardName.Lighthouse).isEmpty())
+            defense = true;
+
+        DomCardName theChosenReaction;
+        ArrayList<DomCard> theCardsToReset = new ArrayList<DomCard>();
+        while ((theChosenReaction=revealHandToChooseNextReaction())!=null) {
+            for (DomCard theCard : getCardsFromHand(theChosenReaction)) {
+                if (!theCard.hasReacted()) {
+                    theCardsToReset.add(theCard);
+                    if (theCard.reactForHuman()) {
+                        defense = true;
+                    }
+                    break;
+                }
+            }
+            setNeedsToUpdate();
+        }
+        for (DomCard theCard : theCardsToReset) {
+            theCard.setReacted(false);
+        }
+        return defense;
+    }
+
+    private DomCardName revealHandToChooseNextReaction() {
+        ArrayList<DomCardName> theCards = new ArrayList<DomCardName>();
+        for (DomCard theCard : getCardsFromHand(DomCardType.Reaction)) {
+            if (theCard.getName()==DomCardName.Watchtower)
+                continue;
+            if (theCard.getName()==DomCardName.Trader)
+                continue;
+            if (theCard.getName()==DomCardName.Hovel)
+                continue;
+            if (!theCard.hasReacted() && theCard.canReact())
+              theCards.add(theCard.getName());
+        }
+        if (theCards.isEmpty())
+            return null;
+        else
+            return getEngine().getGameFrame().askToSelectOneCard("React?", theCards, "Don't React");
+    }
+
+    public void resolveBeginningOfTurnForHuman() {
+        fillTriggerStack();
+        if (beginningOfTurnTriggers.isEmpty())
+            return;
+        ArrayList<DomCardName> theChosenCards;
+        do {
+            do {
+                setNeedsToUpdate();
+                theChosenCards = new ArrayList<DomCardName>();
+                myEngine.getGameFrame().askToSelectCards("Choose next beginning of turn trigger", beginningOfTurnTriggers, theChosenCards, 0);
+            } while (theChosenCards.size() > 1);
+            DomCard theNextCardToHandle;
+            if (theChosenCards.isEmpty()) {
+                //automatic handling of beginning of turn triggers
+                while (!beginningOfTurnTriggers.isEmpty()) {
+                    if (beginningOfTurnTriggers.get(0).hasCardType(DomCardType.Reserve)) {
+                        beginningOfTurnTriggers.remove(0);
+                    } else {
+                        handleTriggerForHuman(beginningOfTurnTriggers.get(0));
+                    }
+                }
+            } else {
+                //human chooses order of beginning of turn triggers
+                theNextCardToHandle = null;
+                DomCardName theChosenCard = theChosenCards.get(0);
+                for (DomCard theCard : beginningOfTurnTriggers) {
+                    if (theCard.getName()==theChosenCard) {
+                        theNextCardToHandle = theCard;
+                        break;
+                    }
+                }
+                handleTriggerForHuman(theNextCardToHandle);
+            }
+        } while (!theChosenCards.isEmpty() && !beginningOfTurnTriggers.isEmpty());
+    }
+
+    private void handleTriggerForHuman(DomCard theNextCardToHandle) {
+        beginningOfTurnTriggers.remove(theNextCardToHandle);
+        if (theNextCardToHandle.hasCardType(DomCardType.Duration)) {
+            if (DomEngine.haveToLog) DomEngine.addToLog(this + " resolves duration effect from " + theNextCardToHandle.getName().toHTML());
+            theNextCardToHandle.resolveDuration();
+            if (!theNextCardToHandle.mustStayInPlay())
+                theNextCardToHandle.setDiscardAtCleanup(true);
+        }
+        if (theNextCardToHandle instanceof MultiplicationCard) {
+            if (DomEngine.haveToLog) DomEngine.addToLog(this + " resolves duration effect from " + theNextCardToHandle.getName().toHTML());
+            for (DomCard theDuration: ((MultiplicationCard)theNextCardToHandle).getDurationCards()){
+                theDuration.resolveDuration();
+                if (!theDuration.mustStayInPlay())
+                    theDuration.setDiscardAtCleanup(true);
+            }
+            theNextCardToHandle.resolveDuration();
+            if (!theNextCardToHandle.mustStayInPlay())
+                theNextCardToHandle.setDiscardAtCleanup(true);
+        }
+        if (horseTradersPile.contains(theNextCardToHandle)) {
+            if (DomEngine.haveToLog)
+                DomEngine.addToLog(this + " adds " + DomCardName.Horse_Traders.toHTML() + " to his hand");
+            cardsInHand.add(theNextCardToHandle);
+            horseTradersPile.remove(theNextCardToHandle);
+            drawCards(1);
+        }
+        if (cardsToSummon.contains(theNextCardToHandle)) {
+            play(theNextCardToHandle);
+            cardsToSummon.remove(theNextCardToHandle);
+        }
+        if (princedCards.contains(theNextCardToHandle)) {
+            if (DomEngine.haveToLog)
+                DomEngine.addToLog(" <html><i>( " + theNextCardToHandle.getName().toHTML()+ " set aside with Prince)</i></html>");
+            theNextCardToHandle.play();
+            theNextCardToHandle.markForPrince();
+        }
+        if (theNextCardToHandle.hasCardType(DomCardType.Reserve)) {
+            getCardsInPlay().add(removeFromTavernMat(theNextCardToHandle));
+            if (DomEngine.haveToLog) DomEngine.addToLog(this + " calls " + theNextCardToHandle.getName().toHTML() + " from the tavern mat");
+            theNextCardToHandle.doWhenCalled();
+        }
+    }
+
+    private void fillTriggerStack() {
+        beginningOfTurnTriggers.clear();
+        beginningOfTurnTriggers.addAll(getAllFromTavernMat(DomCardName.Teacher));
+        beginningOfTurnTriggers.addAll(getAllFromTavernMat(DomCardName.Guide));
+        beginningOfTurnTriggers.addAll(getAllFromTavernMat(DomCardName.Ratcatcher));
+        beginningOfTurnTriggers.addAll(getAllFromTavernMat(DomCardName.Transmogrify));
+        beginningOfTurnTriggers.addAll(horseTradersPile);
+        for (DomCard aCard : getCardsInPlay()) {
+            if (aCard instanceof MultiplicationCard)
+                beginningOfTurnTriggers.add(aCard);
+        }
+        for (DomCard aCard : getCardsInPlay()) {
+            if (aCard.hasCardType(DomCardType.Duration)) {
+                boolean dontAdd = false;
+                for (DomCard theCard : getCardsInPlay()) {
+                    if ( (theCard instanceof MultiplicationCard) && ((MultiplicationCard)theCard).getDurationCards().contains(aCard)){
+                        dontAdd=true;
+                        break;
+                    }
+
+                }
+                if (!dontAdd)
+                    beginningOfTurnTriggers.add(aCard);
             }
         }
-        return false;
+        beginningOfTurnTriggers.addAll(cardsToSummon);
+        beginningOfTurnTriggers.addAll(princedCards);
     }
 
     /**
@@ -2061,20 +2338,21 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
      */
     public void passCardToTheLeftForMasquerade(DomCard aCardToPass, DomPlayer theMasqueradePlayer) {
         ArrayList<DomPlayer> theOpponents = getOpponents();
-        DomPlayer theOpponentToTheLeft = theOpponents.get(0);
-        if (theOpponentToTheLeft != theMasqueradePlayer) {
-            theOpponentToTheLeft.passCardToTheLeftForMasquerade(theOpponentToTheLeft.chooseCardToPass(), theMasqueradePlayer);
+        int i = 0;
+        while (i++!=theOpponents.size() && theOpponents.get(i-1).getCardsInHand().isEmpty() );
+        if (i<=theOpponents.size() && theOpponents.get(i-1)!=theMasqueradePlayer){
+            theOpponents.get(i-1).passCardToTheLeftForMasquerade(theOpponents.get(i-1).chooseCardToPass(), theMasqueradePlayer);
         }
         if (aCardToPass != null) {
             if (DomEngine.haveToLog)
-                DomEngine.addToLog(this + " passes a " + aCardToPass + " to " + theOpponentToTheLeft);
+                DomEngine.addToLog(this + " passes a " + aCardToPass + " to " + theOpponents.get(i-1));
             removePhysicalCard(aCardToPass);
-            theOpponentToTheLeft.receiveCard(aCardToPass);
+            theOpponents.get(i-1).receiveCard(aCardToPass);
         }
     }
 
     private void receiveCard(DomCard aCardToPass) {
-        deck.addPhysicalCardFromMasquerade(aCardToPass);
+        deck.addPhysicalCardWhenNotGained(aCardToPass);
         cardsInHand.add(aCardToPass);
     }
 
@@ -2082,8 +2360,14 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
      * @return
      */
     public DomCard chooseCardToPass() {
-        if (getCardsInHand().isEmpty())
-            return null;
+        if (isHumanOrPossessedByHuman()) {
+            setNeedsToUpdate();
+            ArrayList<DomCardName> theChooseFrom=new ArrayList<DomCardName>();
+            for (DomCard theCard : cardsInHand) {
+                theChooseFrom.add(theCard.getName());
+            }
+            return removeCardFromHand(getCardsFromHand(getEngine().getGameFrame().askToSelectOneCard("Pass a card" , theChooseFrom, "Mandatory!")).get(0));
+        }
         Collections.sort(getCardsInHand(), DomCard.SORT_FOR_TRASHING);
         DomCard theCardToTrash = getCardsInHand().get(0);
         if (countInDeck(DomCardName.Baron) > 0 && countInDeck(DomCardName.Estate) < 3 && theCardToTrash.getName() == DomCardName.Estate) {
@@ -2184,6 +2468,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         theCopy.setBane(myBaneCard);
         theCopy.setMountainPassBid(mountainPassBid);
         theCopy.setObeliskCard(obeliskChoice == null ? null : obeliskChoice.toString());
+        theCopy.setShelters(shelters);
         return theCopy;
     }
 
@@ -2559,6 +2844,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
             theXML.append(" bane=\"").append(myBaneCard == null ? "" : myBaneCard).append("\"");
             theXML.append(" Mountain_Pass_Bid=\"").append(mountainPassBid).append("\"");
             theXML.append(" Obelisk_Choice=\"").append(getObeliskChoice() == null ? "" : getObeliskChoice()).append("\"");
+            theXML.append(" Shelters=\""+Boolean.toString(getShelters())+"\"");
             theXML.append("/>").append(newline);
         }
         for (DomBuyRule theRule : getPrizeBuyRules()) {
@@ -2799,15 +3085,34 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     }
 
     void dealStartCards() {
-        for (int c = 0; c < 7; c++) {
+        int i=7;
+        for (DomCardName theCard : getCurrentGame().getBoard().keySet()) {
+            if (theCard.hasCardType(DomCardType.Heirloom)) {
+                DomCard theHeirloom = getCurrentGame().takeFromSupply(theCard);
+                if (theHeirloom!=null) {
+                    i--;
+                    gainOnTopOfDeck(theHeirloom);
+                }
+            }
+        }
+        for (int c = 0; c < i; c++) {
             gainOnTopOfDeck(getCurrentGame().takeFromSupply(DomCardName.Copper));
         }
-        for (int c = 0; c < 3; c++) {
-            gainOnTopOfDeck(getCurrentGame().takeFromSupply(DomCardName.Estate));
+        if (shelters) {
+            getCurrentGame().getBoard().addCardPile(DomCardName.Necropolis);
+            gainOnTopOfDeck(getCurrentGame().takeFromSupply(DomCardName.Necropolis));
+            getCurrentGame().getBoard().addCardPile(DomCardName.Hovel);
+            gainOnTopOfDeck(getCurrentGame().takeFromSupply(DomCardName.Hovel));
+            getCurrentGame().getBoard().addCardPile(DomCardName.Overgrown_Estate);
+            gainOnTopOfDeck(getCurrentGame().takeFromSupply(DomCardName.Overgrown_Estate));
+        } else {
+            for (int c = 0; c < 3; c++) {
+                gainOnTopOfDeck(getCurrentGame().takeFromSupply(DomCardName.Estate));
+            }
         }
     }
 
-    public boolean addBoard(String contents, String bane, String aMountainPassBid, String anObeliskChoice) {
+    public boolean addBoard(String contents, String bane, String aMountainPassBid, String anObeliskChoice, String aShelters) {
         if (!StartState.dissectAndAdd(contents, mySuggestedBoardCards))
             return false;
         if (bane != null) {
@@ -2825,6 +3130,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         }
         setMountainPassBid(Integer.valueOf(aMountainPassBid));
         setObeliskCard(anObeliskChoice);
+        setShelters(Boolean.valueOf(aShelters));
         return true;
     }
 
@@ -2864,10 +3170,6 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         this.availableCoins = availableCoins;
     }
 
-    public void setCoinTokens(int coinTokens) {
-        this.coinTokens = coinTokens;
-    }
-
     public void flipJourneyToken() {
         journeyTokenIsFaceUp = !journeyTokenIsFaceUp;
         if (DomEngine.haveToLog)
@@ -2896,6 +3198,10 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                 theList.add(theCard);
         }
         return theList;
+    }
+
+    public boolean isMinusOneCardToken() {
+        return minusOneCardToken;
     }
 
     public void setMinusOneCardToken() {
@@ -3006,6 +3312,18 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         }
     }
 
+    public void placePlusOneActionToken(DomCardName aCard) {
+        plusOneActionTokenOn = aCard;
+        if (DomEngine.haveToLog)
+           DomEngine.addToLog(this + " puts +1 Action token on " + aCard.toHTML());
+    }
+
+    public void placePlusOneCardToken(DomCardName aCard) {
+        plusOneCardTokenOn = aCard;
+        if (DomEngine.haveToLog)
+            DomEngine.addToLog(this + " puts +1 Action token on " + aCard.toHTML());
+    }
+
     private DomCardName getChosenCardForFunction(DomBotFunction function) {
         DomCardName theChosenCard = null;
         for (DomBuyRule theRule : getBuyRules()) {
@@ -3108,11 +3426,28 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     }
 
     public void placeEstateToken() {
-        if (estateTokenOn != null)
+        if (estateTokenOn != null) {
+            if (isHumanOrPossessedByHuman()) {
+                JOptionPane.showMessageDialog(null, "You can only do this once per game!");
+            }
             return;
-        DomCardName theCard = getChosenCardForFunction(DomBotFunction.isEstateTokenPlaced);
-        if (DomEngine.haveToLog) DomEngine.addToLog(this + " places Estate token on " + theCard.toHTML());
-        estateTokenOn = getCurrentGame().takeFromSupply(theCard);
+        }
+        if (isHumanOrPossessedByHuman()) {
+            ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+            for (DomCardName theCard : getCurrentGame().getBoard().keySet()) {
+                if (new DomCost(4,0).compareTo(theCard.getCost(getCurrentGame()))>=0 && getCurrentGame().countInSupply(theCard)>0 && !theCard.hasCardType(DomCardType.Victory) && theCard.hasCardType(DomCardType.Action))
+                    theChooseFrom.add(theCard);
+            }
+            if (theChooseFrom.isEmpty())
+                return;
+            DomCardName theChosenCard = getEngine().getGameFrame().askToSelectOneCard("Select card to Inherit", theChooseFrom, "Mandatory!");
+            if (DomEngine.haveToLog) DomEngine.addToLog(this + " places Estate token on " + theChosenCard.toHTML());
+            estateTokenOn = getCurrentGame().takeFromSupply(theChosenCard);
+        } else {
+            DomCardName theCard = getChosenCardForFunction(DomBotFunction.isEstateTokenPlaced);
+            if (DomEngine.haveToLog) DomEngine.addToLog(this + " places Estate token on " + theCard.toHTML());
+            estateTokenOn = getCurrentGame().takeFromSupply(theCard);
+        }
     }
 
     public boolean isEstateTokenPlaced() {
@@ -3146,6 +3481,16 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         plusOneCoinTokenOn = getChosenCardForFunction(DomBotFunction.isPlusOneCoinTokenSet);
         if (plusOneCoinTokenOn != null)
             if (DomEngine.haveToLog) DomEngine.addToLog(this + " puts +$1 token on " + plusOneCoinTokenOn.toHTML());
+    }
+
+    public void placePlusOneCoinToken(DomCardName aCard) {
+        plusOneCoinTokenOn = aCard;
+        if (DomEngine.haveToLog) DomEngine.addToLog(this + " puts +$1 token on " + plusOneCoinTokenOn.toHTML());
+    }
+
+    public void placePlusOneBuyToken(DomCardName aCard) {
+        plusOneBuyTokenOn = aCard;
+        if (DomEngine.haveToLog) DomEngine.addToLog(this + " puts +1 Buy token on " + plusOneBuyTokenOn.toHTML());
     }
 
     public DomCardName placePlusOneBuyToken() {
@@ -3213,6 +3558,8 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     }
 
     public void payOffDebt() {
+        if ((availableCoins > 0 || coinTokens > 0) && isHumanOrPossessedByHuman() && !getEngine().getGameFrame().askPlayer("<html>Pay off debt?</html>", "Resolving " + this.getName().toString()))
+            return;
         if (DomEngine.haveToLog)
             DomEngine.addToLog(name + " has $" + debt + " in debt and $" + getAvailableCoins() + " to pay off the debt");
         while (debt > 0 && (availableCoins > 0 || coinTokens > 0)) {
@@ -3276,7 +3623,17 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         return false;
     }
 
-    public int getMountainPassBid() {
+    public int getMountainPassBid(int highestBid) {
+        if (isHumanOrPossessedByHuman()) {
+            try {
+                Integer theBid = Integer.valueOf(JOptionPane.showInputDialog("Bid (current bid = " + highestBid + ")"));
+                return theBid;
+            } catch (NumberFormatException e) {
+                return 0;
+            } catch (HeadlessException e) {
+                return 0;
+            }
+        }
         return mountainPassBid;
     }
 
@@ -3416,7 +3773,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         this.myEngine = myEngine;
     }
 
-    public Set<DomCardName> getUniqueCardsInHand() {
+    public Set<DomCardName> getUniqueCardNamesInHand() {
         HashSet<DomCardName> theSet = new HashSet<DomCardName>();
         for (DomCard theCard : cardsInHand) {
             theSet.add(theCard.getName());
@@ -3426,25 +3783,37 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         return treeSet;
     }
 
-    public void attemptToPlay(DomCard selectedValue) {
-        if (selectedValue==null)
+    public void attemptToPlay(DomCard selectedCard) {
+        if (selectedCard==null)
             return;
-        if (selectedValue.hasCardType(DomCardType.Action) && getPhase()==DomPhase.Action) {
+        if (selectedCard.hasCardType(DomCardType.Action) && getPhase()==DomPhase.Action) {
             actionsLeft--;
-            play(removeCardFromHand(selectedValue));
-            if (getCurrentGame().getResolvingCard()==null) {
-                if (actionsLeft == 0 || getCardsFromHand(DomCardType.Action).isEmpty()) {
+            handleUrchins(selectedCard);
+            play(removeCardFromHand(selectedCard));
+            if (selectedCard.getName()!=DomCardName.Royal_Carriage)
+              maybeHandleRoyalCarriage(selectedCard);
+            if (actionsLeft == 0 || getCardsFromHand(DomCardType.Action).isEmpty()) {
+                if (getFromTavernMat(DomCardName.Coin_of_the_Realm) != null) {
+                    handleCoinOfTheRealm();
+                } else {
                     setPhase(DomPhase.Buy);
                 }
             }
-        }
-        if (selectedValue.hasCardType(DomCardType.Treasure) && getPhase()==DomPhase.Buy && getBoughtCards().isEmpty()) {
-            play(removeCardFromHand(selectedValue));
-            if (previousPlayedCardName != null) {
-                DomEngine.addToLog(name + " plays " + (sameCardCount + 1) + " " + previousPlayedCardName.toHTML()
-                        + (sameCardCount > 0 ? "s" : ""));
-                previousPlayedCardName = null;
-                sameCardCount = 0;
+        } else {
+            if (selectedCard.hasCardType(DomCardType.Treasure) && getPhase() == DomPhase.Buy && getBoughtCards().isEmpty()) {
+                play(removeCardFromHand(selectedCard));
+                if (previousPlayedCardName != null) {
+                    DomEngine.addToLog(name + " plays " + (sameCardCount + 1) + " " + previousPlayedCardName.toHTML()
+                            + (sameCardCount > 0 ? "s" : ""));
+                    previousPlayedCardName = null;
+                    sameCardCount = 0;
+                }
+            } else {
+                if (selectedCard.hasCardType(DomCardType.Night) && getPhase()==DomPhase.Night) {
+                    play(removeCardFromHand(selectedCard));
+                    if (getCardsFromHand(DomCardType.Night).isEmpty())
+                        endHumanTurn();
+                }
             }
         }
         setChanged();
@@ -3452,6 +3821,8 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     }
 
     public void attemptToPlayAllTreasures() {
+        if (getPhase()!=DomPhase.Buy)
+            return;
         Collections.sort(cardsInHand,DomCard.SORT_FOR_PLAYING);
         while (baseTreasuresInHand()) {
             for (DomCard theCard : getCardsFromHand(DomCardType.Base)) {
@@ -3478,47 +3849,84 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         return false;
     }
 
-    public void tryToBuyFromSupplyAsHuman(DomCardName card) {
-        if (getPhase()==DomPhase.Buy) {
+    public void attemptToBuyFromSupplyAsHuman(DomCardName card) {
+        if (card.hasCardType(DomCardType.Landmark))
+            return;
+        if (getPhase()==DomPhase.Buy && buysLeft>0) {
+            if (debt>0) {
+                attemptToPlayAllTreasures();
+                payOffDebt();
+                setChanged();
+                notifyObservers();
+                if (debt>0) {
+                    JOptionPane.showMessageDialog(getEngine().getGameFrame(), "You have debt left!");
+                    return;
+                }
+            }
+            if (getEngine().getCurrentGame().getBoard().isFromSeparatePile(card))
+                return;
             if (availableCoins>=card.getCoinCost(myEngine.getCurrentGame())
                     && availablePotions>=card.getPotionCost()) {
-                updateMoneyCurve();
-                if (tryToBuy(card, false)) {
+                if (card.hasCardType(DomCardType.Event)) {
+                    resolveEvent(card);
                     buysLeft--;
                     setChanged();
                     notifyObservers();
+                } else {
+                    if (!hasExtraMissionTurn() && tryToBuy(card, false)) {
+                        buysLeft--;
+                        if (getCardsFromPlay(DomCardName.Merchant_Guild).size() > 0)
+                            addCoinTokens(getCardsFromPlay(DomCardName.Merchant_Guild).size());
+                        setChanged();
+                        notifyObservers();
+                    }
                 }
-                if (buysLeft==0) {
-                    doCleanUpPhase();
-                    getCurrentGame().continueHumanGame();
+                if (getPhase()==DomPhase.Buy && buysLeft==0 && (getDebt()==0 || getAvailableCoins()==0) ) {
+                    if (!getCardsFromHand(DomCardType.Night).isEmpty()){
+                        setPhase(DomPhase.Night);
+                    } else {
+                        endHumanTurn();
+                    }
                 }
             } else {
                 if (getTotalPotentialCurrency().compareTo( card.getCost(getCurrentGame())) >= 0 && baseTreasuresInHand()) {
                     attemptToPlayAllTreasures();
-                    tryToBuyFromSupplyAsHuman(card);
+                    attemptToBuyFromSupplyAsHuman(card);
                 }
             }
         }
     }
 
     public void endActions() {
-        if (!getCurrentGame().isGameFinished()) {
+        if (!getCurrentGame().isGameFinished() || currentPhase!=null) {
             setPhase(DomPhase.Buy);
             setChanged();
             notifyObservers();
         }
     }
 
-    public void endTurn() {
+    public void humanEndsTurn() {
         if (!getCurrentGame().isGameFinished() || currentPhase!=null) {
-            doCleanUpPhase();
-            getCurrentGame().continueHumanGame();
+            endHumanTurn();
         }
+    }
+
+    private void endHumanTurn() {
+        handleWineMerchantsForHuman();
+        doCleanUpPhase();
+        possessor = null;
+        if (donateTriggered)
+            DonateCard.trashStuff(getCurrentGame().getActivePlayer());
+        if (getCurrentGame().isAuctionTriggered()) {
+            Mountain_PassCard.doTheAuction(this);
+            getCurrentGame().setAuctionTriggered(false);
+        }
+        getCurrentGame().setPreviousTurnTakenBy(this);
+        getCurrentGame().continueHumanGame();
     }
 
     public boolean canBuy(DomCardName theCard) {
         return getTotalAvailableCoins()>=theCard.getCoinCost(getCurrentGame()) && getTotalPotentialCurrency().potions>=theCard.getPotionCost();
-
     }
 
     public DomEngine getEngine() {
@@ -3534,19 +3942,166 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         notifyObservers();
     }
 
-//    public void attemptToPlay(String selectedValue) {
-//        if (selectedValue==null)
-//            return;
-//       for (DomCard theCard : getCardsInHand()) {
-//           if (selectedValue.contains(theCard.getName().toString())) {
-//               if (theCard.hasCardType(DomCardType.Action) && getPhase()==DomPhase.Action) {
-//                   actionsLeft--;
-//                   play(removeCardFromHand(theCard));
-//                   break;
-//               }
-//           }
-//       }
-//       setChanged();
-//       notifyObservers();
-//    }
+    public void setBuyRules(ArrayList<DomBuyRule> buyRules) {
+        this.buyRules = buyRules;
+    }
+
+    public void putInDeckAt(DomCard domCard, int theChoice) {
+        if (DomEngine.haveToLog) DomEngine.addToLog(name + " puts "+domCard.getName().toHTML()+" at position "+(theChoice+1));
+        deck.putInDeckAt(domCard,theChoice);
+    }
+
+    public String getGainedCardsText() {
+        StringBuilder theSr = new StringBuilder();
+        for (DomCardName theCard : getCardsGainedLastTurn())
+            theSr.append("<br>").append(theCard.toHTML());
+        return theSr.toString();
+    }
+
+    public String getNativeVillageMatToString() {
+        return getCardNameString(getNativeVillageMat());
+    }
+
+    public String getCardNameString(ArrayList<DomCard> aCards) {
+        Map<DomCardName,Integer> theMap = new HashMap<DomCardName, Integer>();
+        for (DomCard theCard:aCards) {
+            if (theMap.get(theCard.getName())!=null) {
+                theMap.put(theCard.getName(), theMap.get(theCard.getName())+1);
+            } else {
+                theMap.put(theCard.getName(), 1);
+            }
+        }
+        StringBuilder theStr = new StringBuilder();
+        String thePrefix = "";
+        for (DomCardName theName : theMap.keySet()) {
+            theStr.append(thePrefix).append(theMap.get(theName)).append(" ").append(theName.toHTML());
+            thePrefix=", ";
+        }
+        return theStr.toString();
+    }
+
+    public String getIslandMatString() {
+        return getCardNameString(deck.getIslandMat());
+    }
+
+    public DomPlayer removePossessorTurn() {
+        if (possessionTurns.isEmpty())
+            return null;
+        return possessionTurns.remove(0);
+    }
+
+    public DomCard removeCardFromDiscard(DomCardName aCard) {
+        for (DomCard theCard : getDeck().getDiscardPile())
+            if (theCard.getName() == aCard) {
+                return removeCardFromDiscard(theCard);
+            }
+        return null;
+    }
+
+    public ArrayList<DomCard> getTavernMat() {
+        return tavernMat;
+    }
+
+    public String getTavernMatAsString() {
+        Map<DomCardName,Integer> theMap = new HashMap<DomCardName, Integer>();
+        for (DomCard theCard:getTavernMat()) {
+            if (theMap.get(theCard.getName())!=null) {
+                theMap.put(theCard.getName(), theMap.get(theCard.getName())+1);
+            } else {
+                theMap.put(theCard.getName(), 1);
+            }
+        }
+        StringBuilder theStr = new StringBuilder();
+        String thePrefix = "";
+        for (DomCardName theName : theMap.keySet()) {
+            theStr.append(thePrefix).append(theMap.get(theName)).append(" ").append(theName.toHTML());
+            thePrefix=", ";
+        }
+        return theStr.length()==0? "<i>empty</i>" : theStr.toString();
+    }
+
+    public boolean cardHasToken(DomCardName theCard) {
+        if (plusOneActionTokenOn==theCard)
+            return true;
+        if (plusOneCardTokenOn==theCard)
+            return true;
+        if (plusOneCoinTokenOn==theCard)
+            return true;
+        if (plusOneBuyTokenOn==theCard)
+            return true;
+        if (trashingTokenOn==theCard)
+            return true;
+        if (minus$2TokenOn==theCard)
+            return true;
+        return false;
+    }
+
+    public String getTokensStringOn(DomCardName theCard) {
+        String theStr = "";
+        if (plusOneCardTokenOn==theCard)
+            theStr+=" +C";
+        if (plusOneActionTokenOn==theCard)
+            theStr+=" +A";
+        if (plusOneCoinTokenOn==theCard)
+            theStr+=" +$";
+        if (plusOneBuyTokenOn==theCard)
+            theStr+=" +B";
+        if (minus$2TokenOn==theCard)
+            theStr+=" -$2";
+        if (trashingTokenOn==theCard)
+            theStr+=" X";
+        return theStr;
+    }
+
+    public boolean isAlmsActivated() {
+        return almsActivated;
+    }
+
+    public boolean isSaveActivated() {
+        return saveActivated;
+    }
+
+    public boolean getShelters() {
+        return shelters;
+    }
+
+    public void setShelters(boolean shelters) {
+        this.shelters = shelters;
+    }
+
+    public void placeMinus$2Token(DomCardName aChosenCard) {
+        minus$2TokenOn = aChosenCard;
+        if (DomEngine.haveToLog)
+            DomEngine.addToLog(this + " puts -$2 Action token on " + aChosenCard.toHTML());
+    }
+
+    public void placeTrashingToken(DomCardName aChosenCard) {
+        trashingTokenOn = aChosenCard;
+        if (DomEngine.haveToLog)
+            DomEngine.addToLog(this + " puts the trashing token on " + aChosenCard.toHTML());
+    }
+
+    public boolean isPilgrimageActivatedThisTurn() {
+        return pilgrimageActivatedThisTurn;
+    }
+
+    public ArrayList<DomCard> getUniqueCardsInPlay() {
+        ArrayList<DomCard> theUniqueCardsList = new ArrayList<DomCard>();
+        HashSet<DomCardName> theUniqueCardsSet = new HashSet<DomCardName>();
+        for (DomCard theCard:cardsInPlay) {
+            theUniqueCardsSet.add(theCard.getName());
+        }
+        for (DomCardName theName : theUniqueCardsSet) {
+            theUniqueCardsList.add(getCardsFromPlay(theName).get(0));
+        }
+        return theUniqueCardsList;
+    }
+
+    public int getDebt() {
+        return debt;
+    }
+
+    public void payOffDebt(int i) {
+        debt-=i;
+    }
 }

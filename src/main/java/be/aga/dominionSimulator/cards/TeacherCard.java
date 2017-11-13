@@ -6,7 +6,10 @@ import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.enums.DomBotFunction;
 import be.aga.dominionSimulator.enums.DomCardName;
+import be.aga.dominionSimulator.enums.DomCardType;
 import be.aga.dominionSimulator.enums.DomPlayStrategy;
+
+import java.util.ArrayList;
 
 public class TeacherCard extends DomCard {
     public TeacherCard() {
@@ -20,6 +23,10 @@ public class TeacherCard extends DomCard {
 
     @Override
     public void doWhenCalled() {
+        if (owner.isHumanOrPossessedByHuman()) {
+            handleHuman();
+            return;
+        }
         for (DomBuyRule theRule : owner.getBuyRules()) {
             if (theRule.getCardToBuy()!=DomCardName.Teacher)
                 continue;
@@ -52,6 +59,31 @@ public class TeacherCard extends DomCard {
                 }
             }
         }
+    }
+
+    private void handleHuman() {
+        ArrayList<String> theOptions = new ArrayList<String>();
+        theOptions.add("+Action token");
+        theOptions.add("+Card token");
+        theOptions.add("+Coin token");
+        theOptions.add("+Buy token");
+        int theChoice = owner.getEngine().getGameFrame().askToSelectOption("Place a token", theOptions, "Mandatory!");
+        ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+            if (!owner.cardHasToken(theCard) &&  theCard.hasCardType(DomCardType.Action) && owner.getCurrentGame().countInSupply(theCard)>0)
+                theChooseFrom.add(theCard);
+        }
+        if (theChooseFrom.isEmpty())
+            return;
+        DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Select a card", theChooseFrom, "Mandatory!");
+        if (theChoice==0)
+            owner.placePlusOneActionToken(theChosenCard);
+        if (theChoice==1)
+            owner.placePlusOneCardToken(theChosenCard);
+        if (theChoice==2)
+            owner.placePlusOneCoinToken(theChosenCard);
+        if (theChoice==3)
+            owner.placePlusOneBuyToken(theChosenCard);
     }
 
     @Override

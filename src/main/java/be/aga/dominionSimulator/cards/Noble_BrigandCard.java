@@ -8,6 +8,8 @@ import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
 public class Noble_BrigandCard extends DomCard {
+    private boolean treasureFound;
+
     public Noble_BrigandCard () {
       super( DomCardName.Noble_Brigand);
     }
@@ -22,18 +24,22 @@ public class Noble_BrigandCard extends DomCard {
         for (DomPlayer thePlayer : player.getOpponents()) {
             if (thePlayer.checkDefense())
             	continue;
-            boolean treasureFound=false;
+            treasureFound=false;
             ArrayList< DomCard > theCards = thePlayer.revealTopCards(2);
             DomCard theCardToTrash = null;
-            for (DomCard theCard : theCards) {
-			  if (theCard.hasCardType(DomCardType.Treasure))
-            	treasureFound=true;
-              if (theCard.getName()==DomCardName.Silver || theCard.getName()==DomCardName.Gold) {
-                if (theCardToTrash==null 
-                	|| theCard.getName().getTrashPriority(player)>theCardToTrash.getName().getTrashPriority(player)){
-                  theCardToTrash = theCard;
+            if (owner.isHumanOrPossessedByHuman()) {
+                theCardToTrash=handleHuman(theCards);
+            } else {
+                for (DomCard theCard : theCards) {
+                    if (theCard.hasCardType(DomCardType.Treasure))
+                        treasureFound = true;
+                    if (theCard.getName() == DomCardName.Silver || theCard.getName() == DomCardName.Gold) {
+                        if (theCardToTrash == null
+                                || theCard.getName().getTrashPriority(player) > theCardToTrash.getName().getTrashPriority(player)) {
+                            theCardToTrash = theCard;
+                        }
+                    }
                 }
-              }
             }
             if (theCardToTrash!=null) {
               thePlayer.trash( theCardToTrash );
@@ -45,4 +51,27 @@ public class Noble_BrigandCard extends DomCard {
             	thePlayer.gain(DomCardName.Copper);
           }
 	}
+
+    private DomCard handleHuman(ArrayList<DomCard> theCards) {
+        ArrayList<DomCardName> theChoosefrom = new ArrayList<DomCardName>();
+        for (DomCard theCard : theCards) {
+            if (theCard.hasCardType(DomCardType.Treasure))
+                treasureFound = true;
+            if (theCard.getName() == DomCardName.Silver || theCard.getName() == DomCardName.Gold) {
+                theChoosefrom.add(theCard.getName());
+            }
+        }
+        if (theChoosefrom.isEmpty())
+            return null;
+        if (theChoosefrom.size()==1) {
+            for (DomCard theCard : theCards)
+                if (theCard.getName() == theChoosefrom.get(0))
+                    return theCard;
+        }
+        DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChoosefrom, "Mandatory!");
+        for (DomCard theCard : theCards)
+            if (theCard.getName() == theChosenCard)
+                return theCard;
+        return null;
+    }
 }

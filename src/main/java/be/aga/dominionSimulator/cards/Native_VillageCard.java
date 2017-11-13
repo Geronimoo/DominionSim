@@ -15,6 +15,10 @@ public class Native_VillageCard extends DomCard {
 
     public void play() {
       owner.addActions(2);
+      if (owner.isHumanOrPossessedByHuman()) {
+          handleHuman();
+          return;
+      }
       switch (owner.getPlayStrategyFor(this)) {
         case standard:
           playDefault();
@@ -27,6 +31,18 @@ public class Native_VillageCard extends DomCard {
         	//always put card away because it's a useless green
         	playNativeVillageForStorage();
       }    
+    }
+
+    private void handleHuman() {
+        ArrayList<String> theOptions = new ArrayList<String>();
+        theOptions.add("Set aside");
+        theOptions.add("<html>Pick up: " + owner.getEngine().getCurrentGame().getActivePlayer().getNativeVillageMatToString());
+        int theChoice = owner.getEngine().getGameFrame().askToSelectOption("Native Village", theOptions, "Mandatory!");
+        if (theChoice == 0) {
+            playNativeVillageForStorage();
+        } else {
+            playNativeVillageForCards();
+        }
     }
 
     private void playForBigTurn() {

@@ -13,6 +13,10 @@ public class ScavengerCard extends DomCard {
 
     public void play() {
       owner.addAvailableCoins(2);
+      if (owner.isHumanOrPossessedByHuman()) {
+          handleHuman();
+          return;
+      }
       owner.putDeckInDiscard();
       ArrayList<DomCard> theCardsToConsider = owner.getCardsFromDiscard();
       if (theCardsToConsider.isEmpty())
@@ -26,6 +30,23 @@ public class ScavengerCard extends DomCard {
           }
       }
       owner.putOnTopOfDeck(owner.removeCardFromDiscard(theChosenCard));
+    }
+
+    private void handleHuman() {
+        owner.setNeedsToUpdate();
+        if (owner.getEngine().getGameFrame().askPlayer("<html>Put deck in discard ? </html>", "Resolving " + this.getName().toString()))
+          owner.putDeckInDiscard();
+        owner.setNeedsToUpdate();
+        ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCard theCard : owner.getCardsFromDiscard())
+            theChooseFrom.add(theCard.getName());
+        DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Put on top of deck" + this.getName().toString(), theChooseFrom, "Mandatory!");
+        for (DomCard theCard:owner.getCardsFromDiscard()) {
+            if (theCard.getName()==theChosenCard) {
+                owner.putOnTopOfDeck(owner.removeCardFromDiscard(theCard));
+                break;
+            }
+        }
     }
 
     @Override

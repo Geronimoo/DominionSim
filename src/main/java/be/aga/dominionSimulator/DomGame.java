@@ -29,11 +29,11 @@ public class DomGame extends Observable{
   public long playerTurnTime=0;
   private DomPlayer activePlayer;
   public boolean emptyPilesEnding=false;
-  private boolean extraTurnsTakenByActivePlayer;
   private boolean isNoProvinceGainedYet = true;
   private boolean auctionTriggered;
-    private int turn;
-    private ArrayList<DomCard> resolvingCards = new ArrayList<DomCard>();
+  private DomPlayer previousTurnTakenBy;
+  private DomCardName obeliskChoice;
+    private ArrayList<DomCard> faceDownCardsInTrash = new ArrayList<DomCard>();
 
 
     /**
@@ -64,9 +64,23 @@ private void initialize() {
     getBoard().clearTradeRouteMat();
     isNoProvinceGainedYet=true;
     auctionTriggered=false;
+    setObeliskChoice();
 }
 
-/**
+    private void setObeliskChoice() {
+        for (DomPlayer thePlayer : players) {
+            if (thePlayer.getObeliskChoice()!=null && thePlayer.getObeliskChoice().length()>0) {
+                obeliskChoice=thePlayer.getCardForObelisk();
+                break;
+            }
+        }
+    }
+
+public DomPlayer getPreviousTurnTakenBy() {
+    return previousTurnTakenBy;
+}
+
+    /**
  * @return
  */
 public ArrayList< DomPlayer > getPlayers() {
@@ -85,20 +99,17 @@ public DomCard takeFromSupply( DomCardName aCardName ) {
  * 
  */
 public void runSimulation() {
+    setPreviousTurnTakenBy(null);
     long theTime = System.currentTimeMillis();
-    turn = 0;
     do {
-        turn++;
         DomEngine.logPlayerIndentation = 0;
         for (int i=0;i<players.size()&&!isGameFinished();i++) {
-          extraTurnsTakenByActivePlayer=false;
           activePlayer = players.get(i);
           theTime = System.currentTimeMillis();
           //first take all possessed turns
       	  while (!activePlayer.getPossessionTurns().isEmpty() && !isGameFinished()) {
-     	    activePlayer.setPossessor(activePlayer.getPossessionTurns().remove(0));
+     	    activePlayer.setPossessor(activePlayer.removePossessorTurn());
             activePlayer.takeTurn();
-            extraTurnsTakenByActivePlayer=true;
       	  }
       	  activePlayer.setPossessor(null);
       	  //take normal turn
@@ -108,15 +119,13 @@ public void runSimulation() {
       	  //take Outpost turn
           if (activePlayer.hasExtraOutpostTurn() && !isGameFinished()){
         	activePlayer.takeTurn();
-            extraTurnsTakenByActivePlayer=true;
           }
-          if (activePlayer.hasExtraMissionTurn() && !isGameFinished() && !extraTurnsTakenByActivePlayer) {
-              activePlayer.takeTurn();
-              activePlayer.setExtraMissionTurn(false);
-              extraTurnsTakenByActivePlayer=true;
+          if (activePlayer.hasExtraMissionTurn() && !isGameFinished() ) {
+            activePlayer.takeTurn();
           }
           playerTurnTime += System.currentTimeMillis()-theTime;
           DomEngine.logPlayerIndentation++;
+          previousTurnTakenBy = activePlayer;
         }
     } while (!isGameFinished() );
     DomEngine.logPlayerIndentation = 0;
@@ -380,7 +389,7 @@ public int getBridge_TrollsInPlay() { return activePlayer!=null?activePlayer.get
     public ArrayList<DomCard> getRogueableCardsInTrash() {
         ArrayList<DomCard> theRogueableCards = new ArrayList<DomCard>();
         for (DomCard theCard : getTrashedCards()) {
-            if (theCard.getCoinCost(this)>=3 && theCard.getCoinCost(this)<=6 && theCard.getPotionCost()==0)
+            if (theCard.getCoinCost(this)>=3 && theCard.getCoinCost(this)<=6 && theCard.getPotionCost()==0 && theCard.getCost(this).getDebt()==0)
                 theRogueableCards.add(theCard);
         }
         return theRogueableCards;
@@ -423,23 +432,26 @@ public int getBridge_TrollsInPlay() { return activePlayer!=null?activePlayer.get
 
     public void startUpHumanGame() {
         addObserver(myEngine.getGameFrame());
-        turn = 1;
+        for (DomPlayer thePlayer:players) {
+            thePlayer.addObserver(myEngine.getGameFrame());
+        }
         DomEngine.addToLog("<BR><HR><B>Game Log</B><BR>");
 
         DomEngine.logPlayerIndentation = 0;
 //        activePlayer = players.get(0).isHuman() ? players.get(1):players.get(0);
         activePlayer=players.get(0);
-        while (!activePlayer.isHuman()&&(activePlayer.getPossessor()==null||!activePlayer.getPossessor().isHuman())) {
+        while (!activePlayer.isHuman()) {
             activePlayer.takeTurn();
             activePlayer=activePlayer.getOpponents().get(0);
             DomEngine.logPlayerIndentation++;
         }
-//        activePlayer.gainInHand(takeFromSupply(DomCardName.Market));
-//        activePlayer.gainInHand(takeFromSupply(DomCardName.Village));
-//        activePlayer.gainInHand(takeFromSupply(DomCardName.Smithy));
+//        activePlayer.gainInHand(takeFromSupply(DomCardName.Bazaar));
+//        activePlayer.gainInHand(takeFromSupply(DomCardName.Bazaar));
+//        activePlayer.gainInHand(takeFromSupply(DomCardName.Possession));
+//        activePlayer.gainInHand(takeFromSupply(DomCardName.Possession));
+//        activePlayer.gainInHand(takeFromSupply(DomCardName.Possession));
 
         initHumanOrPossessedPlayer();
-        activePlayer.addObserver(myEngine.getGameFrame());
         setChanged();
         notifyObservers();
     }
@@ -457,19 +469,37 @@ public int getBridge_TrollsInPlay() { return activePlayer!=null?activePlayer.get
     }
 
     public void continueHumanGame() {
-        getHumanPlayer().updateVPCurve(false);
         if (!isGameFinished()) {
             setChanged();
             notifyObservers();
-            activePlayer=activePlayer.getOpponents().get(0);
-            DomEngine.logPlayerIndentation++;
-            while (!isGameFinished() && !activePlayer.isHuman()&&(activePlayer.getPossessor()==null||!activePlayer.getPossessor().isHuman())) {
+            if (activePlayer.isHuman() && !activePlayer.hasExtraOutpostTurn() && !activePlayer.hasExtraMissionTurn() ) {
+                activePlayer = activePlayer.getOpponents().get(0);
+                DomEngine.logPlayerIndentation++;
+            }
+            activePlayer.setPossessor(activePlayer.removePossessorTurn());
+            while (!isGameFinished() && (!activePlayer.isHumanOrPossessedByHuman() || (activePlayer.isHuman() && activePlayer.getPossessor()!=null))) {
                 if (activePlayer.equals(players.get(0))) {
                     DomEngine.logPlayerIndentation=0;
                 }
-                activePlayer.takeTurn();
-                activePlayer=activePlayer.getOpponents().get(0);
-                DomEngine.logPlayerIndentation++;
+                while (activePlayer.getPossessor()!=null && !isGameFinished()) {
+                    activePlayer.takeTurn();
+                    activePlayer.setPossessor(activePlayer.removePossessorTurn());
+                }
+                if (!activePlayer.isHuman()) {
+                    activePlayer.takeTurn();
+                    if (activePlayer.hasExtraOutpostTurn() && !isGameFinished() ){
+                        activePlayer.takeTurn();
+                    }
+                    if (activePlayer.hasExtraMissionTurn() && !isGameFinished() ) {
+                        activePlayer.takeTurn();
+                    }
+                    getEngine().getGameFrame().hover("<html>Opponent gained: " + activePlayer.getGainedCardsText() + "</html>");
+                    activePlayer = activePlayer.getOpponents().get(0);
+                    if (!activePlayer.getPossessionTurns().isEmpty()) {
+                        activePlayer.setPossessor(activePlayer.removePossessorTurn());
+                    }
+                    DomEngine.logPlayerIndentation++;
+                }
             }
             if (!isGameFinished()) {
                 if (activePlayer.equals(players.get(0))) {
@@ -488,20 +518,44 @@ public int getBridge_TrollsInPlay() { return activePlayer!=null?activePlayer.get
 
     private void initHumanOrPossessedPlayer() {
         activePlayer.initializeTurn();
+        activePlayer.resolveBeginningOfTurnForHuman();
         activePlayer.setPhase(DomPhase.Action);
         if (activePlayer.getCardsFromHand(DomCardType.Action).isEmpty())
             activePlayer.setPhase(DomPhase.Buy);
     }
 
-    public DomCard getResolvingCard() {
-        return resolvingCards.isEmpty()?null:resolvingCards.get(0);
+    public DomCard removeFromTrash(DomCardName theChosenCard) {
+        for (DomCard theCard:getTrashedCards()) {
+            if (theCard.getName()==theChosenCard) {
+                return removeFromTrash(theCard);
+            }
+        }
+        return null;
     }
 
-    public void addResolvingCard(DomCard resolvingCard) {
-        resolvingCards.add(0,resolvingCard);
+    public void setPreviousTurnTakenBy(DomPlayer aPlayer) {
+        if (aPlayer==null)
+            return;
+        if (previousTurnTakenBy==aPlayer) {
+            aPlayer.setExtraMissionTurn(false);
+            aPlayer.setExtraOutpostTurn(false);
+        }
+        this.previousTurnTakenBy = aPlayer;
     }
 
-    public void removeResolvingCard() {
-        resolvingCards.remove(0);
+    public DomCardName getObeliskChoice() {
+        return obeliskChoice;
+    }
+
+    public ArrayList<DomCard> getFaceDownCardsInTrash() {
+        return faceDownCardsInTrash;
+    }
+
+    public void resetFaceDownCards() {
+        faceDownCardsInTrash.clear();
+    }
+
+    public void addFaceDownCard(DomCard theChosenCard) {
+        faceDownCardsInTrash.add(theChosenCard);
     }
 }

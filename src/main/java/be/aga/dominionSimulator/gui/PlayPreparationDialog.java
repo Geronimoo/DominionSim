@@ -3,9 +3,11 @@ package be.aga.dominionSimulator.gui;
 import be.aga.dominionSimulator.DomBuyRule;
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.DomPlayer;
+import be.aga.dominionSimulator.StartState;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 import be.aga.dominionSimulator.enums.DomSet;
+import com.sun.org.apache.bcel.internal.generic.LAND;
 import org.jfree.ui.RefineryUtilities;
 
 import javax.swing.*;
@@ -19,21 +21,33 @@ import java.util.*;
 /**
  * Created by jeroena on 19/02/2016.
  */
-public class PlayPreparationDialog extends EscapeDialog implements ActionListener {
+public class PlayPreparationDialog extends JFrame implements ActionListener {
 
     private final DomEngine myEngine;
     private final ArrayList<DomPlayer> myBots;
     private HashSet<DomCardName> myBoard = new HashSet<DomCardName>();
     private JTextField myBoardField;
-    private JTextField myBaneField;
+    private JTextField myBaneField=new JTextField();
     private ButtonGroup myBTNGroup;
     private DomCardName myBane;
     private HashSet<DomSet> myValidSets = new HashSet<DomSet>();
+    private JTextField myDelayTXF;
 
     public PlayPreparationDialog(DomEngine anEngine) {
         myValidSets.add(DomSet.Base);
+        myValidSets.add(DomSet.Intrigue);
+        myValidSets.add(DomSet.Seaside);
+        myValidSets.add(DomSet.Alchemy);
+        myValidSets.add(DomSet.Prosperity);
+        myValidSets.add(DomSet.Cornucopia);
+        myValidSets.add(DomSet.Hinterlands);
+        myValidSets.add(DomSet.Dark_Ages);
+        myValidSets.add(DomSet.Guilds);
+        myValidSets.add(DomSet.Adventures);
+        myValidSets.add(DomSet.Empires);
+        myValidSets.add(DomSet.Nocturne);
+        myValidSets.add(DomSet.Promo);
         myEngine=anEngine;
-        myEngine.getGui().getGlassPane().setVisible(true);
         myBots = myEngine.getGui().getBots();
         if (myBots.isEmpty()){
             JOptionPane.showMessageDialog(this, "Please select (a) bot(s) to play against!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -43,7 +57,7 @@ public class PlayPreparationDialog extends EscapeDialog implements ActionListene
         resetBoard();
         resetBane();
         if (!checkValidSets()) {
-            JOptionPane.showMessageDialog(this, "<html>Bot not supported (yet)<br>Supported Set: Base Dominion</html>", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "<html>Bot not supported (yet)<br>Supported Sets: <i>"+myValidSets+"</i></html>", "Error", JOptionPane.ERROR_MESSAGE);
             dispose();
             return;
         }
@@ -51,7 +65,7 @@ public class PlayPreparationDialog extends EscapeDialog implements ActionListene
         buildGUI();
         pack();
         setVisible( true );
-        RefineryUtilities.positionDialogRelativeToParent(this,1,1);
+//        RefineryUtilities.positionDialogRelativeToParent(this,1,1);
 
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -77,7 +91,25 @@ public class PlayPreparationDialog extends EscapeDialog implements ActionListene
         theCons.gridy++;
         add(getStartStatePanel(), theCons);
         theCons.gridy++;
+        add(getDelayPanel(),theCons);
+        theCons.gridy++;
         add(getButtonPanel(), theCons);
+    }
+
+    private JPanel getDelayPanel() {
+        final JPanel thePanel = new JPanel();
+        thePanel.setLayout( new GridBagLayout() );
+        final GridBagConstraints theCons = DomGui.getGridBagConstraints( 2 );
+//        theCons.anchor=GridBagConstraints.WEST;
+        theCons.weightx=1;
+        thePanel.add(new JLabel("Game Log Delay"),theCons);
+        myDelayTXF = new JTextField("100");
+        theCons.gridx++;
+        thePanel.add(myDelayTXF,theCons);
+        theCons.gridx++;
+        theCons.weightx=100;
+        thePanel.add(new JLabel(), theCons);
+        return thePanel;
     }
 
     private JPanel getBoardPanel() {
@@ -119,10 +151,16 @@ public class PlayPreparationDialog extends EscapeDialog implements ActionListene
         }
         for (DomPlayer theBot : myBots) {
             for (DomBuyRule theRule:theBot.getBuyRules()) {
-                if (theRule.getCardToBuy().hasCardType(DomCardType.Kingdom) || theRule.getCardToBuy()== DomCardName.Platinum || theRule.getCardToBuy()==DomCardName.Colony )
+                if (theRule.getCardToBuy().hasCardType(DomCardType.Kingdom) || theRule.getCardToBuy()== DomCardName.Platinum || theRule.getCardToBuy()==DomCardName.Colony || theRule.getCardToBuy().hasCardType(DomCardType.Event) || theRule.getCardToBuy().hasCardType(DomCardType.Landmark))
                     myBoard.add(theRule.getCardToBuy());
             }
         }
+        if (myBoardField==null)
+            return;
+        ArrayList<DomCardName> aCardList = new ArrayList<DomCardName>();
+        StartState.dissectAndAdd(myBoardField.getText(), aCardList);
+        myBoard.addAll(aCardList);
+
     }
 
     private void resetBane() {
@@ -189,8 +227,23 @@ public class PlayPreparationDialog extends EscapeDialog implements ActionListene
         if (e.getActionCommand().equals("Randomize")) {
             resetBoard();
             resetBane();
-            while (myBoard.size()<10) {
-                myBoard.add(DomCardName.getRandomKingdomCard());
+            int theCount=0;
+            int theEventCount = 0;
+            while (theCount<10) {
+                theCount=0;
+                myBoard.add(DomCardName.getRandomKingdomCard(myValidSets));
+                for (DomCardName theCard : myBoard) {
+                    if (theCard.hasCardType(DomCardType.Kingdom))
+                        theCount++;
+                }
+            }
+            while (theEventCount<2) {
+                theEventCount = 0;
+                myBoard.add(DomCardName.getRandomEventOrLandmark(myValidSets));
+                for (DomCardName theCard : myBoard) {
+                    if (theCard.hasCardType(DomCardType.Event)||theCard.hasCardType(DomCardType.Landmark))
+                        theEventCount++;
+                }
             }
             if (myBoard.contains(DomCardName.Young_Witch) && myBane==null){
                 Object[] theBanes = DomCardName.getPossibleBaneCards();
@@ -206,7 +259,7 @@ public class PlayPreparationDialog extends EscapeDialog implements ActionListene
         if (e.getActionCommand().equals("Start")) {
             DomPlayer theHumanPlayer = new DomPlayer("Human");
             theHumanPlayer.setHuman();
-            if (!theHumanPlayer.addBoard(myBoardField.getText(),myBaneField.getText(),"0","")) {
+            if (!theHumanPlayer.addBoard(myBoardField.getText(),myBaneField.getText(),"0","", "false")) {
               JOptionPane.showMessageDialog(this, "An error was found in the Board and/or Bane", "Error", JOptionPane.ERROR_MESSAGE);
               return;
             }
@@ -219,14 +272,12 @@ public class PlayPreparationDialog extends EscapeDialog implements ActionListene
                         theHumanPlayer.forceStart(52);
                 }
             }
-            myEngine.startHumanGame(theHumanPlayer);
-            dispose();
+            myEngine.startHumanGame(theHumanPlayer, myDelayTXF.getText());
         }
     }
 
     @Override
     public void dispose() {
-        myEngine.getGui().getGlassPane().setVisible(false);
         super.dispose();
     }
 

@@ -26,6 +26,12 @@ public class MandarinCard extends DomCard {
     
     private void putCardBackOnTopOfDeck() {
     	Collections.sort(owner.getCardsInHand(), SORT_FOR_DISCARD_FROM_HAND);
+    	if (owner.getCardsInHand().isEmpty())
+    		return;
+    	if (owner.isHumanOrPossessedByHuman()) {
+    		handleHuman();
+    		return;
+		}
     	DomCard theCardToReturn = null;
     	ArrayList<DomCard> theCardsInHand = owner.getCardsInHand();
      	if (theCardsInHand.get(0).hasCardType(DomCardType.Action)){
@@ -43,6 +49,17 @@ public class MandarinCard extends DomCard {
      	}
    		theCardToReturn=theCardsInHand.get(theCardsInHand.size()-1);
      	owner.putOnTopOfDeck(owner.removeCardFromHand(theCardToReturn));
+	}
+
+	private void handleHuman() {
+		ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+		for (DomCard theCard : owner.getCardsInHand()) {
+			theChooseFrom.add(theCard.getName());
+		}
+		if (theChooseFrom.isEmpty())
+			return;
+		DomCardName theCardToPutBack = owner.getEngine().getGameFrame().askToSelectOneCard("Put on deck", theChooseFrom, "Mandatory!");
+		owner.putOnTopOfDeck(owner.removeCardFromHand(owner.getCardsFromHand(theCardToPutBack).get(0)));
 	}
 
 	private boolean ableToBuyBestCardWhenReturning(DomCard aCardToReturn) {
@@ -77,17 +94,41 @@ public class MandarinCard extends DomCard {
 
 	@Override
 	public void doWhenGained() {
-        int theSum=0;
+    	if (owner.isHumanOrPossessedByHuman()) {
+			ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+			ArrayList<DomCard> theTreasures = new ArrayList<DomCard>();
+			theTreasures.addAll(owner.getCardsFromPlay(DomCardType.Treasure));
+			owner.getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u> (first card = top card)</html>", theTreasures , theChosenCards, 0);
+			if (theChosenCards.size() < theTreasures.size()) {
+				for (DomCard theCard : theTreasures) {
+					owner.putOnTopOfDeck(theCard);
+					owner.removeCardFromPlay(theCard);
+				}
+			} else {
+				for (int i = theChosenCards.size() - 1; i >= 0; i--) {
+					for (DomCard theCard : theTreasures) {
+						if (theChosenCards.get(i) == theCard.getName()) {
+							owner.putOnTopOfDeck(theCard);
+							owner.removeCardFromPlay(theCard);
+							theTreasures.remove(theCard);
+							break;
+						}
+					}
+				}
+			}
+		}else {
+   		  int theSum = 0;
 //        while (!owner.getCardsFromPlay(DomCardType.Treasure).isEmpty() && theSum<5){
 //            DomCard theCard = owner.getCardsFromPlay(DomCardType.Treasure).get(0);
 //            theSum+=theCard.getCoinValue();
 //            owner.putOnTopOfDeck(owner.removeCardFromPlay(theCard));
 //        }
-        //TODO now treasures are sorted so the best will be drawn again, but might need more handling
-		Collections.sort(owner.getCardsInPlay(),SORT_FOR_DISCARDING);
-		while (!owner.getCardsFromPlay(DomCardType.Treasure).isEmpty()){
-			DomCard theCard = owner.removeCardFromPlay(owner.getCardsFromPlay(DomCardType.Treasure).get(0));
+//        TODO now treasures are sorted so the best will be drawn again, but might need more handling
+		  Collections.sort(owner.getCardsInPlay(), SORT_FOR_DISCARDING);
+		  while (!owner.getCardsFromPlay(DomCardType.Treasure).isEmpty()) {
+		    DomCard theCard = owner.removeCardFromPlay(owner.getCardsFromPlay(DomCardType.Treasure).get(0));
 			owner.putOnTopOfDeck(theCard);
+		  }
 		}
 	}    
 }

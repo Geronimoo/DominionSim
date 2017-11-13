@@ -6,6 +6,7 @@ import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 public class TaxmanCard extends DomCard {
@@ -17,6 +18,10 @@ public class TaxmanCard extends DomCard {
     }
 
     public void play() {
+	  if (owner.isHumanOrPossessedByHuman()) {
+	  	handleHumanPlayer();
+	  	return;
+	  }
       checkForCardToMine();
       if (myCardToTrash==null)
     	  //possible if played by Golem for instance
@@ -28,14 +33,37 @@ public class TaxmanCard extends DomCard {
       if (myDesiredCard!=null) {
           owner.gainOnTopOfDeck(owner.getCurrentGame().takeFromSupply(myDesiredCard));
           for (DomPlayer theOpp : owner.getOpponents()) {
-              if (theOpp.checkDefense() || theOpp.getCardsInHand().size()<5)
+              if (theOpp.checkDefense() || theOpp.getCardsInHand().size()<5 || theOpp.getCardsFromHand(myCardToTrash.getName()).isEmpty())
                   continue;
               theOpp.discardFromHand(myCardToTrash.getName());
           }
       }
     }
 
-    @Override
+	private void handleHumanPlayer() {
+			ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+			for (DomCard theCard : owner.getCardsFromHand(DomCardType.Treasure))
+				theChooseFrom.add(theCard.getName());
+			if (theChooseFrom.isEmpty())
+				return;
+			DomCard theCardToMine = owner.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Select card to " + this.getName().toString(), theChooseFrom, "Mandatory!")).get(0);
+			owner.trash(owner.removeCardFromHand(theCardToMine));
+  		    for (DomPlayer theOpp : owner.getOpponents()) {
+  		      if (theOpp.checkDefense() || theOpp.getCardsInHand().size()<5 || theOpp.getCardsFromHand(theCardToMine.getName()).isEmpty())
+			 	continue;
+			  theOpp.discardFromHand(theCardToMine.getName());
+		    }
+		    theChooseFrom = new ArrayList<DomCardName>();
+			for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+				if (theCard.getCost(owner.getCurrentGame()).compareTo(theCardToMine.getCost(owner.getCurrentGame()).add(new DomCost(3, 0))) <= 0 && theCard.hasCardType(DomCardType.Treasure) && owner.getCurrentGame().countInSupply(theCard)>0)
+					theChooseFrom.add(theCard);
+			}
+			if (theChooseFrom.isEmpty())
+				return;
+			owner.gainOnTopOfDeck(owner.getCurrentGame().takeFromSupply(owner.getEngine().getGameFrame().askToSelectOneCard("Select card to gain from " + this.getName().toString(), theChooseFrom, "Mandatory!")));
+	}
+
+	@Override
     public boolean wantsToBePlayed() {
         checkForCardToMine();
         return myDesiredCard!=null;

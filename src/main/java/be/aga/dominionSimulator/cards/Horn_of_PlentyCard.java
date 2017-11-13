@@ -21,16 +21,28 @@ public class Horn_of_PlentyCard extends DomCard {
       }
       if (DomEngine.haveToLog) 
       	DomEngine.addToLog( owner + " has " + theSingleCards.size() + " different cards in play");
-      DomCardName theCardToGain = owner.getDesiredCardWithRestriction(null,new DomCost(theSingleCards.size(), 0), false, DomCardName.Stonemason);
-      if (theCardToGain==null) {
-    	//possibly null if played by Venture
-        theCardToGain=owner.getCurrentGame().getBestCardInSupplyFor(owner, null, new DomCost(theSingleCards.size(), 0));
-      }
-      if (owner.stillInEarlyGame() && theCardToGain.hasCardType(DomCardType.Victory) && (theCardToGain.hasCardType(DomCardType.Action)||theCardToGain.hasCardType(DomCardType.Treasure)))
-        theCardToGain = owner.getDesiredCard(null, new DomCost(theSingleCards.size(), 0), false, false, DomCardType.Victory);
-      if (theCardToGain==null) {
-         //possibly null if played by Venture
-          theCardToGain=owner.getCurrentGame().getBestCardInSupplyFor(owner, null, new DomCost(theSingleCards.size(), 0));
+      DomCardName theCardToGain = null;
+      if (owner.isHumanOrPossessedByHuman()) {
+          ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+          for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+              if (new DomCost(theSingleCards.size(),0).compareTo(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0)
+                  theChooseFrom.add(theCard);
+          }
+          if (theChooseFrom.isEmpty())
+              return;
+          theCardToGain=owner.getEngine().getGameFrame().askToSelectOneCard("Select card to gain from "+this.getName().toString(), theChooseFrom, "Mandatory!");
+      } else {
+          theCardToGain = owner.getDesiredCardWithRestriction(null, new DomCost(theSingleCards.size(), 0), false, DomCardName.Stonemason);
+          if (theCardToGain == null) {
+              //possibly null if played by Venture
+              theCardToGain = owner.getCurrentGame().getBestCardInSupplyFor(owner, null, new DomCost(theSingleCards.size(), 0));
+          }
+          if (owner.stillInEarlyGame() && theCardToGain.hasCardType(DomCardType.Victory) && (theCardToGain.hasCardType(DomCardType.Action) || theCardToGain.hasCardType(DomCardType.Treasure)))
+              theCardToGain = owner.getDesiredCard(null, new DomCost(theSingleCards.size(), 0), false, false, DomCardType.Victory);
+          if (theCardToGain == null) {
+              //possibly null if played by Venture
+              theCardToGain = owner.getCurrentGame().getBestCardInSupplyFor(owner, null, new DomCost(theSingleCards.size(), 0));
+          }
       }
       if (theCardToGain==null)
         return;

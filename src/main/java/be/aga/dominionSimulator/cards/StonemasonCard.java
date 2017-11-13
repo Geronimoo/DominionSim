@@ -7,6 +7,7 @@ import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 import be.aga.dominionSimulator.enums.DomPlayStrategy;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 public class StonemasonCard extends DomCard {
@@ -15,37 +16,70 @@ public class StonemasonCard extends DomCard {
     }
 
     public void play() {
-      if (!owner.getCardsInHand().isEmpty()) {
-        Collections.sort( owner.getCardsInHand() , SORT_FOR_TRASHING);
+        if (owner.getCardsInHand().isEmpty())
+          return;
+        if (owner.isHumanOrPossessedByHuman()) {
+            handleHumanPlay();
+            return;
+        }
+        Collections.sort(owner.getCardsInHand(), SORT_FOR_TRASHING);
         DomCard theCardToTrash = owner.getCardsInHand().get(0);
-        for (DomCard card : owner.getCardsInHand()){
-        	if ((card.getCoinCost(owner.getCurrentGame())==0 && card.getTrashPriority()<=DomCardName.Copper.getTrashPriority(owner))
-        			|| card.getTrashPriority()==0) {
-        		theCardToTrash = card;
-        		break;
-        	}
+        for (DomCard card : owner.getCardsInHand()) {
+            if ((card.getCoinCost(owner.getCurrentGame()) == 0 && card.getTrashPriority() <= DomCardName.Copper.getTrashPriority(owner))
+                    || card.getTrashPriority() == 0) {
+                theCardToTrash = card;
+                break;
+            }
         }
-        if (owner.getPlayStrategyFor(this)== DomPlayStrategy.combo) {
+        if (owner.getPlayStrategyFor(this) == DomPlayStrategy.combo) {
             if (!owner.getCardsFromHand(DomCardName.Peddler).isEmpty()) {
-                theCardToTrash=owner.getCardsFromHand(DomCardName.Peddler).get(0);
+                theCardToTrash = owner.getCardsFromHand(DomCardName.Peddler).get(0);
             }
         }
-        owner.trash(owner.removeCardFromHand( theCardToTrash ));
+        owner.trash(owner.removeCardFromHand(theCardToTrash));
         int theCost = theCardToTrash.getCoinCost(owner.getCurrentGame());
-        if (theCost>0) {
-            for (int j=0;j<2;j++) {
+        if (theCost > 0) {
+            for (int j = 0; j < 2; j++) {
                 DomCardName theDesiredCard = owner.getDesiredCardWithRestriction(null, new DomCost(theCost - 1, theCardToTrash.getPotionCost()), false, DomCardName.Stonemason);
-                if (theDesiredCard==null) {
-                    theDesiredCard = owner.getCurrentGame().getBestCardInSupplyFor(owner, null,new DomCost(theCost - 1, theCardToTrash.getPotionCost()));
+                if (theDesiredCard == null) {
+                    theDesiredCard = owner.getCurrentGame().getBestCardInSupplyFor(owner, null, new DomCost(theCost - 1, theCardToTrash.getPotionCost()));
                 }
-                if (theDesiredCard!=null)
-                  owner.gain(theDesiredCard);
+                if (theDesiredCard != null)
+                    owner.gain(theDesiredCard);
             }
         }
-      }
     }
 
-     @Override
+    private void handleHumanPlay() {
+        ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCard theCard : owner.getCardsInHand()) {
+            theChooseFrom.add(theCard.getName());
+        }
+        DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!");
+        if (theChosenCard != null) {
+          owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
+        }
+        theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+            if (theChosenCard.getCost(owner.getCurrentGame()).compareTo(theCard.getCost(owner.getCurrentGame()))>0 && owner.getCurrentGame().countInSupply(theCard)>0 )
+                theChooseFrom.add(theCard);
+        }
+        if (theChooseFrom.isEmpty())
+            return;
+        DomCardName theCardToGain = owner.getEngine().getGameFrame().askToSelectOneCard("Gain a card", theChooseFrom, "Mandatory!");
+        owner.gain(theCardToGain);
+        theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+            if (theChosenCard.getCost(owner.getCurrentGame()).compareTo(theCard.getCost(owner.getCurrentGame()))>0 && owner.getCurrentGame().countInSupply(theCard)>0)
+                theChooseFrom.add(theCard);
+        }
+        if (theChooseFrom.isEmpty())
+            return;
+        theCardToGain= owner.getEngine().getGameFrame().askToSelectOneCard("Gain a card", theChooseFrom, "Mandatory!");
+        owner.gain(theCardToGain);
+    }
+
+    @Override
     public boolean wantsToBePlayed() {
          if (owner.getPlayStrategyFor(this)== DomPlayStrategy.combo && !owner.getCardsFromHand(DomCardName.Peddler).isEmpty())
              return true;
@@ -53,5 +87,50 @@ public class StonemasonCard extends DomCard {
             return true;
         }
     	return false;
+    }
+
+    public void doWhenBought() {
+        if (owner.isHumanOrPossessedByHuman()) {
+            handleHumanWhenBought();
+            return;
+        }
+        DomCardName theDesiredCard = owner.getDesiredCardWithRestriction(DomCardType.Action, owner.getTotalAvailableCurrency(), false, DomCardName.Stonemason);
+        if (theDesiredCard != null) {
+            owner.addAvailableCoins(-theDesiredCard.getCoinCost(owner.getCurrentGame()));
+            owner.availablePotions -= theDesiredCard.getPotionCost();
+            if (DomEngine.haveToLog)
+                DomEngine.addToLog(owner + " overpays " + theDesiredCard.getCost(owner.getCurrentGame()));
+            owner.gain(theDesiredCard);
+            theDesiredCard = owner.getDesiredCardWithRestriction(DomCardType.Action, theDesiredCard.getCost(owner.getCurrentGame()), true, DomCardName.Stonemason);
+            if (theDesiredCard != null)
+                owner.gain(theDesiredCard);
+        }
+    }
+
+    private void handleHumanWhenBought() {
+        ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+            if (owner.getTotalAvailableCurrency().compareTo(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0 && theCard.hasCardType(DomCardType.Action))
+                theChooseFrom.add(theCard);
+        }
+        if (theChooseFrom.isEmpty())
+            return;
+        DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Overpay?", theChooseFrom, "Don't overpay");
+        if (theChosenCard==null)
+            return;
+        owner.gain(theChosenCard);
+        owner.addAvailableCoins(-theChosenCard.getCoinCost(owner.getCurrentGame()));
+        owner.availablePotions-=theChosenCard.getPotionCost();
+        if (DomEngine.haveToLog)
+            DomEngine.addToLog(owner + " overpays " + theChosenCard.getCost(owner.getCurrentGame()));
+        owner.setNeedsToUpdate();
+        theChooseFrom = new ArrayList<DomCardName>();
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+            if (theChosenCard.getCost(owner.getCurrentGame()).compareTo(theCard.getCost(owner.getCurrentGame()))==0 && owner.getCurrentGame().countInSupply(theCard)>0 && theCard.hasCardType(DomCardType.Action))
+                theChooseFrom.add(theCard);
+        }
+        if (theChooseFrom.isEmpty())
+            return;
+        owner.gain(owner.getEngine().getGameFrame().askToSelectOneCard("Gain a second card", theChooseFrom, "Mandatory!"));
     }
 }

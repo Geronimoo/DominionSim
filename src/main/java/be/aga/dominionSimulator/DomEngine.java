@@ -1,30 +1,5 @@
 package be.aga.dominionSimulator;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Observer;
-
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileFilter;
-
-import com.sun.java.browser.plugin2.DOM;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.SimpleLayout;
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
-
 import be.aga.dominionSimulator.enums.DomBotType;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
@@ -33,6 +8,19 @@ import be.aga.dominionSimulator.gui.DomBarChart;
 import be.aga.dominionSimulator.gui.DomGameFrame;
 import be.aga.dominionSimulator.gui.DomGui;
 import be.aga.dominionSimulator.gui.DomLineChart;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.SimpleLayout;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class DomEngine {
     public static boolean showColoredLog = true;
@@ -522,11 +510,14 @@ public class DomEngine {
 		
 	}
 
-	public void startHumanGame(DomPlayer theHumanPlayer) {
+	public void startHumanGame(DomPlayer theHumanPlayer, String delay) {
     	myLog=new StringBuilder();
     	logPlayerIndentation=0;
     	logIndentation=0;
 		ArrayList<DomPlayer> thePlayers = myGui.initPlayers();
+		theHumanPlayer.setBuyRules((ArrayList<DomBuyRule>) thePlayers.get(0).getBuyRules().clone());
+		theHumanPlayer.setStartState(thePlayers.get(0).getStartState());
+		theHumanPlayer.setShelters(thePlayers.get(0).getShelters());
 		thePlayers.add(0,theHumanPlayer);
 		if (!myGui.getOrderBoxSelected())
 			Collections.shuffle(thePlayers);
@@ -537,7 +528,7 @@ public class DomEngine {
 		haveToLog=false;
 		currentGame = new DomGame(theBoard, players, this);
 		haveToLog=true;
-        setGameFrame(new DomGameFrame(this));
+        setGameFrame(new DomGameFrame(this, delay));
 		myGameFrame.setVisible(true);
 		currentGame.startUpHumanGame();
 	}

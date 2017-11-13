@@ -14,6 +14,10 @@ public class CatacombsCard extends DomCard {
 
     public void play() {
       ArrayList<DomCard> theCards = owner.revealTopCards(3);
+      if (owner.isHumanOrPossessedByHuman()) {
+          handleHuman(theCards);
+          return;
+      }
       int theTotal=0;
       for (DomCard card : theCards){
     	theTotal+=card.getDiscardPriority(owner.getActionsLeft());
@@ -30,6 +34,21 @@ public class CatacombsCard extends DomCard {
         for (DomCard theCard : theCards)
           owner.putInHand(theCard);
       }
+    }
+
+    private void handleHuman(ArrayList<DomCard> theCards) {
+        StringBuilder theStr = new StringBuilder();
+        String thePrefix = "";
+        for (DomCard theCard : theCards) {
+            theStr.append(thePrefix).append(theCard.getName().toHTML());
+            thePrefix=", ";
+        }
+        if (owner.getEngine().getGameFrame().askPlayer("<html>Discard " + theStr +"?</html>", "Resolving " + this.getName().toString())) {
+            owner.discard(theCards);
+            owner.drawCards(3);
+        } else {
+            owner.addCardsToHand(theCards);
+        }
     }
 
     @Override

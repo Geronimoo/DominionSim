@@ -17,8 +17,15 @@ public class AlchemistCard extends DomCard {
     public void handleCleanUpPhase() {
       for (DomCard theCard : owner.getCardsInPlay()) {
         if (theCard.getName()==DomCardName.Potion) {
-          owner.putOnTopOfDeck( this );
-          return;
+          if (owner.isHumanOrPossessedByHuman()) {
+              if (owner.getEngine().getGameFrame().askPlayer("<html>Put back " + DomCardName.Alchemist.toHTML() +" ?</html>", "Resolving " + this.getName().toString())) {
+                  owner.putOnTopOfDeck(this);
+                  return;
+              }
+          } else {
+              owner.putOnTopOfDeck(this);
+              return;
+          }
         }
       }
       super.handleCleanUpPhase();

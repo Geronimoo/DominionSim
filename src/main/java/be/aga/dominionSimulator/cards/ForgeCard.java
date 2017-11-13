@@ -1,12 +1,10 @@
 package be.aga.dominionSimulator.cards;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.enums.DomCardName;
-import com.sun.java.browser.plugin2.DOM;
 
 public class ForgeCard extends DomCard {
     public ForgeCard () {
@@ -15,6 +13,10 @@ public class ForgeCard extends DomCard {
 
 	@Override
 	public void play() {
+    	if (owner.isHumanOrPossessedByHuman()) {
+			handleHuman();
+			return;
+		}
 		ArrayList<DomCard> theFinalCardsToTrash = new ArrayList<DomCard>();
 		for (DomCard theCard : owner.getCardsInHand()) {
 			if (theCard.getTrashPriority()<=DomCardName.Copper.getTrashPriority(owner)) {
@@ -31,6 +33,28 @@ public class ForgeCard extends DomCard {
 			theDesiredCard=owner.getCurrentGame().getBestCardInSupplyFor(owner,null,new DomCost(theTotalCoinCost, 0),true);
 		if (theDesiredCard!=null)
 			owner.gain(theDesiredCard);
+	}
+
+	private void handleHuman() {
+		ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+		owner.getEngine().getGameFrame().askToSelectCards("Trash for Forge?" , owner.getCardsInHand(), theChosenCards, 0);
+		int theTotalCoinCost = 0;
+		for (DomCardName theCard : theChosenCards) {
+			theTotalCoinCost+=theCard.getCoinCost(owner.getCurrentGame());
+			owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theCard).get(0)));
+		}
+		ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
+		for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+			if (new DomCost(theTotalCoinCost,0).compareTo(theCard.getCost(owner.getCurrentGame()))==0 && owner.getCurrentGame().countInSupply(theCard)>0)
+				theChooseFrom.add(theCard);
+		}
+		if (theChooseFrom.isEmpty())
+			return;
+		if (theChooseFrom.size()==1) {
+			owner.gain(theChooseFrom.get(0));
+		} else {
+			owner.gain(owner.getEngine().getGameFrame().askToSelectOneCard("Gain from " + this.getName().toString(), theChooseFrom, "Mandatory!"));
+		}
 	}
 
 	//TODO this implementation will trash without consideration to total money in deck

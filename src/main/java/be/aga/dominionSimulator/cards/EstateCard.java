@@ -50,11 +50,11 @@ public class EstateCard extends DomCard {
 
     @Override
     public boolean hasCardType(DomCardType aType) {
-        if (aType!=DomCardType.Action)
-          return super.hasCardType(aType);
-        if (owner==null)
-            return false;
-        return owner.isEstateTokenPlaced();
+        if (aType==DomCardType.Victory)
+            return true;
+        if (owner!=null && owner.isEstateTokenPlaced())
+            return owner.getEstateTokenOn().hasCardType(aType);
+        return false;
     }
 
     @Override

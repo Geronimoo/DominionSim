@@ -7,9 +7,10 @@ import be.aga.dominionSimulator.enums.DomCardType;
 
 import java.util.ArrayList;
 
-public class SoldierCard extends DomCard {
+public class SoldierCard extends TravellerCard{
     public SoldierCard() {
       super( DomCardName.Soldier);
+      myUpgrade=DomCardName.Fugitive;
     }
 
     public void play() {
@@ -21,18 +22,5 @@ public class SoldierCard extends DomCard {
               continue;
           thePlayer.doForcedDiscard(1,false);
       }
-    }
-
-    @Override
-    public void handleCleanUpPhase() {
-        if (owner==null)
-            return;
-        if (owner.wants(DomCardName.Fugitive)) {
-            DomPlayer theOwner = owner;
-            owner.returnToSupply(this);
-            theOwner.gain(DomCardName.Fugitive);
-            return;
-        }
-        super.handleCleanUpPhase();
     }
 }

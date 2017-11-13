@@ -19,16 +19,42 @@ public class RabbleCard extends DomCard {
             if (thePlayer.checkDefense())
             	continue;
             ArrayList< DomCard > theTopThree = thePlayer.revealTopCards(3);
-            for (DomCard theCard : theTopThree) {
-                if (theCard.hasCardType( DomCardType.Treasure ) || theCard.hasCardType(DomCardType.Action)){
-                	thePlayer.discard(theCard);
-                }else{
-                	thePlayer.putOnTopOfDeck(theCard);
+            if (thePlayer.isHumanOrPossessedByHuman()) {
+                handleHuman(thePlayer,theTopThree);
+            }  else {
+                for (DomCard theCard : theTopThree) {
+                    if (theCard.hasCardType(DomCardType.Treasure) || theCard.hasCardType(DomCardType.Action)) {
+                        thePlayer.discard(theCard);
+                    } else {
+                        thePlayer.putOnTopOfDeck(theCard);
+                    }
                 }
             }
         }
     }
-    
+
+    private void handleHuman(DomPlayer thePlayer, ArrayList<DomCard> theTopThree) {
+        ArrayList<DomCard> theVP = new ArrayList<DomCard>();
+        for (DomCard theCard : theTopThree)
+            if (!theCard.hasCardType(DomCardType.Treasure) && !theCard.hasCardType(DomCardType.Action) )
+                theVP.add(theCard);
+        if (theVP.size()==1) {
+            thePlayer.putOnTopOfDeck(theVP.get(0));
+            return;
+        }
+        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();;
+        owner.getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u> (first card = top card)</html>" , theVP, theChosenCards, theVP.size());
+        for (int i=theChosenCards.size()-1;i>=0;i--) {
+            for (DomCard theCard : theVP) {
+                if (theChosenCards.get(i)==theCard.getName()) {
+                    thePlayer.putOnTopOfDeck(theCard);
+                    theVP.remove(theCard);
+                    break;
+                }
+            }
+        }
+    }
+
     public int getPlayPriority() {
       if (owner.getDeckSize() == 0)
           return 50;

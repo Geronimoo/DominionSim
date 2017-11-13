@@ -9,6 +9,7 @@ public class MissionCard extends DomCard {
     }
     @Override
     public void play() {
-		owner.setExtraMissionTurn(true);
+      if (owner.getCurrentGame().getPreviousTurnTakenBy()!=owner)
+        owner.setExtraMissionTurn(true);
     }
 }

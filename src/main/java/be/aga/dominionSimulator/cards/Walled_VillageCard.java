@@ -15,9 +15,16 @@ public class Walled_VillageCard extends DomCard {
 
     @Override
     public void handleCleanUpPhase() {
-      if (owner.getCurrentGame().countActionsInPlay()<=2)
-        owner.putOnTopOfDeck(this);
-      else
-    	super.handleCleanUpPhase();
+        if (owner.isHumanOrPossessedByHuman()) {
+            if (owner.getCurrentGame().countActionsInPlay()<=2 && owner.getEngine().getGameFrame().askPlayer("<html>Return " + DomCardName.Walled_Village.toHTML() +" to top?</html>", "Resolving " + this.getName().toString()))
+                owner.putOnTopOfDeck(this);
+            else
+                super.handleCleanUpPhase();
+        } else {
+            if (owner.getCurrentGame().countActionsInPlay() <= 2)
+                owner.putOnTopOfDeck(this);
+            else
+                super.handleCleanUpPhase();
+        }
     }
 }

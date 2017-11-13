@@ -2,7 +2,6 @@ package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomCost;
-import be.aga.dominionSimulator.DomGame;
 import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomPlayStrategy;
@@ -20,6 +19,10 @@ public class Mining_VillageCard extends DomCard {
     }
 
     private final void posibblyTrashThis() {
+        if (owner.isHumanOrPossessedByHuman()) {
+            handleHuman();
+            return;
+        }
         if (owner.getPlayStrategyFor(this)==DomPlayStrategy.forEngines && owner.getCurrentGame().getGainsNeededToEndGame()>3)
             return;
         if (owner.addingThisIncreasesBuyingPower( new DomCost( 2,0 )) || owner.getCurrentGame().getGainsNeededToEndGame()<=3) {
@@ -27,6 +30,16 @@ public class Mining_VillageCard extends DomCard {
             owner.trash(owner.removeCardFromPlay( this ));
             //owner has now become null... so we use theOwner
             theOwner.addAvailableCoins( 2 );
+        }
+    }
+
+    private void handleHuman() {
+        owner.setNeedsToUpdate();
+        if (owner.getEngine().getGameFrame().askPlayer("<html>Trash " + DomCardName.Mining_Village.toHTML() + " ?</html>", "Resolving " + this.getName().toString())) {
+            DomPlayer theOwner = owner;
+            owner.trash(owner.removeCardFromPlay(this));
+            //owner has now become null... so we use theOwner
+            theOwner.addAvailableCoins(2);
         }
     }
 }
