@@ -460,6 +460,7 @@ public enum DomCardName  {
       }
     }
 
+    
     public static DomCardName[] getSafeValues() {
         ArrayList<DomCardName> theValues = new ArrayList<DomCardName>();
         for (DomCardName theCard : values()){
