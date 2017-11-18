@@ -436,6 +436,20 @@ public enum DomCardName  {
     private int playPriority;
     private int discardPriority;
 
+    /**
+     * Sole constructor.
+     * <p>
+     * Note that coin cost, potion cost, coin value, and victory value are all printed on card, while play priority and discard priority are not.
+     * <p>
+     * The coin value and victory value are the non-variable values printed as "+ x" on the card, not the values that require any sort of calculation.
+     * @param aCoinCost int the coin cost as printed on card
+     * @param aPotionCost int potion cost as printed on card
+     * @param aCoinValue int number of non-variable coins added to money pool
+     * @param aVictoryValue int number of non-variable victory points added to score
+     * @param aPlayPriority int play priority
+     * @param aDiscardPriority int discard priority
+     * @param aTypes DomCardType array of all types
+     */
     DomCardName(int aCoinCost, int aPotionCost, int aCoinValue, int aVictoryValue, int aPlayPriority, int aDiscardPriority, DomCardType[] aTypes) {
       cost = new DomCost(aCoinCost, aPotionCost);
       coinValue = aCoinValue;
@@ -1258,7 +1272,8 @@ public enum DomCardName  {
     }
 
     /**
-     * @return
+     * Returns true iff this card has {@code aCardType}.
+     * @return true iff this card has {@code aCardType}
      */
     public boolean hasCardType( DomCardType aCardType ) {
       return types.contains( aCardType);
