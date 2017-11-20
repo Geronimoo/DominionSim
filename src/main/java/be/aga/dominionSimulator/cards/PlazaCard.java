@@ -3,7 +3,6 @@ package be.aga.dominionSimulator.cards;
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
-import com.sun.java.browser.plugin2.DOM;
 
 import java.util.ArrayList;
 

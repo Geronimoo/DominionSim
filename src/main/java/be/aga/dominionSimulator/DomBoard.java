@@ -6,6 +6,11 @@ import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 import be.aga.dominionSimulator.enums.DomSet;
 
+/**
+ * Represents Dominion setup.
+ * @author Brandon Irvine, brandon@underplex.com
+ *
+ */
 public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 
     private ArrayList< DomPlayer > players;

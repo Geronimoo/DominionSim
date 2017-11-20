@@ -22,6 +22,11 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * Engine for a simulation of Dominion game.
+ * <p>
+ * Contains the {@code main} method that launches the simulator GUI.
+ */
 public class DomEngine {
     public static boolean showColoredLog = true;
     public static boolean hideGraphs = false;
@@ -48,7 +53,12 @@ public class DomEngine {
 
     private ArrayList< DomPlayer > players = new ArrayList< DomPlayer >();
 	private long findWinnerTime=0;
+	
+	/**
+	 * The bots that will play the game.
+	 */
 	private ArrayList<DomPlayer> bots;
+	
     private long boardResetTime=0;
     private long checkGameFinishTime=0;
     private long playerTurnTime=0;
@@ -107,18 +117,23 @@ public class DomEngine {
     public void loadSystemBots() {
 		try {
             InputSource src = new InputSource(getClass().getResourceAsStream("DomBots.xml"));
-          //InputSource src = new InputSource(new FileInputStream(new File("..."));
+            // InputSource src = new InputSource(new FileInputStream(new File("..."));
 			XMLHandler saxHandler = new XMLHandler();
 			XMLReader rdr = XMLReaderFactory.createXMLReader();
 			rdr.setContentHandler(saxHandler);
 			rdr.parse(src);
 			bots = saxHandler.getBots();
 		} catch (Exception e) {
+			// TODO: Update this message since this requires Java 1.8.
 			JOptionPane.showMessageDialog(myGui, "You'll need to download Java 1.6 at www.java.com to runSimulation this program!!!");
 		}
 		Collections.sort( bots );
 	}
 
+    /**
+     * Loads user-defined bots from file.
+     * @return true iff the bots were successfully loaded
+     */
 	public boolean loadCurrentUserBots() {
 		LOGGER.info("loading from: " + BOT_FILE);
 		if (BOT_FILE.exists() && BOT_FILE.isFile()) {
@@ -214,9 +229,6 @@ public class DomEngine {
         }
     }
 
-    /**
-     * 
-     */
     private void showRunTimes() {
         long theTotalActionTime = 0;
         long theTotalBuyTime = 0;
@@ -235,9 +247,12 @@ public class DomEngine {
         LOGGER.info( "check game finish time: " + checkGameFinishTime);
     }
 
-     /**
-     * @param aString
-     * @return
+    /**
+     * Returns {@code DomPlayer} corresponding to {@code aString}.
+     * <p>
+     * Returns {@code null} if no corresponding bot exists.
+     * @param aString String identifying the bot or player
+     * @return DomPlayer bot or player 
      */
     private DomPlayer getBot( String aString ) {
         for (DomPlayer thePlayer : bots){

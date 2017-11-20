@@ -19,6 +19,9 @@ import be.aga.dominionSimulator.enums.DomPlayStrategy;
 
 import javax.swing.*;
 
+/**
+ * Represents a single player in a simulated game.
+ */
 public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     protected static final Logger LOGGER = Logger.getLogger(DomPlayer.class);
 

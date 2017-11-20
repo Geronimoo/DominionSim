@@ -1,6 +1,14 @@
 package be.aga.dominionSimulator.enums;
 
-public enum     DomCardType {
+/**
+ * Enum with values representing various, non-exclusive card types.
+ * <p>
+ * Cards types are legal if the name of the type actually appears in the listing of types at the bottom of the card, or not legal otherwise.
+ * ({@code Prize} is the only exception to the rule.)
+ * <p>
+ * Non-legal card types are useful for unofficial classification of cards, not rule implementation.
+ */
+public enum DomCardType {
     Kingdom(false),
     Event(true),
     Curse(true),
@@ -39,10 +47,18 @@ public enum     DomCardType {
 
     private final boolean isLegalCardType;
 
+    /**
+     * Sole constructor.
+     * @param isLegalCardType boolean whether this is a legal type
+     */
     DomCardType(boolean isLegalCardType) {
         this.isLegalCardType = isLegalCardType;
     }
 
+    /**
+     * Returns true iff this value is a card type that appears on the bottom of the card as part of the rules.
+     * @param isLegalCardType true if this card type appears on the card
+     */
     public boolean isLegal() {
         return isLegalCardType;
     }
