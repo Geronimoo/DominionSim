@@ -355,27 +355,31 @@ public enum DomSet {
             ,DomCardName.Necromancer
             ,DomCardName.Crypt
             ,DomCardName.Shepherd
-            ,DomCardName.Pooka}),
+            ,DomCardName.Pooka
+            ,DomCardName.Bard
+            ,DomCardName.Blessed_Village
+            ,DomCardName.Conclave
+            ,DomCardName.Idol}),
 
     Promo (new DomCardName[] {DomCardName.Black_Market
-           , DomCardName.Envoy
-           , DomCardName.Governor
-           , DomCardName.Walled_Village
-           , DomCardName.Stash
-           , DomCardName.Summon
-           , DomCardName.Sauna
-           , DomCardName.Dismantle}),
+           ,DomCardName.Envoy
+           ,DomCardName.Governor
+           ,DomCardName.Walled_Village
+           ,DomCardName.Stash
+           ,DomCardName.Summon
+           ,DomCardName.Sauna
+           ,DomCardName.Dismantle}),
                
    Common (new DomCardName[] {DomCardName.Copper
-           , DomCardName.Silver
-           , DomCardName.Gold
-           , DomCardName.Platinum
-           , DomCardName.Potion
-           , DomCardName.Curse
-           , DomCardName.Estate
-           , DomCardName.Duchy
-           , DomCardName.Province
-           , DomCardName.Colony
+           ,DomCardName.Silver
+           ,DomCardName.Gold
+           ,DomCardName.Platinum
+           ,DomCardName.Potion
+           ,DomCardName.Curse
+           ,DomCardName.Estate
+           ,DomCardName.Duchy
+           ,DomCardName.Province
+           ,DomCardName.Colony
            }),
    ;
    

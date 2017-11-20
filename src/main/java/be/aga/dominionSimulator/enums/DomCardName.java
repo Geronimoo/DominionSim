@@ -49,6 +49,7 @@ public enum DomCardName  {
     Bandit_Fort (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Landmark}),
     Bank (7, 0, 0, 0, 1000, 30, new DomCardType[]{DomCardType.Treasure, DomCardType.Kingdom}),
     Banquet (3, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
+    Bard (4, 0, 2, 0, 28, 22, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal, DomCardType.Fate}),
     Baron (4, 0, 4, 0, 22, 25, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal}),
     Basilica (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Landmark}),
     Baths (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Landmark}),
@@ -57,6 +58,7 @@ public enum DomCardName  {
     Beggar (2, 0, 3, 0, 35, 20, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal,DomCardType.Reaction}),
     Bishop (4, 0, 0, 0, 22, 25, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal, DomCardType.Trasher, DomCardType.TrashForBenefit}),
     Black_Market (3, 0, 2, 0, 32, 20, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal}),
+    Blessed_Village (4, 0, 0, 0, 5, 21, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler, DomCardType.Village, DomCardType.Fate}),
     Bonfire (3, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
     Border_Village (6, 0, 0, 0, 5, 22, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler, DomCardType.Village}),
     Borrow (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
@@ -84,6 +86,7 @@ public enum DomCardName  {
     City_Quarter (0, 0, 0, 0, 2, 30, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler, DomCardType.Village}),
     Coin_of_the_Realm (2, 0, 0, 0, 10, 22, new DomCardType[]{DomCardType.Treasure, DomCardType.Kingdom, DomCardType.Reserve}),
     Colonnade (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Landmark}),
+    Conclave (4, 0, 2, 0, 25, 23, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom}),
     Conquest (6, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
     Conspirator (4, 0, 2, 0, 35, 25, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal}),
     Contraband (5, 0, 3, 0, 5, 27, new DomCardType[]{DomCardType.Treasure, DomCardType.Kingdom}),
@@ -190,8 +193,9 @@ public enum DomCardName  {
     Humble_Castle (3, 0, 1, 0, 58, 20, new DomCardType[]{DomCardType.Victory, DomCardType.Kingdom, DomCardType.Treasure, DomCardType.Castle}),
     Hunting_Grounds (6, 0, 0, 0, 19, 32, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal, DomCardType.Card_Advantage}),
     Hunting_Party (5, 0, 0, 0, 13, 28, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler,DomCardType.Card_Advantage}),
+    Idol (5, 0, 2, 0, 2, 27, new DomCardType[]{DomCardType.Kingdom, DomCardType.Treasure, DomCardType.Fate, DomCardType.Attack}),
     Ill_Gotten_Gains (5, 0, 2, 0, 95, 15, new DomCardType[]{DomCardType.Treasure, DomCardType.Kingdom}),
-    Imp (2, 0, 0, 0, 33, 23, new DomCardType[]{DomCardType.Action, DomCardType.Terminal, DomCardType.Card_Advantage}),
+    Imp (2, 0, 0, 0, 33, 23, new DomCardType[]{DomCardType.Action, DomCardType.Terminal, DomCardType.Card_Advantage, DomCardType.Spirit}),
     Inheritance (7, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
     Inn (5, 0, 0, 0, 7, 20, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler, DomCardType.Village}),
     Ironmonger (4, 0, 0, 0, 5, 16, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler}),
@@ -361,6 +365,18 @@ public enum DomCardName  {
     Taxman (4, 0, 2, 0, 32, 25, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Attack, DomCardType.Terminal}),
     Teacher (6, 0, 0, 0, 22, 30, new DomCardType[]{DomCardType.Action, DomCardType.Terminal, DomCardType.Reserve,DomCardType.Traveller}),
     Temple (4, 0, 0, 0, 37, 18, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal, DomCardType.Trasher, DomCardType.Gathering}),
+    The_Earth$s_Gift (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Boon}),
+    The_Field$s_Gift (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Boon}),
+    The_Flame$s_Gift (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Boon}),
+    The_Forest$s_Gift (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Boon}),
+    The_Moon$s_Gift (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Boon}),
+    The_Mountain$s_Gift (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Boon}),
+    The_River$s_Gift (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Boon}),
+    The_Sea$s_Gift (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Boon}),
+    The_Sky$s_Gift (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Boon}),
+    The_Sun$s_Gift (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Boon}),
+    The_Swamp$s_Gift (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Boon}),
+    The_Wind$s_Gift (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Boon}),
     Thief (4, 0, 0, 0, 30, 20, new DomCardType[]{DomCardType.Action, DomCardType.Attack, DomCardType.Kingdom, DomCardType.Terminal}),
     Throne_Room (4, 0, 0, 0, 7, 22, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Multiplier}),
     Tomb (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Landmark}),
@@ -403,6 +419,7 @@ public enum DomCardName  {
     Wedding (4, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
     Wharf (5, 0, 0, 0, 19, 32, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal, DomCardType.Duration, DomCardType.Card_Advantage}),
     Wild_Hunt (5, 0, 0, 0, 19, 32, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal, DomCardType.Card_Advantage, DomCardType.Gathering}),
+    Will_o$_Wisp (0, 0, 0, 0, 4, 18, new DomCardType[]{DomCardType.Action, DomCardType.Cycler, DomCardType.Spirit}),
     Windfall (5, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
     Wine_Merchant (5, 0, 4, 0, 21, 28, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal}),
     Wishing_Well (3, 0, 0, 0, 6, 20, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler}),
@@ -541,6 +558,8 @@ public enum DomCardName  {
             return new BankCard();
         case Banquet:
             return new BanquetCard();
+        case Bard:
+            return new BardCard();
         case Baron:
             return new BaronCard();
         case Bazaar:
@@ -551,6 +570,8 @@ public enum DomCardName  {
             return new BishopCard();
         case Black_Market:
             return new Black_MarketCard();
+        case Blessed_Village:
+            return new Blessed_VillageCard();
         case Bonfire:
             return new BonfireCard();
         case Border_Village:
@@ -603,6 +624,8 @@ public enum DomCardName  {
             return new Coin_of_the_RealmCard();
         case Colony:
             return new ColonyCard();
+        case Conclave:
+            return new ConclaveCard();
         case Conquest:
             return new ConquestCard();
         case Conspirator:
@@ -819,12 +842,14 @@ public enum DomCardName  {
             return new Hunting_GroundsCard();
         case Hunting_Party:
             return new Hunting_PartyCard();
+        case Idol:
+            return new IdolCard();
+        case Ill_Gotten_Gains:
+            return new Ill_Gotten_GainsCard();
         case Inheritance:
             return new InheritanceCard();
         case Inn:
             return new InnCard();
-        case Ill_Gotten_Gains:
-            return new Ill_Gotten_GainsCard();
         case Imp:
             return new ImpCard();
         case Ironmonger:
@@ -1147,6 +1172,30 @@ public enum DomCardName  {
             return new TeacherCard();
         case Temple:
             return new TempleCard();
+        case The_Earth$s_Gift:
+            return new The_Earth$s_GiftCard();
+        case The_Field$s_Gift:
+            return new The_Field$s_GiftCard();
+        case The_Flame$s_Gift:
+            return new The_Flame$s_GiftCard();
+        case The_Forest$s_Gift:
+            return new The_Forest$s_GiftCard();
+        case The_Moon$s_Gift:
+            return new The_Moon$s_GiftCard();
+        case The_Mountain$s_Gift:
+            return new The_Mountain$s_GiftCard();
+        case The_River$s_Gift:
+            return new The_River$s_GiftCard();
+        case The_Sea$s_Gift:
+            return new The_Sea$s_GiftCard();
+        case The_Sky$s_Gift:
+            return new The_Sky$s_GiftCard();
+        case The_Sun$s_Gift:
+            return new The_Sun$s_GiftCard();
+        case The_Swamp$s_Gift:
+            return new The_Swamp$s_GiftCard();
+        case The_Wind$s_Gift:
+            return new The_Wind$s_GiftCard();
         case Thief:
             return new ThiefCard();
         case Throne_Room:
@@ -1223,6 +1272,8 @@ public enum DomCardName  {
             return new WharfCard();
         case Wild_Hunt:
             return new Wild_HuntCard();
+        case Will_o$_Wisp:
+            return new Will_o$_WispCard();
         case Windfall:
             return new WindfallCard();
         case Wine_Merchant:
@@ -1496,6 +1547,8 @@ public enum DomCardName  {
       String theString = super.toString().replaceAll( "_", " " ).replaceAll( "\\$", "'" );
       if (this==DomCardName.Ill_Gotten_Gains)
     	  return "Ill-Gotten Gains";
+      if (this==DomCardName.Will_o$_Wisp)
+          return "Will-o'-Wisp";
 	  return theString;
     }
 

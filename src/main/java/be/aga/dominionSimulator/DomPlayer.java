@@ -117,6 +117,9 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     private char[] tavernMatAsString;
     private ArrayList<DomCard> beginningOfTurnTriggers=new ArrayList<DomCard>();
     private boolean shelters=false;
+    private ArrayList<DomCard> boons = new ArrayList<DomCard>();
+    private boolean river$sGiftActive=false;
+    private ArrayList<DomCard> delayedBoons = new ArrayList<DomCard>();
 
     public DomPlayer(String aString) {
         name = aString;
@@ -459,6 +462,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         resolvePrincedCards();
         resolveRatcatchers();
         handleTransmogrify();
+        handleDelayedBoons();
         doActionPhase();
         doBuyPhase();
         doNightPhase();
@@ -477,6 +481,12 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         //TODO needed fixing
         actionsLeft=1;
         getCurrentGame().setPreviousTurnTakenBy(this);
+    }
+
+    private void handleDelayedBoons() {
+        while (!delayedBoons.isEmpty()) {
+            receiveBoon(delayedBoons.remove(0));
+        }
     }
 
     private void doNightPhase() {
@@ -532,6 +542,9 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
 
     private void doCleanUpPhase() {
         setPhase(DomPhase.CleanUp);
+        while (!boons.isEmpty()) {
+            getCurrentGame().getBoard().returnBoon(boons.remove(0));
+        }
         for (DomCard theEncampment : mySetAsideEncampments) {
             returnToSupply(theEncampment);
         }
@@ -601,6 +614,8 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         drawCards(5);
         for (int i=0;i<expeditionsActivated;i++)
             drawCards(2);
+        if(river$sGiftActive)
+            drawCards(1);
     }
 
     /**
@@ -696,6 +711,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         almsActivated = false;
         saveActivated = false;
         expeditionsActivated = 0;
+        river$sGiftActive=false;
         bridgesPlayedCount = 0;
         hasDoubledMoney = false;
         charmReminder = 0;
@@ -1350,16 +1366,31 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                 DomEngine.addToLog(name + " plays " + (sameCardCount + 1) + " " + previousPlayedCardName.toHTML()
                         + (sameCardCount > 0 ? "s" : ""));
             }
-            if (!aCard.hasCardType(DomCardType.Kingdom) && !aCard.hasCardType(DomCardType.Prize) && aCard.getName() != DomCardName.Mercenary && !aCard.hasCardType(DomCardType.Traveller) && aCard.getName() != DomCardName.Champion && aCard.getName() != DomCardName.Madman && aCard.getName() != DomCardName.Necropolis && aCard.getName() != DomCardName.Estate && aCard.getName() !=DomCardName.Imp) {
-                previousPlayedCardName = aCard.getName();
+            if (!aCard.hasCardType(DomCardType.Kingdom)
+                    && !aCard.hasCardType(DomCardType.Prize)
+                    && aCard.getName() != DomCardName.Mercenary
+                    && !aCard.hasCardType(DomCardType.Traveller)
+                    && aCard.getName() != DomCardName.Champion
+                    && aCard.getName() != DomCardName.Madman
+                    && aCard.getName() != DomCardName.Necropolis
+                    && aCard.getName() != DomCardName.Estate
+                    && !aCard.hasCardType(DomCardType.Spirit)) {
+              previousPlayedCardName = aCard.getName();
             } else {
-                previousPlayedCardName = null;
+              previousPlayedCardName = null;
             }
             sameCardCount = 0;
         } else {
             sameCardCount++;
         }
-        if (aCard.hasCardType(DomCardType.Kingdom) || aCard.hasCardType(DomCardType.Prize) || aCard.getName() == DomCardName.Mercenary || aCard.hasCardType(DomCardType.Traveller) || aCard.getName() == DomCardName.Champion || aCard.getName() == DomCardName.Necropolis || aCard.getName() == DomCardName.Madman ||aCard.getName()==DomCardName.Imp) {
+        if (aCard.hasCardType(DomCardType.Kingdom)
+                || aCard.hasCardType(DomCardType.Prize)
+                || aCard.getName() == DomCardName.Mercenary
+                || aCard.hasCardType(DomCardType.Traveller)
+                || aCard.getName() == DomCardName.Champion
+                || aCard.getName() == DomCardName.Necropolis
+                || aCard.getName() == DomCardName.Madman
+                || aCard.hasCardType(DomCardType.Spirit)) {
             DomEngine.addToLog(name + " plays " + aCard);
         }
         DomEngine.logIndentation++;
@@ -2166,6 +2197,9 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
             if (DomEngine.haveToLog) DomEngine.addToLog(this + " calls " + theNextCardToHandle.getName().toHTML() + " from the tavern mat");
             theNextCardToHandle.doWhenCalled();
         }
+        if (theNextCardToHandle.hasCardType(DomCardType.Boon)) {
+            receiveBoon(delayedBoons.remove(delayedBoons.indexOf(theNextCardToHandle)));
+        }
     }
 
     private void fillTriggerStack() {
@@ -2195,6 +2229,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         }
         beginningOfTurnTriggers.addAll(cardsToSummon);
         beginningOfTurnTriggers.addAll(princedCards);
+        beginningOfTurnTriggers.addAll(delayedBoons);
     }
 
     /**
@@ -4103,5 +4138,31 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
 
     public void payOffDebt(int i) {
         debt-=i;
+    }
+
+    public void receiveBoon(DomCard aBoon) {
+       getCurrentGame().getBoard().receiveBoon(this, aBoon);
+    }
+
+    public void keepBoon(DomCard aBoon) {
+        boons.add(aBoon);
+    }
+
+    public void activateRiver$sGift() {
+        river$sGiftActive = true;
+    }
+
+    public DomCard takeBoon() {
+        return getCurrentGame().getBoard().takeBoon();
+    }
+
+    public void addDelayedBoon(DomCard aBoon) {
+        delayedBoons.add(aBoon);
+    }
+
+    public void returnDelayedBoons() {
+        for (DomCard theBoon : delayedBoons)
+          getCurrentGame().getBoard().returnBoon(theBoon);
+        delayedBoons.clear();
     }
 }

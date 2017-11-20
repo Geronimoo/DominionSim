@@ -33,7 +33,9 @@ public enum     DomCardType {
     TrashForBenefit(false),
     Night(true),
     Fate(true),
-    Heirloom(true);
+    Heirloom(true),
+    Boon(true),
+    Spirit(true);
 
     private final boolean isLegalCardType;
 

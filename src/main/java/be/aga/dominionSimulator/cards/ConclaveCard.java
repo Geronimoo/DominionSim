@@ -1,21 +1,20 @@
 package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
-import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class ImpCard extends DomCard {
+public class ConclaveCard extends DomCard {
 
-    public ImpCard() {
-        super(DomCardName.Imp);
+    public ConclaveCard() {
+        super(DomCardName.Conclave);
     }
 
     public void play() {
-        owner.drawCards(2);
+        owner.addAvailableCoins(2);
         int theCount = 0;
         for (DomCard theCard : owner.getCardsInHand()) {
             if (owner.getCardsFromPlay(theCard.getName()).isEmpty())
@@ -28,6 +27,7 @@ public class ImpCard extends DomCard {
         } else {
             if (getNextActionToPlay() != null) {
                owner.play(owner.removeCardFromHand(owner.getNextActionToPlay()));
+               owner.addActions(1);
             }
         }
     }
@@ -49,6 +49,7 @@ public class ImpCard extends DomCard {
         DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Play a card?", theChooseFrom, "Don't play a card");
         if (theChosenCard != null) {
             owner.play(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
+            owner.addActions(1);
         }
     }
 
@@ -72,7 +73,7 @@ public class ImpCard extends DomCard {
         for (DomCard card : theActionsToConsider) {
             if (card==this)
                 continue;
-            if (card.getName()!=DomCardName.Imp && card.wantsToBePlayed() && owner.getCardsFromPlay(card.getName()).isEmpty() )
+            if (card.getName()!=DomCardName.Conclave && card.wantsToBePlayed() && owner.getCardsFromPlay(card.getName()).isEmpty() )
                 return 2;
         }
         return super.getPlayPriority();

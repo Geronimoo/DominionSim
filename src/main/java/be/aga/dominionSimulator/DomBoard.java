@@ -19,8 +19,8 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     private EnumMap< DomCardName, Integer > gatheringVPTokens = new EnumMap<DomCardName, Integer>(DomCardName.class);
     private HashSet<DomCardName> tradeRouteMat = new HashSet<DomCardName>();
     private HashSet<DomCardName> activeLandmarks = new HashSet<DomCardName>();
-    private ArrayList<DomCardName> boons = new ArrayList<DomCardName>();
-    private ArrayList<DomCardName> boonsDiscard = new ArrayList<DomCardName>();
+    private ArrayList<DomCard> boons = new ArrayList<DomCard>();
+    private ArrayList<DomCard> boonsDiscard = new ArrayList<DomCard>();
     private int gainsNeededToEndGame;
     private EnumMap< DomCardName, Integer > taxTokens = new EnumMap<DomCardName, Integer>(DomCardName.class);
     private EnumMap< DomCardName, Integer > landmarkTokens = new EnumMap<DomCardName, Integer>(DomCardName.class);
@@ -56,6 +56,15 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
            putShrineTokensOnActions();
         if (isLandmarkActive(DomCardName.Aqueduct))
             putAqueductTokensOnTreasures();
+        resetBoons();
+    }
+
+    private void resetBoons() {
+        if (!boonsDiscard.isEmpty()) {
+            boons.addAll(boonsDiscard);
+            boonsDiscard.clear();
+            Collections.shuffle(boons);
+        }
     }
 
     private void putShrineTokensOnActions() {
@@ -108,6 +117,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 }
                 theCard.setEstateCard(null);
             }
+            thePlayer.returnDelayedBoons();
         }
         if (get(DomCardName.Ruins)!=null)
             Collections.shuffle(get(DomCardName.Ruins));
@@ -316,6 +326,12 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     private void createBoonsDeck() {
         if (!boons.isEmpty())
             return;
+        for (DomCardName theCard : DomCardName.values()) {
+            if (theCard.hasCardType(DomCardType.Boon))
+                boons.add(theCard.createNewCardInstance());
+        }
+        Collections.shuffle(boons);
+        addSeparatePile(DomCardName.Will_o$_Wisp,12);
     }
 
     private void addSaunaPile() {
@@ -1014,5 +1030,35 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 
     public EnumMap<DomCardName, ArrayList<DomCard>> getSeperatePiles() {
         return separatePiles;
+    }
+
+    public void receiveBoon(DomPlayer player, DomCard aBoon) {
+        if (aBoon==null && boons.isEmpty()) {
+            boons.addAll(boonsDiscard);
+            boonsDiscard.clear();
+            Collections.shuffle(boons);
+        }
+        DomCard theBoon = aBoon;
+        if (theBoon==null)
+          theBoon = boons.remove(0);
+        theBoon.setOwner(player);
+        if (DomEngine.haveToLog)
+            DomEngine.addToLog(player +" receives "+theBoon);
+        theBoon.play();
+        if (theBoon.getName()!= DomCardName.The_Field$s_Gift && theBoon.getName()!= DomCardName.The_Forest$s_Gift && theBoon.getName()!= DomCardName.The_River$s_Gift)
+            boonsDiscard.add(theBoon);
+    }
+
+    public void returnBoon(DomCard aBoon) {
+        boonsDiscard.add(aBoon);
+    }
+
+    public DomCard takeBoon() {
+        if (boons.isEmpty()) {
+            boons.addAll(boonsDiscard);
+            boonsDiscard.clear();
+            Collections.shuffle(boons);
+        }
+        return boons.remove(0);
     }
 }

@@ -26,7 +26,7 @@ public class Triumphal_ArchCard extends DomCard {
         }
         for (DomCardName theCard : aPlayer.getDeck().keySet()) {
             if (theCard.hasCardType(DomCardType.Action) && theCard!=theMaxAction) {
-                if (aPlayer.countInDeck(theCard) < theMax && aPlayer.countInDeck(theCard)>theSecondMax) {
+                if (theCard!=theMaxAction && aPlayer.countInDeck(theCard) <= theMax && aPlayer.countInDeck(theCard)>theSecondMax) {
                     theSecondMax = aPlayer.countInDeck(theCard);
                     theSecondMaxAction = theCard;
                 }
