@@ -1,5 +1,8 @@
 package be.aga.dominionSimulator;
 
+/**
+ * Represents a cost to be paid in the game on three dimensions: coins, potions, and debt.
+ */
 public class DomCost implements Comparable< DomCost >{
 
     public static final DomCost ZERO = new DomCost( 0, 0 );
@@ -8,44 +11,57 @@ public class DomCost implements Comparable< DomCost >{
     int debt = 0;
 
     /**
-     * @return Returns the coins.
+     * Returns the coin cost.
+     * @return number of coins in cost
      */
     public int getCoins() {
         return coins;
     }
 
     /**
-     * @param aCoins The coins to set.
+     * Sets number of coins in cost.
+     * @param aCoins number of coins in cost
      */
     public void setCoins( int aCoins ) {
         coins = aCoins;
     }
 
     /**
-     * @return Returns the potions.
+     * Returns the potions cost.
+     * @return number of potions in cost
      */
     public int getPotions() {
         return potions;
     }
 
     /**
-     * @param aPotions The potions to set.
+     * Sets number of potions in cost.
+     * @param aPotions number of potions in cost
      */
     public void setPotions( int aPotions ) {
         potions = aPotions;
     }
 
+    /**
+     * Returns the debt cost.
+     * @return number of debt in cost
+     */
     public int getDebt() {
         return debt;
     }
 
+    /**
+     * Sets number of debt in cost.
+     * @param aPotions number of debt in cost
+     */
     public void setDebt(int debt) {
         this.debt = debt;
     }
 
     /**
-     * @param aCoinCost
-     * @param aPotionCost
+     * Sole constructor.
+     * @param aCoinCost number of coins in cost
+     * @param aPotionCost number of potions in cost
      */
     public DomCost ( int aCoinCost , int aPotionCost ) {
         coins = aCoinCost;
@@ -71,7 +87,8 @@ public class DomCost implements Comparable< DomCost >{
     }
 
     /**
-     * @return
+     * Returns new {@code DomCost} representing the addition of this cost and {@code aCostToAdd}.
+     * @return DomCost that is addition of this and argument
      */
     public DomCost add( DomCost aCostToAdd ) {
       DomCost theNewCost = new DomCost(  coins + aCostToAdd.coins, potions + aCostToAdd.potions );
