@@ -845,7 +845,9 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 			return gainsNeededToEndGame;
 		ArrayList<Integer> theCounts = new ArrayList<Integer>();
 		for (DomCardName cardName : keySet()){
-			theCounts.add(get(cardName).size());
+			if (!cardName.hasCardType(DomCardType.Event)) {
+				theCounts.add(get(cardName).size());
+			}
 		}
 		Collections.sort(theCounts);
 		int theCountGainsToEndGame = theCounts.get(0) + theCounts.get(1) + theCounts.get(2);
