@@ -74,10 +74,10 @@ public class HamletCard extends DomCard {
 		int theChoice = owner.getEngine().getGameFrame().askToSelectOption("Select for Hamlet", theOptions, "Don't discard");
 		if (theChoice==-1)
 			return;
-		ArrayList<DomCardName> theChosenCards=new ArrayList<DomCardName>();
+		ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
 		owner.getEngine().getGameFrame().askToSelectCards("Discard" , owner.getCardsInHand(), theChosenCards, theChoice==0||theChoice==1 ? 1 : 2);
-		for (DomCardName theCardName: theChosenCards) {
-			owner.discard(owner.getCardsFromHand(theCardName).get(0), false);
+		for (DomCard theCardName: theChosenCards) {
+			owner.discard(owner.getCardsFromHand(theCardName.getName()).get(0), false);
 		}
 		if (theChoice==0 || theChoice==2)
 			owner.addActions(1);

@@ -5,7 +5,6 @@ import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.enums.DomCardName;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class CatacombsCard extends DomCard {
     public CatacombsCard() {

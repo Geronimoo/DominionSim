@@ -48,11 +48,11 @@ public class NavigatorCard extends DomCard {
         if (owner.getEngine().getGameFrame().askPlayer("<html>Discard " + theStr +"</html>", "Resolving " + this.getName().toString())) {
             owner.discard(theCards);
         } else {
-            ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+            ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
             owner.getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u> (first card = top card)</html>" , theCards, theChosenCards, theCards.size());
             for (int i=theChosenCards.size()-1;i>=0;i--) {
                 for (DomCard theCard : theCards) {
-                    if (theChosenCards.get(i)==theCard.getName()) {
+                    if (theChosenCards.get(i).getName()==theCard.getName()) {
                         owner.putOnTopOfDeck(theCard);
                         theCards.remove(theCard);
                         break;

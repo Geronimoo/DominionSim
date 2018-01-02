@@ -44,10 +44,6 @@ public class Wishing_WellCard extends DomCard {
       }
     }
 
-    private void handleHuman() {
-
-    }
-
     @Override
     public int getPlayPriority() {
         if (owner.getKnownTopCards()>=2)

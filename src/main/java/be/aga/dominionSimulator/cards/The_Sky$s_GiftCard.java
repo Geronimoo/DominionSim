@@ -1,7 +1,6 @@
 package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
-import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.enums.DomCardName;
 
 import java.util.ArrayList;
@@ -36,10 +35,10 @@ public class The_Sky$s_GiftCard extends DomCard {
         owner.setNeedsToUpdate();
         if (!owner.getEngine().getGameFrame().askPlayer("<html>Discard 3 cards to gain " + DomCardName.Gold.toHTML() +"?</html>", "Resolving " + this.getName().toString()))
            return;
-        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
         owner.getEngine().getGameFrame().askToSelectCards("Discard 3 cards" , owner.getCardsInHand(), theChosenCards, 3);
-        for (DomCardName theCardName: theChosenCards) {
-            owner.discardFromHand(owner.getCardsFromHand(theCardName).get(0));
+        for (DomCard theCardName: theChosenCards) {
+            owner.discardFromHand(owner.getCardsFromHand(theCardName.getName()).get(0));
         }
         owner.gain(DomCardName.Gold);
     }

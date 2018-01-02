@@ -72,7 +72,6 @@ public class DomCost implements Comparable< DomCost >{
     /* (non-Javadoc)
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
-    @Override
     public int compareTo( DomCost aO ) {
     	//CAREFUL when using this!!
     	//the cost of King's Court for example will be smaller then the cost of Transmute

@@ -11,19 +11,16 @@ import javax.swing.border.TitledBorder;
 
 import be.aga.dominionSimulator.DomCard;
 
+@SuppressWarnings("unused")
 public class DomCardPanel extends JPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7678820659826715979L;
 	private static final int FIRST_TRESHOLD = 9;
 	private static final Dimension MINIMUM_SIZE = new Dimension(600,150);
 	private static final int SECOND_TRESHOLD = 11;
-	private static final int THIRD_TRESHOLD = 35;
-	private JSplitPane myBigSplit;
-	private JSplitPane myMainSplit;
-	private JPanel myMainPanel;
-	private JPanel mySecondPanel;
-	private JPanel myFourthPanel;
-	private JPanel myThirdPanel;
-	private JSplitPane myExtraSplit;
 	private DomGameFrame myGameFrame;
 
 	public DomCardPanel(String string, DomGameFrame aGameFrame) {
@@ -32,7 +29,7 @@ public class DomCardPanel extends JPanel {
 //		setMinimumSize(MINIMUM_SIZE);
 		setLayout(new GridBagLayout());
 		setBorder(new TitledBorder(string));
-		GridBagConstraints theCons = DomGui.getGridBagConstraints(2);
+		DomGui.getGridBagConstraints(2);
 	}
 
 	public void setCards(ArrayList<DomCard> aCards) {
@@ -65,7 +62,7 @@ public class DomCardPanel extends JPanel {
 			int i=0;
 			GridBagConstraints theCons = DomGui.getGridBagConstraints(2);
 			while (i<aCards.size()){
-	  	      add(new DomCardLabel(aCards.get(i++).getName(), myGameFrame,  false), theCons);
+	  	      add(new DomCardLabel(aCards.get(i++).getName(),  false), theCons);
 	  	      theCons.gridx++;
 	  	      if (i%SECOND_TRESHOLD==0){
 	  	    	  theCons.gridx=0;
@@ -76,7 +73,7 @@ public class DomCardPanel extends JPanel {
 			int i=0;
 			GridBagConstraints theCons = DomGui.getGridBagConstraints(2);
 			while (i<aCards.size()){
-	  	      add(new DomCardLabel(aCards.get(i++).getName(), myGameFrame), theCons);
+	  	      add(new DomCardLabel(aCards.get(i++).getName()), theCons);
 	  	      theCons.gridx++;
 			}
 		}

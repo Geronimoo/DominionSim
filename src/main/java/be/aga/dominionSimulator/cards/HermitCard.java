@@ -9,7 +9,6 @@ import be.aga.dominionSimulator.enums.DomPlayStrategy;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 public class HermitCard extends DomCard {
     public HermitCard() {

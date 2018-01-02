@@ -1,13 +1,21 @@
 package be.aga.dominionSimulator;
 
-import be.aga.dominionSimulator.enums.DomBotType;
-import be.aga.dominionSimulator.enums.DomCardName;
-import be.aga.dominionSimulator.enums.DomCardType;
-import be.aga.dominionSimulator.enums.DomSet;
-import be.aga.dominionSimulator.gui.DomBarChart;
-import be.aga.dominionSimulator.gui.DomGameFrame;
-import be.aga.dominionSimulator.gui.DomGui;
-import be.aga.dominionSimulator.gui.DomLineChart;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
+
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -16,11 +24,14 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
+import be.aga.dominionSimulator.enums.DomBotType;
+import be.aga.dominionSimulator.enums.DomCardName;
+import be.aga.dominionSimulator.enums.DomCardType;
+import be.aga.dominionSimulator.enums.DomSet;
+import be.aga.dominionSimulator.gui.DomBarChart;
+import be.aga.dominionSimulator.gui.DomGameFrame;
+import be.aga.dominionSimulator.gui.DomGui;
+import be.aga.dominionSimulator.gui.DomLineChart;
 
 /**
  * Engine for a simulation of Dominion game.
@@ -266,8 +277,8 @@ public class DomEngine {
        new DomEngine();
     }
 
-    public Object[] getBotArray() {
-      return bots.toArray();
+    public DomPlayer[] getBotArray() {
+        return bots.toArray(new DomPlayer[bots.size()]);
     }
 
 	public DomGame getCurrentGame() {
@@ -467,7 +478,7 @@ public class DomEngine {
 		Collections.sort(bots);
 	}
 
-	public Object[] getBots(Object[] domBotTypes, String[] keywords) {
+	public DomPlayer[] getBots(List<DomBotType> domBotTypes, String[] keywords) {
 		ArrayList<DomPlayer> theBots = new ArrayList<DomPlayer>();
 		player:
 		for (DomPlayer player : bots) {
@@ -490,7 +501,7 @@ public class DomEngine {
 			theBots.add(player);
 		}
 		Collections.sort(theBots);
-		return theBots.toArray();
+        return theBots.toArray(new DomPlayer[theBots.size()]);
 	}
 
 	public void setSelectedBot(Object selectedValue) {
@@ -530,7 +541,7 @@ public class DomEngine {
     	logPlayerIndentation=0;
     	logIndentation=0;
 		ArrayList<DomPlayer> thePlayers = myGui.initPlayers();
-		theHumanPlayer.setBuyRules((ArrayList<DomBuyRule>) thePlayers.get(0).getBuyRules().clone());
+		theHumanPlayer.setBuyRules(thePlayers.get(0).getBuyRules());
 		theHumanPlayer.setStartState(thePlayers.get(0).getStartState());
 		theHumanPlayer.setShelters(thePlayers.get(0).getShelters());
 		thePlayers.add(0,theHumanPlayer);

@@ -11,8 +11,13 @@ import be.aga.dominionSimulator.enums.DomCardName;
 
   
   public class CustomComboBoxRenderer extends DefaultListCellRenderer {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3769438539969485229L;
+
     public Component getListCellRendererComponent(
-                                       JList list,
+                                       JList<?> list,
                                        Object value,
                                        int index,
                                        boolean isSelected,

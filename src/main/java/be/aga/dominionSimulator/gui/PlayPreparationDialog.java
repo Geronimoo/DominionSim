@@ -7,9 +7,6 @@ import be.aga.dominionSimulator.StartState;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 import be.aga.dominionSimulator.enums.DomSet;
-import com.sun.org.apache.bcel.internal.generic.LAND;
-import org.jfree.ui.RefineryUtilities;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -23,6 +20,10 @@ import java.util.*;
  */
 public class PlayPreparationDialog extends JFrame implements ActionListener {
 
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7755122367867940116L;
     private final DomEngine myEngine;
     private final ArrayList<DomPlayer> myBots;
     private HashSet<DomCardName> myBoard = new HashSet<DomCardName>();

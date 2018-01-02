@@ -26,7 +26,7 @@ public class PilgrimageCard extends DomCard {
             return;
         }
         Collections.sort(owner.getCardsInPlay(),SORT_FOR_TRASHING);
-        Set theGainedCards = new HashSet<DomCardName>();
+        Set<DomCardName> theGainedCards = new HashSet<DomCardName>();
         int i=owner.getCardsInPlay().size()-1;
         while (theGainedCards.size()<3 && i>=0) {
             DomCardName theCardToConsider = owner.getCardsInPlay().get(i).getName();
@@ -39,12 +39,12 @@ public class PilgrimageCard extends DomCard {
     }
 
     private void handleHuman() {
-        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
         do {
-          theChosenCards = new ArrayList<DomCardName>();
+          theChosenCards = new ArrayList<DomCard>();
           owner.getEngine().getGameFrame().askToSelectCards("Gain up to 3", owner.getUniqueCardsInPlay(), theChosenCards, 0);
         } while (theChosenCards.size()>3);
-        for (DomCardName theCard:theChosenCards) {
+        for (DomCard theCard:theChosenCards) {
           owner.gain(theCard);
         }
     }

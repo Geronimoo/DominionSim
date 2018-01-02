@@ -1,9 +1,7 @@
 package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
-import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.enums.DomCardName;
-import be.aga.dominionSimulator.enums.DomCardType;
 
 public class FortuneCard extends DomCard {
     public FortuneCard() {
@@ -35,7 +33,8 @@ public class FortuneCard extends DomCard {
 
     @Override
     public void doWhenGained() {
-        for (DomCard theGladiator : owner.getCardsFromPlay(DomCardName.Gladiator)) {
+        final int numberOfGoldsToGain = owner.getCardsFromPlay(DomCardName.Gladiator).size();
+        for (int i=0; i<numberOfGoldsToGain; i++) {
             owner.gain(DomCardName.Gold);
         }
     }

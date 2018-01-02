@@ -30,12 +30,12 @@ public class ShepherdCard extends DomCard {
 
     private void handleHuman() {
         owner.setNeedsToUpdate();
-        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
         owner.getEngine().getGameFrame().askToSelectCards("Discard?" , owner.getCardsFromHand(DomCardType.Victory), theChosenCards, 0);
         if (theChosenCards.isEmpty())
             return;
-        for (DomCardName theCard : theChosenCards) {
-            owner.discardFromHand(theCard);
+        for (DomCard theCard : theChosenCards) {
+            owner.discardFromHand(theCard.getName());
         }
         owner.drawCards(theChosenCards.size()*2);
     }

@@ -2,8 +2,6 @@ package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.enums.DomCardName;
-import be.aga.dominionSimulator.enums.DomCardType;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -35,13 +33,13 @@ public class AnnexCard extends DomCard {
     }
 
     private void handleHuman() {
-        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
         do {
-            theChosenCards = new ArrayList<DomCardName>();
+            theChosenCards = new ArrayList<DomCard>();
             owner.getEngine().getGameFrame().askToSelectCards("Choose and leave maximum 5", owner.getCardsFromDiscard(), theChosenCards, 0);
         } while(owner.getCardsFromDiscard().size()-theChosenCards.size()>5);
-        for (DomCardName theCardName: theChosenCards) {
-            owner.putOnTopOfDeck(owner.removeCardFromDiscard(theCardName));
+        for (DomCard theCard: theChosenCards) {
+            owner.putOnTopOfDeck(owner.removeCardFromDiscard(theCard.getName()));
         }
         owner.shuffleDeck();
         owner.gain(DomCardName.Duchy);

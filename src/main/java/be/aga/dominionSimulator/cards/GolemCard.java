@@ -42,12 +42,12 @@ public class GolemCard extends DomCard {
     }
 
     private void handleHuman(ArrayList<DomCard> theRevealedActions) {
-        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
         do {
             owner.getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u></html>", theRevealedActions, theChosenCards, 0);
         } while (theChosenCards.size() == 1);
         if (theChosenCards.size() == 2) {
-            if (theRevealedActions.get(1).getName() == theChosenCards.get(0)) {
+            if (theRevealedActions.get(1).getName() == theChosenCards.get(0).getName()) {
                 theRevealedActions.add(0, theRevealedActions.get(1));
                 theRevealedActions.remove(2);
             }

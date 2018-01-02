@@ -10,6 +10,11 @@ import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
 
 public class EscapeDialog extends JDialog {
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8797615002822678508L;
+
   protected JRootPane createRootPane() {
     ActionListener actionListener = new ActionListener() {
       public void actionPerformed(ActionEvent actionEvent) {

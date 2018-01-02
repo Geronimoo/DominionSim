@@ -11,7 +11,6 @@ public class Triumphal_ArchCard extends DomCard {
     }
 
     public static int countVP(DomPlayer aPlayer ){
-        int theCount = 0;
         int theMax = 0;
         DomCardName theMaxAction = null;
         int theSecondMax = 0;

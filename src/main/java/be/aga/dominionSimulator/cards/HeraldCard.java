@@ -64,7 +64,7 @@ public class HeraldCard extends DomCard {
         owner.addAvailableCoins(-(theOverpayAmount + 1));
         if (DomEngine.haveToLog)
             DomEngine.addToLog(owner + " overpays $" + (theOverpayAmount + 1));
-        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
         int theSize = 0;
         if ((theOverpayAmount + 1) > owner.getCardsFromDiscard().size())
             theSize = owner.getCardsFromDiscard().size();
@@ -73,7 +73,7 @@ public class HeraldCard extends DomCard {
         owner.getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u> (first card = top card)</html>", owner.getCardsFromDiscard(), theChosenCards, theSize);
         for (int i = theChosenCards.size() - 1; i >= 0; i--) {
             for (DomCard theCard : owner.getCardsFromDiscard()) {
-                if (theChosenCards.get(i) == theCard.getName()) {
+                if (theChosenCards.get(i).getName() == theCard.getName()) {
                     owner.putOnTopOfDeck(theCard);
                     owner.removeCardFromDiscard(theCard);
                     break;

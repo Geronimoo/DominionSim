@@ -39,17 +39,17 @@ public class StoreroomCard extends DomCard {
     }
 
     private void handleHuman() {
-        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
         owner.getEngine().getGameFrame().askToSelectCards("Discard cards" , owner.getCardsInHand(), theChosenCards, 0);
-        for (DomCardName theCard : theChosenCards) {
-            owner.discardFromHand(theCard);
+        for (DomCard theCard : theChosenCards) {
+            owner.discardFromHand(theCard.getName());
         }
         owner.drawCards(theChosenCards.size());
         owner.setNeedsToUpdate();
-        theChosenCards = new ArrayList<DomCardName>();
+        theChosenCards = new ArrayList<DomCard>();
         owner.getEngine().getGameFrame().askToSelectCards("Discard for +$1" , owner.getCardsInHand(), theChosenCards, 0);
-        for (DomCardName theCard : theChosenCards) {
-            owner.discardFromHand(theCard);
+        for (DomCard theCard : theChosenCards) {
+            owner.discardFromHand(theCard.getName());
         }
         owner.addAvailableCoins(theChosenCards.size());
     }

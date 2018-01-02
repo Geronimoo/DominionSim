@@ -1,6 +1,13 @@
 package be.aga.dominionSimulator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
@@ -12,6 +19,11 @@ import be.aga.dominionSimulator.enums.DomSet;
  *
  */
 public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
+
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8125287846716646288L;
 
     private ArrayList< DomPlayer > players;
     
@@ -622,7 +634,6 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     }
 
     public int count( DomCardName aCardName ) {
-        DomCardName theCardName = aCardName;
         if (separatePiles.get(aCardName)!=null)
             return separatePiles.get(aCardName).size();
         if (aCardName==DomCardName.Fortune)
@@ -1025,7 +1036,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
         return theStr.length()==0? "<i>empty</i>" : theStr.toString();
     }
 
-    public Set getTradeRouteMat() {
+    public Set<DomCardName> getTradeRouteMat() {
         return tradeRouteMat;
     }
 

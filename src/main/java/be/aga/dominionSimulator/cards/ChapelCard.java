@@ -40,14 +40,14 @@ public class ChapelCard extends DomCard {
     }
 
     private void handleHumanPlayer() {
-        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
         owner.getEngine().getGameFrame().askToSelectCards("Choose up to 4 cards to trash" , owner.getCardsInHand(), theChosenCards, 0);
         while(theChosenCards.size()>4) {
-            theChosenCards=new ArrayList<DomCardName>();
+            theChosenCards = new ArrayList<DomCard>();
             owner.getEngine().getGameFrame().askToSelectCards("Choose up to 4 cards to trash", owner.getCardsInHand(), theChosenCards, 0);
         }
-        for (DomCardName theCardName: theChosenCards) {
-            owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theCardName).get(0)));
+        for (DomCard theCard: theChosenCards) {
+            owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theCard.getName()).get(0)));
         }
     }
 
@@ -85,7 +85,7 @@ public class ChapelCard extends DomCard {
             }
         }
         Collections.sort(owner.getCardsInHand(),SORT_FOR_TRASHING);
-        for ( int i=0; i<4 && !owner.getCardsInHand().isEmpty();i++) {
+        if (!owner.getCardsInHand().isEmpty()) {
             DomCard theCardToTrash=owner.getCardsInHand().get( 0 );
             if (theCardToTrash.getTrashPriority()>=16
                     || (owner.removingReducesBuyingPower( theCardToTrash ) && theTrashCount< theTrashOverBuyTreshold)

@@ -40,13 +40,13 @@ public class MercenaryCard extends DomCard {
     }
 
     private void handleHuman() {
-        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
         do {
-            theChosenCards = new ArrayList<DomCardName>();
+            theChosenCards = new ArrayList<DomCard>();
             owner.getEngine().getGameFrame().askToSelectCards("Trash 2 ?", owner.getCardsInHand(), theChosenCards, 0);
         } while (theChosenCards.size()>2);
-        for (DomCardName theCard : theChosenCards) {
-            owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theCard).get(0)));
+        for (DomCard theCard : theChosenCards) {
+            owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theCard.getName()).get(0)));
         }
         if (theChosenCards.size()==2) {
             owner.addAvailableCoins(2);

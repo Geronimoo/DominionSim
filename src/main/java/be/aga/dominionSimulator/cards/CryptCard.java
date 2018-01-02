@@ -29,11 +29,11 @@ public class CryptCard extends DomCard {
     }
 
     private void handleHuman() {
-        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
         owner.getEngine().getGameFrame().askToSelectCards("Remove for Crypt" , owner.getCardsFromPlay(DomCardType.Treasure), theChosenCards, 0);
         if (DomEngine.haveToLog) DomEngine.addToLog(owner + " removes "+(theChosenCards.isEmpty()?"nothing" : theChosenCards));
-        for (DomCardName theCardName: theChosenCards) {
-            myArchivedCards.add(owner.removeCardFromPlay(owner.getCardsFromPlay(theCardName).get(0)));
+        for (DomCard theCardName: theChosenCards) {
+            myArchivedCards.add(owner.removeCardFromPlay(owner.getCardsFromPlay(theCardName.getName()).get(0)));
         }
     }
 

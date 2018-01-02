@@ -5,6 +5,7 @@ import java.util.Collections;
 
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomEngine;
+import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
@@ -26,7 +27,7 @@ public class HavenCard extends DomCard {
       }
       if (!owner.getCardsFromHand(DomCardName.Menagerie).isEmpty()) {
           MenagerieCard theMenagerie = (MenagerieCard) owner.getCardsFromHand(DomCardName.Menagerie).get(0);
-          ArrayList<DomCard> theCardsToDiscard = owner.getMultiplesInHand(theMenagerie);
+          ArrayList<DomCard> theCardsToDiscard = DomPlayer.getMultiplesInHand(theMenagerie);
           if (!theCardsToDiscard.isEmpty()) {
               havenAway(theCardsToDiscard.get(0));
               return;

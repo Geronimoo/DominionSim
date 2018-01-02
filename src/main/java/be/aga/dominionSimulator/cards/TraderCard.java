@@ -9,8 +9,6 @@ import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomPlayStrategy;
 
 public class TraderCard extends DomCard {
-    private DomCard lastTradedCard = null;
-
     public TraderCard () {
       super( DomCardName.Trader);
     }
@@ -46,7 +44,6 @@ public class TraderCard extends DomCard {
     
     public boolean react(DomCard aCard) {
       if (DomEngine.haveToLog) DomEngine.addToLog( owner + " reveals " + this );
-      lastTradedCard = aCard;
       owner.getCurrentGame().returnToSupply( aCard );
       owner.gain(DomCardName.Silver);
       return true;

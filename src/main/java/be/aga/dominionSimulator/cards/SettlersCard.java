@@ -3,8 +3,6 @@ package be.aga.dominionSimulator.cards;
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.enums.DomCardName;
 
-import java.util.ArrayList;
-
 public class SettlersCard extends DomCard {
     public SettlersCard() {
       super( DomCardName.Settlers);
