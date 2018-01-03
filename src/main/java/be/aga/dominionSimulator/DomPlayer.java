@@ -101,6 +101,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     private DomCard estateTokenOn;
     private int coinTokensToAdd;
     private boolean extraMissionTurn;
+    private boolean noBuyThisTurn;
     private DomCardName plusOneCoinTokenOn;
     private DomCardName trashingTokenOn;
     private int bridgesPlayedCount;
@@ -231,7 +232,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                     }
                     return;
                 }
-                if (!hasExtraMissionTurn() && tryToBuy(theBuyRule.getCardToBuy(), true)) {
+                if (!getNoBuyThisTurn() && tryToBuy(theBuyRule.getCardToBuy(), true)) {
                     coinTokensToAdd += getCardsFromPlay(DomCardName.Merchant_Guild).size();
                     return;
                 }
@@ -478,6 +479,9 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         if (getCurrentGame().isAuctionTriggered()) {
             Mountain_PassCard.doTheAuction(this);
             getCurrentGame().setAuctionTriggered(false);
+        }
+        if (hasExtraMissionTurn()) {
+            setNoBuyThisTurn(true);
         }
         //TODO moved from buy phase to here... ok?
         updateVPCurve(false);
@@ -3511,6 +3515,14 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         return extraMissionTurn;
     }
 
+    private void setNoBuyThisTurn(boolean noBuyThisTurn) {
+        this.noBuyThisTurn = noBuyThisTurn;
+    }
+
+    private boolean getNoBuyThisTurn() {
+        return noBuyThisTurn;
+    }
+
     public boolean isPlusOneCoinTokenSet() {
         return plusOneCoinTokenOn != null;
     }
@@ -3911,7 +3923,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                     setChanged();
                     notifyObservers();
                 } else {
-                    if (!hasExtraMissionTurn() && tryToBuy(card, false)) {
+                    if (!getNoBuyThisTurn() && tryToBuy(card, false)) {
                         buysLeft--;
                         if (getCardsFromPlay(DomCardName.Merchant_Guild).size() > 0)
                             addCoinTokens(getCardsFromPlay(DomCardName.Merchant_Guild).size());
