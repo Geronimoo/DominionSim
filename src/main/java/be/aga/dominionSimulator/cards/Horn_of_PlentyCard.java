@@ -24,8 +24,8 @@ public class Horn_of_PlentyCard extends DomCard {
       DomCardName theCardToGain = null;
       if (owner.isHumanOrPossessedByHuman()) {
           ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
-          for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-              if (new DomCost(theSingleCards.size(),0).compareTo(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0)
+          for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
+              if (new DomCost(theSingleCards.size(),0).customCompare(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0)
                   theChooseFrom.add(theCard);
           }
           if (theChooseFrom.isEmpty())

@@ -54,8 +54,8 @@ public class TaxmanCard extends DomCard {
 			  theOpp.discardFromHand(theCardToMine.getName());
 		    }
 		    theChooseFrom = new ArrayList<DomCardName>();
-			for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-				if (theCard.getCost(owner.getCurrentGame()).compareTo(theCardToMine.getCost(owner.getCurrentGame()).add(new DomCost(3, 0))) <= 0 && theCard.hasCardType(DomCardType.Treasure) && owner.getCurrentGame().countInSupply(theCard)>0)
+			for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
+				if (theCard.getCost(owner.getCurrentGame()).customCompare(theCardToMine.getCost(owner.getCurrentGame()).add(new DomCost(3, 0))) <= 0 && theCard.hasCardType(DomCardType.Treasure) && owner.getCurrentGame().countInSupply(theCard)>0)
 					theChooseFrom.add(theCard);
 			}
 			if (theChooseFrom.isEmpty())

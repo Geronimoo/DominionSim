@@ -179,7 +179,7 @@ public class GovernorCard extends DomCard {
 		player.trash(player.removeCardFromHand(theCardToRemodel));
 		theChooseFrom = new ArrayList<DomCardName>();
 		for (DomCardName theCard : player.getCurrentGame().getBoard().keySet()) {
-			if (theCardToRemodel.getCost(player.getCurrentGame()).add(new DomCost(i,0)).compareTo(theCard.getCost(player.getCurrentGame()))>=0
+			if (theCardToRemodel.getCost(player.getCurrentGame()).add(new DomCost(i,0)).customCompare(theCard.getCost(player.getCurrentGame()))>=0
 					&& player.getCurrentGame().countInSupply(theCard)>0)
 				theChooseFrom.add(theCard);
 		}

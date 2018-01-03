@@ -22,7 +22,7 @@ public class DuplicateCard extends DomCard {
 
     public boolean wantsToGain(DomCard aCard) {
         if (owner.isHumanOrPossessedByHuman() &&
-            new DomCost(6, 0).compareTo(aCard.getCost(owner.getCurrentGame()))>=0) {
+            new DomCost(6, 0).customCompare(aCard.getCost(owner.getCurrentGame()))>=0) {
             owner.setNeedsToUpdate();
             return owner.getEngine().getGameFrame().askPlayer("<html>Duplicate " + aCard.getName().toHTML() +" ?</html>", "Resolving " + this.getName().toString());
         } else {
@@ -33,7 +33,7 @@ public class DuplicateCard extends DomCard {
                     return true;
                 return false;
             }
-            if (new DomCost(6, 0).compareTo(aCard.getCost(owner.getCurrentGame()))>=0 && owner.wants(aCard.getName()) && aCard.getTrashPriority() > DomCardName.Silver.getTrashPriority())
+            if (new DomCost(6, 0).customCompare(aCard.getCost(owner.getCurrentGame()))>=0 && owner.wants(aCard.getName()) && aCard.getTrashPriority() > DomCardName.Silver.getTrashPriority())
                 return true;
         }
         return false;

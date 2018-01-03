@@ -15,7 +15,7 @@ public class Will_o$_WispCard extends DomCard {
       if (owner.getDeckSize()==0)
     	return;
       DomCard theRevealedCard = owner.revealTopCards(1).get(0);
-	  if (new DomCost(2,0).compareTo(theRevealedCard.getCost(owner.getCurrentGame()))>=0) {
+	  if (new DomCost(2,0).customCompare(theRevealedCard.getCost(owner.getCurrentGame()))>=0) {
         owner.putInHand(theRevealedCard);
 	  }else{
         owner.putOnTopOfDeck(theRevealedCard);

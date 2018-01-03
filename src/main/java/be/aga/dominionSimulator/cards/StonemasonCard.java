@@ -60,8 +60,8 @@ public class StonemasonCard extends DomCard {
           owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
         }
         theChooseFrom = new ArrayList<DomCardName>();
-        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-            if (theChosenCard.getCost(owner.getCurrentGame()).compareTo(theCard.getCost(owner.getCurrentGame()))>0 && owner.getCurrentGame().countInSupply(theCard)>0 )
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
+            if (theChosenCard.getCost(owner.getCurrentGame()).customCompare(theCard.getCost(owner.getCurrentGame()))>0 && owner.getCurrentGame().countInSupply(theCard)>0 )
                 theChooseFrom.add(theCard);
         }
         if (theChooseFrom.isEmpty())
@@ -69,8 +69,8 @@ public class StonemasonCard extends DomCard {
         DomCardName theCardToGain = owner.getEngine().getGameFrame().askToSelectOneCard("Gain a card", theChooseFrom, "Mandatory!");
         owner.gain(theCardToGain);
         theChooseFrom = new ArrayList<DomCardName>();
-        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-            if (theChosenCard.getCost(owner.getCurrentGame()).compareTo(theCard.getCost(owner.getCurrentGame()))>0 && owner.getCurrentGame().countInSupply(theCard)>0)
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
+            if (theChosenCard.getCost(owner.getCurrentGame()).customCompare(theCard.getCost(owner.getCurrentGame()))>0 && owner.getCurrentGame().countInSupply(theCard)>0)
                 theChooseFrom.add(theCard);
         }
         if (theChooseFrom.isEmpty())
@@ -109,8 +109,8 @@ public class StonemasonCard extends DomCard {
 
     private void handleHumanWhenBought() {
         ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
-        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-            if (owner.getTotalAvailableCurrency().compareTo(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0 && theCard.hasCardType(DomCardType.Action))
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
+            if (owner.getTotalAvailableCurrency().customCompare(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0 && theCard.hasCardType(DomCardType.Action))
                 theChooseFrom.add(theCard);
         }
         if (theChooseFrom.isEmpty())
@@ -125,8 +125,8 @@ public class StonemasonCard extends DomCard {
             DomEngine.addToLog(owner + " overpays " + theChosenCard.getCost(owner.getCurrentGame()));
         owner.setNeedsToUpdate();
         theChooseFrom = new ArrayList<DomCardName>();
-        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-            if (theChosenCard.getCost(owner.getCurrentGame()).compareTo(theCard.getCost(owner.getCurrentGame()))==0 && owner.getCurrentGame().countInSupply(theCard)>0 && theCard.hasCardType(DomCardType.Action))
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
+            if (theChosenCard.getCost(owner.getCurrentGame()).customCompare(theCard.getCost(owner.getCurrentGame()))==0 && owner.getCurrentGame().countInSupply(theCard)>0 && theCard.hasCardType(DomCardType.Action))
                 theChooseFrom.add(theCard);
         }
         if (theChooseFrom.isEmpty())

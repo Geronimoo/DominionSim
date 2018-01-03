@@ -20,8 +20,8 @@ public class ProcessionCard extends MultiplicationCard {
             return;
         if (owner.isHumanOrPossessedByHuman()) {
             ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
-            for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-                if (theCard.getCost(owner.getCurrentGame()).compareTo(theCardToMultiply.getCost(owner.getCurrentGame()).add(new DomCost(1,0)))==0
+            for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
+                if (theCard.getCost(owner.getCurrentGame()).customCompare(theCardToMultiply.getCost(owner.getCurrentGame()).add(new DomCost(1,0)))==0
                   && owner.getCurrentGame().countInSupply(theCard)>0
                   && theCard.hasCardType(DomCardType.Action))
                     theChooseFrom.add(theCard);

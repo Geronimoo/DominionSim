@@ -38,6 +38,8 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     private HashSet<DomCardName> activeLandmarks = new HashSet<DomCardName>();
     private ArrayList<DomCard> boons = new ArrayList<DomCard>();
     private ArrayList<DomCard> boonsDiscard = new ArrayList<DomCard>();
+    private ArrayList<DomCard> hexes = new ArrayList<DomCard>();
+    private ArrayList<DomCard> hexesDiscard = new ArrayList<DomCard>();
     private int gainsNeededToEndGame;
     private EnumMap< DomCardName, Integer > taxTokens = new EnumMap<DomCardName, Integer>(DomCardName.class);
     private EnumMap< DomCardName, Integer > landmarkTokens = new EnumMap<DomCardName, Integer>(DomCardName.class);
@@ -74,6 +76,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
         if (isLandmarkActive(DomCardName.Aqueduct))
             putAqueductTokensOnTreasures();
         resetBoons();
+        resetHexes();
     }
 
     private void resetBoons() {
@@ -81,6 +84,14 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
             boons.addAll(boonsDiscard);
             boonsDiscard.clear();
             Collections.shuffle(boons);
+        }
+    }
+
+    private void resetHexes() {
+        if (!hexesDiscard.isEmpty()) {
+            hexes.addAll(hexesDiscard);
+            hexesDiscard.clear();
+            Collections.shuffle(hexes);
         }
     }
 
@@ -141,19 +152,19 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
         if (get(DomCardName.Knights)!=null)
             Collections.shuffle(get(DomCardName.Knights));
         if (get(DomCardName.Gladiator)!=null)
-            Collections.sort(get(DomCardName.Gladiator), DomCard.SORT_BY_COST);
+            Collections.sort(get(DomCardName.Gladiator), DomCard.SORT_BY_COIN_COST);
         if (get(DomCardName.Settlers)!=null)
-            Collections.sort(get(DomCardName.Settlers), DomCard.SORT_BY_COST);
+            Collections.sort(get(DomCardName.Settlers), DomCard.SORT_BY_COIN_COST);
         if (get(DomCardName.Catapult)!=null)
-            Collections.sort(get(DomCardName.Catapult), DomCard.SORT_BY_COST);
+            Collections.sort(get(DomCardName.Catapult), DomCard.SORT_BY_COIN_COST);
         if (get(DomCardName.Patrician)!=null)
-            Collections.sort(get(DomCardName.Patrician), DomCard.SORT_BY_COST);
+            Collections.sort(get(DomCardName.Patrician), DomCard.SORT_BY_COIN_COST);
         if (get(DomCardName.Encampment)!=null)
-            Collections.sort(get(DomCardName.Encampment), DomCard.SORT_BY_COST);
+            Collections.sort(get(DomCardName.Encampment), DomCard.SORT_BY_COIN_COST);
         if (get(DomCardName.Castles)!=null)
-            Collections.sort(get(DomCardName.Castles),DomCard.SORT_BY_COST);
+            Collections.sort(get(DomCardName.Castles),DomCard.SORT_BY_COIN_COST);
         if (get(DomCardName.Sauna)!=null)
-            Collections.sort(get(DomCardName.Sauna), DomCard.SORT_BY_COST);
+            Collections.sort(get(DomCardName.Sauna), DomCard.SORT_BY_COIN_COST);
 
         embargoTokens=new EnumMap<DomCardName, Integer>(DomCardName.class);
         gatheringVPTokens=new EnumMap<DomCardName, Integer>(DomCardName.class);
@@ -182,7 +193,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 
     private void putTaxTokensOnAll() {
         for (DomCardName theCard : keySet()) {
-            if (!theCard.hasCardType(DomCardType.Event))
+            if (!theCard.hasCardType(DomCardType.Event) && !theCard.hasCardType(DomCardType.Landmark))
               putTaxOn(theCard,1);
         }
     }
@@ -268,12 +279,15 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
                     case Patrician:
                     case Emporium:
                         addPatricianPile();
+                        break;
                     case Encampment:
                     case Plunder:
                         addEncampmentPile();
+                        break;
                     case Sauna:
                     case Avanto:
                         addSaunaPile();
+                        break;
                     default:
                         addCardPile(theCard);
                         break;
@@ -325,6 +339,9 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 if (theCard== DomCardName.Pooka) {
                     addCardPile(DomCardName.Cursed_Gold);
                 }
+                if (theCard== DomCardName.Pixie) {
+                    addCardPile(DomCardName.Goat);
+                }
             }
         }
     }
@@ -349,6 +366,17 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
         }
         Collections.shuffle(boons);
         addSeparatePile(DomCardName.Will_o$_Wisp,12);
+    }
+
+    private void createHexesDeck() {
+        if (!hexes.isEmpty())
+            return;
+        for (DomCardName theCard : DomCardName.values()) {
+            if (theCard.hasCardType(DomCardType.Hex))
+                hexes.add(theCard.createNewCardInstance());
+        }
+        Collections.shuffle(hexes);
+//        addSeparatePile(DomCardName.Will_o$_Wisp,12);
     }
 
     private void addSaunaPile() {
@@ -425,7 +453,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
             get(DomCardName.Castles).add(DomCardName.King$s_Castle.createNewCardInstance());
         }
 
-        Collections.sort(get(DomCardName.Castles),DomCard.SORT_BY_COST);
+        Collections.sort(get(DomCardName.Castles),DomCard.SORT_BY_COIN_COST);
     }
 
     private void addKnightsPile() {
@@ -544,6 +572,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
             break;
         case Pasture:
         case Cursed_Gold:
+        case Goat:
             theNumber=players.size();
             break;
 		default:
@@ -802,8 +831,8 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 		    && !get(theCardName).isEmpty() 
 		    && (aType==null || theCardName.hasCardType(aType))
 		    && (aForbiddenType==null || !theCardName.hasCardType(aForbiddenType))
-		    && ((!anExactCost && domCost.compareTo(theCardName.getCost(aPlayer.getCurrentGame()))>=0)
-		    	|| (anExactCost && domCost.compareTo(theCardName.getCost(aPlayer.getCurrentGame()))==0))
+		    && ((!anExactCost && domCost.customCompare(theCardName.getCost(aPlayer.getCurrentGame()))>=0)
+		    	|| (anExactCost && domCost.customCompare(theCardName.getCost(aPlayer.getCurrentGame()))==0))
 		    && ( theCardToGet==null ||
 		      theCardName.getTrashPriority(aPlayer)>theCardToGet.getTrashPriority(aPlayer))
             && !aPlayer.suicideIfBuys(theCardName)) {
@@ -819,7 +848,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
             if (!theCardName.hasCardType(DomCardType.Kingdom) && !theCardName.hasCardType(DomCardType.Base))
                 continue;
 			if (get(theCardName)!=null && !get(theCardName).isEmpty() 
-		    && theCardName.getCost(aPlayer.getCurrentGame()).compareTo(domCost)==0
+		    && theCardName.getCost(aPlayer.getCurrentGame()).customCompare(domCost)==0
 		    && (theCardToGet==null ||
 		    	theCardName.getTrashPriority(aPlayer)<theCardToGet.getTrashPriority(aPlayer))) {
 			  theCardToGet=theCardName;
@@ -856,6 +885,8 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 			return gainsNeededToEndGame;
 		ArrayList<Integer> theCounts = new ArrayList<Integer>();
 		for (DomCardName cardName : keySet()){
+		    if (cardName.hasCardType(DomCardType.Event) || cardName.hasCardType(DomCardType.Landmark) || cardName.hasCardType(DomCardType.Heirloom) || cardName.hasCardType(DomCardType.Shelter))
+		        continue;
 			theCounts.add(get(cardName).size());
 		}
 		Collections.sort(theCounts);
@@ -1062,7 +1093,23 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
             DomEngine.addToLog(player +" receives "+theBoon);
         theBoon.play();
         if (theBoon.getName()!= DomCardName.The_Field$s_Gift && theBoon.getName()!= DomCardName.The_Forest$s_Gift && theBoon.getName()!= DomCardName.The_River$s_Gift)
-            boonsDiscard.add(theBoon);
+            if (!boonsDiscard.contains(theBoon))
+              boonsDiscard.add(theBoon);
+    }
+
+    public void receiveHex(DomPlayer player, DomCard aHex) {
+        if (aHex==null && hexes.isEmpty()) {
+            hexes.addAll(hexesDiscard);
+            hexesDiscard.clear();
+            Collections.shuffle(hexes);
+        }
+        DomCard theHex = aHex;
+        if (theHex==null)
+            theHex = hexes.remove(0);
+        theHex.setOwner(player);
+        if (DomEngine.haveToLog)
+            DomEngine.addToLog(player +" receives "+theHex);
+        theHex.play();
     }
 
     public void returnBoon(DomCard aBoon) {
@@ -1076,5 +1123,18 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
             Collections.shuffle(boons);
         }
         return boons.remove(0);
+    }
+
+    public ArrayList<DomCardName> getTopCardsOfPiles() {
+        ArrayList<DomCardName> theTopCards = new ArrayList<DomCardName>();
+        for(DomCardName theCard : keySet()) {
+            if (theCard.hasCardType(DomCardType.Event)||theCard.hasCardType(DomCardType.Landmark)||theCard.hasCardType(DomCardType.Shelter))
+                continue;
+            if (count(theCard)==0)
+                theTopCards.add(theCard);
+            else
+                theTopCards.add(get(theCard).get(0).getName());
+        }
+        return theTopCards;
     }
 }

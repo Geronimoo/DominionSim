@@ -43,7 +43,7 @@ public class LurkerCard extends DomCard {
             }
         }
         ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
-        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
             if (theCard.hasCardType(DomCardType.Action) && owner.getCurrentGame().countInSupply(theCard)>0)
                 theChooseFrom.add(theCard);
         }
@@ -61,14 +61,14 @@ public class LurkerCard extends DomCard {
 
     private void trashActionFromSupply() {
         for (DomBuyRule theBuyRule : owner.getBuyRules()) {
-            if (theBuyRule.getCardToBuy().hasCardType(DomCardType.Action) && owner.checkBuyConditions(theBuyRule) && owner.getCurrentGame().countInSupply(theBuyRule.getCardToBuy())>0) {
+            if (!owner.getCurrentGame().getBoard().isFromSeparatePile(theBuyRule.getCardToBuy()) && theBuyRule.getCardToBuy().hasCardType(DomCardType.Action) && owner.checkBuyConditions(theBuyRule) && owner.getCurrentGame().countInSupply(theBuyRule.getCardToBuy())>0) {
                 DomCard theCard = owner.getCurrentGame().takeFromSupply(theBuyRule.getCardToBuy());
                 owner.trash(theCard);
                 return;
             }
         }
         for (DomBuyRule theBuyRule : owner.getBuyRules()) {
-            if (theBuyRule.getCardToBuy().hasCardType(DomCardType.Action) && owner.getCurrentGame().countInSupply(theBuyRule.getCardToBuy())>0) {
+            if (!owner.getCurrentGame().getBoard().isFromSeparatePile(theBuyRule.getCardToBuy()) && theBuyRule.getCardToBuy().hasCardType(DomCardType.Action) && owner.getCurrentGame().countInSupply(theBuyRule.getCardToBuy())>0) {
                 DomCard theCard = owner.getCurrentGame().takeFromSupply(theBuyRule.getCardToBuy());
                 owner.trash(theCard);
                 return;

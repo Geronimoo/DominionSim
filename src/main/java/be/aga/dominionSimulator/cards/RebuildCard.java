@@ -73,8 +73,8 @@ public class RebuildCard extends DomCard {
             DomCost theCardCost = theLastCard.getCost(owner.getCurrentGame());
             owner.trash(theRevealedCards.remove(theRevealedCards.size() - 1));
             ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
-            for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-                if (theCard.hasCardType(DomCardType.Victory) && theCardCost.add(new DomCost(3, 0)).compareTo(theCard.getCost(owner.getCurrentGame())) >= 0 && owner.getCurrentGame().countInSupply(theCard) > 0)
+            for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
+                if (theCard.hasCardType(DomCardType.Victory) && theCardCost.add(new DomCost(3, 0)).customCompare(theCard.getCost(owner.getCurrentGame())) >= 0 && owner.getCurrentGame().countInSupply(theCard) > 0)
                     theChooseFrom.add(theCard);
             }
             if (theChooseFrom.isEmpty())

@@ -359,7 +359,8 @@ public enum DomSet {
             ,DomCardName.Bard
             ,DomCardName.Blessed_Village
             ,DomCardName.Conclave
-            ,DomCardName.Idol}),
+            ,DomCardName.Idol
+            ,DomCardName.Pixie}),
 
     Promo (new DomCardName[] {DomCardName.Black_Market
            ,DomCardName.Envoy

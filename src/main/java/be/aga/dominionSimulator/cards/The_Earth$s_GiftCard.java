@@ -41,8 +41,8 @@ public class The_Earth$s_GiftCard extends DomCard {
         }
         DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Discard a Treasure", theChooseFrom, "Mandatory!");
         owner.discardFromHand(theChosenCard);
-        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-            if (new DomCost(4,0).compareTo(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0 )
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
+            if (new DomCost(4,0).customCompare(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0 )
                 theChooseFrom.add(theCard);
         }
         if (theChooseFrom.isEmpty())
