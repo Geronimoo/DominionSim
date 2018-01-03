@@ -35,8 +35,8 @@ public class SwindlerCard extends DomCard {
 
     private void handleHuman(ArrayList<DomCard> theCards, DomPlayer thePlayer) {
         ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
-        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-            if (theCard.getCost(owner.getCurrentGame()).compareTo(theCards.get(0).getCost(owner.getCurrentGame()))==0 && owner.getCurrentGame().countInSupply(theCard)>0)
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
+            if (theCard.getCost(owner.getCurrentGame()).customCompare(theCards.get(0).getCost(owner.getCurrentGame()))==0 && owner.getCurrentGame().countInSupply(theCard)>0)
                 theChooseFrom.add(theCard);
         }
         if (!theChooseFrom.isEmpty()) {

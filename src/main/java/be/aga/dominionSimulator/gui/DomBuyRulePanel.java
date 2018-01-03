@@ -27,16 +27,20 @@ import be.aga.dominionSimulator.enums.DomPlayStrategy;
 
 public class DomBuyRulePanel extends JPanel implements ActionListener, ItemListener {
 
-	private JComboBox myCardToBuyBox;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2021282542194530050L;
+	private JComboBox<DomCardName> myCardToBuyBox;
     private ArrayList<DomBuyConditionPanel> myBuyConditionPanels=new ArrayList<DomBuyConditionPanel>();
 	private JPanel myConditionsPanel;
 	private DomBotEditor myParent;
-	private JComboBox myPlayStrategyBox;
+	private JComboBox<DomPlayStrategy> myPlayStrategyBox;
 	private DomBuyRule domBuyRule;
 	private DomBotEditor domBotEditor;
 	private DomPlayStrategy thePlaystrategy;
 	private JLabel myPlayStrategyLBL;
-	private JComboBox myBaneBox;
+	private JComboBox<DomCardName> myBaneBox;
 	private JLabel myBaneLBL;
 
 	public DomBuyRulePanel(DomBuyRule domBuyRule, DomBotEditor domBotEditor) {
@@ -50,7 +54,7 @@ public class DomBuyRulePanel extends JPanel implements ActionListener, ItemListe
 
 	private void fill() {
         GridBagConstraints theCons = DomGui.getGridBagConstraints( 2 );
-		myCardToBuyBox = new JComboBox(DomCardName.getSafeValues());
+		myCardToBuyBox = new JComboBox<DomCardName>(DomCardName.getSafeValues());
 //        myCardToBuyBox.setRenderer(new CustomComboBoxRenderer());
         myCardToBuyBox.setSelectedItem( domBuyRule.getCardToBuy() );
         myCardToBuyBox.addItemListener(this);
@@ -58,7 +62,7 @@ public class DomBuyRulePanel extends JPanel implements ActionListener, ItemListe
         theCons.gridx++;
         add(myCardToBuyBox, theCons);
 
-        myPlayStrategyBox = new JComboBox(domBuyRule.getCardToBuy().getPlayStrategies());
+        myPlayStrategyBox = new JComboBox<DomPlayStrategy>(domBuyRule.getCardToBuy().getPlayStrategies());
         myPlayStrategyBox.setSelectedItem( domBuyRule.getPlayStrategy() );
         theCons.gridx++;
         myPlayStrategyLBL = new JLabel("Play Strategy");
@@ -70,7 +74,7 @@ public class DomBuyRulePanel extends JPanel implements ActionListener, ItemListe
           myPlayStrategyLBL.setVisible(false);
         }
 
-        myBaneBox = new JComboBox(DomCardName.getPossibleBaneCards());
+        myBaneBox = new JComboBox<DomCardName>(DomCardName.getPossibleBaneCards());
         if (domBuyRule.getBane()!=null)
           myBaneBox.setSelectedItem( domBuyRule.getBane() );
         theCons.gridx--;
@@ -204,7 +208,7 @@ public class DomBuyRulePanel extends JPanel implements ActionListener, ItemListe
 	public void itemStateChanged(ItemEvent e) {
 		myPlayStrategyBox.removeAllItems();
 		DomCardName theSelectedCardName = (DomCardName)myCardToBuyBox.getSelectedItem();
-		for (Object theStrategy : theSelectedCardName.getPlayStrategies()) {
+		for (DomPlayStrategy theStrategy : theSelectedCardName.getPlayStrategies()) {
 	      myPlayStrategyBox.addItem(theStrategy);
 		}
         if (myPlayStrategyBox.getItemCount()==1) {

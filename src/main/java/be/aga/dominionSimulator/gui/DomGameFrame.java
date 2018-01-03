@@ -1,14 +1,42 @@
 package be.aga.dominionSimulator.gui;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.*;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.JTextPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -27,6 +55,10 @@ import be.aga.dominionSimulator.gui.util.HandCardRenderer;
 import be.aga.dominionSimulator.gui.util.TableCardRenderer;
 
 public class DomGameFrame extends JFrame implements ActionListener, ListSelectionListener, Observer {
+    /**
+     *
+     */
+    private static final long serialVersionUID = 3862051191311979736L;
     public static final int LIST_HEIGHT = 360;
     private DomEngine myEngine;
 	private JLabel myActionsValue;
@@ -169,7 +201,7 @@ private JPanel getBottomPanel() {
             super.mouseClicked(e);
         }
     });
-    ((DefaultListModel)myInPlayList.getModel()).addElement("");
+    ((DefaultListModel)myInPlayList.getModel()).addElement(DomCard.NONEXISTANT_CARD);
     theScrollPane = new JScrollPane(myInPlayList);
     theScrollPane.setBorder(new TitledBorder("In play"));
     theScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -410,6 +442,7 @@ public void actionPerformed(ActionEvent e) {
     }
 }
 
+    @SuppressWarnings("unchecked")
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
         if (!e.getValueIsAdjusting() && ((JList) e.getSource()).getSelectedValue()!=null) {
@@ -418,11 +451,20 @@ public void actionPerformed(ActionEvent e) {
 	}
 
 	public void addToLog(final String s) {
-        if (logStack.isEmpty()) {
-            Timer theTimer = new Timer(myDelay, getListener());
-            theTimer.start();
+//        if (logStack.isEmpty()) {
+//            Timer theTimer = new Timer(myDelay, getListener());
+//            theTimer.start();
+//        }
+//        logStack.add(s);
+        if (!s.contains("cards in Hand:")) {
+            try {
+                editorKit.insertHTML(gameLog, gameLog.getLength(), s, 0, 0, null);
+            } catch (BadLocationException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        logStack.add(s);
     }
 
     private ActionListener getListener() {
@@ -543,7 +585,7 @@ public void actionPerformed(ActionEvent e) {
             ((DefaultListModel) myInPlayList.getModel()).addElement(theCard);
         }
         if (thePlayer.getCardsInPlay().isEmpty())
-            ((DefaultListModel) myInPlayList.getModel()).addElement("");
+            ((DefaultListModel) myInPlayList.getModel()).addElement(DomCard.NONEXISTANT_CARD);
         Runnable doRun = new Runnable() {
             @Override
             public void run() {
@@ -572,7 +614,7 @@ public void actionPerformed(ActionEvent e) {
         return JOptionPane.showConfirmDialog(this, question, title, JOptionPane.YES_NO_OPTION)==0;
     }
 
-    public void askToSelectCards(String s, ArrayList<DomCard> chooseFrom, ArrayList<DomCardName> theChosenCards, int aNumber) {
+    public void askToSelectCards(String s, ArrayList<DomCard> chooseFrom, ArrayList<DomCard> theChosenCards, int aNumber) {
         new CardSelector(myInPlayList,s, theChosenCards, chooseFrom, aNumber);
     }
 

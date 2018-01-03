@@ -1,8 +1,6 @@
 package be.aga.dominionSimulator.cards;
 
-import be.aga.dominionSimulator.DomBuyRule;
 import be.aga.dominionSimulator.DomCard;
-import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
@@ -24,7 +22,7 @@ public class FerryCard extends DomCard {
 
     private void handleHuman() {
         ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
-        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
             if (theCard.hasCardType(DomCardType.Action))
                 theChooseFrom.add(theCard);
         }

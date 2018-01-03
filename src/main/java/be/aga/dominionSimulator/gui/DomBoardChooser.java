@@ -1,37 +1,38 @@
 package be.aga.dominionSimulator.gui;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
 import org.jfree.ui.RefineryUtilities;
 
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.DomPlayer;
-import be.aga.dominionSimulator.enums.DomBotType;
 import be.aga.dominionSimulator.enums.DomCardName;
 
 public class DomBoardChooser extends EscapeDialog implements ActionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4501352596755688357L;
    private DomEngine myEngine;
-   private JList myCardNameList;
-   private JList myBoardList;
+	private JList<DomCardName> myCardNameList;
+	private JList<?> myBoardList;
 
    Action chooseAction = new AbstractAction() {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -1625549994196615111L;
+
        public void actionPerformed(ActionEvent e) {
 //   		 myEngine.setSelectedBoard(myBoardList.getSelectedValues());
 //   		 dispose();
@@ -114,14 +115,13 @@ private JPanel getSelectionPanel() {
     return thePanel;
 }
 
-private JList getCardNameList() {
-	myCardNameList= new JList(DomCardName.getKingdomCards());
+	private JList<DomCardName> getCardNameList() {
+		myCardNameList= new JList<DomCardName>(DomCardName.getKingdomCards());
 	return myCardNameList;
 }
 
-@SuppressWarnings("serial")
-private JList getBoardList() {
-	myBoardList = new JList();
+	private JList<?> getBoardList() {
+		myBoardList = new JList<Object>();
 	new ListAction(myBoardList, chooseAction);
 	return myBoardList;
 }

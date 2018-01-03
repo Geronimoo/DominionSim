@@ -1,6 +1,5 @@
 package be.aga.dominionSimulator.gui;
 
-import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.gui.util.CardRenderer;
 
@@ -12,11 +11,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class OneCardSelector extends JDialog implements ActionListener {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4489225360035371801L;
     private final ArrayList<DomCardName> myChooseFrom;
-    private final String myQuestion;
     private final String myButtonMessage;
     private DomCardName myChosenCard;
-    private JList myChooseFromList;
+    private JList<DomCardName> myChooseFromList;
 
     public OneCardSelector(Component aComponent, String aTitle, ArrayList<DomCardName> chooseFrom, String aButtonMessage) {
      setModal(true);
@@ -30,7 +32,6 @@ public class OneCardSelector extends JDialog implements ActionListener {
 	 myChooseFrom = chooseFrom;
 	 Collections.sort(myChooseFrom);
 	 myButtonMessage = aButtonMessage;
-	 myQuestion = aTitle;
 	 buildGUI();
 	 setTitle(aTitle);
 	 pack();
@@ -78,13 +79,13 @@ private JPanel getChooseFromPanel() {
     return thePanel;
 }
 
-private JList getChooseFromList() {
-    myChooseFromList = new JList();
+private JList<DomCardName> getChooseFromList() {
+    myChooseFromList = new JList<DomCardName>();
 //    myChooseFromList.setPreferredSize(new Dimension(100,200));
-    myChooseFromList.setCellRenderer(new CardRenderer());
-    myChooseFromList.setModel(new DefaultListModel());
+    myChooseFromList.setCellRenderer(new CardRenderer<DomCardName>());
+    myChooseFromList.setModel(new DefaultListModel<DomCardName>());
     for (DomCardName theCard:myChooseFrom)
-      ((DefaultListModel)myChooseFromList.getModel()).addElement(theCard);
+      ((DefaultListModel<DomCardName>)myChooseFromList.getModel()).addElement(theCard);
     myChooseFromList.addMouseListener(new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {

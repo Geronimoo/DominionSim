@@ -2,7 +2,6 @@ package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomCost;
-import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
@@ -58,7 +57,7 @@ public class GraverobberCard extends DomCard {
         if (theChoice == 0) {
             ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
             for (DomCard theCard : owner.getCurrentGame().getTrashedCards()) {
-                if (new DomCost(6, 0).compareTo(theCard.getCost(owner.getCurrentGame())) >= 0 && theCard.getCost(owner.getCurrentGame()).compareTo(new DomCost(3, 0)) >= 0)
+                if (new DomCost(6, 0).customCompare(theCard.getCost(owner.getCurrentGame())) >= 0 && theCard.getCost(owner.getCurrentGame()).customCompare(new DomCost(3, 0)) >= 0)
                     theChooseFrom.add(theCard.getName());
             }
             if (theChooseFrom.isEmpty())
@@ -77,8 +76,8 @@ public class GraverobberCard extends DomCard {
             DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!");
             owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
             theChooseFrom = new ArrayList<DomCardName>();
-            for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-                if (theChosenCard.getCost(owner.getCurrentGame()).add(new DomCost(3,0)).compareTo(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0)
+            for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
+                if (theChosenCard.getCost(owner.getCurrentGame()).add(new DomCost(3,0)).customCompare(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0)
                     theChooseFrom.add(theCard);
             }
             if (theChooseFrom.isEmpty())

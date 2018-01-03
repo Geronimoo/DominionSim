@@ -7,7 +7,6 @@ import be.aga.dominionSimulator.enums.DomCardType;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 
 public class CatapultCard extends DomCard {
     public CatapultCard() {

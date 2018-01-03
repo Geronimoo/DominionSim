@@ -5,7 +5,6 @@ import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 public class KeepCard extends DomCard {

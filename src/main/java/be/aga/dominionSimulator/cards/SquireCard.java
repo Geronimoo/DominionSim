@@ -6,7 +6,6 @@ import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 import be.aga.dominionSimulator.enums.DomPlayStrategy;
 
-import javax.swing.*;
 import java.util.ArrayList;
 
 public class SquireCard extends DomCard {
@@ -49,7 +48,7 @@ public class SquireCard extends DomCard {
     public void doWhenTrashed() {
         if (owner.isHumanOrPossessedByHuman()) {
             ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
-            for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+            for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
                 if (theCard.hasCardType(DomCardType.Attack) && theCard.hasCardType(DomCardType.Action) && owner.getCurrentGame().countInSupply(theCard)>0)
                     theChooseFrom.add(theCard);
             }

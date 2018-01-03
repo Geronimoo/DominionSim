@@ -1,6 +1,16 @@
 package be.aga.dominionSimulator.gui;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
@@ -18,17 +28,39 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 
-import javax.swing.*;
+import javax.swing.AbstractButton;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
 
-import be.aga.dominionSimulator.gui.util.KingdomViewer;
 import org.jfree.ui.RefineryUtilities;
 import org.xml.sax.InputSource;
 
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.DomPlayer;
-import be.aga.dominionSimulator.enums.DomBotType;
+import be.aga.dominionSimulator.gui.util.KingdomViewer;
 
 public class DomGui extends JFrame implements ActionListener {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5413419033308857784L;
   private DomEngine myEngine;
   private ArrayList< JButton > myBotSelectors= new ArrayList< JButton>();
   private DomBarChart myBarChart;
@@ -241,6 +273,11 @@ public class DomGui extends JFrame implements ActionListener {
 
 	private JButton getNewBotSelector() {
 		JButton theBotSelector = new JButton() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 8140006807993097976L;
+
 			@Override
 			public String getToolTipText() {
 				if (getSelectedPlayer(this)!=null) {
@@ -405,9 +442,9 @@ public class DomGui extends JFrame implements ActionListener {
 		String theName = theSelector.getText();
 		if (theName==null || theName.equals(""))
 			return null;
-		for (Object player : myEngine.getBotArray()){
-			if (((DomPlayer)player).toString().equals(theName) )
-			  return (DomPlayer)player;
+        for (DomPlayer player : myEngine.getBotArray()) {
+            if (player.toString().equals(theName))
+                return player;
 		}
 		return null;
 	}
@@ -446,15 +483,6 @@ public class DomGui extends JFrame implements ActionListener {
 		} catch (IOException e) {
 		  JOptionPane.showMessageDialog(this, getSampleGamePanel(), "Sample Game", JOptionPane.PLAIN_MESSAGE);
 		}
-	}
-
-    private DomPlayer colonize(DomPlayer theSelectedBot) {
-       if (theSelectedBot.hasType(DomBotType.Colony))
-    	   return theSelectedBot;
-       DomPlayer theNewPlayer = theSelectedBot.getColonyCopy(theSelectedBot.toString() + "(Col)");
-       theNewPlayer.addType(DomBotType.UserCreated);
-       myEngine.addUserBot(theNewPlayer);
-       return theNewPlayer;
 	}
 
 	private JPanel getAboutPanel() {

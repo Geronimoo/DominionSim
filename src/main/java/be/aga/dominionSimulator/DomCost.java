@@ -3,7 +3,7 @@ package be.aga.dominionSimulator;
 /**
  * Represents a cost to be paid in the game on three dimensions: coins, potions, and debt.
  */
-public class DomCost implements Comparable< DomCost >{
+public class DomCost {
 
     public static final DomCost ZERO = new DomCost( 0, 0 );
     int coins = 0;
@@ -69,11 +69,11 @@ public class DomCost implements Comparable< DomCost >{
         debt = 0;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
+    /**
+     * @param aO
+     * @return a < b and b < a are possible at the same time so this should not be used to sort
      */
-    @Override
-    public int compareTo( DomCost aO ) {
+    public int customCompare(DomCost aO ) {
     	//CAREFUL when using this!!
     	//the cost of King's Court for example will be smaller then the cost of Transmute
     	//and the cost of Transmute will also be smaller than the cost of King's Court! 
@@ -93,7 +93,7 @@ public class DomCost implements Comparable< DomCost >{
     public DomCost add( DomCost aCostToAdd ) {
       DomCost theNewCost = new DomCost(  coins + aCostToAdd.coins, potions + aCostToAdd.potions );
       theNewCost.setDebt(debt + aCostToAdd.getDebt());
-//      if (theNewCost.compareTo(ZERO)<0)
+//      if (theNewCost.customCompare(ZERO)<0)
 //    	  theNewCost=ZERO;
       return theNewCost; 
     }
@@ -101,7 +101,7 @@ public class DomCost implements Comparable< DomCost >{
 	public DomCost subtract(DomCost aCostToSubtract) {
 	      DomCost theNewCost = new DomCost(  coins - aCostToSubtract.coins, potions - aCostToSubtract.potions );
           theNewCost.setDebt(debt - aCostToSubtract.getDebt());
-//	      if (theNewCost.compareTo(ZERO)<0)
+//	      if (theNewCost.customCompare(ZERO)<0)
 //	    	  theNewCost=ZERO;
 	      return theNewCost; 
 	}

@@ -48,8 +48,8 @@ public class MineCard extends DomCard {
 		DomCard theCardToMine = owner.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Select card to " + this.getName().toString(), theChooseFrom, "Mandatory!")).get(0);
 		owner.trash(owner.removeCardFromHand(theCardToMine));
 		theChooseFrom = new ArrayList<DomCardName>();
-		for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-            if (theCard.getCost(owner.getCurrentGame()).compareTo(theCardToMine.getCost(owner.getCurrentGame()).add(new DomCost(3, 0))) <= 0 && theCard.hasCardType(DomCardType.Treasure) && owner.getCurrentGame().countInSupply(theCard)>0)
+		for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
+            if (theCard.getCost(owner.getCurrentGame()).customCompare(theCardToMine.getCost(owner.getCurrentGame()).add(new DomCost(3, 0))) <= 0 && theCard.hasCardType(DomCardType.Treasure) && owner.getCurrentGame().countInSupply(theCard)>0)
                 theChooseFrom.add(theCard);
         }
 		if (theChooseFrom.isEmpty())

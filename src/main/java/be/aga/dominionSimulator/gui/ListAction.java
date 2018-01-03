@@ -18,13 +18,13 @@ public class ListAction implements MouseListener
 {
 	private static final KeyStroke ENTER = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
 
-	private JList list;
+	private JList<?> list;
 	private KeyStroke keyStroke;
 
 	/*
 	 *	Add an Action to the JList bound by the default KeyStroke
 	 */
-	public ListAction(JList list, Action action)
+	public ListAction(JList<?> list, Action action)
 	{
 		this(list, action, ENTER);
 	}
@@ -32,7 +32,7 @@ public class ListAction implements MouseListener
 	/*
 	 *	Add an Action to the JList bound by the specified KeyStroke
 	 */
-	public ListAction(JList list, Action action, KeyStroke keyStroke)
+	public ListAction(JList<?> list, Action action, KeyStroke keyStroke)
 	{
 		this.list = list;
 		this.keyStroke = keyStroke;

@@ -2,9 +2,6 @@ package be.aga.dominionSimulator.gui;
 
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -12,16 +9,18 @@ import javax.swing.SwingConstants;
 import be.aga.dominionSimulator.enums.DomCardName;
 
 public class DomCardLabel extends JLabel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1464348634649471489L;
 	private static final double STANDARD_FIT = 0.9;
 	private ImageIcon myOriginalIcon;
 	private ImageIcon myScaledIcon;
 	private Object myParentSize;
-	private DomGameFrame myGameFrame;
 	private DomCardName myCardName;
 	
-	public DomCardLabel(DomCardName aCardName, DomGameFrame aGameFrame) {
+	public DomCardLabel(DomCardName aCardName) {
 		myCardName = aCardName;
-		myGameFrame = aGameFrame;
 		setText("<html>"+aCardName.toHTML()+"</html>");
 //		URL url = aCardName.getImageURL();
 //		if (url!=null) {
@@ -36,8 +35,8 @@ public class DomCardLabel extends JLabel {
         setHorizontalTextPosition(SwingConstants.CENTER);
 	}
 	
-	public DomCardLabel(DomCardName name, DomGameFrame aGameFrame, boolean b) {
-		this(name, aGameFrame);
+	public DomCardLabel(DomCardName name, boolean b) {
+		this(name);
 	    myOriginalIcon=null;
 	    setIcon(null);
 	}
@@ -65,10 +64,6 @@ public class DomCardLabel extends JLabel {
         setIcon(myScaledIcon);
 	}
 	
-	private DomGameFrame getGameFrame() {
-		return myGameFrame;
-	}
-
 	public void setCardName(DomCardName aCardName) {
 	   if (aCardName==myCardName)
 		return;

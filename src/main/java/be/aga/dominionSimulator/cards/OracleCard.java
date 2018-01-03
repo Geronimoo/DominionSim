@@ -38,7 +38,7 @@ public class OracleCard extends DomCard {
 	    	thePlayer.discard(theRevealedCards);
 	      }else{
 	      	  if (thePlayer.isHuman() && theRevealedCards.size()>1) {
-				  ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+				  ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
 				  do {
 					  owner.getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u> (first card = top card)</html>", theRevealedCards, theChosenCards, 0);
 				  } while (theChosenCards.size()==1);
@@ -46,7 +46,7 @@ public class OracleCard extends DomCard {
 					  thePlayer.putOnTopOfDeck(theRevealedCards.get(1));
 					  thePlayer.putOnTopOfDeck(theRevealedCards.get(0));
 				  } else {
-					  if (theRevealedCards.get(1).getName() == theChosenCards.get(1)) {
+					  if (theRevealedCards.get(1).getName() == theChosenCards.get(1).getName()) {
 						  thePlayer.putOnTopOfDeck(theRevealedCards.get(1));
 						  thePlayer.putOnTopOfDeck(theRevealedCards.get(0));
 					  } else {
@@ -103,7 +103,7 @@ public class OracleCard extends DomCard {
 				owner.putOnTopOfDeck(theRevealedCards.get(0));
 				return;
 			}
-			ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+			ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
 			do {
 				owner.getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u> (first card = top card)</html>", theRevealedCards, theChosenCards, 0);
 			} while (theChosenCards.size()==1);
@@ -111,7 +111,7 @@ public class OracleCard extends DomCard {
 				owner.putOnTopOfDeck(theRevealedCards.get(1));
 				owner.putOnTopOfDeck(theRevealedCards.get(0));
 			} else {
-				if (theRevealedCards.get(1).getName() == theChosenCards.get(1)) {
+				if (theRevealedCards.get(1).getName() == theChosenCards.get(1).getName()) {
 					owner.putOnTopOfDeck(theRevealedCards.get(1));
 					owner.putOnTopOfDeck(theRevealedCards.get(0));
 				} else {

@@ -28,10 +28,10 @@ public class Opulent_CastleCard extends DomCard {
     }
 
     private void handleHuman() {
-        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
         owner.getEngine().getGameFrame().askToSelectCards("<html>Discard for +$2</html>" , owner.getCardsFromHand(DomCardType.Victory), theChosenCards, 0);
-        for (DomCardName theCard : theChosenCards) {
-            owner.discardFromHand(theCard);
+        for (DomCard theCard : theChosenCards) {
+            owner.discardFromHand(theCard.getName());
             owner.addAvailableCoins(2);
         }
     }

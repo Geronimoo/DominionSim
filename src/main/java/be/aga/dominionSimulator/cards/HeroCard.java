@@ -1,8 +1,6 @@
 package be.aga.dominionSimulator.cards;
 
-import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomCost;
-import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
@@ -18,7 +16,7 @@ public class HeroCard extends TravellerCard{
       owner.addAvailableCoins(2);
       if (owner.isHumanOrPossessedByHuman()) {
           ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
-          for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+          for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
               if (theCard.hasCardType(DomCardType.Treasure) && owner.getCurrentGame().countInSupply(theCard)>0)
                   theChooseFrom.add(theCard);
           }

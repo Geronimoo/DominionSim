@@ -42,11 +42,11 @@ public class InnCard extends DomCard {
             if (theCard.hasCardType(DomCardType.Action))
                 theChooseFrom.add(theCard);
         }
-        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
         owner.getEngine().getGameFrame().askToSelectCards("Add to draw deck ?", theChooseFrom, theChosenCards, 0);
         for (int i = theChosenCards.size() - 1; i >= 0; i--) {
             for (DomCard theCard : theChooseFrom) {
-                if (theChosenCards.get(i) == theCard.getName()) {
+                if (theChosenCards.get(i).getName() == theCard.getName()) {
                     owner.getDeck().removeFromDiscard(theCard);
                     owner.putOnTopOfDeck(theCard);
                     theChooseFrom.remove(theCard);

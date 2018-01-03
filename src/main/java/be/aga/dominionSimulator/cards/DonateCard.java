@@ -45,10 +45,10 @@ public class DonateCard extends DomCard {
     }
 
     private static void handleHuman(DomPlayer owner) {
-        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
         owner.getEngine().getGameFrame().askToSelectCards("Choose cards to trash", owner.getCardsInHand(), theChosenCards, 0);
-        for (DomCardName theCardName : theChosenCards) {
-            owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theCardName).get(0)));
+        for (DomCard theCardName : theChosenCards) {
+            owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theCardName.getName()).get(0)));
         }
     }
 }

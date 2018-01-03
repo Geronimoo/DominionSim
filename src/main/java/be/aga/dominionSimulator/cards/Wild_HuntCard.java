@@ -5,8 +5,6 @@ import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomPlayStrategy;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 
 public class Wild_HuntCard extends DomCard {
     public Wild_HuntCard() {
@@ -40,7 +38,7 @@ public class Wild_HuntCard extends DomCard {
         theOptions.add("Points");
         int theChoice = owner.getEngine().getGameFrame().askToSelectOption("Select for Wild Hunt", theOptions, "Mandatory!");
         if (theChoice == 0)
-            owner.drawCards(3);
+            drawCards();
         if (theChoice == 1)
             gainVP();
     }

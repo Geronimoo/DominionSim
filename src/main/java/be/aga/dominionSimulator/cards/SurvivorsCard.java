@@ -19,23 +19,22 @@ public class SurvivorsCard extends DomCard {
     }
 
 	private void handleHuman() {
-		int theTotal=0;
 		ArrayList<DomCard> theTopCards = owner.revealTopCards(2);
 		if (theTopCards.isEmpty())
 			return;
 		if (owner.getEngine().getGameFrame().askPlayer("<html>Discard " + theTopCards +" ?</html>", "Resolving " + this.getName().toString())) {
 			owner.discard(theTopCards);
 		} else {
-			ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+			ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
 			do {
-				theChosenCards=new ArrayList<DomCardName>();
+				theChosenCards = new ArrayList<DomCard>();
 				owner.getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u> (first card = top card)</html>", theTopCards, theChosenCards, 0);
 			} while (theChosenCards.size()==1);
 			if (theChosenCards.size()<2) {
 				owner.putOnTopOfDeck(theTopCards.get(1));
 				owner.putOnTopOfDeck(theTopCards.get(0));
 			} else {
-				if (theTopCards.get(1).getName() == theChosenCards.get(1)) {
+				if (theTopCards.get(1).getName() == theChosenCards.get(1).getName()) {
 					owner.putOnTopOfDeck(theTopCards.get(1));
 					owner.putOnTopOfDeck(theTopCards.get(0));
 				} else {

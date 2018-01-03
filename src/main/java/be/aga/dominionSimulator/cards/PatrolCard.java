@@ -38,11 +38,11 @@ public class PatrolCard extends DomCard {
                 chooseFrom.add(theCard);
             }
         }
-        ArrayList<DomCardName> theChosenCards=new ArrayList<DomCardName>();
+        ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
         owner.getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u> (first card = top card)</html>" , chooseFrom, theChosenCards, chooseFrom.size());
         for (int i=theChosenCards.size()-1;i>=0;i--) {
             for (DomCard theCard : chooseFrom) {
-                if (theChosenCards.get(i)==theCard.getName()) {
+                if (theChosenCards.get(i).getName()==theCard.getName()) {
                     owner.putOnTopOfDeck(theCard);
                     chooseFrom.remove(theCard);
                     break;

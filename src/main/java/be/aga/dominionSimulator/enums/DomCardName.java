@@ -1,9 +1,19 @@
 package be.aga.dominionSimulator.enums;
 
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
 
-import be.aga.dominionSimulator.*;
+import be.aga.dominionSimulator.DomBuyRule;
+import be.aga.dominionSimulator.DomCard;
+import be.aga.dominionSimulator.DomCost;
+import be.aga.dominionSimulator.DomEngine;
+import be.aga.dominionSimulator.DomGame;
+import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.cards.*;
 import be.aga.dominionSimulator.gui.EscapeDialog;
 
@@ -40,6 +50,7 @@ public enum DomCardName  {
     Artificer (5, 0, 1, 0, 12, 28, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler}),
     Artisan (6, 0, 0, 0, 30, 27, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal}),
     Avanto (5, 0, 0, 0, 25, 24, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal, DomCardType.Card_Advantage, DomCardType.Split_Pile}),
+    Bad_Omens (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Hex}),
     Bag_of_Gold (0, 0, 0, 0, 7, 25, new DomCardType[]{DomCardType.Action, DomCardType.Prize}),
     Baker (5, 0, 1, 0, 12, 28, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler}),
     Ball (5, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
@@ -111,6 +122,7 @@ public enum DomCardName  {
     Dame_Sylvia (5, 0, 2, 0, 25, 28, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Attack, DomCardType.Terminal, DomCardType.Knight}),
     Death_Cart (4, 0, 5, 0, 25, 23, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal, DomCardType.Looter}),
     Defiled_Shrine (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Landmark}),
+    Delusion (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Hex}),
     Delve (2, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
     Develop (3, 0, 0, 0, 33, 16, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal, DomCardType.Trasher, DomCardType.TrashForBenefit}),
     Devil$s_Workshop (4, 0, 0, 0, 38, 22, new DomCardType[]{DomCardType.Night, DomCardType.Kingdom}),
@@ -163,6 +175,7 @@ public enum DomCardName  {
     Ghost_Town (3, 0, 0, 0, 1, 23, new DomCardType[]{DomCardType.Kingdom, DomCardType.Duration, DomCardType.Night, DomCardType.Village}),
     Giant (5, 0, 1, 0, 22, 30, new DomCardType[]{DomCardType.Action, DomCardType.Attack, DomCardType.Kingdom, DomCardType.Terminal}),
     Gladiator (3, 0, 2, 0, 28, 22, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal, DomCardType.Split_Pile}),
+    Goat (2, 0, 1, 0, 3, 18, new DomCardType[]{DomCardType.Treasure,DomCardType.Heirloom,DomCardType.Kingdom, DomCardType.Trasher}),
     Golem (4, 1, 0, 0, 18, 40, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Village, DomCardType.Card_Advantage}),
     Goons (6, 0, 2, 0, 20, 31, new DomCardType[]{DomCardType.Action, DomCardType.Attack, DomCardType.Kingdom, DomCardType.Terminal}),
     Governor (5, 0, 0, 0,9, 40, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Card_Advantage, DomCardType.TrashForBenefit}),
@@ -278,6 +291,7 @@ public enum DomCardName  {
     Pilgrimage (4, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
     Pillage (5, 0, 2, 0, 27, 28, new DomCardType[]{DomCardType.Action, DomCardType.Attack, DomCardType.Kingdom, DomCardType.Terminal}),
     Pirate_Ship (4, 0, 0, 0, 20, 20, new DomCardType[]{DomCardType.Action, DomCardType.Attack, DomCardType.Kingdom, DomCardType.Terminal}),
+    Pixie (2, 0, 0, 0, 5, 18, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Fate, DomCardType.Cycler}),
     Plan (3, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
     Plaza (4, 0, 0, 0, 5, 17, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler, DomCardType.Village}),
     Plunder (5, 0, 2, 0, 35, 28, new DomCardType[]{DomCardType.Kingdom, DomCardType.Treasure,DomCardType.Split_Pile}),
@@ -435,8 +449,7 @@ public enum DomCardName  {
 
     ;
 
-    public static final Comparator SORT_FOR_TRASHING = new Comparator<DomCardName>(){
-        @Override
+    public static final Comparator<DomCardName> SORT_FOR_TRASHING = new Comparator<DomCardName>(){
         public int compare( DomCardName aO1, DomCardName aO2 ) {
             if (aO1.getTrashPriority()< aO2.getTrashPriority())
                 return -1;
@@ -453,6 +466,12 @@ public enum DomCardName  {
     private int playPriority;
     private int discardPriority;
 
+    /**
+     * Used solely for the non-existent card (meant to represent a lack of cards).
+     */
+    private DomCardName() {
+    	
+    }
     /**
      * Sole constructor.
      * <p>
@@ -557,6 +576,8 @@ public enum DomCardName  {
             return new ArtisanCard();
         case Avanto:
             return new AvantoCard();
+        case Bad_Omens:
+            return new Bad_OmensCard();
         case Bag_of_Gold:
             return new Bag_of_GoldCard();
         case Baker:
@@ -691,6 +712,8 @@ public enum DomCardName  {
             return new Dame_SylviaCard();
         case Death_Cart:
             return new Death_CartCard();
+        case Delusion:
+            return new DelusionCard();
         case Delve:
             return new DelveCard();
         case Develop:
@@ -795,6 +818,8 @@ public enum DomCardName  {
             return new GiantCard();
         case Gladiator:
             return new GladiatorCard();
+        case Goat:
+            return new GoatCard();
         case Gold:
             return new GoldCard();
         case Golem:
@@ -1009,6 +1034,8 @@ public enum DomCardName  {
             return new PillageCard();
         case Pirate_Ship:
             return new Pirate_ShipCard();
+        case Pixie:
+            return new PixieCard();
         case Plan:
             return new PlanCard();
         case Plaza:
@@ -1311,8 +1338,9 @@ public enum DomCardName  {
             return new Zombie_MasonCard();
         case Zombie_Spy:
             return new Zombie_SpyCard();
-        }
+        default:
         return new DomCard( this );
+    }
     }
 
     public DomCost getCost() {
@@ -1330,7 +1358,7 @@ public enum DomCardName  {
       return types.contains( aCardType);
     }
 
-    public Object[] getPlayStrategies() {
+    public DomPlayStrategy[] getPlayStrategies() {
     	ArrayList<DomPlayStrategy> theStrategies = new ArrayList<DomPlayStrategy>();
     	switch (this) {
 		case Ambassador:
@@ -1459,7 +1487,7 @@ public enum DomCardName  {
 			break;
 		}
 		theStrategies.add(0,DomPlayStrategy.standard);
-		return theStrategies.toArray();
+        return theStrategies.toArray(new DomPlayStrategy[theStrategies.size()]);
     }
 
     /**
@@ -1620,16 +1648,16 @@ public enum DomCardName  {
 		return theIntermediateCard.getTrashPriority();
 	}
 
-	public static Object[] getPossibleBaneCards() {
+	public static DomCardName[] getPossibleBaneCards() {
 	    ArrayList<DomCardName> possibleBanes = new ArrayList<DomCardName>();
 		for (DomCardName cardName : values()) {
-			if (cardName.getCost().compareTo(new DomCost(2, 0))==0
-			 || cardName.getCost().compareTo(new DomCost(3, 0))==0){
+			if (cardName.getCost().customCompare(new DomCost(2, 0))==0
+			 || cardName.getCost().customCompare(new DomCost(3, 0))==0){
 				if (cardName.hasCardType(DomCardType.Kingdom))
 			  	  possibleBanes.add(cardName);
 			}
 		}
-		return possibleBanes.toArray();
+        return possibleBanes.toArray(new DomCardName[possibleBanes.size()]);
 	}
 
 	public String toHTML() {
@@ -1682,13 +1710,13 @@ public enum DomCardName  {
 //		return  "C:/Users/MEDION/Pictures/" + getImageLocation();
 	}
 
-	public static Object[] getKingdomCards() {
+	public static DomCardName[] getKingdomCards() {
 		ArrayList<DomCardName> theCards = new ArrayList<DomCardName>();
 		for (DomCardName cardName : values()){
 			if (!DomSet.Base.contains(cardName))
 				theCards.add(cardName);
 		}
-		return theCards.toArray();
+        return theCards.toArray(new DomCardName[theCards.size()]);
 	}
 
 	public int getOrderInBuyRules(DomPlayer owner) {
@@ -1729,7 +1757,8 @@ public enum DomCardName  {
                 case Sauna:
                 case Avanto:
                     return DomCardName.Sauna;
-
+                default:
+                	System.err.println("Attempted to determine the pile of the split pile card \"" + toString() + "\" that isn't on the recognized list of split pile cards!");
             }
         }
 

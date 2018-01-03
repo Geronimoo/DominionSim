@@ -13,6 +13,10 @@ import java.awt.*;
 
 public class TableCardRenderer extends DefaultTableCellRenderer implements TableCellRenderer {
 
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1751528463538430723L;
     private final DomEngine myEngine;
 
     public TableCardRenderer(DomEngine anEngine) {

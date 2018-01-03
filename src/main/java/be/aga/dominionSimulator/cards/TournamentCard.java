@@ -37,6 +37,7 @@ public class TournamentCard extends DomCard {
     private void handleHuman() {
         if (!owner.getCardsFromHand(DomCardName.Province).isEmpty()) {
             if (owner.getEngine().getGameFrame().askPlayer("<html>Reveal " + DomCardName.Province.toHTML() + "?</html>", "Resolving " + this.getName().toString())) {
+                owner.discardFromHand(DomCardName.Province);
                 ArrayList<DomCardName> thePrizes = new ArrayList<DomCardName>();
                 for (DomCard theCard : owner.getCurrentGame().getBoard().getPrizes()) {
                     thePrizes.add(theCard.getName());

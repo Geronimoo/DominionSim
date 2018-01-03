@@ -11,11 +11,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class OneCardSelectorWithDomCard extends JDialog implements ActionListener {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2763092423371435334L;
     private final ArrayList<DomCard> myChooseFrom;
-    private final String myQuestion;
     private final String myButtonMessage;
     private DomCard myChosenCard;
-    private JList myChooseFromList;
+    private JList<DomCard> myChooseFromList;
 
     public OneCardSelectorWithDomCard(Component aComponent, String aTitle, ArrayList<DomCard> chooseFrom, String aButtonMessage) {
         setModal(true);
@@ -29,7 +32,6 @@ public class OneCardSelectorWithDomCard extends JDialog implements ActionListene
         myChooseFrom = chooseFrom;
         Collections.sort(myChooseFrom,DomCard.SORT_BY_NAME);
         myButtonMessage = aButtonMessage;
-        myQuestion = aTitle;
         buildGUI();
         setTitle(aTitle);
         pack();
@@ -77,20 +79,20 @@ public class OneCardSelectorWithDomCard extends JDialog implements ActionListene
         return thePanel;
     }
 
-    private JList getChooseFromList() {
-        myChooseFromList = new JList();
+    private JList<DomCard> getChooseFromList() {
+        myChooseFromList = new JList<DomCard>();
 //    myChooseFromList.setPreferredSize(new Dimension(100,200));
-        myChooseFromList.setCellRenderer(new CardRenderer());
-        myChooseFromList.setModel(new DefaultListModel());
+        myChooseFromList.setCellRenderer(new CardRenderer<DomCard>());
+        myChooseFromList.setModel(new DefaultListModel<DomCard>());
         for (DomCard theCard:myChooseFrom)
-            ((DefaultListModel)myChooseFromList.getModel()).addElement(theCard);
+            ((DefaultListModel<DomCard>)myChooseFromList.getModel()).addElement(theCard);
         myChooseFromList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton()==MouseEvent.BUTTON1) {
                     int index = myChooseFromList.locationToIndex(e.getPoint());
                     if (index >= 0) {
-                        DomCard theChosenCard = (DomCard) myChooseFromList.getModel().getElementAt(index);
+                        DomCard theChosenCard = myChooseFromList.getModel().getElementAt(index);
                         for (DomCard theCard:myChooseFrom) {
                             if (theCard==theChosenCard) {
                                 myChosenCard = theCard;

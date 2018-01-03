@@ -1,36 +1,28 @@
 package be.aga.dominionSimulator.gui;
 
-import be.aga.dominionSimulator.DomBuyRule;
 import be.aga.dominionSimulator.DomCard;
-import be.aga.dominionSimulator.DomEngine;
-import be.aga.dominionSimulator.DomPlayer;
-import be.aga.dominionSimulator.enums.DomBotType;
-import be.aga.dominionSimulator.enums.DomCardName;
-import be.aga.dominionSimulator.enums.DomSet;
 import be.aga.dominionSimulator.gui.util.CardRenderer;
-import be.aga.dominionSimulator.gui.util.HandCardRenderer;
-import org.jfree.ui.RefineryUtilities;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 public class CardSelector extends JDialog implements ActionListener {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1537143106231692584L;
     private final ArrayList<DomCard> myChooseFrom;
     private final int myNumber;
     private final String myQuestion;
-    private ArrayList<DomCardName> myChosenCards;
-    private JList myChooseFromList;
-    private JList myChosenList;
+    private ArrayList<DomCard> myChosenCards;
+    private JList<DomCard> myChooseFromList;
+    private JList<DomCard> myChosenList;
 
-    public CardSelector(Component aComponent, String aQuestion, ArrayList<DomCardName> aChosenCards, ArrayList<DomCard> chooseFrom, int aNumber) {
+    public CardSelector(Component aComponent, String aQuestion, ArrayList<DomCard> aChosenCards, ArrayList<DomCard> chooseFrom, int aNumber) {
      setModal(true);
      setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
      addWindowListener(new WindowAdapter() {
@@ -111,14 +103,15 @@ private JPanel getChosenPanel() {
     return thePanel;
 }
 
-private JList getChooseFromList() {
+private JList<DomCard> getChooseFromList() {
     Collections.sort(myChooseFrom,DomCard.SORT_BY_NAME);
-    myChooseFromList = new JList();
+    myChooseFromList = new JList<DomCard>();
 //    myChooseFromList.setPreferredSize(new Dimension(100,200));
-    myChooseFromList.setCellRenderer(new CardRenderer());
-    myChooseFromList.setModel(new DefaultListModel());
+    myChooseFromList.setCellRenderer(new CardRenderer<DomCard>());
+    final DefaultListModel<DomCard> myChooseFromListModel = new DefaultListModel<DomCard>();
+	myChooseFromList.setModel(myChooseFromListModel);
     for (DomCard theCard:myChooseFrom)
-      ((DefaultListModel)myChooseFromList.getModel()).addElement(theCard.getName());
+    	myChooseFromListModel.addElement(theCard);
     myChooseFromList.addMouseListener(new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -127,43 +120,44 @@ private JList getChooseFromList() {
                     return;
                 int index = myChooseFromList.locationToIndex(e.getPoint());
                 if (index >= 0) {
-                    Object o = myChooseFromList.getModel().getElementAt(index);
-                    ((DefaultListModel)myChooseFromList.getModel()).removeElement(o);
-                    ((DefaultListModel)myChosenList.getModel()).addElement(o);
+                	DomCard o = myChooseFromList.getModel().getElementAt(index);
+                	myChooseFromListModel.removeElement(o);
+                    ((DefaultListModel<DomCard>)myChosenList.getModel()).addElement(o);
                 }
             }
             if (e.getButton()==MouseEvent.BUTTON3) {
                 int index = myChooseFromList.locationToIndex(e.getPoint());
                 if (index >= 0)
-                    DomGameFrame.showWiki( myChooseFromList.getModel().getElementAt(index));
+                    DomGameFrame.showWiki(myChooseFromListModel.getElementAt(index));
             }
         }
     });
     return myChooseFromList;
 }
 
-private JList getChosenList() {
-    myChosenList = new JList();
+private JList<DomCard> getChosenList() {
+    myChosenList = new JList<DomCard>();
 //    myChosenList.setPreferredSize(new Dimension(100,200));
-    myChosenList.setCellRenderer(new CardRenderer());
-    myChosenList.setModel(new DefaultListModel());
-    for (DomCardName theCard:myChosenCards)
-        ((DefaultListModel)myChosenList.getModel()).addElement(theCard);
+    myChosenList.setCellRenderer(new CardRenderer<DomCard>());
+    final DefaultListModel<DomCard> myChosenListModel = new DefaultListModel<DomCard>();
+	myChosenList.setModel(myChosenListModel);
+    for (DomCard theCard:myChosenCards)
+    	myChosenListModel.addElement(theCard);
     myChosenList.addMouseListener(new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
             if (e.getButton()==MouseEvent.BUTTON1) {
                 int index = myChosenList.locationToIndex(e.getPoint());
                 if (index >= 0) {
-                    Object o = myChosenList.getModel().getElementAt(index);
-                    ((DefaultListModel)myChosenList.getModel()).removeElement(o);
-                    ((DefaultListModel)myChooseFromList.getModel()).addElement(o);
+                    DomCard o = myChosenList.getModel().getElementAt(index);
+                    myChosenListModel.removeElement(o);
+                    ((DefaultListModel<DomCard>)myChooseFromList.getModel()).addElement(o);
                 }
             }
             if (e.getButton()==MouseEvent.BUTTON3) {
                 int index = myChosenList.locationToIndex(e.getPoint());
                 if (index >= 0)
-                    DomGameFrame.showWiki( myChosenList.getModel().getElementAt(index));
+                    DomGameFrame.showWiki(myChosenListModel.getElementAt(index));
             }
         }
     });
@@ -176,7 +170,7 @@ public void actionPerformed(ActionEvent e) {
 	    if (myNumber!=0 && myChosenList.getModel().getSize()!=myNumber)
 	        return;
 	    for (int i=0; i<myChosenList.getModel().getSize(); i++) {
-	        myChosenCards.add((DomCardName) myChosenList.getModel().getElementAt(i));
+	        myChosenCards.add((DomCard) myChosenList.getModel().getElementAt(i));
         }
 		dispose();
 	}

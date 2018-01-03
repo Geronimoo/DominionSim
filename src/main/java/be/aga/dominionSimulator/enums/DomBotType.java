@@ -21,7 +21,8 @@ public enum DomBotType {
    Optimized,
    AppliesPPR,
    ShuffleOverhand,
-   RiffleShuffle
+   RiffleShuffle,
+   SilverHater
    
    ;
    

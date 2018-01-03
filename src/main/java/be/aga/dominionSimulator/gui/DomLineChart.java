@@ -8,7 +8,6 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
@@ -86,8 +85,8 @@ public class DomLineChart {
 	}
 
     public ChartPanel getChartPanel() {
-       int theHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-       int theWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
+       Toolkit.getDefaultToolkit().getScreenSize();
+       Toolkit.getDefaultToolkit().getScreenSize();
 //       myChartPanel.setMinimumSize( new Dimension(theWidth*10/27,theHeight*10/27) );
 //       myChartPanel.setPreferredSize( new Dimension(theWidth*10/27,theHeight*10/27) );
        return myChartPanel;

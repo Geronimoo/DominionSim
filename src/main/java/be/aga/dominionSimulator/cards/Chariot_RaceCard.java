@@ -1,10 +1,8 @@
 package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
-import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
-import be.aga.dominionSimulator.enums.DomPlayStrategy;
 
 public class Chariot_RaceCard extends DomCard {
     public Chariot_RaceCard() {
@@ -22,12 +20,12 @@ public class Chariot_RaceCard extends DomCard {
         DomCard theOppRevealedCard = theLeftOpp.revealTopCards(1).get(0);
 
         if (theRevealedCard.getDebtCost()==0 && theOppRevealedCard.getDebtCost()==0 &&
-        theRevealedCard.getCost(owner.getCurrentGame()).compareTo(theOppRevealedCard.getCost(owner.getCurrentGame()))>0) {
+        theRevealedCard.getCost(owner.getCurrentGame()).customCompare(theOppRevealedCard.getCost(owner.getCurrentGame()))>0) {
             owner.addAvailableCoins(1);
             owner.addVP(1);
         }
         if (theRevealedCard.getDebtCost()>0 && theOppRevealedCard.getDebtCost()>0 &&
-                theRevealedCard.getCost(owner.getCurrentGame()).compareTo(theOppRevealedCard.getCost(owner.getCurrentGame()))>0) {
+                theRevealedCard.getCost(owner.getCurrentGame()).customCompare(theOppRevealedCard.getCost(owner.getCurrentGame()))>0) {
             owner.addAvailableCoins(1);
             owner.addVP(1);
         }

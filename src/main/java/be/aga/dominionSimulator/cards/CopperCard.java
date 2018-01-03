@@ -14,7 +14,7 @@ public class CopperCard extends DomCard {
     }
     @Override
     public int getCoinValue() {
-        return owner.getCardsFromPlay(DomCardName.Coppersmith).size() +1;
+        return owner.getCoppersmithPlayedCount() +1;
     }
     @Override
     public boolean wantsToBePlayed() {

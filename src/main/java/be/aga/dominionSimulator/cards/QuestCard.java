@@ -1,7 +1,6 @@
 package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
-import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
@@ -63,11 +62,11 @@ public class QuestCard extends DomCard {
             owner.gain(DomCardName.Gold);
         }
         if (theChoice == 2 && owner.getCardsInHand().size() >= 6) {
-            ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+            ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
             owner.getEngine().getGameFrame().askToSelectCards("<html>Choose to discard</html>", owner.getCardsInHand(), theChosenCards, 6);
             for (int i = theChosenCards.size() - 1; i >= 0; i--) {
                 for (DomCard theCard : owner.getCardsInHand()) {
-                    if (theChosenCards.get(i) == theCard.getName()) {
+                    if (theChosenCards.get(i).getName() == theCard.getName()) {
                         owner.discardFromHand(theCard);
                         break;
                     }

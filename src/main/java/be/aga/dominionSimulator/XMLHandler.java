@@ -13,12 +13,12 @@ import be.aga.dominionSimulator.enums.DomBotType;
  */
 
 public final class XMLHandler extends DefaultHandler {
-    private Stack stack;
+    private Stack<Object> stack;
     private boolean isStackReadyForText;
     private ArrayList<DomPlayer> bots=new ArrayList<DomPlayer>();
 
     public XMLHandler() {
-      stack = new Stack();
+      stack = new Stack<Object>();
       isStackReadyForText = false;
     }
 
@@ -71,6 +71,7 @@ public final class XMLHandler extends DefaultHandler {
       }    
     }
 
+    @SuppressWarnings("unchecked")
     public void endElement( String uri, String localName, String qName ) {
       // recognized text is always content of an element
       // when the element closes, no more text should be expected

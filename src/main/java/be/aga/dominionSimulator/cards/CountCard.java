@@ -2,12 +2,10 @@ package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomCost;
-import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Set;
 
 public class CountCard extends DomCard {
     public CountCard() {

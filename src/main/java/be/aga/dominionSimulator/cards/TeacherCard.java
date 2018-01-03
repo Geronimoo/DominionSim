@@ -3,12 +3,8 @@ package be.aga.dominionSimulator.cards;
 import be.aga.dominionSimulator.DomBuyCondition;
 import be.aga.dominionSimulator.DomBuyRule;
 import be.aga.dominionSimulator.DomCard;
-import be.aga.dominionSimulator.DomCost;
-import be.aga.dominionSimulator.enums.DomBotFunction;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
-import be.aga.dominionSimulator.enums.DomPlayStrategy;
-
 import java.util.ArrayList;
 
 public class TeacherCard extends DomCard {
@@ -56,6 +52,8 @@ public class TeacherCard extends DomCard {
                             return;
                         }
                         break;
+				default:
+					break;
                 }
             }
         }
@@ -69,8 +67,8 @@ public class TeacherCard extends DomCard {
         theOptions.add("+Buy token");
         int theChoice = owner.getEngine().getGameFrame().askToSelectOption("Place a token", theOptions, "Mandatory!");
         ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
-        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-            if (!owner.cardHasToken(theCard) &&  theCard.hasCardType(DomCardType.Action) && owner.getCurrentGame().countInSupply(theCard)>0)
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
+            if (!owner.cardHasToken(theCard))
                 theChooseFrom.add(theCard);
         }
         if (theChooseFrom.isEmpty())

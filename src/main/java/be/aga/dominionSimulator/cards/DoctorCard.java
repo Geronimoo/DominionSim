@@ -52,11 +52,11 @@ public class DoctorCard extends DomCard {
             else
                 theCardsToPutBack.add(theCard);
         }
-        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
         owner.getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u> (first card = top card)</html>" , theCardsToPutBack, theChosenCards, theCardsToPutBack.size());
         for (int i=theChosenCards.size()-1;i>=0;i--) {
             for (DomCard theCard : theCardsToPutBack) {
-                if (theChosenCards.get(i)==theCard.getName()) {
+                if (theChosenCards.get(i).getName()==theCard.getName()) {
                     owner.putOnTopOfDeck(theCard);
                     theCardsToPutBack.remove(theCard);
                     break;

@@ -39,7 +39,7 @@ public class PawnCard extends DomCard {
     	  theChoicesCount++;
     	  actionChosen=true;
       }
-      if (owner.getTotalPotentialCurrency().compareTo(new DomCost(7,0))>0) {
+      if (owner.getTotalPotentialCurrency().customCompare(new DomCost(7,0))>0) {
             owner.addAvailableBuys(1);
             theChoicesCount++;
             buysChosen=true;

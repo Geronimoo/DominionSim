@@ -56,15 +56,15 @@ public class ArtificerCard extends DomCard {
         owner.setNeedsToUpdate();
         if (!owner.getEngine().getGameFrame().askPlayer("<html>Use " + DomCardName.Artificer.toHTML() +"?</html>", "Resolving " + this.getName().toString()))
            return;
-        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
         owner.getEngine().getGameFrame().askToSelectCards("Choose cards to discard" , owner.getCardsInHand(), theChosenCards, 0);
-        for (DomCardName theCardName: theChosenCards) {
-            owner.discardFromHand(owner.getCardsFromHand(theCardName).get(0));
+        for (DomCard theCardName: theChosenCards) {
+            owner.discardFromHand(owner.getCardsFromHand(theCardName.getName()).get(0));
         }
         owner.setNeedsToUpdate();
         ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
-        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-            if (new DomCost(theChosenCards.size(),0).compareTo(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0)
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
+            if (new DomCost(theChosenCards.size(),0).customCompare(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0)
                 theChooseFrom.add(theCard);
         }
         if (theChooseFrom.isEmpty())

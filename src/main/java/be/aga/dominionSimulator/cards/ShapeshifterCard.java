@@ -61,10 +61,10 @@ public class ShapeshifterCard extends DomCard {
             if (theCard.hasCardType(DomCardType.Village)&&i>0)
                 continue;
             if (getName()==DomCardName.Band_of_Misfits)
-                if (theCard.getCost(owner.getCurrentGame()).compareTo(getCost(owner.getCurrentGame()))>=0)
+                if (theCard.getCost(owner.getCurrentGame()).customCompare(getCost(owner.getCurrentGame()))>=0)
                     continue;
             if (getName()==DomCardName.Overlord)
-                if (new DomCost(5,0).compareTo(theCard.getCost(owner.getCurrentGame()))<0)
+                if (new DomCost(5,0).customCompare(theCard.getCost(owner.getCurrentGame()))<0)
                     continue;
             return theCard;
         }
@@ -73,12 +73,12 @@ public class ShapeshifterCard extends DomCard {
 
     private DomCardName handleHuman() {
         ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
-        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
             if (getName()==DomCardName.Overlord) {
-                if (new DomCost(5,0).compareTo(theCard.getCost(owner.getCurrentGame())) >= 0 && owner.getCurrentGame().countInSupply(theCard) > 0 && theCard.hasCardType(DomCardType.Action))
+                if (new DomCost(5,0).customCompare(theCard.getCost(owner.getCurrentGame())) >= 0 && owner.getCurrentGame().countInSupply(theCard) > 0 && theCard.hasCardType(DomCardType.Action))
                     theChooseFrom.add(theCard);
             } else {
-                if (getCost(owner.getCurrentGame()).compareTo(theCard.getCost(owner.getCurrentGame())) > 0 && owner.getCurrentGame().countInSupply(theCard) > 0 && theCard.hasCardType(DomCardType.Action))
+                if (getCost(owner.getCurrentGame()).customCompare(theCard.getCost(owner.getCurrentGame())) > 0 && owner.getCurrentGame().countInSupply(theCard) > 0 && theCard.hasCardType(DomCardType.Action))
                     theChooseFrom.add(theCard);
             }
         }

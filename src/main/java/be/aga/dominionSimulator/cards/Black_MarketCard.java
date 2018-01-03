@@ -67,7 +67,7 @@ public class Black_MarketCard extends DomCard {
       for (int i=theRevealedCards.size()-1 ; i>=0 ; i--) {
     	DomCard theCard = theRevealedCards.get(i);
         DomCost theCardCost = theCard.getName().getCost(owner.getCurrentGame());
-    	if (theAvailableCurrency.compareTo(theCardCost)>=0 && theDesiredCardName==null) {
+    	if (theAvailableCurrency.customCompare(theCardCost)>=0 && theDesiredCardName==null) {
     		owner.buy(theRevealedCards.remove(i));
             break;
     	}
@@ -82,7 +82,6 @@ public class Black_MarketCard extends DomCard {
 
     private void handleHuman(ArrayList<DomCard> aRevealedCards) {
         ArrayList<DomCardName> theChooseFrom;
-        int theCount=0;
         DomCardName theCardToPlay;
         do {
             owner.setNeedsToUpdate();

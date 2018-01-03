@@ -3,7 +3,6 @@ package be.aga.dominionSimulator.cards;
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
-import com.sun.javafx.scene.control.skin.VirtualContainerBase;
 
 public class CrossroadsCard extends DomCard {
     public CrossroadsCard () {
