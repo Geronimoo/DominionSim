@@ -30,8 +30,8 @@ public class ArtisanCard extends DomCard {
 
     private void handleHumanPlayer() {
         ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
-        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-            if (theCard.getCost(owner.getCurrentGame()).compareTo(new DomCost(5, 0)) <= 0 && owner.getCurrentGame().countInSupply(theCard)>0)
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
+            if (theCard.getCost(owner.getCurrentGame()).customCompare(new DomCost(5, 0)) <= 0 && owner.getCurrentGame().countInSupply(theCard)>0)
                 theChooseFrom.add(theCard);
         }
         if (!theChooseFrom.isEmpty()) {

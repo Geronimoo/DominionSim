@@ -418,11 +418,20 @@ public void actionPerformed(ActionEvent e) {
 	}
 
 	public void addToLog(final String s) {
-        if (logStack.isEmpty()) {
-            Timer theTimer = new Timer(myDelay, getListener());
-            theTimer.start();
+//        if (logStack.isEmpty()) {
+//            Timer theTimer = new Timer(myDelay, getListener());
+//            theTimer.start();
+//        }
+//        logStack.add(s);
+        if (!s.contains("cards in Hand:")) {
+            try {
+                editorKit.insertHTML(gameLog, gameLog.getLength(), s, 0, 0, null);
+            } catch (BadLocationException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        logStack.add(s);
     }
 
     private ActionListener getListener() {

@@ -69,8 +69,8 @@ public class TeacherCard extends DomCard {
         theOptions.add("+Buy token");
         int theChoice = owner.getEngine().getGameFrame().askToSelectOption("Place a token", theOptions, "Mandatory!");
         ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
-        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-            if (!owner.cardHasToken(theCard) &&  theCard.hasCardType(DomCardType.Action) && owner.getCurrentGame().countInSupply(theCard)>0)
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
+            if (!owner.cardHasToken(theCard))
                 theChooseFrom.add(theCard);
         }
         if (theChooseFrom.isEmpty())

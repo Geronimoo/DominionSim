@@ -2,6 +2,7 @@ package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomCost;
+import be.aga.dominionSimulator.enums.DomBotType;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 import be.aga.dominionSimulator.enums.DomPlayStrategy;
@@ -27,18 +28,18 @@ public class AmuletCard extends DomCard {
 
             if (!playForAgroTrash())
                 if (!playForMoney())
-                    owner.gain(DomCardName.Silver);
+                    gainSilver();
             return;
         }
 
         if (owner.getPlayStrategyFor(this) == DomPlayStrategy.silverGainer) {
             if (!owner.isGoingToBuyTopCardInBuyRules(owner.getTotalPotentialCurrency())) {
                 if (!owner.isGoingToBuyTopCardInBuyRules(owner.getTotalPotentialCurrency().add(new DomCost(1, 0)))) {
-                    owner.gain(DomCardName.Silver);
+                    gainSilver();
                     return;
                 }
             } else {
-                owner.gain(DomCardName.Silver);
+                gainSilver();
                 return;
             }
         }
@@ -46,7 +47,7 @@ public class AmuletCard extends DomCard {
         if (!playForTrashEstatesOrWorse())
          if (!playForMoney())
            if (!playForTrash())
-              owner.gain(DomCardName.Silver);
+              gainSilver();
     }
 
     private void handleHuman() {
@@ -58,7 +59,7 @@ public class AmuletCard extends DomCard {
         if (theChoice == 1)
             owner.addAvailableCoins(1);
         if (theChoice == 2)
-            owner.gain(DomCardName.Silver);
+            gainSilver();
         if (theChoice == 0) {
             if (owner.getCardsInHand().size()>0) {
                 ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
@@ -68,6 +69,13 @@ public class AmuletCard extends DomCard {
                 }
             }
         }
+    }
+
+    private void gainSilver() {
+        if (!owner.hasType(DomBotType.SilverHater))
+          owner.gain(DomCardName.Silver);
+        else
+          owner.addAvailableCoins(1);
     }
 
     private boolean playForTrashEstatesOrWorse() {

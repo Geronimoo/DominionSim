@@ -57,8 +57,8 @@ public class UpgradeCard extends DomCard {
         owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
         owner.setNeedsToUpdate();
         theChooseFrom = new ArrayList<DomCardName>();
-        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-            if (theCard.getCost(owner.getCurrentGame()).compareTo(theChosenCard.getCost(owner.getCurrentGame()).add(new DomCost(1,0)))==0 && owner.getCurrentGame().countInSupply(theCard)>0)
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
+            if (theCard.getCost(owner.getCurrentGame()).customCompare(theChosenCard.getCost(owner.getCurrentGame()).add(new DomCost(1,0)))==0 && owner.getCurrentGame().countInSupply(theCard)>0)
                 theChooseFrom.add(theCard);
         }
         if (theChooseFrom.isEmpty())

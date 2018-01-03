@@ -40,6 +40,7 @@ public enum DomCardName  {
     Artificer (5, 0, 1, 0, 12, 28, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler}),
     Artisan (6, 0, 0, 0, 30, 27, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal}),
     Avanto (5, 0, 0, 0, 25, 24, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal, DomCardType.Card_Advantage, DomCardType.Split_Pile}),
+    Bad_Omens (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Hex}),
     Bag_of_Gold (0, 0, 0, 0, 7, 25, new DomCardType[]{DomCardType.Action, DomCardType.Prize}),
     Baker (5, 0, 1, 0, 12, 28, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler}),
     Ball (5, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
@@ -111,6 +112,7 @@ public enum DomCardName  {
     Dame_Sylvia (5, 0, 2, 0, 25, 28, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Attack, DomCardType.Terminal, DomCardType.Knight}),
     Death_Cart (4, 0, 5, 0, 25, 23, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal, DomCardType.Looter}),
     Defiled_Shrine (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Landmark}),
+    Delusion (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Hex}),
     Delve (2, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
     Develop (3, 0, 0, 0, 33, 16, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal, DomCardType.Trasher, DomCardType.TrashForBenefit}),
     Devil$s_Workshop (4, 0, 0, 0, 38, 22, new DomCardType[]{DomCardType.Night, DomCardType.Kingdom}),
@@ -163,6 +165,7 @@ public enum DomCardName  {
     Ghost_Town (3, 0, 0, 0, 1, 23, new DomCardType[]{DomCardType.Kingdom, DomCardType.Duration, DomCardType.Night, DomCardType.Village}),
     Giant (5, 0, 1, 0, 22, 30, new DomCardType[]{DomCardType.Action, DomCardType.Attack, DomCardType.Kingdom, DomCardType.Terminal}),
     Gladiator (3, 0, 2, 0, 28, 22, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal, DomCardType.Split_Pile}),
+    Goat (2, 0, 1, 0, 3, 18, new DomCardType[]{DomCardType.Treasure,DomCardType.Heirloom,DomCardType.Kingdom, DomCardType.Trasher}),
     Golem (4, 1, 0, 0, 18, 40, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Village, DomCardType.Card_Advantage}),
     Goons (6, 0, 2, 0, 20, 31, new DomCardType[]{DomCardType.Action, DomCardType.Attack, DomCardType.Kingdom, DomCardType.Terminal}),
     Governor (5, 0, 0, 0,9, 40, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Card_Advantage, DomCardType.TrashForBenefit}),
@@ -278,6 +281,7 @@ public enum DomCardName  {
     Pilgrimage (4, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
     Pillage (5, 0, 2, 0, 27, 28, new DomCardType[]{DomCardType.Action, DomCardType.Attack, DomCardType.Kingdom, DomCardType.Terminal}),
     Pirate_Ship (4, 0, 0, 0, 20, 20, new DomCardType[]{DomCardType.Action, DomCardType.Attack, DomCardType.Kingdom, DomCardType.Terminal}),
+    Pixie (2, 0, 0, 0, 5, 18, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Fate, DomCardType.Cycler}),
     Plan (3, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
     Plaza (4, 0, 0, 0, 5, 17, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler, DomCardType.Village}),
     Plunder (5, 0, 2, 0, 35, 28, new DomCardType[]{DomCardType.Kingdom, DomCardType.Treasure,DomCardType.Split_Pile}),
@@ -557,6 +561,8 @@ public enum DomCardName  {
             return new ArtisanCard();
         case Avanto:
             return new AvantoCard();
+        case Bad_Omens:
+            return new Bad_OmensCard();
         case Bag_of_Gold:
             return new Bag_of_GoldCard();
         case Baker:
@@ -691,6 +697,8 @@ public enum DomCardName  {
             return new Dame_SylviaCard();
         case Death_Cart:
             return new Death_CartCard();
+        case Delusion:
+            return new DelusionCard();
         case Delve:
             return new DelveCard();
         case Develop:
@@ -795,6 +803,8 @@ public enum DomCardName  {
             return new GiantCard();
         case Gladiator:
             return new GladiatorCard();
+        case Goat:
+            return new GoatCard();
         case Gold:
             return new GoldCard();
         case Golem:
@@ -1009,6 +1019,8 @@ public enum DomCardName  {
             return new PillageCard();
         case Pirate_Ship:
             return new Pirate_ShipCard();
+        case Pixie:
+            return new PixieCard();
         case Plan:
             return new PlanCard();
         case Plaza:
@@ -1623,8 +1635,8 @@ public enum DomCardName  {
 	public static Object[] getPossibleBaneCards() {
 	    ArrayList<DomCardName> possibleBanes = new ArrayList<DomCardName>();
 		for (DomCardName cardName : values()) {
-			if (cardName.getCost().compareTo(new DomCost(2, 0))==0
-			 || cardName.getCost().compareTo(new DomCost(3, 0))==0){
+			if (cardName.getCost().customCompare(new DomCost(2, 0))==0
+			 || cardName.getCost().customCompare(new DomCost(3, 0))==0){
 				if (cardName.hasCardType(DomCardType.Kingdom))
 			  	  possibleBanes.add(cardName);
 			}

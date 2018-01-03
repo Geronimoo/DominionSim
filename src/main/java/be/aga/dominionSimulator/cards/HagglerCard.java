@@ -22,7 +22,7 @@ public class HagglerCard extends DomCard {
     	if (owner.isHumanOrPossessedByHuman()) {
             ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
             for (DomCardName theCardName : owner.getCurrentGame().getBoard().keySet()) {
-                if (theCost.compareTo(theCardName.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCardName)>0 && !theCardName.hasCardType(DomCardType.Victory))
+                if (theCost.customCompare(theCardName.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCardName)>0 && !theCardName.hasCardType(DomCardType.Victory))
                     theChooseFrom.add(theCardName);
             }
             if (theChooseFrom.isEmpty())

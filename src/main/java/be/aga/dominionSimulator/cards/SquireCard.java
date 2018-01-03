@@ -49,7 +49,7 @@ public class SquireCard extends DomCard {
     public void doWhenTrashed() {
         if (owner.isHumanOrPossessedByHuman()) {
             ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
-            for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+            for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
                 if (theCard.hasCardType(DomCardType.Attack) && theCard.hasCardType(DomCardType.Action) && owner.getCurrentGame().countInSupply(theCard)>0)
                     theChooseFrom.add(theCard);
             }

@@ -51,8 +51,8 @@ public class ReplaceCard extends DomCard {
         DomCard theCardToReplace = owner.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Select card to " + this.getName().toString(), theChooseFrom, "Mandatory!")).get(0);
         owner.trash(owner.removeCardFromHand(theCardToReplace));
         theChooseFrom = new ArrayList<DomCardName>();
-        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-            if (theCardToReplace.getCost(owner.getCurrentGame()).add(new DomCost(2,0)).compareTo(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0)
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
+            if (theCardToReplace.getCost(owner.getCurrentGame()).add(new DomCost(2,0)).customCompare(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0)
                 theChooseFrom.add(theCard);
         }
         if (theChooseFrom.isEmpty())

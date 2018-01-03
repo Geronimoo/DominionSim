@@ -48,8 +48,8 @@ public class ButcherCard extends DomCard {
             return;
         owner.trash(owner.removeCardFromHand(theCardToButcher));
         theChooseFrom = new ArrayList<DomCardName>();
-        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-            if (theCardToButcher.getCost(owner.getCurrentGame()).add(new DomCost(owner.getCoinTokens(),0)).compareTo(theCard.getCost(owner.getCurrentGame()))>=0
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
+            if (theCardToButcher.getCost(owner.getCurrentGame()).add(new DomCost(owner.getCoinTokens(),0)).customCompare(theCard.getCost(owner.getCurrentGame()))>=0
                     && owner.getCurrentGame().countInSupply(theCard)>0 )
 //                    && theCard.getCost(owner.getCurrentGame()).getDebt()==theCardToButcher.getCost(owner.getCurrentGame()).getDebt())
                 theChooseFrom.add(theCard);

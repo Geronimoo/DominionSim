@@ -21,8 +21,8 @@ public class AlmsCard extends DomCard {
             return;
         if (owner.isHumanOrPossessedByHuman()) {
             ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
-            for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-                if (new DomCost(4,0).compareTo(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0 && !theCard.hasCardType(DomCardType.Event))
+            for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
+                if (new DomCost(4,0).customCompare(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0 && !theCard.hasCardType(DomCardType.Event))
                     theChooseFrom.add(theCard);
             }
             if (theChooseFrom.isEmpty())

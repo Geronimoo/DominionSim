@@ -44,10 +44,10 @@ public class DevelopCard extends DomCard {
         DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!");
         owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
         theChooseFrom = new ArrayList<DomCardName>();
-        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-            if (theCard.getCost(owner.getCurrentGame()).compareTo(theChosenCard.getCost(owner.getCurrentGame()).add(new DomCost(1,0)))==0 && owner.getCurrentGame().countInSupply(theCard)>0)
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
+            if (theCard.getCost(owner.getCurrentGame()).customCompare(theChosenCard.getCost(owner.getCurrentGame()).add(new DomCost(1,0)))==0 && owner.getCurrentGame().countInSupply(theCard)>0)
                 theChooseFrom.add(theCard);
-            if (theCard.getCost(owner.getCurrentGame()).compareTo(theChosenCard.getCost(owner.getCurrentGame()).add(new DomCost(-1,0)))==0 && owner.getCurrentGame().countInSupply(theCard)>0)
+            if (theCard.getCost(owner.getCurrentGame()).customCompare(theChosenCard.getCost(owner.getCurrentGame()).add(new DomCost(-1,0)))==0 && owner.getCurrentGame().countInSupply(theCard)>0)
                 theChooseFrom.add(theCard);
         }
         if (theChooseFrom.isEmpty())
@@ -57,10 +57,10 @@ public class DevelopCard extends DomCard {
         } else {
             DomCardName theFirstChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Gain a card for " + this.getName().toString(), theChooseFrom, "Mandatory!");
             owner.gainOnTopOfDeck(owner.getCurrentGame().takeFromSupply(theFirstChosenCard));
-            if (theFirstChosenCard.getCost(owner.getCurrentGame()).compareTo(theChosenCard.getCost(owner.getCurrentGame()))>0) {
+            if (theFirstChosenCard.getCost(owner.getCurrentGame()).customCompare(theChosenCard.getCost(owner.getCurrentGame()))>0) {
                 theChooseFrom = new ArrayList<DomCardName>();
-                for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-                    if (theCard.getCost(owner.getCurrentGame()).compareTo(theChosenCard.getCost(owner.getCurrentGame()).add(new DomCost(-1,0)))==0 && owner.getCurrentGame().countInSupply(theCard)>0)
+                for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
+                    if (theCard.getCost(owner.getCurrentGame()).customCompare(theChosenCard.getCost(owner.getCurrentGame()).add(new DomCost(-1,0)))==0 && owner.getCurrentGame().countInSupply(theCard)>0)
                         theChooseFrom.add(theCard);
                 }
                 if (theChooseFrom.isEmpty())
@@ -73,8 +73,8 @@ public class DevelopCard extends DomCard {
                 }
             } else {
                 theChooseFrom = new ArrayList<DomCardName>();
-                for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-                    if (theCard.getCost(owner.getCurrentGame()).compareTo(theChosenCard.getCost(owner.getCurrentGame()).add(new DomCost(1, 0))) == 0 && owner.getCurrentGame().countInSupply(theCard) > 0)
+                for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
+                    if (theCard.getCost(owner.getCurrentGame()).customCompare(theChosenCard.getCost(owner.getCurrentGame()).add(new DomCost(1, 0))) == 0 && owner.getCurrentGame().countInSupply(theCard) > 0)
                         theChooseFrom.add(theCard);
                 }
                 if (theChooseFrom.isEmpty())

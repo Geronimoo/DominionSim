@@ -40,7 +40,7 @@ public class Wild_HuntCard extends DomCard {
         theOptions.add("Points");
         int theChoice = owner.getEngine().getGameFrame().askToSelectOption("Select for Wild Hunt", theOptions, "Mandatory!");
         if (theChoice == 0)
-            owner.drawCards(3);
+            drawCards();
         if (theChoice == 1)
             gainVP();
     }

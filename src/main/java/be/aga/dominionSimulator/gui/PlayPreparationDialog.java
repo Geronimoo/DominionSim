@@ -34,6 +34,7 @@ public class PlayPreparationDialog extends JFrame implements ActionListener {
     private JTextField myDelayTXF;
 
     public PlayPreparationDialog(DomEngine anEngine) {
+        myValidSets.add(DomSet.Common);
         myValidSets.add(DomSet.Base);
         myValidSets.add(DomSet.Intrigue);
         myValidSets.add(DomSet.Seaside);

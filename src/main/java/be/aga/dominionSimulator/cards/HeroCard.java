@@ -18,7 +18,7 @@ public class HeroCard extends TravellerCard{
       owner.addAvailableCoins(2);
       if (owner.isHumanOrPossessedByHuman()) {
           ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
-          for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
+          for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
               if (theCard.hasCardType(DomCardType.Treasure) && owner.getCurrentGame().countInSupply(theCard)>0)
                   theChooseFrom.add(theCard);
           }

@@ -20,7 +20,7 @@ public class PrinceCard extends DomCard {
         Collections.sort(owner.getCardsInHand(),SORT_FOR_TRASHING);
         for (int i=owner.getCardsInHand().size()-1;i>0;i--) {
             if (owner.getCardsInHand().get(i).hasCardType(DomCardType.Action)
-                    && owner.getCardsInHand().get(i).getCost(owner.getCurrentGame()).compareTo(new DomCost(4,0))<=0) {
+                    && owner.getCardsInHand().get(i).getCost(owner.getCurrentGame()).customCompare(new DomCost(4,0))<=0) {
                 if (owner.getCardsFromPlay(getName()).contains(this))
                    owner.removeCardFromPlay(this);
                 if (DomEngine.haveToLog) DomEngine.addToLog( owner + " sets aside " + owner.getCardsInHand().get(i) + " with " + this);
@@ -33,7 +33,7 @@ public class PrinceCard extends DomCard {
     public boolean wantsToBePlayed() {
         for (int i = owner.getCardsInHand().size() - 1; i > 0; i--) {
             if (owner.getCardsInHand().get(i).hasCardType(DomCardType.Action)
-                    && owner.getCardsInHand().get(i).getCost(owner.getCurrentGame()).compareTo(new DomCost(4, 0)) <= 0
+                    && owner.getCardsInHand().get(i).getCost(owner.getCurrentGame()).customCompare(new DomCost(4, 0)) <= 0
                     && owner.getCardsInHand().get(i) != this) {
                 return true;
             }
@@ -49,7 +49,7 @@ public class PrinceCard extends DomCard {
         DomCard theCardToPrince=null;
         for (DomCard theCard : theCards) {
             if (theCard.hasCardType(DomCardType.Action)
-                    && theCard.getCost(owner.getCurrentGame()).compareTo(new DomCost(4, 0)) <= 0) {
+                    && theCard.getCost(owner.getCurrentGame()).customCompare(new DomCost(4, 0)) <= 0) {
                 theCount++;
                 theCardToPrince = theCard;
             }

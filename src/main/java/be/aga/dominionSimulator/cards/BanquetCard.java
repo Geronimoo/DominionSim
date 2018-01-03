@@ -17,8 +17,8 @@ public class BanquetCard extends DomCard {
     owner.gain(DomCardName.Copper);
     if (owner.isHumanOrPossessedByHuman()) {
         ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
-        for (DomCardName theCard : owner.getCurrentGame().getBoard().keySet()) {
-            if (!theCard.hasCardType(DomCardType.Victory) && new DomCost(5,0).compareTo(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0)
+        for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
+            if (!theCard.hasCardType(DomCardType.Victory) && new DomCost(5,0).customCompare(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0)
                 theChooseFrom.add(theCard);
         }
         if (theChooseFrom.isEmpty())

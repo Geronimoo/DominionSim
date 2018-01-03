@@ -23,10 +23,14 @@ public class DomCard implements Comparable< DomCard >{
         }
     };
 
-    public static final Comparator SORT_BY_COST = new Comparator<DomCard>(){
+    public static final Comparator SORT_BY_COIN_COST = new Comparator<DomCard>(){
         @Override
         public int compare( DomCard aO1, DomCard aO2 ) {
-            return aO1.getName().getCost().compareTo(aO2.getName().getCost());
+            if (aO1.getName().getCoinCost(null)< aO2.getName().getCoinCost(null))
+                return -1;
+            if (aO1.getName().getCoinCost(null)> aO2.getName().getCoinCost(null))
+                return 1;
+            return 0;
         }
     };
 
@@ -109,7 +113,7 @@ public class DomCard implements Comparable< DomCard >{
     }
 
     /* (non-Javadoc)
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     * @see java.lang.Comparable#customCompare(java.lang.Object)
      */
     @Override
     public int compareTo( DomCard aO ) {
