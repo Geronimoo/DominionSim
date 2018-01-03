@@ -6,23 +6,19 @@ import be.aga.dominionSimulator.enums.DomCardName;
 
 public class CoppersmithCard extends DomCard {
     public CoppersmithCard () {
-      super( DomCardName.Coppersmith);
+        super(DomCardName.Coppersmith);
     }
 
     public void play() {
-        if (DomEngine.haveToLog) DomEngine.addToLog( this + "'s Coppers are now worth $" + (owner.getCardsFromPlay(DomCardName.Coppersmith).size()+1) );
-    }
-
-    @Override
-    public double getPotentialCoinValue() {
-      if (owner.getActionsLeft()==0 
-       && owner.getCardsInHand().contains( this ) ) {
-          return 0;
-      }
-      return owner.getCardsFromHand( DomCardName.Copper ).size();
+        owner.increaseCoppersmithPlayedCounter();
+        if (DomEngine.haveToLog)
+            DomEngine.addToLog(this + "'s Coppers are now worth $" + (owner.getCoppersmithPlayedCount() + 1));
     }
 
     public boolean wantsToBePlayed() {
-      return !owner.getCardsFromHand( DomCardName.Copper).isEmpty();
+        boolean bePlayed = !owner.getCardsFromHand(DomCardName.Copper).isEmpty()
+                || (!owner.getCardsFromHand(DomCardName.Counting_House).isEmpty()
+                        && owner.getCardsFromHand(DomCardName.Counting_House).get(0).wantsToBePlayed());
+        return bePlayed;
     }
 }

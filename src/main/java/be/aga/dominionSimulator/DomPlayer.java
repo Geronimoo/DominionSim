@@ -104,6 +104,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     private DomCardName plusOneCoinTokenOn;
     private DomCardName trashingTokenOn;
     private int bridgesPlayedCount;
+    private int coppersmithsPlayedCount;
     private int debt;
     private boolean hasDoubledMoney;
     private int charmReminder = 0;
@@ -716,6 +717,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         expeditionsActivated = 0;
         river$sGiftActive=false;
         bridgesPlayedCount = 0;
+        coppersmithsPlayedCount = 0;
         hasDoubledMoney = false;
         charmReminder = 0;
         donateTriggered = false;
@@ -3558,6 +3560,14 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
 
     public int getBridgesPlayedCount() {
         return bridgesPlayedCount;
+    }
+
+    public void increaseCoppersmithPlayedCounter() {
+        coppersmithsPlayedCount++;
+    }
+
+    public int getCoppersmithPlayedCount() {
+        return coppersmithsPlayedCount;
     }
 
     public void addCardToHand(DomCard card) {
