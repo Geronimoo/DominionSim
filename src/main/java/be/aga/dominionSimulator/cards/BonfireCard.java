@@ -1,10 +1,7 @@
 package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
-import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.enums.DomCardName;
-import be.aga.dominionSimulator.enums.DomCardType;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -32,14 +29,14 @@ public class BonfireCard extends DomCard {
     }
 
     private void handleHuman() {
-        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
         do {
-            theChosenCards = new ArrayList<DomCardName>();
+            theChosenCards = new ArrayList<DomCard>();
             owner.getEngine().getGameFrame().askToSelectCards("Trash", owner.getCardsInPlay(), theChosenCards, 0);
         } while (theChosenCards.size()>2);
         for (int i = theChosenCards.size() - 1; i >= 0; i--) {
             for (DomCard theCard : owner.getCardsInPlay()) {
-                if (theChosenCards.get(i) == theCard.getName()) {
+                if (theChosenCards.get(i).getName() == theCard.getName()) {
                     owner.trash(owner.removeCardFromPlay(theCard));
                     break;
                 }

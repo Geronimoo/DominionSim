@@ -25,6 +25,11 @@ import be.aga.dominionSimulator.StartState;
 import be.aga.dominionSimulator.enums.DomBotType;
 
 public class DomBotEditor extends EscapeDialog implements ActionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1818817906737351312L;
+
   private static final int TEXT_FIELD_WIDTH = 50;
 
 //made static for ease of use
@@ -34,10 +39,9 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
   private final DomEngine myEngine;
   private final DomPlayer myChosenStrategy;
   private JPanel myPlayerPanel;
-  private JPanel myImagePanel;
   private ArrayList<DomBuyRulePanel> myBuyRulePanels=new ArrayList<DomBuyRulePanel>();
   private JTextField myNameField;
-  private JList myBotTypeList;
+	private JList<DomBotType> myBotTypeList;
   private JTextArea myDescriptionField;
   private JTextField myAuthorField;
   private JButton myTypeButton;
@@ -162,21 +166,6 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
 
       validate();
 	}
-
-	/**
-     * @return
-     */
-    private JPanel getImagePanel() {
-        final JPanel thePanel = new JPanel();
-        thePanel.setLayout( new GridBagLayout() );
-        thePanel.setBorder( new TitledBorder( "" ));
-        final GridBagConstraints theCons = DomGui.getGridBagConstraints( 2 );
-    	if (cardImageLabel == null) {
-      	  cardImageLabel= new JLabel(new ImageIcon(getClass().getResource("images/Godctoon.gif")));
-      	}
-        thePanel.add(cardImageLabel,theCons);
-        return thePanel;
-    }
 
     private JScrollPane getPlayerPanel() {
   	  myPlayerPanel = new JPanel();
@@ -376,7 +365,7 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
 		StringBuilder theTypeString=null;
 		if (myBotTypeList!=null){
 			myTypes=new HashSet<DomBotType>();
-			for (Object botType : myBotTypeList.getSelectedValues()){
+			for (Object botType : myBotTypeList.getSelectedValuesList()){
 				myTypes.add((DomBotType) botType);
 			}
 		}
@@ -397,8 +386,8 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
 		return theTypeString==null? "" : theTypeString.toString();
 	}
 
-    private JList getTypeList() {
-    	myBotTypeList = new JList(DomBotType.values());
+	private JList<DomBotType> getTypeList() {
+		myBotTypeList = new JList<DomBotType>(DomBotType.values());
       myBotTypeList.setSelectionModel(new ToggleListSelectionModel());
     	ArrayList<DomBotType> thePossibleTypes = new ArrayList<DomBotType>();
     	for (DomBotType botType : DomBotType.values()){

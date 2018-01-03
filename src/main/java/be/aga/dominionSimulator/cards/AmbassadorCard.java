@@ -27,7 +27,6 @@ public class AmbassadorCard extends DomCard {
             return;
         }
         Collections.sort(owner.getCardsInHand(),SORT_FOR_TRASHING);
-        DomCard thePreviousTrash = null;
         DomCard theRevealedCard = null;
         int theTrashCount = 0;
         ArrayList<DomCard> setAsideShelters = new ArrayList<DomCard>();
@@ -69,14 +68,14 @@ public class AmbassadorCard extends DomCard {
         for (DomCard theCard : owner.getCardsFromHand(theChosenCard)) {
             theChooseToReturn.add(theCard);
         }
-        ArrayList<DomCardName> theChosenCards;
+        ArrayList<DomCard> theChosenCards;
         do {
-            theChosenCards = new ArrayList<DomCardName>();
+            theChosenCards = new ArrayList<DomCard>();
             owner.getEngine().getGameFrame().askToSelectCards("Return these: ", theChooseToReturn, theChosenCards, 0);
         } while (theChosenCards.size()>2);
 
-        for (DomCardName theCard:theChosenCards) {
-            owner.returnToSupply(owner.removeCardFromHand(owner.getCardsFromHand(theCard).get(0)));
+        for (DomCard theCard:theChosenCards) {
+            owner.returnToSupply(owner.removeCardFromHand(theCard));
         }
         attackOpponents( theChosenCard );
     }

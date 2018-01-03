@@ -35,10 +35,10 @@ public class ProvinceCard extends DomCard {
 		if (thePlayer.getCardsFromHand(DomCardName.Fool$s_Gold).isEmpty())
 		  continue;
 		if (thePlayer.isHumanOrPossessedByHuman()) {
-            ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+            ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
             owner.getEngine().getGameFrame().askToSelectCards("Trash for Gold? " , thePlayer.getCardsFromHand(DomCardName.Fool$s_Gold), theChosenCards, 0);
-            for (DomCardName theCardName: theChosenCards) {
-                thePlayer.trash(thePlayer.removeCardFromHand(thePlayer.getCardsFromHand(theCardName).get(0)));
+            for (DomCard theCardName: theChosenCards) {
+                thePlayer.trash(thePlayer.removeCardFromHand(thePlayer.getCardsFromHand(theCardName.getName()).get(0)));
                 DomCard theGold = thePlayer.getCurrentGame().takeFromSupply(DomCardName.Gold);
                 if (theGold!=null)
                   thePlayer.gainOnTopOfDeck(theGold);

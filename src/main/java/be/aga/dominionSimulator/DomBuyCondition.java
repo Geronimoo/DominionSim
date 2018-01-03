@@ -156,6 +156,8 @@ public class DomBuyCondition {
           case countVPon:
               leftValue=owner.getCurrentGame().getBoard().countVPon(leftCardName);
               break;
+		case constant:
+            break;
         }
 		switch(rightFunction){
 		  case countCardsInDeck:
@@ -259,6 +261,8 @@ public class DomBuyCondition {
          case countVPon:
               rightValue=owner.getCurrentGame().getBoard().countVPon(leftCardName);
               break;
+		case constant:
+			break;
         }
 		double theRightValue=rightValue;
 		switch(extraOperator) {

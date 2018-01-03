@@ -28,10 +28,10 @@ public class Trading_PostCard extends DomCard {
 
 	private void handleHuman() {
 		if (owner.getCardsInHand().size()>2) {
-			ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+			ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
 			owner.getEngine().getGameFrame().askToSelectCards("Choose 2 cards to trash", owner.getCardsInHand(), theChosenCards, 2);
-			for (DomCardName theCard:theChosenCards) {
-				owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theCard).get(0)));
+			for (DomCard theCard:theChosenCards) {
+				owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theCard.getName()).get(0)));
 			}
 			owner.gainInHand(DomCardName.Silver);
 		} else {

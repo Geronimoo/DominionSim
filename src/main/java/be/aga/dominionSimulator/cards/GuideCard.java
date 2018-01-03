@@ -3,8 +3,6 @@ package be.aga.dominionSimulator.cards;
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.enums.DomCardName;
 
-import java.util.Collections;
-
 public class GuideCard extends DomCard {
     public GuideCard() {
       super( DomCardName.Guide);

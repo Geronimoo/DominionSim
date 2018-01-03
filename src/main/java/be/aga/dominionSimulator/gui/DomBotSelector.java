@@ -12,8 +12,6 @@ import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -25,14 +23,11 @@ import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -48,9 +43,13 @@ import be.aga.dominionSimulator.enums.DomBotType;
 
 public class DomBotSelector extends EscapeDialog
                             implements ListSelectionListener, ActionListener, WindowListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7792385779124357816L;
    private DomEngine myEngine;
-   private JList myBotTypeList;
-   private JList myBotList;
+	private JList<DomBotType> myBotTypeList;
+	private JList<DomPlayer> myBotList;
    private HintTextField mSearchField;
 
    private String[] mSearchTerms = null;
@@ -58,6 +57,11 @@ public class DomBotSelector extends EscapeDialog
    private static int[] sSelectedIndices = new int[]{8,10};
 
    Action chooseAction = new AbstractAction() {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 4702125469842372059L;
+
        public void actionPerformed(ActionEvent e) {
    		 myEngine.setSelectedBot(myBotList.getSelectedValue());
    		 dispose();
@@ -182,8 +186,8 @@ private HintTextField getSearchField() {
     return mSearchField;
 }
 
-private JList getBotTypeList() {
-	myBotTypeList = new JList(DomBotType.values());
+	private JList<DomBotType> getBotTypeList() {
+		myBotTypeList = new JList<DomBotType>(DomBotType.values());
   myBotTypeList.setSelectionModel(new ToggleListSelectionModel());
 	myBotTypeList.setSelectedIndices(sSelectedIndices);
 	myBotTypeList.addListSelectionListener(this);
@@ -191,8 +195,8 @@ private JList getBotTypeList() {
 }
 
 @SuppressWarnings("serial")
-private JList getBotList() {
-	myBotList = new JList(myEngine.getBots(myBotTypeList.getSelectedValues(), mSearchTerms)) {
+	private JList<DomPlayer> getBotList() {
+		myBotList = new JList<DomPlayer>(myEngine.getBots(myBotTypeList.getSelectedValuesList(), mSearchTerms)) {
         // This method is called as the cursor moves within the list.
         public String getToolTipText(MouseEvent evt) {
             int index = locationToIndex(evt.getPoint());
@@ -233,7 +237,7 @@ public void valueChanged(ListSelectionEvent e) {
 }
 
 private void refreshBotList() {
-    myBotList.setListData(myEngine.getBots(myBotTypeList.getSelectedValues(), mSearchTerms));
+		myBotList.setListData(myEngine.getBots(myBotTypeList.getSelectedValuesList(), mSearchTerms));
 }
 
 @Override
@@ -282,6 +286,10 @@ public void actionPerformed(ActionEvent e) {
 }
 
 class HintTextField extends JTextField {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7186710754623336489L;
     public HintTextField(String hint) {
         _hint = hint;
     }

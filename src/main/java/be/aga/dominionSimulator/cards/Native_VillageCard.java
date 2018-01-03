@@ -30,6 +30,8 @@ public class Native_VillageCard extends DomCard {
         case ApothecaryNativeVillage:
         	//always put card away because it's a useless green
         	playNativeVillageForStorage();
+		default:
+			break;
       }    
     }
 

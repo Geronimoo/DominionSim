@@ -43,17 +43,17 @@ public class TempleCard extends DomCard {
     }
 
     private void handleHuman() {
-        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
         do {
-            theChosenCards = new ArrayList<DomCardName>();
+            theChosenCards = new ArrayList<DomCard>();
             ArrayList<DomCard> theChooseFrom = new ArrayList<DomCard>();
             for (DomCardName theName : owner.getUniqueCardNamesInHand()) {
                 theChooseFrom.add(owner.getCardsFromHand(theName).get(0));
             }
             owner.getEngine().getGameFrame().askToSelectCards("Trash 1 to 3", theChooseFrom, theChosenCards, 0);
         } while (theChosenCards.size() > 3 || theChosenCards.size() < 1);
-        for (DomCardName theCard : theChosenCards) {
-            owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theCard).get(0)));
+        for (DomCard theCard : theChosenCards) {
+            owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theCard.getName()).get(0)));
         }
         owner.getCurrentGame().getBoard().addVPon(DomCardName.Temple);
     }

@@ -32,11 +32,11 @@ public class Scouting_PartyCard extends DomCard {
 
     private void handleHuman(ArrayList<DomCard> theRevealedCards) {
         owner.setNeedsToUpdate();
-        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
         owner.getEngine().getGameFrame().askToSelectCards("<html>Discard 3</html>", theRevealedCards, theChosenCards, theRevealedCards.size() < 3 ? theRevealedCards.size() : 3);
         for (int i = theChosenCards.size() - 1; i >= 0; i--) {
             for (DomCard theCard : theRevealedCards) {
-                if (theChosenCards.get(i) == theCard.getName()) {
+                if (theChosenCards.get(i).getName() == theCard.getName()) {
                     owner.discard(theCard);
                     theRevealedCards.remove(theCard);
                     break;
@@ -45,7 +45,7 @@ public class Scouting_PartyCard extends DomCard {
         }
         if (theRevealedCards.isEmpty())
             return;
-        theChosenCards = new ArrayList<DomCardName>();
+        theChosenCards = new ArrayList<DomCard>();
         owner.getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u> (first card = top card)</html>", theRevealedCards, theChosenCards, 0);
         if (theChosenCards.size() < theRevealedCards.size()) {
             for (DomCard theCard : theRevealedCards) {
@@ -54,7 +54,7 @@ public class Scouting_PartyCard extends DomCard {
         } else {
             for (int i = theChosenCards.size() - 1; i >= 0; i--) {
                 for (DomCard theCard : theRevealedCards) {
-                    if (theChosenCards.get(i) == theCard.getName()) {
+                    if (theChosenCards.get(i).getName() == theCard.getName()) {
                         owner.putOnTopOfDeck(theCard);
                         theRevealedCards.remove(theCard);
                         break;

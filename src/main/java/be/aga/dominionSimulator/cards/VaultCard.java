@@ -16,10 +16,10 @@ public class VaultCard extends DomCard {
     public void play() {
       owner.drawCards( 2 );
       if (owner.isHumanOrPossessedByHuman()) {
-          ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+          ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
           owner.getEngine().getGameFrame().askToSelectCards("<html>Discard for +$1</html>" , owner.getCardsInHand(), theChosenCards, 0);
-          for (DomCardName theCard : theChosenCards) {
-             owner.discardFromHand(theCard);
+          for (DomCard theCard : theChosenCards) {
+             owner.discardFromHand(theCard.getName());
              owner.addAvailableCoins(1);
           }
       } else {
@@ -47,14 +47,14 @@ public class VaultCard extends DomCard {
 	private void handleOpponents() {
       for (DomPlayer thePlayer : owner.getOpponents()) {
         if (thePlayer.isHumanOrPossessedByHuman()) {
-            ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+            ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
             do {
-                theChosenCards=new ArrayList<DomCardName>();
+                theChosenCards = new ArrayList<DomCard>();
                 owner.getEngine().getGameFrame().askToSelectCards("Discard 2?", thePlayer.getCardsInHand(), theChosenCards, 0);
             } while (!(theChosenCards.size()==2 || theChosenCards.size()==0));
             if (theChosenCards.size()==2) {
-                for (DomCardName theCard : theChosenCards) {
-                    thePlayer.discardFromHand(theCard);
+                for (DomCard theCard : theChosenCards) {
+                    thePlayer.discardFromHand(theCard.getName());
                 }
                 thePlayer.drawCards(1);
             }

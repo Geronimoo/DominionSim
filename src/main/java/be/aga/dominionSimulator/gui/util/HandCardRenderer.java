@@ -1,17 +1,21 @@
 package be.aga.dominionSimulator.gui.util;
 
 import be.aga.dominionSimulator.DomCard;
-import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 import be.aga.dominionSimulator.enums.DomPhase;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class HandCardRenderer extends JLabel implements ListCellRenderer {
+public class HandCardRenderer extends JLabel implements ListCellRenderer<DomCard> {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8940309454492428884L;
+
     @Override
-    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        if (value instanceof String) {
+    public Component getListCellRendererComponent(JList<? extends DomCard> list, DomCard value, int index, boolean isSelected, boolean cellHasFocus) {
+        if (value.equals(DomCard.NONEXISTANT_CARD)) {
             setText("<html><i>nothing</i></html>");
         } else {
             DomCard theCard = (DomCard) value;

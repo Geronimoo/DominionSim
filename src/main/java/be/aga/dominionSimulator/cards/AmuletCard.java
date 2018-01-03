@@ -62,10 +62,10 @@ public class AmuletCard extends DomCard {
             gainSilver();
         if (theChoice == 0) {
             if (owner.getCardsInHand().size()>0) {
-                ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+                ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
                 owner.getEngine().getGameFrame().askToSelectCards("Choose a card to trash", owner.getCardsInHand(), theChosenCards, 1);
-                for (DomCardName theCard:theChosenCards) {
-                    owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theCard).get(0)));
+                for (DomCard theCard:theChosenCards) {
+                    owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theCard.getName()).get(0)));
                 }
             }
         }

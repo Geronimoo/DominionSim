@@ -15,6 +15,10 @@ import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
 public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2812359334315822796L;
     protected static final Logger LOGGER = Logger.getLogger( DomDeck.class );
     static {
         LOGGER.setLevel( DomEngine.LEVEL );
@@ -820,7 +824,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
     }
 
     public DomCard removeFromDiscard(DomCardName cardName) {
-        ArrayList<DomCard> theCards = new ArrayList<DomCard>();
+        new ArrayList<DomCard>();
         for (DomCard theCard : discardPile) {
             if (theCard.getName()==cardName) {
                 discardPile.remove(theCard);

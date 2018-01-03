@@ -1,11 +1,8 @@
 package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
-import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
-import be.aga.dominionSimulator.enums.DomPlayStrategy;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -44,7 +41,7 @@ public class Wandering_MinstrelCard extends DomCard {
         }
         if (theChooseFrom.isEmpty())
             return;
-        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
         owner.getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u> (first card = top card)</html>", theChooseFrom, theChosenCards, 0);
         if (theChosenCards.size() < theChooseFrom.size()) {
             for (DomCard theCard : theChooseFrom) {
@@ -53,7 +50,7 @@ public class Wandering_MinstrelCard extends DomCard {
         } else {
             for (int i = theChosenCards.size() - 1; i >= 0; i--) {
                 for (DomCard theCard : theChooseFrom) {
-                    if (theChosenCards.get(i) == theCard.getName()) {
+                    if (theChosenCards.get(i).getName() == theCard.getName()) {
                         owner.putOnTopOfDeck(theCard);
                         theChooseFrom.remove(theCard);
                         break;

@@ -1,9 +1,19 @@
 package be.aga.dominionSimulator.enums;
 
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
 
-import be.aga.dominionSimulator.*;
+import be.aga.dominionSimulator.DomBuyRule;
+import be.aga.dominionSimulator.DomCard;
+import be.aga.dominionSimulator.DomCost;
+import be.aga.dominionSimulator.DomEngine;
+import be.aga.dominionSimulator.DomGame;
+import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.cards.*;
 import be.aga.dominionSimulator.gui.EscapeDialog;
 
@@ -439,8 +449,7 @@ public enum DomCardName  {
 
     ;
 
-    public static final Comparator SORT_FOR_TRASHING = new Comparator<DomCardName>(){
-        @Override
+    public static final Comparator<DomCardName> SORT_FOR_TRASHING = new Comparator<DomCardName>(){
         public int compare( DomCardName aO1, DomCardName aO2 ) {
             if (aO1.getTrashPriority()< aO2.getTrashPriority())
                 return -1;
@@ -457,6 +466,12 @@ public enum DomCardName  {
     private int playPriority;
     private int discardPriority;
 
+    /**
+     * Used solely for the non-existent card (meant to represent a lack of cards).
+     */
+    private DomCardName() {
+    	
+    }
     /**
      * Sole constructor.
      * <p>
@@ -1323,8 +1338,9 @@ public enum DomCardName  {
             return new Zombie_MasonCard();
         case Zombie_Spy:
             return new Zombie_SpyCard();
-        }
+        default:
         return new DomCard( this );
+    }
     }
 
     public DomCost getCost() {
@@ -1342,7 +1358,7 @@ public enum DomCardName  {
       return types.contains( aCardType);
     }
 
-    public Object[] getPlayStrategies() {
+    public DomPlayStrategy[] getPlayStrategies() {
     	ArrayList<DomPlayStrategy> theStrategies = new ArrayList<DomPlayStrategy>();
     	switch (this) {
 		case Ambassador:
@@ -1471,7 +1487,7 @@ public enum DomCardName  {
 			break;
 		}
 		theStrategies.add(0,DomPlayStrategy.standard);
-		return theStrategies.toArray();
+        return theStrategies.toArray(new DomPlayStrategy[theStrategies.size()]);
     }
 
     /**
@@ -1632,7 +1648,7 @@ public enum DomCardName  {
 		return theIntermediateCard.getTrashPriority();
 	}
 
-	public static Object[] getPossibleBaneCards() {
+	public static DomCardName[] getPossibleBaneCards() {
 	    ArrayList<DomCardName> possibleBanes = new ArrayList<DomCardName>();
 		for (DomCardName cardName : values()) {
 			if (cardName.getCost().customCompare(new DomCost(2, 0))==0
@@ -1641,7 +1657,7 @@ public enum DomCardName  {
 			  	  possibleBanes.add(cardName);
 			}
 		}
-		return possibleBanes.toArray();
+        return possibleBanes.toArray(new DomCardName[possibleBanes.size()]);
 	}
 
 	public String toHTML() {
@@ -1694,13 +1710,13 @@ public enum DomCardName  {
 //		return  "C:/Users/MEDION/Pictures/" + getImageLocation();
 	}
 
-	public static Object[] getKingdomCards() {
+	public static DomCardName[] getKingdomCards() {
 		ArrayList<DomCardName> theCards = new ArrayList<DomCardName>();
 		for (DomCardName cardName : values()){
 			if (!DomSet.Base.contains(cardName))
 				theCards.add(cardName);
 		}
-		return theCards.toArray();
+        return theCards.toArray(new DomCardName[theCards.size()]);
 	}
 
 	public int getOrderInBuyRules(DomPlayer owner) {
@@ -1741,7 +1757,8 @@ public enum DomCardName  {
                 case Sauna:
                 case Avanto:
                     return DomCardName.Sauna;
-
+                default:
+                	System.err.println("Attempted to determine the pile of the split pile card \"" + toString() + "\" that isn't on the recognized list of split pile cards!");
             }
         }
 

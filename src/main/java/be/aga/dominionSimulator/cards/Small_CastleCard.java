@@ -1,13 +1,11 @@
 package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
-import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class Small_CastleCard extends DomCard {
     public Small_CastleCard() {

@@ -7,8 +7,6 @@ import be.aga.dominionSimulator.enums.DomCardType;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-import java.util.Set;
 
 public class KnightCard extends DomCard {
     public KnightCard(DomCardName aName) {

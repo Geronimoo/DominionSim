@@ -8,7 +8,6 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.plot.Plot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
@@ -80,8 +79,8 @@ public class DomBarChart {
      * @return
      */
     public ChartPanel getChartPanel() {
-       int theHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-       int theWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
+       Toolkit.getDefaultToolkit().getScreenSize();
+       Toolkit.getDefaultToolkit().getScreenSize();
 //       myChartPanel.setPreferredSize( new Dimension(theWidth*10/28,theHeight*10/32) );
        return myChartPanel;
     }

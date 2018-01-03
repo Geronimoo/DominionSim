@@ -8,6 +8,7 @@ import be.aga.dominionSimulator.enums.DomCardType;
 
 
 public class DomCard implements Comparable< DomCard >{
+    public static final DomCard NONEXISTANT_CARD = new DomCard(null);
     DomCardName name;
     public DomPlayer owner = null;
 	private boolean isFromBlackMarket=false;
@@ -16,15 +17,13 @@ public class DomCard implements Comparable< DomCard >{
 	private boolean isTaggedByScheme;
 	private boolean discardAtCleanUp=true;
 
-    public static final Comparator SORT_BY_NAME = new Comparator<DomCard>(){
-        @Override
+    public static final Comparator<DomCard> SORT_BY_NAME = new Comparator<DomCard>(){
         public int compare( DomCard aO1, DomCard aO2 ) {
             return aO1.getName().compareTo(aO2.getName());
         }
     };
 
-    public static final Comparator SORT_BY_COIN_COST = new Comparator<DomCard>(){
-        @Override
+    public static final Comparator<DomCard> SORT_BY_COST = new Comparator<DomCard>(){
         public int compare( DomCard aO1, DomCard aO2 ) {
             if (aO1.getName().getCoinCost(null)< aO2.getName().getCoinCost(null))
                 return -1;
@@ -34,8 +33,7 @@ public class DomCard implements Comparable< DomCard >{
         }
     };
 
-    public static final Comparator SORT_FOR_TRASHING = new Comparator<DomCard>(){
-        @Override
+    public static final Comparator<DomCard> SORT_FOR_TRASHING = new Comparator<DomCard>(){
         public int compare( DomCard aO1, DomCard aO2 ) {
             if (aO1.getTrashPriority()< aO2.getTrashPriority())
                 return -1;
@@ -45,8 +43,7 @@ public class DomCard implements Comparable< DomCard >{
         }
       };
 
-      public static final Comparator SORT_FOR_PLAYING = new Comparator<DomCard>(){
-          @Override
+      public static final Comparator<DomCard> SORT_FOR_PLAYING = new Comparator<DomCard>(){
           public int compare( DomCard aO1, DomCard aO2 ) {
               if (aO1.getPlayPriority()< aO2.getPlayPriority())
                   return -1;
@@ -56,8 +53,7 @@ public class DomCard implements Comparable< DomCard >{
           }
         };
 
-      public static final Comparator SORT_FOR_DISCARDING = new Comparator<DomCard>(){
-          @Override
+      public static final Comparator<DomCard> SORT_FOR_DISCARDING = new Comparator<DomCard>(){
           public int compare( DomCard aO1, DomCard aO2 ) {
               if (aO1.getDiscardPriority(1)< aO2.getDiscardPriority(1))
                   return -1;
@@ -67,8 +63,7 @@ public class DomCard implements Comparable< DomCard >{
           }
         };
 
-        public static final Comparator SORT_FOR_DISCARD_FROM_HAND = new Comparator<DomCard>(){
-            @Override
+        public static final Comparator<DomCard> SORT_FOR_DISCARD_FROM_HAND = new Comparator<DomCard>(){
             public int compare( DomCard aO1, DomCard aO2 ) {
                 int theActionsLeft = aO1.owner.getActionsLeft();
                 if (aO1.getDiscardPriority(theActionsLeft)< aO2.getDiscardPriority(theActionsLeft))
@@ -115,7 +110,6 @@ public class DomCard implements Comparable< DomCard >{
     /* (non-Javadoc)
      * @see java.lang.Comparable#customCompare(java.lang.Object)
      */
-    @Override
     public int compareTo( DomCard aO ) {
         if (getName().getCoinValue()< aO.getName().getCoinValue())
             return 1;

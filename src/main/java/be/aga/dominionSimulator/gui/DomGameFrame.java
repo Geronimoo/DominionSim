@@ -1,14 +1,42 @@
 package be.aga.dominionSimulator.gui;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.*;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.JTextPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -27,38 +55,48 @@ import be.aga.dominionSimulator.gui.util.HandCardRenderer;
 import be.aga.dominionSimulator.gui.util.TableCardRenderer;
 
 public class DomGameFrame extends JFrame implements ActionListener, ListSelectionListener, Observer {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3862051191311979736L;
     public static final int LIST_HEIGHT = 360;
-    private DomEngine myEngine;
-	private JLabel myActionsValue;
-	private JLabel myBuysValue;
-	private JTextPane myLogPane;
-	private JList myInPlayList;
-	private JButton myEndTurnBTN;
-	private JList myHandList;
-	private JTable myBoardTable;
-	private HTMLEditorKit editorKit;
-	private HTMLDocument gameLog;
-	private JButton myEndActions;
-    private StatusBar myStatusBar;
-    private JScrollPane myLogScroll;
-    private JButton myPlayAllTreasurersBTN;
-    private JLabel myVPLabel;
-    private JLabel myOppsVPLabel;
-    private JLabel myDrawDeckLabel;
-    private JLabel myDiscardLabel;
-    private JButton myHintButton;
-    private ArrayList<String> logStack=new ArrayList<String>();
-    private int myDelay;
-    private JButton mySpendCoinTokensBTN;
-    private JButton myPayOffDebtBTN;
+    final private DomEngine myEngine;
+    final private JLabel myActionsValue = new JLabel();
+    final private JLabel myBuysValue = new JLabel();
+    final private JTextPane myLogPane = new JTextPane();
+    final private JList<DomCard> myInPlayList = new JList<DomCard>();
+    final private DefaultListModel<DomCard> myInPlayModel = new DefaultListModel<DomCard>();
+    final private JButton myEndTurnBTN = new JButton("End turn");
+    final private JList<DomCard> myHandList = new JList<DomCard>();
+    final private JTable myBoardTable;
+    final private HTMLEditorKit editorKit = new HTMLEditorKit();
+    final private HTMLDocument gameLog = (HTMLDocument) editorKit.createDefaultDocument();
+    final private JButton myEndActions = new JButton("End Actions");
+    final private StatusBar myStatusBar = new StatusBar();
+    final private JScrollPane myLogScroll = new JScrollPane(myLogPane);
+    final private JButton myPlayAllTreasurersBTN = new JButton("Play all treasures");
+    final private JLabel myVPLabel = new JLabel();
+    final private JLabel myOppsVPLabel = new JLabel();
+    final private JLabel myDrawDeckLabel = new JLabel();
+    final private JLabel myDiscardLabel = new JLabel();
+    final private JButton myHintButton = new JButton("Hint!");
+    final private ArrayList<String> logStack = new ArrayList<String>();
+    final private int myDelay;
+    final private JButton mySpendCoinTokensBTN = new JButton("$0");
+    final private JButton myPayOffDebtBTN = new JButton("$0");
 
     public DomGameFrame(DomEngine anEngine, String delay) {
 	 myEngine=anEngine;
+        myBoardTable = new JTable(new KingdomTableModel(myEngine));
+
+        Integer intDelay;
         try {
-            myDelay=Integer.valueOf(delay);
+            intDelay = Integer.valueOf(delay);
         } catch (NumberFormatException e) {
-            myDelay=300;
+            intDelay = 300;
         }
+
+        myDelay = intDelay;
         buildGUI();
 	 setTitle("Play Dominion");
 //     setPreferredSize(RefineryUtilities.getMaximumWindowBounds().getSize());
@@ -85,7 +123,6 @@ private void buildGUI() {
 }
 
     public Component getStatusBar() {
-        myStatusBar = new StatusBar();
         myStatusBar.setText("Alles goed");
         return myStatusBar;
     }
@@ -101,19 +138,14 @@ private void buildGUI() {
 private JPanel getLogPanel() {
 	JPanel theLogPanel = new JPanel();
 	theLogPanel.setLayout(new BorderLayout());
-	myLogPane = new JTextPane();
 	myLogPane.setPreferredSize(new Dimension(400,300));
-	editorKit = new HTMLEditorKit();
-	gameLog = (HTMLDocument) editorKit.createDefaultDocument();;
 	myLogPane.setEditorKit(editorKit);
 	myLogPane.setDocument(gameLog);
-	myLogScroll = new JScrollPane(myLogPane);
     myLogScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 //	theScrollPane.setPreferredSize(new Dimension(400,400));
 	theLogPanel.add(myLogScroll,BorderLayout.CENTER);
     Font font = new Font("Times New Roman", Font.PLAIN, 14);
-    String bodyRule = "body { font-family: " + font.getFamily() + "; " +
-            "font-size: " + font.getSize() + "pt; }";
+        String bodyRule = "body { font-family: " + font.getFamily() + "; " + "font-size: " + font.getSize() + "pt; }";
     ((HTMLDocument)myLogPane.getDocument()).getStyleSheet().addRule(bodyRule);//	myLogPane.revalidate();
 	return theLogPanel;
 }
@@ -125,13 +157,13 @@ private JPanel getBottomPanel() {
 	theCons.fill=GridBagConstraints.BOTH;
 
 	//hand list
-	myHandList = new JList();
 	myHandList.setFixedCellHeight(20);
 	myHandList.setLayoutOrientation(JList.VERTICAL);
 	myHandList.setPreferredSize(new Dimension(100, LIST_HEIGHT));
-//	myHandList.setVisibleRowCount(40);
-	myHandList.setModel(new DefaultListModel());
-//	myHandList.setMinimumSize(new Dimension(60,400));
+        myHandList.setVisibleRowCount(40);
+        final DefaultListModel<DomCard> myHandModel = new DefaultListModel<DomCard>();
+        myHandList.setModel(myHandModel);
+        myHandList.setMinimumSize(new Dimension(60, 400));
 	myHandList.setCellRenderer(new HandCardRenderer());
     myHandList.setFont(new Font("Arial",Font.PLAIN,12));
 	myHandList.addListSelectionListener(this);
@@ -141,7 +173,7 @@ private JPanel getBottomPanel() {
             if (e.getButton()==MouseEvent.BUTTON3) {
                 int index = myHandList.locationToIndex(e.getPoint());
                 if (index >= 0)
-                    showWiki( ((DomCard)myHandList.getModel().getElementAt(index)).getName());
+                        showWiki(myHandList.getModel().getElementAt(index).getName());
             }
             super.mouseClicked(e);
         }
@@ -151,25 +183,25 @@ private JPanel getBottomPanel() {
     theScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 	thePanel.add(theScrollPane,theCons);
 	//in-play list
-	myInPlayList = new JList();
-	myInPlayList.setModel(new DefaultListModel());
+        myInPlayList.setModel(myInPlayModel);
 //	myInPlayList.setBorder(new TitledBorder("In play"));
-//	myInPlayList.setMinimumSize(new Dimension(60,400));
+        myInPlayList.setMinimumSize(new Dimension(60, 400));
 	myInPlayList.setPreferredSize(new Dimension(100,LIST_HEIGHT));
-//	myInPlayList.setVisibleRowCount(40);
-	myInPlayList.setCellRenderer(new CardRenderer());
+        myInPlayList.setVisibleRowCount(40);
+        myInPlayList.setCellRenderer(new CardRenderer<DomCard>());
     myInPlayList.addMouseListener(new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
             if (e.getButton()==MouseEvent.BUTTON3) {
-                int index = myInPlayList.locationToIndex(e.getPoint());
+                    final Point point = e.getPoint();
+                    int index = myInPlayList.locationToIndex(point);
                 if (index >= 0)
                     showWiki( myInPlayList.getModel().getElementAt(index));
             }
             super.mouseClicked(e);
         }
     });
-    ((DefaultListModel)myInPlayList.getModel()).addElement("");
+        myInPlayModel.addElement(DomCard.NONEXISTANT_CARD);
     theScrollPane = new JScrollPane(myInPlayList);
     theScrollPane.setBorder(new TitledBorder("In play"));
     theScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -177,7 +209,7 @@ private JPanel getBottomPanel() {
 	theCons.gridx++;
 	thePanel.add(theScrollPane,theCons);
 	//the Board
-	myBoardTable=new JTable(new KingdomTableModel(myEngine));
+        myBoardTable.setModel(new KingdomTableModel(myEngine));
 	myBoardTable.setDefaultRenderer(DomCardName.class, new TableCardRenderer(myEngine));
 	myBoardTable.setTableHeader(null);
     myBoardTable.setShowHorizontalLines(false);
@@ -188,9 +220,11 @@ private JPanel getBottomPanel() {
 	myBoardTable.addMouseListener(new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
+                final Point point = e.getPoint();
             if (e.getButton()==MouseEvent.BUTTON1) {
-                int row = myBoardTable.rowAtPoint(e.getPoint());
-                int col = myBoardTable.columnAtPoint(e.getPoint());
+                    System.out.println(myBoardTable);
+                    int row = myBoardTable.rowAtPoint(point);
+                    int col = myBoardTable.columnAtPoint(point);
                 DomCardName theCardName = (DomCardName) myBoardTable.getModel().getValueAt(row, col);
                 ArrayList<DomCard> thePile = myEngine.getCurrentGame().getBoard().get(theCardName);
                 if (thePile.isEmpty() && !theCardName.hasCardType(DomCardType.Event))
@@ -200,11 +234,13 @@ private JPanel getBottomPanel() {
                 tryToBuyOrGainFromSupply(theCardName);
             }
             if (e.getButton()==MouseEvent.BUTTON3) {
-                int row = myBoardTable.rowAtPoint(e.getPoint());
-                int col = myBoardTable.columnAtPoint(e.getPoint());
+                    int row = myBoardTable.rowAtPoint(point);
+                    int col = myBoardTable.columnAtPoint(point);
                 DomCardName theCardName = (DomCardName) myBoardTable.getModel().getValueAt(row, col);
-//                ArrayList<DomCard> thePile = myEngine.getCurrentGame().getBoard().get(theCardName);
-//                if (thePile.isEmpty() && !theCardName.hasCardType(DomCardType.Event))
+                    // ArrayList<DomCard> thePile =
+                    // myEngine.getCurrentGame().getBoard().get(theCardName);
+                    // if (thePile.isEmpty() &&
+                    // !theCardName.hasCardType(DomCardType.Event))
 //                    return;
 //                if (!theCardName.hasCardType(DomCardType.Event))
 //                    theCardName=thePile.get(0).getName();
@@ -242,30 +278,24 @@ private JPanel getBottomPanel() {
 	thePanel.setLayout(new GridBagLayout());
 	GridBagConstraints theCons = DomGui.getGridBagConstraints(2);
 	theCons.fill=GridBagConstraints.NONE;
-    myDrawDeckLabel = new JLabel();
     theCons.gridx++;
     thePanel.add(myDrawDeckLabel, theCons);
-    myDiscardLabel = new JLabel();
     theCons.gridx++;
     thePanel.add(myDiscardLabel, theCons);
     //Actions indicator
     JLabel theActionsLabel = new JLabel("Actions:");
     theCons.gridx++;
     thePanel.add(theActionsLabel, theCons);
-    myActionsValue=new JLabel();
     theCons.gridx++;
     thePanel.add(myActionsValue, theCons);
     //Buys indicator
 	JLabel theBuysLabel = new JLabel("Buys:");
 	theCons.gridx++;
 	thePanel.add(theBuysLabel, theCons);
-	myBuysValue = new JLabel();
 	theCons.gridx++;
 	thePanel.add(myBuysValue, theCons);
-    myVPLabel = new JLabel();
     theCons.gridx++;
     thePanel.add(myVPLabel, theCons);
-    myOppsVPLabel = new JLabel();
     theCons.gridx++;
     thePanel.add(myOppsVPLabel, theCons);
     theCons.gridx++;
@@ -281,26 +311,22 @@ private JPanel getBottomPanel() {
 	thePanel.add(new JLabel(), theCons);
 	theCons.weightx=1;
     theCons.gridx++;
-    myHintButton = new JButton("Hint!");
     myHintButton.setActionCommand("Hint");
     myHintButton.addActionListener(this);
     myHintButton.setVisible(false);
     thePanel.add(myHintButton, theCons);
     theCons.gridx++;
-    myPlayAllTreasurersBTN = new JButton("Play all treasures");
     myPlayAllTreasurersBTN.setActionCommand("Play all treasures");
     myPlayAllTreasurersBTN.addActionListener(this);
     myPlayAllTreasurersBTN.setVisible(false);
     thePanel.add(myPlayAllTreasurersBTN, theCons);
 	theCons.gridx++;
-    mySpendCoinTokensBTN = new JButton("$0");
     mySpendCoinTokensBTN.setActionCommand("Spend Coin Tokens");
     mySpendCoinTokensBTN.setToolTipText("Spend Coin Tokens");
     mySpendCoinTokensBTN.addActionListener(this);
     mySpendCoinTokensBTN.setVisible(false);
     thePanel.add(mySpendCoinTokensBTN, theCons);
     theCons.gridx++;
-    myPayOffDebtBTN = new JButton("$0");
     myPayOffDebtBTN.setForeground(Color.red);
     myPayOffDebtBTN.setActionCommand("Pay off debt");
     myPayOffDebtBTN.setToolTipText("Pay off debt");
@@ -308,12 +334,10 @@ private JPanel getBottomPanel() {
     myPayOffDebtBTN.setVisible(false);
     thePanel.add(myPayOffDebtBTN, theCons);
     theCons.gridx++;
-    myEndActions = new JButton("End Actions");
 	myEndActions.setActionCommand("End Actions");
 	myEndActions.addActionListener(this);
 	thePanel.add(myEndActions, theCons);
     theCons.gridx++;
-    myEndTurnBTN = new JButton("End turn");
     myEndTurnBTN.setActionCommand("End turn");
     myEndTurnBTN.addActionListener(this);
     thePanel.add(myEndTurnBTN, theCons);
@@ -330,11 +354,13 @@ public void actionPerformed(ActionEvent e) {
 	    theInfo.append("Trash: ").append(myEngine.getCurrentGame().getBoard().getTrashedCardsString());
         if (!myEngine.getCurrentGame().getActivePlayer().getTavernMat().isEmpty()) {
             theInfo.append("<br>");
-            theInfo.append("Tavern Mat: ").append(myEngine.getCurrentGame().getActivePlayer().getTavernMatAsString());
+                theInfo.append("Tavern Mat: ")
+                        .append(myEngine.getCurrentGame().getActivePlayer().getTavernMatAsString());
         }
         if (!myEngine.getCurrentGame().getActivePlayer().getNativeVillageMatToString().isEmpty()) {
             theInfo.append("<br>");
-            theInfo.append("Native Village Mat: ").append(myEngine.getCurrentGame().getActivePlayer().getNativeVillageMatToString());
+                theInfo.append("Native Village Mat: ")
+                        .append(myEngine.getCurrentGame().getActivePlayer().getNativeVillageMatToString());
         }
         if (!myEngine.getCurrentGame().getActivePlayer().getIslandMatString().isEmpty()) {
             theInfo.append("<br>");
@@ -342,7 +368,8 @@ public void actionPerformed(ActionEvent e) {
         }
         if (myEngine.getCurrentGame().getActivePlayer().getPirateShipLevel()>0) {
             theInfo.append("<br>");
-            theInfo.append("Pirate Ship Level: $").append(myEngine.getCurrentGame().getActivePlayer().getPirateShipLevel());
+                theInfo.append("Pirate Ship Level: $")
+                        .append(myEngine.getCurrentGame().getActivePlayer().getPirateShipLevel());
         }
         theInfo.append("<br>");
         theInfo.append("Journey token: ");
@@ -401,7 +428,8 @@ public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(null, "<html>End Actions</html>");
         }
         if (myEngine.getCurrentGame().getActivePlayer().getPhase()==DomPhase.Buy) {
-            DomCardName theCard = myEngine.getCurrentGame().getHumanPlayer().getDesiredCard(myEngine.getCurrentGame().getHumanPlayer().getTotalPotentialCurrency(),false);
+                DomCardName theCard = myEngine.getCurrentGame().getHumanPlayer()
+                        .getDesiredCard(myEngine.getCurrentGame().getHumanPlayer().getTotalPotentialCurrency(), false);
             if (theCard!=null)
               JOptionPane.showMessageDialog(null, "<html>Buy " + theCard.toHTML()+"</html>");
             else
@@ -410,10 +438,11 @@ public void actionPerformed(ActionEvent e) {
     }
 }
 
+    @SuppressWarnings("unchecked")
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-        if (!e.getValueIsAdjusting() && ((JList) e.getSource()).getSelectedValue()!=null) {
-            myEngine.getCurrentGame().getActivePlayer().attemptToPlay((DomCard) ((JList) e.getSource()).getSelectedValue());
+        if (!e.getValueIsAdjusting() && ((JList<DomCard>) e.getSource()).getSelectedValue()!=null) {
+            myEngine.getCurrentGame().getActivePlayer().attemptToPlay((DomCard) ((JList<DomCard>) e.getSource()).getSelectedValue());
         }
 	}
 
@@ -459,7 +488,7 @@ public void actionPerformed(ActionEvent e) {
     public void update(Observable o, Object arg) {
         updateHandList();
         updateInPlayList();
-        myBoardTable.setModel(new KingdomTableModel(myEngine));
+        ((KingdomTableModel)myBoardTable.getModel()).update();
         myStatusBar.setText(myEngine.getStatus());
         DomPlayer theActivePlayer = myEngine.getCurrentGame().getActivePlayer();
         myActionsValue.setText("<html><FONT style=\"BACKGROUND-COLOR: #D9D9D9\">"+theActivePlayer.actionsLeft+"</font></html>");
@@ -547,16 +576,16 @@ public void actionPerformed(ActionEvent e) {
         } else {
             thePlayer = myEngine.getCurrentGame().getHumanPlayer();
         }
-        ((DefaultListModel) myInPlayList.getModel()).removeAllElements();
+        myInPlayModel.removeAllElements();
         for (DomCard theCard : thePlayer.getCardsInPlay()) {
-            ((DefaultListModel) myInPlayList.getModel()).addElement(theCard);
+            myInPlayModel.addElement(theCard);
         }
         if (thePlayer.getCardsInPlay().isEmpty())
-            ((DefaultListModel) myInPlayList.getModel()).addElement("");
+            myInPlayModel.addElement(DomCard.NONEXISTANT_CARD);
         Runnable doRun = new Runnable() {
             @Override
             public void run() {
-                myInPlayList.ensureIndexIsVisible(((DefaultListModel) myInPlayList.getModel()).size() - 1);
+                myInPlayList.ensureIndexIsVisible(myInPlayModel.size() - 1);
             }
         };
         SwingUtilities.invokeLater(doRun);
@@ -569,9 +598,9 @@ public void actionPerformed(ActionEvent e) {
         } else {
             thePlayer = myEngine.getCurrentGame().getHumanPlayer();
         }
-        ((DefaultListModel) myHandList.getModel()).removeAllElements();
+        ((DefaultListModel<DomCard>) myHandList.getModel()).removeAllElements();
         for (DomCardName theCard : thePlayer.getUniqueCardNamesInHand()) {
-            ((DefaultListModel) myHandList.getModel()).addElement(thePlayer.getCardsFromHand(theCard).get(0));
+            ((DefaultListModel<DomCard>) myHandList.getModel()).addElement(thePlayer.getCardsFromHand(theCard).get(0));
         }
         myHandList.setSelectedIndex(-1);
 
@@ -581,7 +610,7 @@ public void actionPerformed(ActionEvent e) {
         return JOptionPane.showConfirmDialog(this, question, title, JOptionPane.YES_NO_OPTION)==0;
     }
 
-    public void askToSelectCards(String s, ArrayList<DomCard> chooseFrom, ArrayList<DomCardName> theChosenCards, int aNumber) {
+    public void askToSelectCards(String s, ArrayList<DomCard> chooseFrom, ArrayList<DomCard> theChosenCards, int aNumber) {
         new CardSelector(myInPlayList,s, theChosenCards, chooseFrom, aNumber);
     }
 

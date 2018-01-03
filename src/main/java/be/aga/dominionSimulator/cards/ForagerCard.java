@@ -1,7 +1,6 @@
 package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
-import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
@@ -59,7 +58,7 @@ public class ForagerCard extends DomCard {
         Collections.sort( owner.getCardsInHand() , SORT_FOR_TRASHING);
         if (owner.getCardsInHand().get(0).getTrashPriority()<= DomCardName.Copper.getTrashPriority())
             return true;
-        for (DomCard theTreasure : owner.getCardsFromHand(DomCardType.Treasure)) {
+        if (!owner.getCardsFromHand(DomCardType.Treasure).isEmpty()) {
             return true;
         }
         return false;

@@ -1,17 +1,16 @@
 package be.aga.dominionSimulator.gui;
 
-import be.aga.dominionSimulator.enums.DomCardName;
-import be.aga.dominionSimulator.gui.util.CardRenderer;
-
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
 public class ButtonSelector extends JDialog implements ActionListener {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3675279357665261098L;
     private final ArrayList<String> myChooseFrom;
-    private final String myQuestion;
     private final String myButtonMessage;
     private int myChosenButton;
 
@@ -26,7 +25,6 @@ public class ButtonSelector extends JDialog implements ActionListener {
 	 myChosenButton = 0;
 	 myChooseFrom = chooseFrom;
 	 myButtonMessage = aButtonMessage;
-	 myQuestion = aTitle;
 	 buildGUI();
 	 setTitle(aTitle);
 	 pack();

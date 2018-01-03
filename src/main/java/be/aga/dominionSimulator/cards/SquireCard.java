@@ -6,7 +6,6 @@ import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 import be.aga.dominionSimulator.enums.DomPlayStrategy;
 
-import javax.swing.*;
 import java.util.ArrayList;
 
 public class SquireCard extends DomCard {

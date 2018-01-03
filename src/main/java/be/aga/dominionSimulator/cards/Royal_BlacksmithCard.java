@@ -2,7 +2,6 @@ package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.enums.DomCardName;
-import be.aga.dominionSimulator.enums.DomPlayStrategy;
 
 public class Royal_BlacksmithCard extends DomCard {
     public Royal_BlacksmithCard() {

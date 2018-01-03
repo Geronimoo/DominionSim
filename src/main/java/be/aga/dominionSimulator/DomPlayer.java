@@ -32,8 +32,8 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
             LOGGER.addAppender(new ConsoleAppender(new SimpleLayout()));
     }
 
-    private ArrayList<DomBuyRule> buyRules = new ArrayList<DomBuyRule>();
-    private ArrayList<DomBuyRule> prizeBuyRules = new ArrayList<DomBuyRule>();
+    final private ArrayList<DomBuyRule> buyRules = new ArrayList<DomBuyRule>();
+    final private ArrayList<DomBuyRule> prizeBuyRules = new ArrayList<DomBuyRule>();
     private EnumMap<DomCardName, DomPlayStrategy> playStrategies = new EnumMap<DomCardName, DomPlayStrategy>(DomCardName.class);
     private String[] keywords = null;
 
@@ -113,11 +113,9 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     private DomCardName obeliskChoice = null;
     private boolean villaTriggered = false;
     private int merchantsPlayed;
-    private int drawDeckSize;
     private DomCard savedCard;
     private boolean isHuman;
     private DomEngine myEngine;
-    private char[] tavernMatAsString;
     private ArrayList<DomCard> beginningOfTurnTriggers=new ArrayList<DomCard>();
     private boolean shelters=false;
     private ArrayList<DomCard> boons = new ArrayList<DomCard>();
@@ -1154,11 +1152,11 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                     if (DomEngine.haveToLog) DomEngine.addToLog(this + " is protected from " + theHauntedWoods);
                 } else {
                     if (isHumanOrPossessedByHuman()) {
-                        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+                        ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
                         getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u> (first card = top card)</html>" , getCardsInHand(), theChosenCards, getCardsInHand().size());
                         for (int i=theChosenCards.size()-1;i>=0;i--) {
                             for (DomCard theCard : getCardsInHand()) {
-                                if (theChosenCards.get(i)==theCard.getName()) {
+                                if (theChosenCards.get(i).getName()==theCard.getName()) {
                                     putOnTopOfDeck(theCard);
                                     cardsInHand.remove(theCard);
                                     break;
@@ -1654,10 +1652,10 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
             return;
         if (isHumanOrPossessedByHuman()) {
             setNeedsToUpdate();
-            ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+            ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
             myEngine.getGameFrame().askToSelectCards("Choose "+discardsLeft+" cards to discard" +(discardToTopOfDeck?" to top of deck":""), cardsInHand, theChosenCards, discardsLeft);
-            for (DomCardName theCardName: theChosenCards) {
-                discard(getCardsFromHand(theCardName).get(0), discardToTopOfDeck);
+            for (DomCard theCardName: theChosenCards) {
+                discard(getCardsFromHand(theCardName.getName()).get(0), discardToTopOfDeck);
             }
             return;
         }
@@ -2140,11 +2138,11 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         fillTriggerStack();
         if (beginningOfTurnTriggers.isEmpty())
             return;
-        ArrayList<DomCardName> theChosenCards;
+        ArrayList<DomCard> theChosenCards;
         do {
             do {
                 setNeedsToUpdate();
-                theChosenCards = new ArrayList<DomCardName>();
+                theChosenCards = new ArrayList<DomCard>();
                 myEngine.getGameFrame().askToSelectCards("Choose next beginning of turn trigger", beginningOfTurnTriggers, theChosenCards, 0);
             } while (theChosenCards.size() > 1);
             DomCard theNextCardToHandle;
@@ -2160,9 +2158,9 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
             } else {
                 //human chooses order of beginning of turn triggers
                 theNextCardToHandle = null;
-                DomCardName theChosenCard = theChosenCards.get(0);
+                DomCard theChosenCard = theChosenCards.get(0);
                 for (DomCard theCard : beginningOfTurnTriggers) {
-                    if (theCard.getName()==theChosenCard) {
+                    if (theCard.getName()==theChosenCard.getName()) {
                         theNextCardToHandle = theCard;
                         break;
                     }
@@ -2510,8 +2508,8 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
 
     public DomPlayer getCopy(String aName) {
         DomPlayer theCopy = new DomPlayer(aName);
-        theCopy.buyRules = (ArrayList<DomBuyRule>) buyRules.clone();
-        theCopy.prizeBuyRules = (ArrayList<DomBuyRule>) prizeBuyRules.clone();
+        theCopy.buyRules.addAll(buyRules);
+        theCopy.prizeBuyRules.addAll(prizeBuyRules);
         theCopy.playStrategies = playStrategies.clone();
         for (DomBotType botType : getTypes()) {
             theCopy.addType(botType);
@@ -2743,7 +2741,6 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     /* (non-Javadoc)
      * @see java.lang.Comparable#customCompare(java.lang.Object)
      */
-    @Override
     public int compareTo(DomPlayer aO) {
         return toString().compareTo(aO.toString());
     }
@@ -3449,7 +3446,6 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
 
     public int countInPlay(DomCardType cardType) {
         int theCount = 0;
-        ArrayList<DomCard> theCards = new ArrayList<DomCard>();
         for (DomCard theCard : cardsInPlay) {
             if (theCard.hasCardType(cardType))
                 theCount++;
@@ -3582,7 +3578,6 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
 
     public int countInPlay(DomCardName cardName) {
         int theCount = 0;
-        ArrayList<DomCard> theCards = new ArrayList<DomCard>();
         for (DomCard theCard : cardsInPlay) {
             if (theCard.getName() == cardName)
                 theCount++;
@@ -3997,7 +3992,8 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     }
 
     public void setBuyRules(ArrayList<DomBuyRule> buyRules) {
-        this.buyRules = buyRules;
+        this.buyRules.clear();
+        this.buyRules.addAll(buyRules);
     }
 
     public void putInDeckAt(DomCard domCard, int theChoice) {

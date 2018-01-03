@@ -36,12 +36,12 @@ public class ForgeCard extends DomCard {
 	}
 
 	private void handleHuman() {
-		ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+		ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
 		owner.getEngine().getGameFrame().askToSelectCards("Trash for Forge?" , owner.getCardsInHand(), theChosenCards, 0);
 		int theTotalCoinCost = 0;
-		for (DomCardName theCard : theChosenCards) {
+		for (DomCard theCard : theChosenCards) {
 			theTotalCoinCost+=theCard.getCoinCost(owner.getCurrentGame());
-			owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theCard).get(0)));
+			owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theCard.getName()).get(0)));
 		}
 		ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
 		for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {

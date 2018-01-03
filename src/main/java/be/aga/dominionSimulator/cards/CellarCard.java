@@ -10,9 +10,6 @@ import be.aga.dominionSimulator.enums.DomCardType;
 public class CellarCard extends DomCard {
     private int discardCount;
 	private int deckSize;
-    private double drawDeckSize;
-    private int badReshuffleTreshold;
-
     public CellarCard () {
       super( DomCardName.Cellar);
     }
@@ -24,7 +21,6 @@ public class CellarCard extends DomCard {
       } else {
           checkBadReshuffle();
           deckSize = owner.getDeckSize();
-          drawDeckSize = owner.getDrawDeckSize();
           discardCount = 0;
           discardExcessTerminalActions();
           discardOtherCellars();
@@ -34,26 +30,24 @@ public class CellarCard extends DomCard {
     }
 
     private void handleHumanPlayer() {
-        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
         owner.getEngine().getGameFrame().askToSelectCards("Choose cards to discard" , owner.getCardsInHand(), theChosenCards, 0);
-        for (DomCardName theCardName: theChosenCards)
-            owner.discard(owner.getCardsFromHand(theCardName).get(0), false);
+        for (DomCard theCardName: theChosenCards)
+            owner.discard(owner.getCardsFromHand(theCardName.getName()).get(0), false);
         owner.drawCards(theChosenCards.size());
     }
 
     private void checkBadReshuffle() {
         if (owner.getCardsFromDiscard().size()==0) {
-            badReshuffleTreshold=10000000;
             return;
         }
         int theTotalDiscard = 0;
         for (DomCard theCard : owner.getCardsFromDiscard()) {
             theTotalDiscard+=theCard.getDiscardPriority(1);
         }
-        if (theTotalDiscard/owner.getCardsFromDiscard().size()<=DomCardName.Copper.getDiscardPriority(1))
-            badReshuffleTreshold= (int) drawDeckSize;
-        else
-            badReshuffleTreshold=10000000;
+        if (theTotalDiscard/owner.getCardsFromDiscard().size()<=DomCardName.Copper.getDiscardPriority(1)) {
+		} else {
+		}
     }
 
     private void discardOtherCellars() {

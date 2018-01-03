@@ -16,6 +16,10 @@ import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.DomPlayer;
 
 public class DomGameSetup extends EscapeDialog implements ListSelectionListener, ActionListener {
+   /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6352279200970431424L;
    private DomEngine myEngine;
    
 public DomGameSetup(DomEngine anEngine, final DomPlayer aSelectedBot) {
@@ -74,7 +78,7 @@ private JPanel getButtonPanel() {
 private JPanel getSelectionPanel() {
     final JPanel thePanel = new JPanel();
     thePanel.setLayout( new GridBagLayout() );
-    final GridBagConstraints theCons = DomGui.getGridBagConstraints( 2 );
+    DomGui.getGridBagConstraints( 2 );
 //    JScrollPane theTypePane = new JScrollPane(getBotTypeList(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 //    theTypePane.setBorder(new TitledBorder( "Type" ));
 //    theTypePane.setPreferredSize(new Dimension(150,400));

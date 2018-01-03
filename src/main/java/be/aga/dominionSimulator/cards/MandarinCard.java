@@ -95,7 +95,7 @@ public class MandarinCard extends DomCard {
 	@Override
 	public void doWhenGained() {
     	if (owner.isHumanOrPossessedByHuman()) {
-			ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+			ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
 			ArrayList<DomCard> theTreasures = new ArrayList<DomCard>();
 			theTreasures.addAll(owner.getCardsFromPlay(DomCardType.Treasure));
 			owner.getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u> (first card = top card)</html>", theTreasures , theChosenCards, 0);
@@ -107,7 +107,7 @@ public class MandarinCard extends DomCard {
 			} else {
 				for (int i = theChosenCards.size() - 1; i >= 0; i--) {
 					for (DomCard theCard : theTreasures) {
-						if (theChosenCards.get(i) == theCard.getName()) {
+						if (theChosenCards.get(i).getName() == theCard.getName()) {
 							owner.putOnTopOfDeck(theCard);
 							owner.removeCardFromPlay(theCard);
 							theTreasures.remove(theCard);
@@ -117,7 +117,6 @@ public class MandarinCard extends DomCard {
 				}
 			}
 		}else {
-   		  int theSum = 0;
 //        while (!owner.getCardsFromPlay(DomCardType.Treasure).isEmpty() && theSum<5){
 //            DomCard theCard = owner.getCardsFromPlay(DomCardType.Treasure).get(0);
 //            theSum+=theCard.getCoinValue();

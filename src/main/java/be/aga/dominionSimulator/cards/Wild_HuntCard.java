@@ -5,8 +5,6 @@ import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomPlayStrategy;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 
 public class Wild_HuntCard extends DomCard {
     public Wild_HuntCard() {

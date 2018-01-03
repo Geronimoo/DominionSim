@@ -82,7 +82,6 @@ public class Black_MarketCard extends DomCard {
 
     private void handleHuman(ArrayList<DomCard> aRevealedCards) {
         ArrayList<DomCardName> theChooseFrom;
-        int theCount=0;
         DomCardName theCardToPlay;
         do {
             owner.setNeedsToUpdate();

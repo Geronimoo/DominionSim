@@ -21,16 +21,16 @@ import be.aga.dominionSimulator.enums.DomCardType;
 
 public class DomBuyConditionPanel extends JPanel implements ItemListener {
 	private static final long serialVersionUID = 1L;
-    Object[] numberValues = new Object[100];
-	private JComboBox myLeftFunctionBox;
-	private JComboBox myLeftCardBox;
-	private JComboBox myLeftTypeBox;
-	private JComboBox myRightFunctionBox;
-	private JComboBox myRightCardBox;
-	private JComboBox myRightTypeBox;
-	private JComboBox myExtraOperator;
-	private JComboBox myComparatorBox;
-	private JComboBox myExtraValue;
+	Integer[] numberValues = new Integer[100];
+	private JComboBox<?> myLeftFunctionBox;
+	private JComboBox<DomCardName> myLeftCardBox;
+	private JComboBox<DomCardType> myLeftTypeBox;
+	private JComboBox<?> myRightFunctionBox;
+	private JComboBox<DomCardName> myRightCardBox;
+	private JComboBox<DomCardType> myRightTypeBox;
+	private JComboBox<DomBotOperator> myExtraOperator;
+	private JComboBox<DomBotComparator> myComparatorBox;
+	private JComboBox<Integer> myExtraValue;
 	
 	public DomBuyConditionPanel(DomBuyCondition aBuyCondition, DomBuyRulePanel aBuyRulePanel) {
 		for (int i=0;i<100;i++){
@@ -44,7 +44,7 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
         Collections.addAll(theValues, DomBotFunction.values());
         Collections.addAll(theValues, numberValues);
         theValues.remove(DomBotFunction.constant);
-        myLeftFunctionBox = new JComboBox(theValues.toArray());
+        myLeftFunctionBox = new JComboBox<Object>(theValues.toArray());
         if (aBuyCondition.getLeftFunction()==DomBotFunction.constant){
           myLeftFunctionBox.setSelectedItem((int)aBuyCondition.getLeftValue());
         } else {
@@ -54,7 +54,7 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
         add(myLeftFunctionBox, theCons);
 
         //add the comparator
-        myComparatorBox = new JComboBox(DomBotComparator.values());
+        myComparatorBox = new JComboBox<DomBotComparator>(DomBotComparator.values());
         myComparatorBox.setSelectedItem( aBuyCondition.getComparator());
         theCons.gridx++;
         theCons.gridheight=2;
@@ -66,7 +66,7 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
         theCons.anchor=GridBagConstraints.NORTHWEST;
 
         //right function
-        myRightFunctionBox = new JComboBox(theValues.toArray());
+        myRightFunctionBox = new JComboBox<Object>(theValues.toArray());
         if (aBuyCondition.getRightFunction()==DomBotFunction.constant){
           myRightFunctionBox.setSelectedItem((int)aBuyCondition.getRightValue());
         } else {
@@ -77,14 +77,14 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
         add(myRightFunctionBox, theCons);
 
         //add the extra operator        
-        myExtraOperator = new JComboBox(DomBotOperator.values());
+        myExtraOperator = new JComboBox<DomBotOperator>(DomBotOperator.values());
         myExtraOperator.setSelectedItem( aBuyCondition.getExtraOperator() == null ? DomBotOperator.plus : aBuyCondition.getExtraOperator());
         theCons.gridx++;
         theCons.gridheight=2;
         theCons.fill=GridBagConstraints.NONE;
         theCons.anchor=GridBagConstraints.CENTER;
         add(myExtraOperator, theCons);
-        myExtraValue = new JComboBox(numberValues);
+        myExtraValue = new JComboBox<Integer>(numberValues);
         myExtraValue .setSelectedItem((int)aBuyCondition.getExtraAttribute());
         theCons.gridx++;
         add(myExtraValue, theCons);
@@ -104,7 +104,7 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
         theCons.gridy++;
         theCons.gridx=0;
         //left card name box
-        myLeftCardBox=new JComboBox(DomCardName.values());
+        myLeftCardBox=new JComboBox<DomCardName>(DomCardName.values());
 //        myLeftCardBox.setRenderer(new CustomComboBoxRenderer());
         myLeftCardBox.setVisible(false);
         if (aBuyCondition.getLeftFunction() == DomBotFunction.countCardsInDeck
@@ -129,7 +129,7 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
         add(myLeftCardBox, theCons);
         
         //left card type box (same position as the card name box)
-        myLeftTypeBox=new JComboBox(DomCardType.values());
+        myLeftTypeBox=new JComboBox<DomCardType>(DomCardType.values());
         myLeftTypeBox.setVisible(false);
         if (aBuyCondition.getLeftFunction() == DomBotFunction.countCardTypeInDeck){
         	myLeftTypeBox.setVisible(true);
@@ -139,7 +139,7 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
         //space for the Comparator
         theCons.gridx++;
         //Right card name box
-        myRightCardBox=new JComboBox(DomCardName.values());
+        myRightCardBox=new JComboBox<DomCardName>(DomCardName.values());
         myRightCardBox.setRenderer(new CustomComboBoxRenderer());
         myRightCardBox.setVisible(false);
         if (aBuyCondition.getRightFunction() == DomBotFunction.countCardsInDeck
@@ -164,7 +164,7 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
         add(myRightCardBox, theCons);
         
         //Right card type box (same position as the card name box)
-        myRightTypeBox=new JComboBox(DomCardType.values());
+        myRightTypeBox=new JComboBox<DomCardType>(DomCardType.values());
         myRightTypeBox.setVisible(false);
         if (aBuyCondition.getRightFunction() == DomBotFunction.countCardTypeInDeck){
         	myRightTypeBox.setVisible(true);

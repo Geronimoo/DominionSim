@@ -31,15 +31,15 @@ public class Dame_AnnaCard extends KnightCard {
     }
 
     private void handleHuman() {
-        ArrayList<DomCardName> theChosenCards = new ArrayList<DomCardName>();
+        ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
         do {
-            theChosenCards = new ArrayList<DomCardName>();
+            theChosenCards = new ArrayList<DomCard>();
             owner.getEngine().getGameFrame().askToSelectCards("Trash (max 2)", owner.getCardsInHand(), theChosenCards, 0);
         } while (theChosenCards.size()>2);
         while (!theChosenCards.isEmpty()) {
             DomCard theCardToTrash = null;
             for (DomCard theCard : owner.getCardsInHand()) {
-                if (theCard.getName() == theChosenCards.get(0))
+                if (theCard.getName() == theChosenCards.get(0).getName())
                     theCardToTrash = theCard;
             }
             theChosenCards.remove(0);

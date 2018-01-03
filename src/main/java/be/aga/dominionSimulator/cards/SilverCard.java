@@ -24,7 +24,8 @@ public class SilverCard extends DomCard {
             owner.addAvailableCoins(owner.getMerchantsPlayed());
             owner.resetMerchantsPlayed();
         }
-        for (DomCard theSauna : owner.getCardsFromPlay(DomCardName.Sauna)) {
+        final int numberOfSaunasInPlay = owner.getCardsFromPlay(DomCardName.Sauna).size();
+        for (int i=0; i<numberOfSaunasInPlay; i++) {
             if (owner.getCardsInHand().isEmpty())
                 return;
             if (owner.isHumanOrPossessedByHuman()) {
