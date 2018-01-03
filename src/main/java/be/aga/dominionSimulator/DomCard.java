@@ -23,7 +23,7 @@ public class DomCard implements Comparable< DomCard >{
         }
     };
 
-    public static final Comparator<DomCard> SORT_BY_COST = new Comparator<DomCard>(){
+    public static final Comparator<DomCard> SORT_BY_COIN_COST = new Comparator<DomCard>(){
         public int compare( DomCard aO1, DomCard aO2 ) {
             if (aO1.getName().getCoinCost(null)< aO2.getName().getCoinCost(null))
                 return -1;
