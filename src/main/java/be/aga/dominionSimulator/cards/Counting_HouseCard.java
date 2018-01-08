@@ -16,4 +16,9 @@ public class Counting_HouseCard extends DomCard {
         owner.putInHand(theCard);
       }
     }
+
+    @Override
+    public boolean wantsToBeMultiplied() {
+        return false;
+    }
 }
