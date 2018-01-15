@@ -1,62 +1,61 @@
 package be.aga.dominionSimulator.cards;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 public class PrinceCard extends DomCard {
     public PrinceCard() {
-      super( DomCardName.Prince);
+        super( DomCardName.Prince);
     }
 
     public void play() {
         if (owner==null)
             return;
         Collections.sort(owner.getCardsInHand(),SORT_FOR_TRASHING);
-        for (int i=owner.getCardsInHand().size()-1;i>0;i--) {
-            if (owner.getCardsInHand().get(i).hasCardType(DomCardType.Action)
-                    && owner.getCardsInHand().get(i).getCost(owner.getCurrentGame()).customCompare(new DomCost(4,0))<=0) {
-                if (owner.getCardsFromPlay(getName()).contains(this))
-                   owner.removeCardFromPlay(this);
-                if (DomEngine.haveToLog) DomEngine.addToLog( owner + " sets aside " + owner.getCardsInHand().get(i) + " with " + this);
-                owner.setAsideForPrince(owner.removeCardFromHand(owner.getCardsInHand().get(i)));
-            }
+        List<DomCard> princeableCards = getPrinceableCards();
+        if (!princeableCards.isEmpty()) {
+            if (owner.getCardsFromPlay(getName()).contains(this))
+                owner.removeCardFromPlay(this);
+            DomCard theCard = princeableCards.get(0);
+            if (DomEngine.haveToLog)
+                DomEngine.addToLog(owner + " sets aside " + theCard + " with " + this);
+            owner.setAsideForPrince(owner.removeCardFromHand(theCard));
         }
     }
 
     @Override
     public boolean wantsToBePlayed() {
-        for (int i = owner.getCardsInHand().size() - 1; i > 0; i--) {
-            if (owner.getCardsInHand().get(i).hasCardType(DomCardType.Action)
-                    && owner.getCardsInHand().get(i).getCost(owner.getCurrentGame()).customCompare(new DomCost(4, 0)) <= 0
-                    && owner.getCardsInHand().get(i) != this) {
-                return true;
-            }
-        }
-        return false;
+        return !getPrinceableCards().isEmpty();
     }
 
     @Override
     public int getPlayPriority() {
-        ArrayList<DomCard> theCards = new ArrayList<DomCard>();
-        theCards.addAll(owner.getCardsInHand());
-        int theCount=0;
-        DomCard theCardToPrince=null;
-        for (DomCard theCard : theCards) {
-            if (theCard.hasCardType(DomCardType.Action)
-                    && theCard.getCost(owner.getCurrentGame()).customCompare(new DomCost(4, 0)) <= 0) {
-                theCount++;
-                theCardToPrince = theCard;
-            }
-        }
-        if (theCount==1) {
-            return (theCardToPrince.getPlayPriority()-1);
+        List<DomCard> theCards = new ArrayList<DomCard>();
+        theCards.addAll(getPrinceableCards());
+        Collections.sort(theCards, Comparator.comparingInt(DomCard::getPlayPriority));
+        if (!theCards.isEmpty()) {
+            return theCards.get(0).getPlayPriority() - 1;
         }
         return super.getPlayPriority();
+    }
+
+    private List<DomCard> getPrinceableCards() {
+        return owner.getCardsInHand().stream()
+                .filter(this::princeableCard)
+                .collect(Collectors.toList());
+    }
+
+    private boolean princeableCard(DomCard theCard) {
+        return theCard.hasCardType(DomCardType.Action) && !theCard.equals(this) &&
+                theCard.getCost(owner.getCurrentGame()).customCompare(new DomCost(4, 0)) <= 0;
     }
 }
