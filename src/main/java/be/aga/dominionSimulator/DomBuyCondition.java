@@ -130,10 +130,10 @@ public class DomBuyCondition {
               leftValue=owner.isPlusOneCoinTokenSet() ? 1:0;
               break;
           case isMinus$2TokenSet:
-              leftValue=owner.getMinus$2TokenOn()==null?0:1;
+              leftValue = leftCardName.equals(owner.getMinus$2TokenOn()) ? 1 : 0;
               break;
           case isEstateTokenPlaced:
-              leftValue=owner.getEstateTokenOn()==null?0:1;
+              leftValue = owner.getEstateTokenOn() != null && leftCardName.equals(owner.getEstateTokenOn().getName()) ? 1 : 0;
               break;
           case isTrashingTokenPlaced:
               leftValue=owner.isTrashingTokenSet()?1:0;
@@ -235,10 +235,10 @@ public class DomBuyCondition {
               rightValue=owner.isPlusOneCoinTokenSet() ? 1:0;
               break;
           case isMinus$2TokenSet:
-              rightValue=owner.getMinus$2TokenOn()==null?0:1;
+              rightValue = rightCardName.equals(owner.getMinus$2TokenOn()) ? 1 : 0;
               break;
           case isEstateTokenPlaced:
-              rightValue=owner.getEstateTokenOn()==null?0:1;
+              rightValue = owner.getEstateTokenOn() != null && rightCardName.equals(owner.getEstateTokenOn().getName()) ? 1 : 0;
               break;
           case isTrashingTokenPlaced:
               rightValue=owner.isTrashingTokenSet()?1:0;
