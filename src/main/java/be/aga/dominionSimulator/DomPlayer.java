@@ -485,6 +485,9 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         if (hasExtraMissionTurn()) {
             setNoBuyThisTurn(true);
         }
+        else {
+            setNoBuyThisTurn(false);
+        }
         //TODO moved from buy phase to here... ok?
         updateVPCurve(false);
         //TODO needed fixing
