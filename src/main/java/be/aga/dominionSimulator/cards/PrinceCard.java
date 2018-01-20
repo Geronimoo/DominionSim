@@ -55,7 +55,7 @@ public class PrinceCard extends DomCard {
     }
 
     private boolean princeableCard(DomCard theCard) {
-        return theCard.hasCardType(DomCardType.Action) && !theCard.equals(this) &&
+        return theCard.hasCardType(DomCardType.Action) && !theCard.getName().equals(DomCardName.Prince) &&
                 theCard.getCost(owner.getCurrentGame()).customCompare(new DomCost(4, 0)) <= 0;
     }
 }
