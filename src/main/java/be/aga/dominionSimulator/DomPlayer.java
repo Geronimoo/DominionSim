@@ -126,6 +126,10 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     private boolean deluded;
     private boolean envious;
     private boolean cantBuyActions;
+    private boolean lostInTheWoods;
+    private boolean enviousActive;
+    private boolean miserable;
+    private boolean twiceMiserable;
 
     public DomPlayer(String aString) {
         name = aString;
@@ -469,6 +473,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         resolveRatcatchers();
         handleTransmogrify();
         handleDelayedBoons();
+        handleLostInTheWoods();
         doActionPhase();
         doBuyPhase();
         doNightPhase();
@@ -493,6 +498,17 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         //TODO needed fixing
         actionsLeft=1;
         getCurrentGame().setPreviousTurnTakenBy(this);
+    }
+
+    private void handleLostInTheWoods() {
+        if (!lostInTheWoods)
+            return;
+        Collections.sort(getCardsInHand(),DomCard.SORT_FOR_DISCARD_FROM_HAND);
+        DomCard theCardToDiscard=getCardsInHand().get( 0 );
+        if (!removingReducesBuyingPower( theCardToDiscard )) {
+            discardFromHand(theCardToDiscard);
+            receiveBoon(null);
+        }
     }
 
     private void handleDelayedBoons() {
@@ -730,6 +746,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         charmReminder = 0;
         donateTriggered = false;
         cantBuyActions = false;
+        enviousActive = false;
         //TODO moved from cleanup to here.. maybe problems
         resetVariables();
     }
@@ -1309,6 +1326,10 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                 setCantBuyActions(true);
                 setDeluded(false);
             }
+            if (isEnvious()) {
+                setEnviousActive(true);
+                setEnvious(false);
+            }
         }
         currentPhase = aPhase;
         myEngine.setStatus("Now in " + currentPhase + " Phase");
@@ -1549,6 +1570,9 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         deluded=false;
         envious=false;
         setExtraMissionTurn(false);
+        lostInTheWoods=false;
+        miserable=false;
+        twiceMiserable=false;
     }
 
     private void putPlayerInStartState() {
@@ -1617,6 +1641,10 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
             theTotalVP += Bandit_FortCard.countVP(this);
 
         countVPTime += System.currentTimeMillis() - theTime;
+        if (isMiserable())
+            theTotalVP -= 2;
+        if (isTwiceMiserable())
+            theTotalVP -= 4;
         return theTotalVP;
     }
 
@@ -2181,6 +2209,14 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
 
     private void handleTriggerForHuman(DomCard theNextCardToHandle) {
         beginningOfTurnTriggers.remove(theNextCardToHandle);
+        if (theNextCardToHandle.getName()==DomCardName.Lost_In_The_Woods) {
+            ArrayList<DomCard> theChosenCards = null;
+            getEngine().getGameFrame().askToSelectCards("Discard" , getCardsInHand(), theChosenCards, 1);
+            for (DomCard theCardName: theChosenCards) {
+                discard(getCardsFromHand(theCardName.getName()).get(0), false);
+            }
+            receiveBoon(null);
+        }
         if (theNextCardToHandle.hasCardType(DomCardType.Duration)) {
             if (DomEngine.haveToLog) DomEngine.addToLog(this + " resolves duration effect from " + theNextCardToHandle.getName().toHTML());
             theNextCardToHandle.resolveDuration();
@@ -2232,6 +2268,8 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         beginningOfTurnTriggers.addAll(getAllFromTavernMat(DomCardName.Ratcatcher));
         beginningOfTurnTriggers.addAll(getAllFromTavernMat(DomCardName.Transmogrify));
         beginningOfTurnTriggers.addAll(horseTradersPile);
+        if (isLostInTheWoods())
+            beginningOfTurnTriggers.add(DomCardName.Lost_In_The_Woods.createNewCardInstance());
         for (DomCard aCard : getCardsInPlay()) {
             if (aCard instanceof MultiplicationCard)
                 beginningOfTurnTriggers.add(aCard);
@@ -4181,7 +4219,11 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     }
 
     public void receiveBoon(DomCard aBoon) {
-       getCurrentGame().getBoard().receiveBoon(this, aBoon);
+        getCurrentGame().getBoard().receiveBoon(this, aBoon);
+    }
+
+    public void receiveHex(DomCard aHex) {
+        getCurrentGame().getBoard().receiveHex(this, aHex);
     }
 
     public void keepBoon(DomCard aBoon) {
@@ -4221,5 +4263,42 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
 
     public void setCantBuyActions(boolean cantBuyActions) {
         this.cantBuyActions = cantBuyActions;
+    }
+
+    public void setLostInTheWoods(boolean lostInTheWoods) {
+        this.lostInTheWoods = lostInTheWoods;
+    }
+
+    public boolean isLostInTheWoods() {
+        return lostInTheWoods;
+    }
+
+    public void setEnvious(boolean envious) {
+        this.envious = envious;
+    }
+
+    public void setEnviousActive(boolean enviousActive) {
+        this.enviousActive = enviousActive;
+    }
+
+    public boolean isEnviousActive() {
+        return enviousActive;
+    }
+
+    public boolean isMiserable() {
+        return miserable;
+    }
+
+    public void setTwiceMiserable() {
+        miserable=false;
+        this.twiceMiserable = true;
+    }
+
+    public void setMiserable(boolean miserable) {
+        this.miserable = miserable;
+    }
+
+    public boolean isTwiceMiserable() {
+        return twiceMiserable;
     }
 }

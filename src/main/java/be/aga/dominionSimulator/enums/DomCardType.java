@@ -44,7 +44,9 @@ public enum DomCardType {
     Heirloom(true),
     Boon(true),
     Spirit(true),
-    Hex(true);
+    Hex(true),
+    State(true),
+    Doom(true);
 
     private final boolean isLegalCardType;
 

@@ -5,6 +5,7 @@ import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ShepherdCard extends DomCard {
     public ShepherdCard() {
@@ -17,12 +18,12 @@ public class ShepherdCard extends DomCard {
             handleHuman();
             return;
         }
+        Collections.sort(owner.getCardsInHand(), SORT_FOR_DISCARD_FROM_HAND);
         int theCount = 0;
-        for (DomCard theCard:owner.getCardsFromPlay(DomCardType.Victory)) {
-            if (theCard.getDiscardPriority(owner.getActionsLeft())<DomCardName.Nobles.getDiscardPriority(1)) {
-                owner.discardFromHand(theCard);
-                theCount++;
-            }
+        while (!owner.getCardsFromHand(DomCardType.Victory).isEmpty()
+                && owner.getCardsFromHand(DomCardType.Victory).get(0).getDiscardPriority(owner.actionsLeft)<DomCardName.Nobles.getDiscardPriority(1)) {
+            owner.discardFromHand(owner.getCardsFromHand(DomCardType.Victory).get(0));
+            theCount++;
         }
         if (theCount>0)
     	  owner.drawCards(theCount*2);

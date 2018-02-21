@@ -136,7 +136,7 @@ public class DomEngine {
 			bots = saxHandler.getBots();
 		} catch (Exception e) {
 			// TODO: Update this message since this requires Java 1.8.
-			JOptionPane.showMessageDialog(myGui, "You'll need to download Java 1.6 at www.java.com to runSimulation this program!!!");
+			JOptionPane.showMessageDialog(myGui, "You'll need to download Java 1.8 at www.java.com to runSimulation this program!!!");
 		}
 		Collections.sort( bots );
 	}

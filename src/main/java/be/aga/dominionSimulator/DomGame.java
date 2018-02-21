@@ -146,6 +146,7 @@ public void determineWinners() {
     	  DomEngine.addToStartOfLog( "<B>"+thePlayer + "</B> has " +  thePlayer.countVictoryPoints() + " points "
     			  +(thePlayer.getVictoryTokens()>0 ? (" ("+thePlayer.getVictoryTokens()+"&#x25BC;) ") : "")
                   + getLandMarkText(thePlayer)
+                  + getMiserableText(thePlayer)
                   +"and took " + thePlayer.getTurns() + " turns");
       theMaxPoints = thePlayer.countVictoryPoints()>theMaxPoints ? thePlayer.countVictoryPoints() : theMaxPoints;
     }
@@ -178,6 +179,17 @@ public void determineWinners() {
         }
     }
 }
+
+    private String getMiserableText(DomPlayer thePlayer) {
+        StringBuilder theBuilder = new StringBuilder();
+        if (thePlayer.isMiserable()) {
+            theBuilder.append("(Miserable:-2").append("&#x25BC;) ");
+        }
+        if (thePlayer.isTwiceMiserable()) {
+            theBuilder.append("(Twice Miserable:-4").append("&#x25BC;) ");
+        }
+        return theBuilder.toString();
+    }
 
     private String getLandMarkText(DomPlayer thePlayer) {
         StringBuilder theBuilder = new StringBuilder();

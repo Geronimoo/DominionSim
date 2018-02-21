@@ -51,11 +51,4 @@ public class Devil$s_WorkshopCard extends DomCard {
           return owner.getDesiredCard(new DomCost( 4, 0), false) != null ;
         return true;
     }
-
-    @Override
-    public int getPlayPriority() {
-        if (owner.getDrawDeckSize()==0 && owner.getActionsLeft()>1 && !owner.getCardsFromHand(DomCardType.Cycler).isEmpty())
-            return 1;
-        return super.getPlayPriority();
-    }
 }

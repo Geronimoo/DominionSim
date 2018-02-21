@@ -333,6 +333,9 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 if (theCard.hasCardType(DomCardType.Fate)) {
                     createBoonsDeck();
                 }
+                if (theCard.hasCardType(DomCardType.Doom)) {
+                    createHexesDeck();
+                }
                 if (theCard==DomCardName.Shepherd) {
                     addCardPile(DomCardName.Pasture);
                 }
@@ -341,6 +344,9 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 }
                 if (theCard== DomCardName.Pixie) {
                     addCardPile(DomCardName.Goat);
+                }
+                if (theCard==DomCardName.Fool) {
+                    addCardPile(DomCardName.Lucky_Coin);
                 }
             }
         }
@@ -376,7 +382,6 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 hexes.add(theCard.createNewCardInstance());
         }
         Collections.shuffle(hexes);
-//        addSeparatePile(DomCardName.Will_o$_Wisp,12);
     }
 
     private void addSaunaPile() {
@@ -509,12 +514,14 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 
     private void addRuinsPile() {
         put( DomCardName.Ruins, new ArrayList< DomCard >() );
-        for (int i=0;i<2;i++) {
-            get(DomCardName.Ruins).add(DomCardName.Abandoned_Mine.createNewCardInstance());
-            get(DomCardName.Ruins).add(DomCardName.Survivors.createNewCardInstance());
-            get(DomCardName.Ruins).add(DomCardName.Ruined_Market.createNewCardInstance());
-            get(DomCardName.Ruins).add(DomCardName.Ruined_Village.createNewCardInstance());
-            get(DomCardName.Ruins).add(DomCardName.Ruined_Library.createNewCardInstance());
+        for (int j = 0;j<players.size() - 1;j++) {
+            for (int i = 0; i < 2; i++) {
+                get(DomCardName.Ruins).add(DomCardName.Abandoned_Mine.createNewCardInstance());
+                get(DomCardName.Ruins).add(DomCardName.Survivors.createNewCardInstance());
+                get(DomCardName.Ruins).add(DomCardName.Ruined_Market.createNewCardInstance());
+                get(DomCardName.Ruins).add(DomCardName.Ruined_Village.createNewCardInstance());
+                get(DomCardName.Ruins).add(DomCardName.Ruined_Library.createNewCardInstance());
+            }
         }
         Collections.shuffle(get(DomCardName.Ruins));
     }
@@ -1110,6 +1117,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
         if (DomEngine.haveToLog)
             DomEngine.addToLog(player +" receives "+theHex);
         theHex.play();
+        hexesDiscard.add(theHex);
     }
 
     public void returnBoon(DomCard aBoon) {

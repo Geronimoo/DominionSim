@@ -18,7 +18,11 @@ public class SilverCard extends DomCard {
 
     @Override
     public void play() {
-        super.play();
+        if (owner.isEnviousActive()) {
+            owner.addAvailableCoinsSilent(1);
+        } else {
+            owner.addAvailableCoinsSilent(2);
+        }
         if (owner.getMerchantsPlayed()>0) {
             if (DomEngine.haveToLog) DomEngine.addToLog(owner + " played " + owner.getMerchantsPlayed() + " Merchants");
             owner.addAvailableCoins(owner.getMerchantsPlayed());

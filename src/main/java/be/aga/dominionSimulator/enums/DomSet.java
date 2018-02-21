@@ -360,7 +360,9 @@ public enum DomSet {
             ,DomCardName.Blessed_Village
             ,DomCardName.Conclave
             ,DomCardName.Idol
-            ,DomCardName.Pixie}),
+            ,DomCardName.Pixie
+            ,DomCardName.Fool
+            ,DomCardName.Monastery}),
 
     Promo (new DomCardName[] {DomCardName.Black_Market
            ,DomCardName.Envoy

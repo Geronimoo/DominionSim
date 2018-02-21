@@ -17,9 +17,12 @@ public class Bad_OmensCard extends DomCard {
       owner.putDeckInDiscard();
       if (owner.countInDeck(DomCardName.Copper)<2) {
          if (DomEngine.haveToLog) DomEngine.addToLog(owner + " has less than 2 Coppers in deck");
-         return;
       }
-      owner.putOnTopOfDeck(owner.getDeck().removeFromDiscard(DomCardName.Copper));
-      owner.putOnTopOfDeck(owner.getDeck().removeFromDiscard(DomCardName.Copper));
+      DomCard theCopper = owner.getDeck().removeFromDiscard(DomCardName.Copper);
+      if (theCopper!=null)
+        owner.putOnTopOfDeck(theCopper);
+      theCopper = owner.getDeck().removeFromDiscard(DomCardName.Copper);
+        if (theCopper!=null)
+            owner.putOnTopOfDeck(theCopper);
     }
 }
