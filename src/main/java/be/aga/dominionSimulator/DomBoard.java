@@ -307,6 +307,9 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 if (theCard == DomCardName.Devil$s_Workshop)
                     addSeparatePile(DomCardName.Imp, 13);
 
+                if (theCard == DomCardName.Leprechaun)
+                    addSeparatePile(DomCardName.Wish, 12);
+
                 if (theCard == DomCardName.Urchin)
                     addSeparatePile(DomCardName.Mercenary, 10);
                 if (theCard == DomCardName.Hermit)

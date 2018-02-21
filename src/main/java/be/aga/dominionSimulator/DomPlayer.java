@@ -1411,6 +1411,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
             if (!aCard.hasCardType(DomCardType.Kingdom)
                     && !aCard.hasCardType(DomCardType.Prize)
                     && aCard.getName() != DomCardName.Mercenary
+                    && aCard.getName() != DomCardName.Wish
                     && !aCard.hasCardType(DomCardType.Traveller)
                     && aCard.getName() != DomCardName.Champion
                     && aCard.getName() != DomCardName.Madman
@@ -1428,6 +1429,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         if (aCard.hasCardType(DomCardType.Kingdom)
                 || aCard.hasCardType(DomCardType.Prize)
                 || aCard.getName() == DomCardName.Mercenary
+                || aCard.getName() == DomCardName.Wish
                 || aCard.hasCardType(DomCardType.Traveller)
                 || aCard.getName() == DomCardName.Champion
                 || aCard.getName() == DomCardName.Necropolis

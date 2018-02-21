@@ -17,19 +17,23 @@ public class WishCard extends DomCard {
       owner.addActions(1);
       if (owner.isHumanOrPossessedByHuman()) {
           handleHuman();
-          return;
+      } else {
+          DomCardName theDesiredCard = owner.getDesiredCard(new DomCost(6, 0), false);
+          if (owner.getNextActionToPlay() != null && owner.getNextActionToPlay().hasCardType(DomCardType.Terminal) && owner.getNextActionToPlay().hasCardType(DomCardType.Card_Advantage) && owner.actionsLeft == 1) {
+              DomCardName theDesiredVillage = owner.getDesiredCard(DomCardType.Village, new DomCost(6, 0), false, false, null);
+              if (theDesiredVillage != null)
+                  theDesiredCard = theDesiredVillage;
+          }
+          if (theDesiredCard == null) {
+              theDesiredCard = owner.getCurrentGame().getBestCardInSupplyFor(owner, null, new DomCost(6, 0));
+          }
+          if (theDesiredCard != null)
+              owner.gainInHand(theDesiredCard);
       }
-      DomCardName theDesiredCard = owner.getDesiredCard(new DomCost( 6, 0), false);
-      if (owner.getNextActionToPlay().hasCardType(DomCardType.Terminal) && owner.getNextActionToPlay().hasCardType(DomCardType.Card_Advantage) && owner.actionsLeft==1 ) {
-          DomCardName theDesiredVillage = owner.getDesiredCard(DomCardType.Village, new DomCost(6, 0), false, false, null);
-          if (theDesiredVillage!=null)
-              theDesiredCard=theDesiredVillage;
-      }
-      if (theDesiredCard==null) {
-         theDesiredCard=owner.getCurrentGame().getBestCardInSupplyFor(owner, null, new DomCost(6, 0));
-      }
-      if (theDesiredCard!=null)
-         owner.gainInHand(theDesiredCard);
+        if (owner.getCardsInPlay().contains(this)) {
+            owner.getCardsInPlay().remove(this);
+            owner.returnToSupply(this);
+        }
     }
 
     private void handleHuman() {
