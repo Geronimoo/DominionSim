@@ -376,6 +376,10 @@ public void actionPerformed(ActionEvent e) {
             theInfo.append("<br>");
             theInfo.append("Pirate Ship Level: $").append(myEngine.getCurrentGame().getActivePlayer().getPirateShipLevel());
         }
+        if (myEngine.getCurrentGame().getBoard().getDruidBoons()!=null) {
+            theInfo.append("<br>");
+            theInfo.append("Druid Boons: ").append(myEngine.getCurrentGame().getBoard().getDruidBoons());
+        }
         theInfo.append("<br>");
         theInfo.append("Journey token: ");
         if (myEngine.getCurrentGame().getActivePlayer().isJourneyTokenFaceUp())

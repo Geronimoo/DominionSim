@@ -362,7 +362,26 @@ public enum DomSet {
             ,DomCardName.Idol
             ,DomCardName.Pixie
             ,DomCardName.Fool
-            ,DomCardName.Monastery}),
+            ,DomCardName.Monastery
+            ,DomCardName.Leprechaun
+            ,DomCardName.Cemetery
+            ,DomCardName.Changeling
+            ,DomCardName.Cobbler
+            ,DomCardName.Druid
+            ,DomCardName.Exorcist
+            ,DomCardName.Faithful_Hound
+            ,DomCardName.Secret_Cave
+            ,DomCardName.Tracker
+            ,DomCardName.Tragic_Hero
+            ,DomCardName.Werewolf
+            ,DomCardName.Night_Watchman
+            ,DomCardName.Cursed_Village
+            ,DomCardName.Den_of_Sin
+            ,DomCardName.Guardian
+            ,DomCardName.Sacred_Grove
+            ,DomCardName.Skulk
+            ,DomCardName.Tormentor
+            ,DomCardName.Vampire}),
 
     Promo (new DomCardName[] {DomCardName.Black_Market
            ,DomCardName.Envoy

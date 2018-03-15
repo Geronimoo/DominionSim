@@ -25,6 +25,7 @@ public class PixieCard extends DomCard {
                 if (owner.getCardsInHand().get(0).getTrashPriority() <= DomCardName.Copper.getTrashPriority())
                     owner.receiveBoon(theBoon);
                 owner.trash(owner.removeCardFromPlay(this));
+                return;
             }
             Collections.sort(owner.getCardsInHand(), SORT_FOR_TRASHING);
             if (owner.getCardsInHand().get(0).getTrashPriority() <= DomCardName.Copper.getTrashPriority()
@@ -46,7 +47,5 @@ public class PixieCard extends DomCard {
             owner.receiveBoon(aBoon);
             owner.trash(owner.removeCardFromPlay(this));
         }
-
-
     }
 }

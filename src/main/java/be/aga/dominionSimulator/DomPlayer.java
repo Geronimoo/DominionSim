@@ -130,6 +130,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     private boolean enviousActive;
     private boolean miserable;
     private boolean twiceMiserable;
+    private ArrayList<DomCard> setAsideFaithfulHounds=new ArrayList<>();
 
     public DomPlayer(String aString) {
         name = aString;
@@ -583,8 +584,14 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         discardAll();
         discard(deck.getPutAsideCards());
         drawHandForNextTurn();
-        if (savedCard!=null)
+        if (savedCard!=null) {
             cardsInHand.add(savedCard);
+            setNeedsToUpdate();
+        }
+        for (DomPlayer thePlayer : getCurrentGame().getPlayers()) {
+            thePlayer.addFaithFulHoundsToHand();
+        }
+        setAsideFaithfulHounds.clear();
         savedCard=null;
         setPhase(null);
         //reset variables needed for total money checking in other player's turns
@@ -597,6 +604,15 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                 addVP(theVP);
             }
         }
+    }
+
+    private void addFaithFulHoundsToHand() {
+        if (setAsideFaithfulHounds.isEmpty())
+            return;
+        if (DomEngine.haveToLog) DomEngine.addToLog(this + " adds all " + DomCardName.Faithful_Hound.toHTML() +"s to hand");
+        cardsInHand.addAll(setAsideFaithfulHounds);
+        setAsideFaithfulHounds.clear();
+        setNeedsToUpdate();
     }
 
     public void showBeginningOfTurnLog() {
@@ -640,10 +656,15 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
             }
         }
         drawCards(5);
-        for (int i=0;i<expeditionsActivated;i++)
+        for (int i = 0; i < expeditionsActivated; i++)
             drawCards(2);
-        if(river$sGiftActive)
+        if (river$sGiftActive)
             drawCards(1);
+        //edge case with Sacred Grove
+        for (DomPlayer theOpp : getOpponents()) {
+            if (theOpp.isRiver$sGiftActive())
+                drawCards(1);
+        }
     }
 
     /**
@@ -1417,7 +1438,8 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                     && aCard.getName() != DomCardName.Madman
                     && aCard.getName() != DomCardName.Necropolis
                     && aCard.getName() != DomCardName.Estate
-                    && !aCard.hasCardType(DomCardType.Spirit)) {
+                    && !aCard.hasCardType(DomCardType.Spirit)
+                    && aCard.getName() != DomCardName.Bat  ) {
               previousPlayedCardName = aCard.getName();
             } else {
               previousPlayedCardName = null;
@@ -1434,7 +1456,8 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                 || aCard.getName() == DomCardName.Champion
                 || aCard.getName() == DomCardName.Necropolis
                 || aCard.getName() == DomCardName.Madman
-                || aCard.hasCardType(DomCardType.Spirit)) {
+                || aCard.hasCardType(DomCardType.Spirit)
+                || aCard.getName() == DomCardName.Bat) {
             DomEngine.addToLog(name + " plays " + aCard);
         }
         DomEngine.logIndentation++;
@@ -1464,9 +1487,9 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         }
         if (isHumanOrPossessedByHuman())
             setNeedsToUpdate();
-        if (aCard.hasCardType(DomCardType.Duration))
-            aCard.setDiscardAtCleanup(false);
         aCard.play();
+        if (aCard.hasCardType(DomCardType.Duration) && !aCard.durationFailed())
+            aCard.setDiscardAtCleanup(false);
     }
 
     public void discard(ArrayList<DomCard> aCards) {
@@ -1575,6 +1598,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         lostInTheWoods=false;
         miserable=false;
         twiceMiserable=false;
+        setAsideFaithfulHounds.clear();
     }
 
     private void putPlayerInStartState() {
@@ -2116,6 +2140,10 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                 if (DomEngine.haveToLog) DomEngine.addToLog(theCard + " prevents the attack!");
                 return true;
             }
+            if (theCard.getName() == DomCardName.Guardian) {
+                if (DomEngine.haveToLog) DomEngine.addToLog(theCard + " prevents the attack!");
+                return true;
+            }
         }
         if (!getCardsFromHand(DomCardName.Moat).isEmpty()) {
             if (DomEngine.haveToLog)
@@ -2163,6 +2191,8 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
             if (theCard.getName()==DomCardName.Trader)
                 continue;
             if (theCard.getName()==DomCardName.Hovel)
+                continue;
+            if (theCard.getName()==DomCardName.Faithful_Hound)
                 continue;
             if (!theCard.hasReacted() && theCard.canReact())
               theCards.add(theCard.getName());
@@ -4302,5 +4332,15 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
 
     public boolean isTwiceMiserable() {
         return twiceMiserable;
+    }
+
+    public void addFaithfulHoundToSetAside(DomCard aFaithful_houndCard) {
+       setAsideFaithfulHounds.add(aFaithful_houndCard);
+        if (DomEngine.haveToLog)
+            DomEngine.addToLog(this + " sets aside " + DomCardName.Faithful_Hound.toHTML());
+    }
+
+    public boolean isRiver$sGiftActive() {
+        return river$sGiftActive;
     }
 }

@@ -9,6 +9,8 @@ public class PovertyCard extends DomCard {
     }
 
     public void play() {
+        if (owner.getCardsInHand().size()<4)
+            return;
         owner.doForcedDiscard(owner.getCardsInHand().size()-3, false);
     }
 }

@@ -204,18 +204,27 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
     public void gain( DomCard aCard , int aLocation) {
 		if (gainIfPossessed(aCard) || !addPhysicalCard(aCard))
 		  return;
-		if (aLocation==HAND && aCard.getName()!=DomCardName.Villa && aCard.getName()!=DomCardName.Ghost_Town){
+        if (owner.isHumanOrPossessedByHuman()
+                && aCard.getName()!=DomCardName.Changeling
+                && owner.getCurrentGame().countInSupply(DomCardName.Changeling)>0
+                && aCard.getCost(owner.getCurrentGame()).customCompare(new DomCost(3,0))>=0
+                &&  owner.getEngine().getGameFrame().askPlayer("<html>Gain " + DomCardName.Changeling.toHTML() +" instead of " + aCard.getName().toHTML() + "?</html>", "Replace with Changeling?".toString())) {
+            owner.returnToSupply(aCard);
+            owner.gain(DomCardName.Changeling);
+            return;
+        }
+        if (aLocation==HAND && aCard.getName()!=DomCardName.Villa && aCard.getName()!=DomCardName.Ghost_Town && aCard.getName()!=DomCardName.Guardian && aCard.getName()!=DomCardName.Night_Watchman){
 	      owner.getCardsInHand().add( aCard );
 	      if (DomEngine.haveToLog) DomEngine.addToLog( owner + " gains a " + aCard + " in hand" );
 		}
-		if (aLocation==TOP_OF_DECK && aCard.getName()!=DomCardName.Villa && aCard.getName()!=DomCardName.Ghost_Town){
+		if (aLocation==TOP_OF_DECK && aCard.getName()!=DomCardName.Villa && aCard.getName()!=DomCardName.Ghost_Town && aCard.getName()!=DomCardName.Guardian && aCard.getName()!=DomCardName.Night_Watchman){
 		  owner.putOnTopOfDeck(aCard);      	
 		}
-		if (aLocation==DISCARD && aCard.getName()!=DomCardName.Villa && aCard.getName()!=DomCardName.Ghost_Town) {
+		if (aLocation==DISCARD && aCard.getName()!=DomCardName.Villa && aCard.getName()!=DomCardName.Ghost_Town && aCard.getName()!=DomCardName.Guardian && aCard.getName()!=DomCardName.Night_Watchman) {
             if (aCard.getName() == DomCardName.Nomad_Camp) {
                 owner.putOnTopOfDeck(aCard);
             } else {
-                if (!owner.getCardsFromPlay(DomCardName.Royal_Seal).isEmpty()) {
+                if (!owner.getCardsFromPlay(DomCardName.Royal_Seal).isEmpty() || !owner.getCardsFromPlay(DomCardName.Tracker).isEmpty()) {
                     if (owner.isHumanOrPossessedByHuman()) {
                         if (owner.getEngine().getGameFrame().askPlayer("<html>On Top of Deck: " + aCard.getName().toHTML() + "</html>", "Resolving Royal Seal"))
                             owner.putOnTopOfDeck(aCard);
@@ -290,7 +299,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
     public boolean addPhysicalCard( DomCard aCard ) {
       //TODO Trader might conflict with Watchtower ????
       if (aCard.getName()!=DomCardName.Silver && owner.countInDeck( DomCardName.Trader )>0 && owner.usesTrader(aCard))
-        return false;
+      return false;
     	
       if (owner.countInDeck( DomCardName.Watchtower )>0 && owner.usesWatchtower(aCard))
         return false;

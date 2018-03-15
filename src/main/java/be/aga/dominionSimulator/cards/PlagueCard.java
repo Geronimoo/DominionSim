@@ -5,7 +5,7 @@ import be.aga.dominionSimulator.enums.DomCardName;
 
 public class PlagueCard extends DomCard {
     public PlagueCard() {
-      super( DomCardName.Haunting);
+      super( DomCardName.Plague);
     }
 
     public void play() {

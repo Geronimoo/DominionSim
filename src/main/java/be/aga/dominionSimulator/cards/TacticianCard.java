@@ -13,17 +13,14 @@ public class TacticianCard extends DomCard {
     }
 
     public void play() {
-      durationFailed = false;
+      durationFailed = true;
       if (owner.getCardsInHand().size()>0) {
         owner.discardHand();
-      } else {
-    	durationFailed=true;
+        durationFailed=false;
       }
     }
 
     public void resolveDuration() {
-      if (durationFailed)
-    	return;
       owner.drawCards( 5 );
       owner.addAvailableBuys(1);
       owner.addActions(1);
@@ -49,5 +46,10 @@ public class TacticianCard extends DomCard {
     		}
     	}
     	return true;
+    }
+
+    @Override
+    public boolean durationFailed() {
+        return durationFailed;
     }
 }

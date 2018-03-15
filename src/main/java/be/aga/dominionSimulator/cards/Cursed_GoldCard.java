@@ -18,7 +18,7 @@ public class Cursed_GoldCard extends DomCard {
 
     @Override
     public int getTrashPriority() {
-        if (owner.getCurrentGame().countInSupply(DomCardName.Curse)==0)
+        if (owner!=null && owner.getCurrentGame().countInSupply(DomCardName.Curse)==0)
             return DomCardName.Gold.getTrashPriority();
         return super.getTrashPriority();
     }

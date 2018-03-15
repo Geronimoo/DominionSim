@@ -40,7 +40,7 @@ public class NecromancerCard extends DomCard {
                theCard.setOwner(owner);
             }
         }
-        Collections.sort(theActions,SORT_FOR_PLAYING);
+        Collections.sort(theActions,SORT_FOR_DISCARDING_REVERSE);
         for (DomCard theCard:theActions) {
             if (theCard.wantsToBePlayed()) {
                 theCard.setOwner(null);

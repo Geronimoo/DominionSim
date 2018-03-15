@@ -63,7 +63,17 @@ public class DomCard implements Comparable< DomCard >{
           }
         };
 
-        public static final Comparator<DomCard> SORT_FOR_DISCARD_FROM_HAND = new Comparator<DomCard>(){
+    public static final Comparator<DomCard> SORT_FOR_DISCARDING_REVERSE = new Comparator<DomCard>(){
+        public int compare( DomCard aO1, DomCard aO2 ) {
+            if (aO1.getDiscardPriority(1)> aO2.getDiscardPriority(1))
+                return -1;
+            if (aO1.getDiscardPriority(1) < aO2.getDiscardPriority(1))
+                return 1;
+            return 0;
+        }
+    };
+
+    public static final Comparator<DomCard> SORT_FOR_DISCARD_FROM_HAND = new Comparator<DomCard>(){
             public int compare( DomCard aO1, DomCard aO2 ) {
                 int theActionsLeft = aO1.owner.getActionsLeft();
                 if (aO1.getDiscardPriority(theActionsLeft)< aO2.getDiscardPriority(theActionsLeft))
@@ -399,5 +409,9 @@ public class DomCard implements Comparable< DomCard >{
             theCount+=theType.isLegal() && hasCardType(theType) ? 1 : 0;
         }
         return theCount;
+    }
+
+    public boolean durationFailed() {
+        return false;
     }
 }

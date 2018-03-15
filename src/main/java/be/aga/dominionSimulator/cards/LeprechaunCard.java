@@ -2,6 +2,7 @@ package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomPlayer;
+import be.aga.dominionSimulator.enums.DomBotType;
 import be.aga.dominionSimulator.enums.DomCardName;
 
 public class LeprechaunCard extends DomCard {
@@ -23,5 +24,12 @@ public class LeprechaunCard extends DomCard {
           return 1;
       }
       return super.getPlayPriority( );
+    }
+
+    @Override
+    public boolean wantsToBePlayed() {
+//        if (owner.hasType(DomBotType.Engine))
+//            return owner.getCardsInPlay().size()==6;
+        return true;
     }
 }

@@ -46,6 +46,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     private DomCard myZombieApprentice;
     private DomCard myZombieMason;
     private DomCard myZombieSpy;
+    private ArrayList<DomCard> druidBoons;
 
     public DomBoard ( Class< DomCardName > aKeyType, ArrayList< DomPlayer > aPlayers ) {
       super( aKeyType );
@@ -77,10 +78,23 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
             putAqueductTokensOnTreasures();
         resetBoons();
         resetHexes();
+        resetDruid();
+    }
+
+    private void resetDruid() {
+        if (get(DomCardName.Druid) == null)
+            return;
+        druidBoons = new ArrayList<DomCard>();
+        druidBoons.add(boons.remove(0));
+        druidBoons.add(boons.remove(0));
+        druidBoons.add(boons.remove(0));
     }
 
     private void resetBoons() {
+        if (druidBoons!=null)
+            boons.addAll(druidBoons);
         if (!boonsDiscard.isEmpty()) {
+            druidBoons = null;
             boons.addAll(boonsDiscard);
             boonsDiscard.clear();
             Collections.shuffle(boons);
@@ -351,6 +365,28 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 if (theCard==DomCardName.Fool) {
                     addCardPile(DomCardName.Lucky_Coin);
                 }
+                if (theCard==DomCardName.Cemetery) {
+                    addCardPile(DomCardName.Haunted_Mirror);
+                    addSeparatePile(DomCardName.Ghost, 6);
+                }
+                if (theCard==DomCardName.Exorcist) {
+                    addSeparatePile(DomCardName.Ghost, 6);
+                    addSeparatePile(DomCardName.Imp,13);
+                    addSeparatePile(DomCardName.Will_o$_Wisp,12);
+                }
+                if (theCard==DomCardName.Vampire) {
+                    addSeparatePile(DomCardName.Bat,10);
+                }
+                if (theCard== DomCardName.Secret_Cave) {
+                    addCardPile(DomCardName.Magic_Lamp);
+                    addSeparatePile(DomCardName.Wish, 12);
+                }
+                if (theCard==DomCardName.Tormentor){
+                    addSeparatePile(DomCardName.Imp,13);
+                }
+                if (theCard==DomCardName.Tracker){
+                    addCardPile(DomCardName.Pouch);
+                }
             }
         }
     }
@@ -583,6 +619,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
         case Pasture:
         case Cursed_Gold:
         case Goat:
+        case Haunted_Mirror:
             theNumber=players.size();
             break;
 		default:
@@ -1102,9 +1139,11 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
         if (DomEngine.haveToLog)
             DomEngine.addToLog(player +" receives "+theBoon);
         theBoon.play();
-        if (theBoon.getName()!= DomCardName.The_Field$s_Gift && theBoon.getName()!= DomCardName.The_Forest$s_Gift && theBoon.getName()!= DomCardName.The_River$s_Gift)
-            if (!boonsDiscard.contains(theBoon))
-              boonsDiscard.add(theBoon);
+        if (getDruidBoons()==null || !getDruidBoons().contains(aBoon)){
+            if (theBoon.getName() != DomCardName.The_Field$s_Gift && theBoon.getName() != DomCardName.The_Forest$s_Gift && theBoon.getName() != DomCardName.The_River$s_Gift)
+                if (!boonsDiscard.contains(theBoon))
+                    boonsDiscard.add(theBoon);
+        }
     }
 
     public void receiveHex(DomPlayer player, DomCard aHex) {
@@ -1124,7 +1163,8 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     }
 
     public void returnBoon(DomCard aBoon) {
-        boonsDiscard.add(aBoon);
+        if (!boonsDiscard.contains(aBoon))
+          boonsDiscard.add(aBoon);
     }
 
     public DomCard takeBoon() {
@@ -1147,5 +1187,9 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 theTopCards.add(get(theCard).get(0).getName());
         }
         return theTopCards;
+    }
+
+    public ArrayList<DomCard> getDruidBoons() {
+        return druidBoons;
     }
 }
