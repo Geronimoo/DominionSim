@@ -15,13 +15,27 @@ public class MasterpieceCard extends DomCard {
     public void doWhenBought(DomPlayer player) {
         if (owner.isHumanOrPossessedByHuman()) {
             doHumanWhenBought();
-            return;
+        } else {
+            if (player.getCoinTokens()==0 && player.getTotalAvailableCoins()>20 && player.getCurrentGame().getBoard().get(DomCardName.Triumph)!=null) {
+                double toSpend = 4.0 * (player.getTotalAvailableCoins()+3) / 9 - 3;
+                int theRound = (int) (toSpend/5);
+                int theOverpay = theRound * 5 + 5;
+                if (DomEngine.haveToLog)
+                    DomEngine.addToLog(player + " overpays $" + theOverpay);
+                for (int i = 0; i < theOverpay; i++) {
+                    player.gain(DomCardName.Silver);
+                }
+                player.setAvailableCoins(player.getTotalAvailableCoins()-theOverpay);
+            } else {
+                if (DomEngine.haveToLog)
+                    DomEngine.addToLog(player + " overpays $" + player.getTotalAvailableCoins());
+                for (int i = 0; i < player.getTotalAvailableCoins(); i++) {
+                    player.gain(DomCardName.Silver);
+                }
+                player.setAvailableCoins(0);
+                player.spendCoinTokens(player.getCoinTokens());
+            }
         }
-        for (int i=0;i<player.getTotalAvailableCoins();i++) {
-            player.gain(DomCardName.Silver);
-        }
-        player.setAvailableCoins(0);
-        player.spendCoinTokens(player.getCoinTokens());
     }
 
     private void doHumanWhenBought() {

@@ -2242,7 +2242,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     private void handleTriggerForHuman(DomCard theNextCardToHandle) {
         beginningOfTurnTriggers.remove(theNextCardToHandle);
         if (theNextCardToHandle.getName()==DomCardName.Lost_In_The_Woods) {
-            ArrayList<DomCard> theChosenCards = null;
+            ArrayList<DomCard> theChosenCards = new ArrayList<>();
             getEngine().getGameFrame().askToSelectCards("Discard" , getCardsInHand(), theChosenCards, 1);
             for (DomCard theCardName: theChosenCards) {
                 discard(getCardsFromHand(theCardName.getName()).get(0), false);

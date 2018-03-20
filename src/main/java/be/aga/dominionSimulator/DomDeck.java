@@ -208,6 +208,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 && aCard.getName()!=DomCardName.Changeling
                 && owner.getCurrentGame().countInSupply(DomCardName.Changeling)>0
                 && aCard.getCost(owner.getCurrentGame()).customCompare(new DomCost(3,0))>=0
+                && owner.getEngine().getGameFrame()!=null
                 &&  owner.getEngine().getGameFrame().askPlayer("<html>Gain " + DomCardName.Changeling.toHTML() +" instead of " + aCard.getName().toHTML() + "?</html>", "Replace with Changeling?".toString())) {
             owner.returnToSupply(aCard);
             owner.gain(DomCardName.Changeling);
