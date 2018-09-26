@@ -32,7 +32,7 @@ public class The_Sky$s_GiftCard extends DomCard {
     }
 
     private void handleHuman() {
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         if (!owner.getEngine().getGameFrame().askPlayer("<html>Discard 3 cards to gain " + DomCardName.Gold.toHTML() +"?</html>", "Resolving " + this.getName().toString()))
            return;
         ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();

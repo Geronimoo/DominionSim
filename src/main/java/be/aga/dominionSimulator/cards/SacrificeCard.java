@@ -30,23 +30,24 @@ public class SacrificeCard extends DomCard {
               theCardToTrash = owner.getCardsInHand().get(0);
           }
       }
+      boolean isAction = theCardToTrash.hasCardType(DomCardType.Action);
+      boolean isTreasure = theCardToTrash.hasCardType(DomCardType.Treasure);
+      boolean isVictory = theCardToTrash.hasCardType(DomCardType.Victory);
       owner.trash(owner.removeCardFromHand( theCardToTrash ));
-      if (theCardToTrash.hasCardType(DomCardType.Action)) {
-        owner.addActions(2);
-        owner.drawCards(2);
+      if (isAction) {
+          owner.addActions(2);
+          owner.drawCards(2);
       }
-      if (theCardToTrash.hasCardType(DomCardType.Treasure)) {
-        owner.addAvailableCoins(2);
-      }
-      if (theCardToTrash.hasCardType(DomCardType.Victory)) {
-        owner.addVP(2);
-      }
-    }
+      if (isTreasure)
+          owner.addAvailableCoins(2);
+      if (isVictory)
+          owner.addVP(2);
+}
 
 	private DomCard findCardToTrash() {
       Collections.sort( owner.getCardsInHand(), SORT_FOR_TRASHING);
       DomCard theCardToTrash = owner.getCardsInHand().get( 0 );
-      if (!theCardToTrash.hasCardType(DomCardType.Action) && owner.getActionsLeft()==0 && !owner.getCardsFromHand(DomCardType.Action).isEmpty())
+      if (!theCardToTrash.hasCardType(DomCardType.Action) && owner.getActionsLeft()==0 && !owner.getCardsFromHand(DomCardType.Action).isEmpty() && owner.getCardsFromHand(DomCardType.Action).get(0).getName()!=DomCardName.Market_Square)
           theCardToTrash=owner.getCardsFromHand(DomCardType.Action).get(0);
       return theCardToTrash;
 	}

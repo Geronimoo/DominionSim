@@ -26,7 +26,7 @@ public class CrownCard extends MultiplicationCard {
         Collections.sort(theTreasures, SORT_FOR_DISCARDING);
         DomCard theCardToPlayTwice=null;
         if (owner.isHumanOrPossessedByHuman()) {
-            owner.setNeedsToUpdate();
+            owner.setNeedsToUpdateGUI();
             ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
             for (DomCard theCard : owner.getCardsFromHand(DomCardType.Treasure)) {
                 theChooseFrom.add(theCard.getName());
@@ -81,7 +81,8 @@ public class CrownCard extends MultiplicationCard {
 
     @Override
     public boolean wantsToBePlayed() {
-        if (owner.getPhase()==DomPhase.Action && (owner.getCardsFromHand(DomCardType.Action).size()<2 || !owner.getCardsFromHand(DomCardName.Capital).isEmpty() || owner.getCardsFromHand(DomCardName.Crown).size()==owner.getCardsFromHand(DomCardType.Action).size()))
+        if (owner.getPhase()==DomPhase.Action
+                && (owner.getCardsFromHand(DomCardType.Action).size()<2 || !owner.getCardsFromHand(DomCardName.Capital).isEmpty() || owner.getCardsFromHand(DomCardName.Crown).size()==owner.getCardsFromHand(DomCardType.Action).size()))
             return false;
         return true;
     }

@@ -4,6 +4,7 @@ import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
+import be.aga.dominionSimulator.enums.DomPlayStrategy;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,7 +41,7 @@ public class RatsCard extends DomCard {
     }
 
     private void handleHuman() {
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
         for (DomCard theCard : owner.getCardsInHand()) {
             if (theCard.getName()!=DomCardName.Rats)
@@ -54,8 +55,14 @@ public class RatsCard extends DomCard {
 
     @Override
     public boolean wantsToBePlayed() {
+        if (owner.getPlayStrategyFor(this)== DomPlayStrategy.DominateTraining){
+          return true;
+        }
+
         if (owner.getCardsInHand().isEmpty())
             return false;
+//        if (owner.countInDeck(DomCardName.Rats)>2)
+//            return false;
         Collections.sort( owner.getCardsInHand() , SORT_FOR_TRASHING);
         int i=0;
         while (i<owner.getCardsInHand().size() && owner.getCardsInHand().get(i).getName()==DomCardName.Rats )

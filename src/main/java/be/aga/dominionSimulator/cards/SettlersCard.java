@@ -21,7 +21,7 @@ public class SettlersCard extends DomCard {
     }
 
     private void handleHuman() {
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         for (DomCard theCard:owner.getCardsFromDiscard()){
             if (theCard.getName()==DomCardName.Copper) {
                 if (owner.getEngine().getGameFrame().askPlayer("<html>Take " + DomCardName.Copper.toHTML() +"?</html>", "Resolving " + this.getName().toString())) {

@@ -20,17 +20,17 @@ public class PlazaCard extends DomCard {
       }
       if (!owner.getCardsFromHand(DomCardName.Copper).isEmpty()) {
           owner.discardFromHand(DomCardName.Copper);
-          owner.addCoinTokens(1);
+          owner.addCoffers(1);
       } else {
           if (!owner.getCardsFromHand(DomCardName.Masterpiece).isEmpty()) {
               owner.discardFromHand(DomCardName.Masterpiece);
-              owner.addCoinTokens(1);
+              owner.addCoffers(1);
           }
       }
     }
 
     private void handleHuman() {
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         if (owner.getCardsFromHand(DomCardType.Treasure).isEmpty())
             return;
         if (!owner.getEngine().getGameFrame().askPlayer("<html>Discard a treasure?", "Resolving " + this.getName().toString()))
@@ -44,7 +44,7 @@ public class PlazaCard extends DomCard {
         for (DomCard theCard : owner.getCardsInHand()) {
             if (theChosenCard==theCard.getName()) {
                 owner.discardFromHand(theCard);
-                owner.addCoinTokens(1);
+                owner.addCoffers(1);
                 return;
             }
         }

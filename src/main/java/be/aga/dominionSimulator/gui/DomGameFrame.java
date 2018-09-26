@@ -9,7 +9,6 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -81,8 +80,9 @@ public class DomGameFrame extends JFrame implements ActionListener, ListSelectio
     private JButton myHintButton;
     private ArrayList<String> logStack=new ArrayList<String>();
     private int myDelay;
-    private JButton mySpendCoinTokensBTN;
+    private JButton mySpendCoffersBTN;
     private JButton myPayOffDebtBTN;
+    private JButton myUseVillagersBTN;
 
     public DomGameFrame(DomEngine anEngine, String delay) {
 	 myEngine=anEngine;
@@ -325,12 +325,19 @@ private JPanel getBottomPanel() {
     myPlayAllTreasurersBTN.setVisible(false);
     thePanel.add(myPlayAllTreasurersBTN, theCons);
 	theCons.gridx++;
-    mySpendCoinTokensBTN = new JButton("$0");
-    mySpendCoinTokensBTN.setActionCommand("Spend Coin Tokens");
-    mySpendCoinTokensBTN.setToolTipText("Spend Coin Tokens");
-    mySpendCoinTokensBTN.addActionListener(this);
-    mySpendCoinTokensBTN.setVisible(false);
-    thePanel.add(mySpendCoinTokensBTN, theCons);
+    mySpendCoffersBTN = new JButton("$0");
+    mySpendCoffersBTN.setActionCommand("Spend coffers");
+    mySpendCoffersBTN.setToolTipText("Spend coffers");
+    mySpendCoffersBTN.addActionListener(this);
+    mySpendCoffersBTN.setVisible(false);
+    thePanel.add(mySpendCoffersBTN, theCons);
+    theCons.gridx++;
+    myUseVillagersBTN = new JButton("V(0)");
+    myUseVillagersBTN.setActionCommand("Use Villagers");
+    myUseVillagersBTN.setToolTipText("Use Villagers");
+    myUseVillagersBTN.addActionListener(this);
+    myUseVillagersBTN.setVisible(false);
+    thePanel.add(myUseVillagersBTN, theCons);
     theCons.gridx++;
     myPayOffDebtBTN = new JButton("$0");
     myPayOffDebtBTN.setForeground(Color.red);
@@ -402,21 +409,25 @@ public void actionPerformed(ActionEvent e) {
     if (e.getActionCommand().equals("Play all treasures")) {
       myEngine.getCurrentGame().getActivePlayer().attemptToPlayAllTreasures();
     }
-    if (e.getActionCommand().equals("Spend Coin Tokens")) {
+    if (e.getActionCommand().equals("Spend coffers")) {
 	    int i=1;
-	    if (myEngine.getCurrentGame().getActivePlayer().getCoinTokens()>4) {
-            String theStr = JOptionPane.showInputDialog(this, "Spend how many coin tokens?");
+	    if (myEngine.getCurrentGame().getActivePlayer().getCoffers()>4) {
+            String theStr = JOptionPane.showInputDialog(this, "Spend how many coffers?");
             if (!theStr.equals("") && Integer.valueOf(theStr)>0)
                 i=Integer.valueOf(theStr);
         }
-        myEngine.getCurrentGame().getActivePlayer().spendCoinTokens(i);
+        myEngine.getCurrentGame().getActivePlayer().spendCoffers(i);
         myEngine.getCurrentGame().getActivePlayer().addAvailableCoins(i);
-        myEngine.getCurrentGame().getActivePlayer().setNeedsToUpdate();
+        myEngine.getCurrentGame().getActivePlayer().setNeedsToUpdateGUI();
+    }
+    if (e.getActionCommand().equals("Use Villagers")) {
+        myEngine.getCurrentGame().getActivePlayer().useVillager();
+        myEngine.getCurrentGame().getActivePlayer().setNeedsToUpdateGUI();
     }
     if (e.getActionCommand().equals("Pay off debt")) {
         myEngine.getCurrentGame().getActivePlayer().payOffDebt(1);
         myEngine.getCurrentGame().getActivePlayer().addAvailableCoins(-1);
-        myEngine.getCurrentGame().getActivePlayer().setNeedsToUpdate();
+        myEngine.getCurrentGame().getActivePlayer().setNeedsToUpdateGUI();
     }
     if (e.getActionCommand().equals("End Actions")) {
         myEngine.getCurrentGame().getActivePlayer().endActions();
@@ -426,7 +437,7 @@ public void actionPerformed(ActionEvent e) {
     }
     if (e.getActionCommand().equals("End Buy")) {
         myEngine.getCurrentGame().getActivePlayer().setPhase(DomPhase.Night);
-        myEngine.getCurrentGame().getActivePlayer().setNeedsToUpdate();
+        myEngine.getCurrentGame().getActivePlayer().setNeedsToUpdateGUI();
     }
     if (e.getActionCommand().equals("Hint")) {
 	    if (myEngine.getCurrentGame().getActivePlayer().getPhase()==DomPhase.Action) {
@@ -534,17 +545,29 @@ public void actionPerformed(ActionEvent e) {
             myPlayAllTreasurersBTN.setVisible(true);
         else
             myPlayAllTreasurersBTN.setVisible(false);
-        if (theActivePlayer.getCoinTokens()>0) {
-            mySpendCoinTokensBTN.setText("$"+theActivePlayer.getCoinTokens());
-            mySpendCoinTokensBTN.setVisible(true);
-            mySpendCoinTokensBTN.setEnabled(false);
+        if (theActivePlayer.getCoffers()>0) {
+            mySpendCoffersBTN.setText("$"+theActivePlayer.getCoffers());
+            mySpendCoffersBTN.setVisible(true);
+            mySpendCoffersBTN.setEnabled(false);
         } else {
-            mySpendCoinTokensBTN.setVisible(false);
+            mySpendCoffersBTN.setVisible(false);
         }
-        if (theActivePlayer.getPhase()==DomPhase.Buy && theActivePlayer.getBoughtCards().isEmpty() && theActivePlayer.getCoinTokens()>0) {
-            mySpendCoinTokensBTN.setEnabled(true);
+        if (theActivePlayer.getPhase()==DomPhase.Buy && theActivePlayer.getBoughtCards().isEmpty() && theActivePlayer.getCoffers()>0) {
+            mySpendCoffersBTN.setEnabled(true);
         } else {
-            mySpendCoinTokensBTN.setEnabled(false);
+            mySpendCoffersBTN.setEnabled(false);
+        }
+        if (theActivePlayer.countVillagers()>0) {
+            myUseVillagersBTN.setText("V("+theActivePlayer.countVillagers()+")");
+            myUseVillagersBTN.setVisible(true);
+            myUseVillagersBTN.setEnabled(false);
+        } else {
+            myUseVillagersBTN.setVisible(false);
+        }
+        if (theActivePlayer.getPhase()==DomPhase.Action ) {
+            myUseVillagersBTN.setEnabled(true);
+        } else {
+            myUseVillagersBTN.setEnabled(false);
         }
         if (theActivePlayer.getDebt()>0) {
             myPayOffDebtBTN.setText("$"+theActivePlayer.getDebt());

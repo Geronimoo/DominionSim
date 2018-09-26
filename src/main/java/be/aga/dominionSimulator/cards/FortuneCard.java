@@ -13,7 +13,7 @@ public class FortuneCard extends DomCard {
       owner.addAvailableBuys(1);
       if (owner.hasDoubledMoney())
           return;
-      owner.addAvailableCoins(owner.getAvailableCoins()-owner.getCoinTokens());
+      owner.addAvailableCoins(owner.getAvailableCoins()-owner.getCoffers());
       owner.setDoubledMoney(true);
     }
 
@@ -27,7 +27,7 @@ public class FortuneCard extends DomCard {
             if (theCardInHand.getName()!=DomCardName.Fortune)
               theTotalCoins += theCardInHand.getPotentialCoinValue();
         }
-        theTotalCoins += owner.getCoinTokens();
+        theTotalCoins += owner.getCoffers();
         return theTotalCoins;
     }
 

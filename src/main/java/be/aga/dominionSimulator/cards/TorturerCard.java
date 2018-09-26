@@ -47,7 +47,7 @@ public class TorturerCard extends DomCard {
     }
 
     private void handleHuman(DomPlayer thePlayer) {
-        thePlayer.setNeedsToUpdate();
+        thePlayer.setNeedsToUpdateGUI();
         ArrayList<String> theOptions = new ArrayList<String>();
         theOptions.add("Discard 2 cards");
         if (owner.getCurrentGame().countInSupply(DomCardName.Curse) == 0)

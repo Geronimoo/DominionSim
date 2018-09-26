@@ -131,7 +131,7 @@ public class AmuletCard extends DomCard {
 
         DomCard theCardToTrash = cardsInHand.get(0);
 
-        if (!owner.removingReducesBuyingPower(theCardToTrash)) {
+        if (!owner.removingReducesBuyingPower(theCardToTrash) && theCardToTrash.getTrashPriority()<=DomCardName.Copper.getTrashPriority()) {
             owner.trash(owner.removeCardFromHand(theCardToTrash));
             return true;
         }

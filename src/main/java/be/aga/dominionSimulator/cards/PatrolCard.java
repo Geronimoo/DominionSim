@@ -30,6 +30,7 @@ public class PatrolCard extends DomCard {
     }
 
     private void handleHuman(ArrayList<DomCard> theRevealedCards) {
+        owner.setNeedsToUpdateGUI();
         ArrayList<DomCard> chooseFrom = new ArrayList<DomCard>();
         for (DomCard theCard:theRevealedCards) {
             if (theCard.hasCardType(DomCardType.Victory) || theCard.hasCardType(DomCardType.Curse)){

@@ -36,7 +36,7 @@ public class CartographerCard extends DomCard {
 	}
 
 	private void handleHuman(ArrayList<DomCard> theRevealedCards) {
-		owner.setNeedsToUpdate();
+		owner.setNeedsToUpdateGUI();
 		ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
 		owner.getEngine().getGameFrame().askToSelectCards("<html>Discard ?</html>", theRevealedCards, theChosenCards, 0);
 		for (int i = theChosenCards.size() - 1; i >= 0; i--) {

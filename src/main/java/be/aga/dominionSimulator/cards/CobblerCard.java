@@ -34,7 +34,7 @@ public class CobblerCard extends DomCard {
     }
 
     private void handleHumanPlayer() {
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
         for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
             if (new DomCost(4,0).customCompare(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0 )

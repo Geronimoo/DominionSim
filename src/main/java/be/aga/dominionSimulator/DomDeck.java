@@ -166,9 +166,10 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
     public int count( DomCardType aCardType ) {
         int theCount = 0;
         for (DomCardName theCardName : keySet()) {
-          if (theCardName.hasCardType( aCardType )) {
+          if (theCardName==DomCardName.Estate && owner.isEstateTokenPlaced() && aCardType==DomCardType.Action)
+              theCount+= get( theCardName ).size();
+          if (theCardName.hasCardType( aCardType ))
             theCount+= get( theCardName ).size();
-          }
         }
         return theCount;
     }
@@ -509,14 +510,14 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
     }
 
     /**
-     * 
+     *
      */
     public void returnCardsFromIslandMat() {
-      if (DomEngine.haveToLog) DomEngine.addToLog( owner + " returns all cards from the Island Mat: " + getIslandMat() );
-      for (DomCard theCard : islandMat) {
-        discardPile.add(theCard);
-      }
-      islandMat.clear();
+        if (DomEngine.haveToLog) DomEngine.addToLog( owner + " returns all cards from the Island Mat: " + getIslandMat() );
+        for (DomCard theCard : islandMat) {
+            discardPile.add(theCard);
+        }
+        islandMat.clear();
     }
 
     /**

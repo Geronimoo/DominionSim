@@ -18,7 +18,7 @@ public class CultistCard extends DomCard {
       }
       if (!owner.getCardsFromHand(DomCardName.Cultist).isEmpty()) {
           if (owner.isHumanOrPossessedByHuman()) {
-              owner.setNeedsToUpdate();
+              owner.setNeedsToUpdateGUI();
               if (owner.getEngine().getGameFrame().askPlayer("<html>Chain " + DomCardName.Cultist.toHTML() + " ?</html>", "Resolving " + this.getName().toString()))
                   owner.play(owner.removeCardFromHand(owner.getCardsFromHand(DomCardName.Cultist).get(0)));
           } else {

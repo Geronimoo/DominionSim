@@ -41,6 +41,11 @@ public class CopperCard extends DomCard {
             return false;
     	if (handlePossibleGrandMarketBuy())
     	  return false;
+    	if (owner.getCurrentGame().countInSupply(DomCardName.Ducat)>0
+            && owner.getCardsFromHand(DomCardName.Copper).size()==1
+    	    && owner.getDesiredCard(owner.getTotalPotentialCurrency(),false)==DomCardName.Ducat
+            && owner.getTotalPotentialCurrency().getCoins()>2)
+    	    return false;
     	return true;
     }
 

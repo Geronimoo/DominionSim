@@ -10,7 +10,7 @@ public class Candlestick_MakerCard extends DomCard {
 
     public void play() {
       owner.addActions(1);
-      owner.addCoinTokens(1);
+      owner.addCoffers(1);
       owner.addAvailableBuys(1);
     }
 }

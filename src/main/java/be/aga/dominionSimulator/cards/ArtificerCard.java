@@ -53,7 +53,7 @@ public class ArtificerCard extends DomCard {
     }
 
     private void handleHuman() {
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         if (!owner.getEngine().getGameFrame().askPlayer("<html>Use " + DomCardName.Artificer.toHTML() +"?</html>", "Resolving " + this.getName().toString()))
            return;
         ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
@@ -61,7 +61,7 @@ public class ArtificerCard extends DomCard {
         for (DomCard theCardName: theChosenCards) {
             owner.discardFromHand(owner.getCardsFromHand(theCardName.getName()).get(0));
         }
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
         for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
             if (new DomCost(theChosenCards.size(),0).customCompare(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0)

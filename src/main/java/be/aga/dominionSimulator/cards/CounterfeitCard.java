@@ -50,7 +50,7 @@ public class CounterfeitCard extends DomCard {
     }
 
     private void handleHuman(ArrayList<DomCard> theTreasures) {
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
         for (DomCard theCard : theTreasures) {
             theChooseFrom.add(theCard.getName());

@@ -19,6 +19,7 @@ public class Pearl_DiverCard extends DomCard {
       }
       if (DomEngine.haveToLog) DomEngine.addToLog(owner + " looks at the bottom card");
       if (owner.isHumanOrPossessedByHuman()) {
+          owner.setNeedsToUpdateGUI();
           if (owner.getEngine().getGameFrame().askPlayer("<html>Put on top of deck: " + theBottomCard.getName().toHTML() +" ?</html>", "Resolving " + this.getName().toString()))
               owner.putOnTopOfDeck(theBottomCard);
           else

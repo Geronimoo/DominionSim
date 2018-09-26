@@ -31,7 +31,7 @@ public class CourtyardCard extends DomCard {
         ArrayList<DomCardName> theChooseFrom=new ArrayList<DomCardName>();
         theChooseFrom.clear();
         theChooseFrom.addAll(uniqueCards);
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         DomCard theChosenCard = owner.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Put back a card for " + this.getName().toString(), theChooseFrom, "Mandatory!")).get(0);
         owner.putOnTopOfDeck(owner.removeCardFromHand(theChosenCard));
     }

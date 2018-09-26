@@ -84,7 +84,7 @@ public class Black_MarketCard extends DomCard {
         ArrayList<DomCardName> theChooseFrom;
         DomCardName theCardToPlay;
         do {
-            owner.setNeedsToUpdate();
+            owner.setNeedsToUpdateGUI();
             theChooseFrom = new ArrayList<DomCardName>();
             for (DomCard theCard : owner.getCardsFromHand(DomCardType.Treasure))
                 theChooseFrom.add(theCard.getName());

@@ -33,10 +33,10 @@ public class ScavengerCard extends DomCard {
     }
 
     private void handleHuman() {
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         if (owner.getEngine().getGameFrame().askPlayer("<html>Put deck in discard ? </html>", "Resolving " + this.getName().toString()))
           owner.putDeckInDiscard();
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
         for (DomCard theCard : owner.getCardsFromDiscard())
             theChooseFrom.add(theCard.getName());

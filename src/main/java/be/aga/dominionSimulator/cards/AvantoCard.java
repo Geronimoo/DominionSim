@@ -12,7 +12,7 @@ public class AvantoCard extends DomCard {
       owner.drawCards(3);
       if (!owner.getCardsFromHand(DomCardName.Sauna).isEmpty()) {
           if (owner.isHumanOrPossessedByHuman()) {
-              owner.setNeedsToUpdate();
+              owner.setNeedsToUpdateGUI();
               if (owner.getEngine().getGameFrame().askPlayer("<html>Chain " + DomCardName.Sauna.toHTML() +"?</html>", "Resolving " + this.getName().toString()))
                   owner.play(owner.removeCardFromHand(owner.getCardsFromHand(DomCardName.Sauna).get(0)));
           } else {

@@ -37,7 +37,7 @@ public class Jack_of_all_TradesCard extends DrawUntilXCardsCard {
 	}
 
 	private void handleHuman() {
-    	owner.setNeedsToUpdate();
+    	owner.setNeedsToUpdateGUI();
 		ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
 		for (DomCard theCard : owner.getCardsInHand()) {
 			if (!theCard.hasCardType(DomCardType.Treasure))
@@ -107,4 +107,11 @@ public class Jack_of_all_TradesCard extends DrawUntilXCardsCard {
             return false;
         return true;
     }
+
+	@Override
+	public boolean wantsToBeMultiplied() {
+    	if (owner.getCardsFromHand(DomCardType.Action).size()>owner.getCardsFromHand(DomCardName.Jack_of_all_Trades).size())
+    		return false;
+		return true;
+	}
 }

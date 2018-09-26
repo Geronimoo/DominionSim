@@ -72,7 +72,7 @@ public class GearCard extends DomCard {
     }
 
     private void handleHuman() {
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
         owner.getEngine().getGameFrame().askToSelectCards("Set aside cards", owner.getCardsInHand(), theChosenCards, 0);
         for (DomCard theCardName: theChosenCards) {

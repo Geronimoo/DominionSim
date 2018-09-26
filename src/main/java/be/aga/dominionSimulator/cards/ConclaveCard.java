@@ -33,7 +33,7 @@ public class ConclaveCard extends DomCard {
     }
 
     private void handleHuman() {
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
         ArrayList<DomCard> theActionsToConsider = owner.getCardsFromHand(DomCardType.Action);
         if (theActionsToConsider.isEmpty())

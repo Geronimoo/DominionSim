@@ -33,7 +33,7 @@ public class DiplomatCard extends DomCard {
        if (DomEngine.haveToLog) DomEngine.addToLog( owner + " reveals " + this );
        owner.drawCards(2);
        if (owner.isHumanOrPossessedByHuman()) {
-           owner.setNeedsToUpdate();
+           owner.setNeedsToUpdateGUI();
        }
        owner.doForcedDiscard(3,false);
        return false;

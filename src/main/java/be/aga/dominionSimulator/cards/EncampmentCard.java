@@ -14,7 +14,7 @@ public class EncampmentCard extends DomCard {
       owner.drawCards(2);
       if (!owner.getCardsFromHand(DomCardName.Gold).isEmpty() || !owner.getCardsFromHand(DomCardName.Plunder).isEmpty()) {
           if (owner.isHumanOrPossessedByHuman()) {
-              owner.setNeedsToUpdate();
+              owner.setNeedsToUpdateGUI();
               if (owner.getEngine().getGameFrame().askPlayer("<html>Reveal " + DomCardName.Gold.toHTML() +" or " + DomCardName.Plunder.toHTML()+"?</html>", "Resolving " + this.getName().toString())) {
                   if (DomEngine.haveToLog) DomEngine.addToLog(owner + " reveals Gold or Plunder");
                   return;

@@ -875,7 +875,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 		for (DomCardName theCardName : keySet()){
 			if (get(theCardName)!=null
             && (theCardName.hasCardType(DomCardType.Kingdom) || theCardName.hasCardType(DomCardType.Base))
-		    && !get(theCardName).isEmpty() 
+		    && (!get(theCardName).isEmpty() && get(theCardName).get(0).getName()==theCardName)
 		    && (aType==null || theCardName.hasCardType(aType))
 		    && (aForbiddenType==null || !theCardName.hasCardType(aForbiddenType))
 		    && ((!anExactCost && domCost.customCompare(theCardName.getCost(aPlayer.getCurrentGame()))>=0)

@@ -33,7 +33,7 @@ public class SilverCard extends DomCard {
             if (owner.getCardsInHand().isEmpty())
                 return;
             if (owner.isHumanOrPossessedByHuman()) {
-                owner.setNeedsToUpdate();
+                owner.setNeedsToUpdateGUI();
                 ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
                 for (DomCard theCard : owner.getCardsInHand()) {
                     theChooseFrom.add(theCard.getName());

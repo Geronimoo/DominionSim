@@ -21,8 +21,8 @@ public class Zombie_ApprenticeCard extends DomCard {
       }
       ArrayList<DomCard> theActions = owner.getCardsFromHand(DomCardType.Action);
       Collections.sort( theActions , SORT_FOR_TRASHING);
-      DomCard theCardToTrash = owner.getCardsInHand().get(0);
-      for (DomCard theCard : owner.getCardsInHand()) {
+      DomCard theCardToTrash = theActions.get(0);
+      for (DomCard theCard : theActions) {
     	  if (theCard.getName()!=DomCardName.Market_Square){
              theCardToTrash=theCard;
              break;

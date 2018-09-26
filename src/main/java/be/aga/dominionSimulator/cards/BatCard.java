@@ -3,7 +3,6 @@ package be.aga.dominionSimulator.cards;
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
-import be.aga.dominionSimulator.enums.DomCardType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,7 +16,7 @@ public class BatCard extends DomCard {
     
     public void play() {
         exchangeForVampire=false;
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         if (owner.getCardsInHand().isEmpty())
             return;
         if (owner.isHumanOrPossessedByHuman()) {

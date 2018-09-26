@@ -67,7 +67,7 @@ public class StorytellerCard extends DomCard {
         int theCount=0;
         DomCardName theCardToPlay;
         do {
-            owner.setNeedsToUpdate();
+            owner.setNeedsToUpdateGUI();
             theChooseFrom = new ArrayList<DomCardName>();
             for (DomCard theCard : owner.getCardsFromHand(DomCardType.Treasure))
                 theChooseFrom.add(theCard.getName());

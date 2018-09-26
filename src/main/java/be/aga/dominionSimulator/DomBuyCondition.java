@@ -156,6 +156,9 @@ public class DomBuyCondition {
           case countVPon:
               leftValue=owner.getCurrentGame().getBoard().countVPon(leftCardName);
               break;
+          case countVillagers:
+              leftValue=owner.countVillagers();
+              break;
 		case constant:
             break;
         }
@@ -261,7 +264,10 @@ public class DomBuyCondition {
          case countVPon:
               rightValue=owner.getCurrentGame().getBoard().countVPon(leftCardName);
               break;
-		case constant:
+         case countVillagers:
+              rightValue=owner.countVillagers();
+              break;
+            case constant:
 			break;
         }
 		double theRightValue=rightValue;

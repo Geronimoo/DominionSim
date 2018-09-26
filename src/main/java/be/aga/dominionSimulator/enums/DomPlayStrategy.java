@@ -12,5 +12,5 @@ public enum DomPlayStrategy {
    FoolsGoldEnabler,
    silverGainer, combo,
     dukeEnabler, goodDeckTracker, greedyDeckTracker, removeAllCoppers, mineCopperFirst, forEngines, MarketSquareCombo, trashWhenObsolete,
-    modestTrashing, keepPayload, playOnlyIfGaining, cityQuarterCombo, ambassadorWar, crossroadsCombo
+    modestTrashing, keepPayload, playOnlyIfGaining, cityQuarterCombo, ambassadorWar, DominateTraining, crossroadsCombo
 }

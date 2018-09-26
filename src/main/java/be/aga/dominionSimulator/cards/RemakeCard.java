@@ -38,7 +38,7 @@ public class RemakeCard extends DomCard {
     private void handleHuman() {
         int theCount=0;
         while (!owner.getCardsInHand().isEmpty() && theCount<2) {
-            owner.setNeedsToUpdate();
+            owner.setNeedsToUpdateGUI();
             ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
             for (DomCard theCard : owner.getCardsInHand()) {
                 theChooseFrom.add(theCard.getName());

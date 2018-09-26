@@ -20,6 +20,7 @@ public class Salt_the_EarthCard extends DomCard {
         }
         DomCardName theCard = null;
         theCard = DomCardName.Estate;
+//        theCard = DomCardName.Province;
         if (owner.countVictoryPoints()>owner.countMaxOpponentsVictoryPoints())
             theCard = DomCardName.Province;
         if (owner.getCurrentGame().countInSupply(DomCardName.Duke)>0 && owner.getCurrentGame().countInSupply(DomCardName.Duchy)>0)

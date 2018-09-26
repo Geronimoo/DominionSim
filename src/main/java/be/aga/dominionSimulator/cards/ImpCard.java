@@ -32,7 +32,7 @@ public class ImpCard extends DomCard {
     }
 
     private void handleHuman() {
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
         ArrayList<DomCard> theActionsToConsider = owner.getCardsFromHand(DomCardType.Action);
         if (theActionsToConsider.isEmpty())
@@ -57,7 +57,7 @@ public class ImpCard extends DomCard {
             return null;
         Collections.sort(theActionsToConsider, DomCard.SORT_FOR_PLAYING);
         for (DomCard card : theActionsToConsider) {
-            if (card.wantsToBePlayed() && owner.getCardsFromPlay(owner.getNextActionToPlay().getName()).isEmpty() )
+            if (card.wantsToBePlayed() && owner.getCardsFromPlay(card.getName()).isEmpty() )
                 return card;
         }
         return null;

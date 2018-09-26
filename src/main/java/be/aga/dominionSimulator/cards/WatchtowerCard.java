@@ -44,7 +44,7 @@ public class WatchtowerCard extends DrawUntilXCardsCard {
       if (lastWatchtoweredCard == aCard)
         return false;
       if (owner.isHumanOrPossessedByHuman()) {
-          owner.setNeedsToUpdate();
+          owner.setNeedsToUpdateGUI();
           return owner.getEngine().getGameFrame().askPlayer("<html>React with " + this.getName().toHTML() +" ?</html>", "Resolving " + this.getName().toString());
       } else {
           if (aCard.getName().getTrashPriority(owner) < 35) {

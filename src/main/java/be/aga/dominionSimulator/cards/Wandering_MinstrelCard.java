@@ -31,7 +31,7 @@ public class Wandering_MinstrelCard extends DomCard {
     }
 
     private void handleHuman(ArrayList<DomCard> aRevealedCards) {
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         ArrayList<DomCard> theChooseFrom = new ArrayList<DomCard>();
         for (DomCard theCard : aRevealedCards) {
             if (theCard.hasCardType(DomCardType.Action))

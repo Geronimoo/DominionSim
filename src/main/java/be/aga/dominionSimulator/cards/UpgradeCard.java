@@ -6,6 +6,7 @@ import java.util.Collections;
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.enums.DomCardName;
+import be.aga.dominionSimulator.enums.DomCardType;
 
 public class UpgradeCard extends DomCard {
     public UpgradeCard () {
@@ -22,7 +23,7 @@ public class UpgradeCard extends DomCard {
             return;
         }
         Collections.sort( owner.getCardsInHand(), SORT_FOR_TRASHING);
-        if (owner.getCardsInHand().get(0).getName()==DomCardName.Curse || owner.getCardsInHand().get(0).getName()==DomCardName.Copper) {
+        if (owner.getCardsInHand().get(0).getName()==DomCardName.Curse || owner.getCardsInHand().get(0).getName()==DomCardName.Copper || owner.getCardsInHand().get(0).hasCardType(DomCardType.Ruins)) {
             owner.trash( owner.removeCardFromHand( owner.getCardsInHand().get(0) ) );
             DomCardName theDesiredCard = owner.getDesiredCard(new DomCost(1,0 ) , true);
             if (theDesiredCard!=null )
@@ -48,14 +49,14 @@ public class UpgradeCard extends DomCard {
     }
 
     private void handleHuman() {
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         ArrayList<DomCardName> theChooseFrom=new ArrayList<DomCardName>();
         for (DomCard theCard : owner.getCardsInHand()) {
             theChooseFrom.add(theCard.getName());
         }
         DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!");
         owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         theChooseFrom = new ArrayList<DomCardName>();
         for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
             if (theCard.getCost(owner.getCurrentGame()).customCompare(theChosenCard.getCost(owner.getCurrentGame()).add(new DomCost(1,0)))==0 && owner.getCurrentGame().countInSupply(theCard)>0)

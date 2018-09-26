@@ -2,7 +2,6 @@ package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomEngine;
-import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
@@ -33,7 +32,7 @@ public class FearCard extends DomCard {
     }
 
     private void handleHuman() {
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
         ArrayList<DomCard> theCards = new ArrayList<DomCard>();
         theCards.addAll(owner.getCardsFromHand(DomCardType.Action));

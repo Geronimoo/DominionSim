@@ -40,7 +40,7 @@ public class The_Flame$s_GiftCard extends DomCard {
     }
 
     private void handleHuman() {
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         ArrayList<DomCardName> theChooseFrom=new ArrayList<DomCardName>();
         for (DomCard theCard : owner.getCardsInHand()) {
             theChooseFrom.add(theCard.getName());

@@ -51,7 +51,7 @@ public class TraderCard extends DomCard {
 
      public boolean wantsToReact(DomCard aCard) {
          if (owner.isHumanOrPossessedByHuman()) {
-             owner.setNeedsToUpdate();
+             owner.setNeedsToUpdateGUI();
              return owner.getEngine().getGameFrame().askPlayer("<html>React with " + this.getName().toHTML() +" ?</html>", "Resolving " + this.getName().toString());
          } else {
              //TODO this way of handling Trader looks a bit dirty (= Watchtower)

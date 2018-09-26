@@ -85,7 +85,7 @@ public class DoctorCard extends DomCard {
             }
         }
         owner.setAvailableCoins(0);
-        owner.spendCoinTokens(owner.getCoinTokens());
+        owner.spendCoffers(owner.getCoffers());
     }
 
     private void doHumanWhenBought() {

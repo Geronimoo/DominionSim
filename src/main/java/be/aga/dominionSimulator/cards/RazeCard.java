@@ -36,7 +36,7 @@ public class RazeCard extends DomCard {
 
     private void handleHuman() {
         DomPlayer theOwner = owner;
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         ArrayList<DomCardName> theChooseFrom=new ArrayList<DomCardName>();
         for (DomCard theCard : owner.getCardsInHand()) {
             theChooseFrom.add(theCard.getName());

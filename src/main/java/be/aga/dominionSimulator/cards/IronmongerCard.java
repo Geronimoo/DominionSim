@@ -26,7 +26,7 @@ public class IronmongerCard extends DomCard {
         if (theTopCard.hasCardType(DomCardType.Action))
             owner.addActions(1);
         if (owner.isHumanOrPossessedByHuman()) {
-            owner.setNeedsToUpdate();
+            owner.setNeedsToUpdateGUI();
             if (owner.getEngine().getGameFrame().askPlayer("<html>Discard " + theTopCard.getName().toHTML() +" ?</html>", "Resolving " + this.getName().toString()))
                 owner.discard(theTopCard);
             else

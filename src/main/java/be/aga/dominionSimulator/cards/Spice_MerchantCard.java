@@ -45,7 +45,7 @@ public class Spice_MerchantCard extends DomCard {
 		DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card?", theChooseFrom, "Don't trash");
 		if (theChosenCard!=null) {
 			owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
-			owner.setNeedsToUpdate();
+			owner.setNeedsToUpdateGUI();
 			ArrayList<String> theOptions = new ArrayList<String>();
 			theOptions.add("+1 Action/+2 Cards");
 			theOptions.add("+$2/+1 Buy");

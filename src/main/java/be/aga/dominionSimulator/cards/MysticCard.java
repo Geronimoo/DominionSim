@@ -20,7 +20,7 @@ public class MysticCard extends DomCard {
             return;
         DomCardName theChoice = null;
         if (owner.isHumanOrPossessedByHuman()) {
-            owner.setNeedsToUpdate();
+            owner.setNeedsToUpdateGUI();
             ArrayList<DomCardName> theDeckCards = new ArrayList<DomCardName>();
             for (DomCardName theCard : owner.getDeck().keySet()) {
                 theDeckCards.add(theCard);

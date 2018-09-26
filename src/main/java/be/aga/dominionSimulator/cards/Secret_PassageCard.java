@@ -53,7 +53,7 @@ public class Secret_PassageCard extends DomCard {
     }
 
     private void handleHuman() {
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         Set<DomCardName> uniqueCards = owner.getUniqueCardNamesInHand();
         ArrayList<DomCardName> theChooseFrom=new ArrayList<DomCardName>();
         theChooseFrom.clear();

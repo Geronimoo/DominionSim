@@ -66,7 +66,7 @@ public class BishopCard extends DomCard {
 		    boolean trashes=false;
 		    if (thePlayer.getCardsInHand().size()>0) {
 		      if (thePlayer.isHumanOrPossessedByHuman()) {
-				  thePlayer.setNeedsToUpdate();
+				  thePlayer.setNeedsToUpdateGUI();
 				  ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
 				  for (DomCard theCard : thePlayer.getCardsInHand()) {
 					  theChooseFrom.add(theCard.getName());

@@ -494,8 +494,8 @@ public class DomGui extends JFrame implements ActionListener {
         theCons.gridy++;
         JTextArea a = new JTextArea( 250, 260 );
         a.setText( "\n Geronimoo's Dominion Simulator \n\n"
-            + " Version:\n      2.1.5\n" + " Written by:\n      Jeroen Aga\n"
-            + " Released:\n      march 2018\n\n"
+            + " Version:\n      2.1.6\n" + " Written by:\n      Jeroen Aga\n"
+            + " Released:\n      september 2018\n\n"
             + " Website:\n      http://dominionsimulator.wordpress.com\n" 
             + " Report bugs/Sing Praise:\n      jeroen_aga@yahoo.com\n" );
         theAboutPanel.add( a, theCons );
@@ -620,31 +620,7 @@ public class DomGui extends JFrame implements ActionListener {
 		button.setText("Click to select a strategy for this player");
 	}
 
-	public JPanel getXMLPanel(DomPlayer theStrategy) {
-        final JPanel thePanel = new JPanel( new GridBagLayout() );
-        final GridBagConstraints theCons = DomGui.getGridBagConstraints( 2 );
-        JTextArea theXMLStrategyArea = new JTextArea();
-        theXMLStrategyArea.setFont( Font.decode( "Courrier 12" ) );
-        theXMLStrategyArea.setWrapStyleWord( true );
-        theXMLStrategyArea.setLineWrap( true );
-        if (theStrategy==null) {
-          theXMLStrategyArea.setText( "Paste XML here (delete this line)!!" );
-        } else {
-          theXMLStrategyArea.setText( theStrategy.getXML() );
-        }
-        final JScrollPane scr = new JScrollPane( theXMLStrategyArea);
-        scr.setPreferredSize( new Dimension( 700, 500 ) );
-        Runnable doScroll = new Runnable() {
-          public void run() {
-            scr.getVerticalScrollBar().setValue( 0 );
-          }
-        };
-        SwingUtilities.invokeLater( doScroll );
-        thePanel.add( scr, theCons );
-        return thePanel;
-    }
-
-	public void showWinPercentage(DomPlayer thePlayer, int i) {
+    public void showWinPercentage(DomPlayer thePlayer, int i) {
 		JButton theBTN = myPlayers.get(thePlayer);
 		((JLabel) myWinPercentageLBLs.get(theBTN)).setText("Wins: "+i+"%");
 	}

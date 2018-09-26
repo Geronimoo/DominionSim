@@ -48,6 +48,7 @@ public class PlayPreparationDialog extends JFrame implements ActionListener {
         myValidSets.add(DomSet.Adventures);
         myValidSets.add(DomSet.Empires);
         myValidSets.add(DomSet.Nocturne);
+        myValidSets.add(DomSet.Renaissance);
         myValidSets.add(DomSet.Promo);
         myEngine=anEngine;
         myBots = myEngine.getGui().getBots();
@@ -58,11 +59,11 @@ public class PlayPreparationDialog extends JFrame implements ActionListener {
         }
         resetBoard();
         resetBane();
-        if (!checkValidSets()) {
-            JOptionPane.showMessageDialog(this, "<html>Bot not supported (yet)<br>Supported Sets: <i>"+myValidSets+"</i></html>", "Error", JOptionPane.ERROR_MESSAGE);
-            dispose();
-            return;
-        }
+//        if (!checkValidSets()) {
+//            JOptionPane.showMessageDialog(this, "<html>Bot not supported (yet)<br>Supported Sets: <i>"+myValidSets+"</i></html>", "Error", JOptionPane.ERROR_MESSAGE);
+//            dispose();
+//            return;
+//        }
         setTitle("Prepare to play against " + myBots);
         buildGUI();
         pack();
@@ -153,7 +154,11 @@ public class PlayPreparationDialog extends JFrame implements ActionListener {
         }
         for (DomPlayer theBot : myBots) {
             for (DomBuyRule theRule:theBot.getBuyRules()) {
-                if (theRule.getCardToBuy().hasCardType(DomCardType.Kingdom) || theRule.getCardToBuy()== DomCardName.Platinum || theRule.getCardToBuy()==DomCardName.Colony || theRule.getCardToBuy().hasCardType(DomCardType.Event) || theRule.getCardToBuy().hasCardType(DomCardType.Landmark))
+                if (theRule.getCardToBuy().hasCardType(DomCardType.Kingdom) ||
+                        theRule.getCardToBuy()== DomCardName.Platinum ||
+                        theRule.getCardToBuy()==DomCardName.Colony ||
+                        theRule.getCardToBuy().hasCardType(DomCardType.Event) ||
+                        theRule.getCardToBuy().hasCardType(DomCardType.Landmark))
                     myBoard.add(theRule.getCardToBuy());
             }
         }

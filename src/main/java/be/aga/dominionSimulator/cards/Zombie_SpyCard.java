@@ -20,7 +20,7 @@ public class Zombie_SpyCard extends DomCard {
 		  if (theRevealedCard.isEmpty()) 
 			  return;
 		  if (owner.isHumanOrPossessedByHuman()) {
-		  	  owner.setNeedsToUpdate();
+		  	  owner.setNeedsToUpdateGUI();
 			  if (owner.getEngine().getGameFrame().askPlayer("<html>Discard " + theRevealedCard.get(0).getName().toHTML() +"?</html>", "Resolving " + this.getName().toString())){
 				  owner.discard(theRevealedCard);
 			  } else {

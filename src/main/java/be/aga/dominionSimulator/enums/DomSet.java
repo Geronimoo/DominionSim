@@ -403,7 +403,17 @@ public enum DomSet {
            ,DomCardName.Province
            ,DomCardName.Colony
            }),
-   ;
+
+    Renaissance(new DomCardName[]{DomCardName.Priest
+            , DomCardName.Mountain_Village
+            , DomCardName.Scholar
+            , DomCardName.Experiment
+            , DomCardName.Seer
+            , DomCardName.Acting_Troupe
+            , DomCardName.Recruiter
+            , DomCardName.Silk_Merchant
+    }
+    );
    
    private final ArrayList< DomCardName> cards = new ArrayList< DomCardName>();
    

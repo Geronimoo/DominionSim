@@ -31,7 +31,7 @@ public class The_Moon$s_GiftCard extends DomCard {
     }
 
     private void handleHumanPlayer(ArrayList<DomCard> theDiscard) {
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
         for (DomCard theCard : theDiscard)
            theChooseFrom.add(theCard.getName());

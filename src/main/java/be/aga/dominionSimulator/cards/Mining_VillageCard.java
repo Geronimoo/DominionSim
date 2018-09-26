@@ -34,7 +34,7 @@ public class Mining_VillageCard extends DomCard {
     }
 
     private void handleHuman() {
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         if (owner.getEngine().getGameFrame().askPlayer("<html>Trash " + DomCardName.Mining_Village.toHTML() + " ?</html>", "Resolving " + this.getName().toString())) {
             DomPlayer theOwner = owner;
             owner.trash(owner.removeCardFromPlay(this));

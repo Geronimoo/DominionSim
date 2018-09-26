@@ -95,7 +95,7 @@ public class StoreroomCard extends DomCard {
             owner.discardFromHand(theCard.getName());
         }
         owner.drawCards(theChosenCards.size());
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         theChosenCards = new ArrayList<DomCard>();
         owner.getEngine().getGameFrame().askToSelectCards("Discard for +$1" , owner.getCardsInHand(), theChosenCards, 0);
         for (DomCard theCard : theChosenCards) {

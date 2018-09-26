@@ -42,6 +42,7 @@ public class PixieCard extends DomCard {
     }
 
     private void handleHuman(DomCard aBoon) {
+        owner.setNeedsToUpdateGUI();
         if (owner.getEngine().getGameFrame().askPlayer("<html>Receive " + aBoon +" twice ?</html>", "Resolving " + this.getName().toString())) {
             owner.receiveBoon(aBoon);
             owner.receiveBoon(aBoon);

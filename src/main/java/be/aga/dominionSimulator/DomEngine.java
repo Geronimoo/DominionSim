@@ -80,6 +80,7 @@ public class DomEngine {
 	private static DomGameFrame myGameFrame;
 	private DomGame currentGame;
     private String myStatus;
+	private int totalVPTokens=0;
 
 	/**
 	 * @param aString
@@ -237,6 +238,7 @@ public class DomEngine {
             }
             myGui.showTiePercentage((int) (theTotalTies*100/NUMBER_OF_GAMES));
             LOGGER.info("Empty Piles Endings : " + emptyPilesEndingCount / NUMBER_OF_GAMES * 100 + "%");
+            LOGGER.info("average VP tokens: " + totalVPTokens/NUMBER_OF_GAMES);
         }
     }
 
@@ -256,6 +258,12 @@ public class DomEngine {
         LOGGER.info( "find winner time: " + findWinnerTime);
         LOGGER.info( "board reset time: " + boardResetTime);
         LOGGER.info( "check game finish time: " + checkGameFinishTime);
+		int theCount = 0;
+        for (DomCardName theCard : DomCardName.values()) {
+        	if (theCard.hasCardType(DomCardType.Kingdom) && !theCard.hasCardType(DomCardType.Base))
+        		theCount++;
+		}
+        LOGGER.info("Total cards: " + theCount);
     }
 
     /**
@@ -304,7 +312,7 @@ public class DomEngine {
         checkGameFinishTime=0;
         findWinnerTime=0;
         boardResetTime=0;
-
+        totalVPTokens=0;
         for (int i=0;i<NUMBER_OF_GAMES;i++) {
             if (!keepOrder) {
               Collections.shuffle(players);
@@ -320,6 +328,7 @@ public class DomEngine {
             checkGameFinishTime+=currentGame.checkGameFinishTime;
             emptyPilesEndingCount+=currentGame.emptyPilesEnding ? 1 : 0;
             long theTime = System.currentTimeMillis();
+//			totalVPTokens+=players.get(0).getVictoryTokens();
             currentGame.determineWinners();
             findWinnerTime += System.currentTimeMillis()-theTime;
             theBoard=currentGame.getBoard();

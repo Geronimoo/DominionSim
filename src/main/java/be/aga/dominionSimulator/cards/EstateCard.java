@@ -60,7 +60,7 @@ public class EstateCard extends DomCard {
     @Override
     public int getPlayPriority() {
         if (owner.isEstateTokenPlaced())
-            return owner.getEstateTokenOn().getName().getPlayPriority();
+            return owner.getEstateTokenOn().getPlayPriority();
         return 0;
     }
 }

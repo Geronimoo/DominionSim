@@ -37,10 +37,11 @@ public class DonateCard extends DomCard {
         while (!owner.getCardsInHand().isEmpty()) {
             DomCard theCardToTrash = owner.getCardsInHand().get(0);
             if (theCardToTrash.getTrashPriority() > DomCardName.Copper.getTrashPriority()
-                    || owner.getTotalMoneyInDeck() - theCardToTrash.getPotentialCoinValue() < 4) {
+                    || owner.getTotalMoneyInDeck() - theCardToTrash.getPotentialCoinValue() < 6) {
                 break;
             }
             owner.trash(owner.removeCardFromHand(theCardToTrash));
+            Collections.sort(owner.getCardsInHand(), SORT_FOR_TRASHING);
         }
     }
 

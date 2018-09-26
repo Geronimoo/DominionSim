@@ -30,7 +30,7 @@ public class Secret_CaveCard extends DomCard {
 
     private void handleHuman() {
         durationFailed = true;
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         if (!owner.getEngine().getGameFrame().askPlayer("<html>Discard 3 cards ?</html>", "Resolving " + this.getName().toString()))
            return;
         ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();

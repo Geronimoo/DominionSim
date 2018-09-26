@@ -13,7 +13,7 @@ public class PoacherCard extends DomCard {
       owner.addAvailableCoins(1);
       owner.drawCards(1);
       if (owner.isHumanOrPossessedByHuman())
-          owner.setNeedsToUpdate();
+          owner.setNeedsToUpdateGUI();
       owner.doForcedDiscard(owner.getCurrentGame().countEmptyPiles(),false);
     }
 }

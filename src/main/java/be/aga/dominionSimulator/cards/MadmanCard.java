@@ -41,7 +41,9 @@ public class MadmanCard extends DomCard {
             else
                 return false;
         }
-        return owner.getDeck().getDeckAndDiscardSize() > 3 && owner.getCardsInHand().size() > 3;
+        //quick trial with Dominate
+//        return owner.getTotalMoneyInDeck()>13 && owner.getTotalPotentialCurrency().getCoins()<14 && owner.getDeck().getDeckAndDiscardSize() > 3;
+        return owner.getDeck().getDeckAndDiscardSize() > 3;
     }
 
     @Override

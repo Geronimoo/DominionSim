@@ -53,7 +53,7 @@ public class TournamentCard extends DomCard {
         for (DomPlayer thePlayer : owner.getOpponents()){
             if (!thePlayer.getCardsFromHand(DomCardName.Province).isEmpty()){
                 if (thePlayer.isHuman()) {
-                    thePlayer.setNeedsToUpdate();
+                    thePlayer.setNeedsToUpdateGUI();
                     if (owner.getEngine().getGameFrame().askPlayer("<html>Reveal " + DomCardName.Province.toHTML() +"?</html>", "Resolving " + this.getName().toString())){
                         if (DomEngine.haveToLog) DomEngine.addToLog( thePlayer + " reveals a "+DomCardName.Province.toHTML()+" so "+ owner +" will not get $1 or draw a card" );
                         return;

@@ -21,8 +21,17 @@ public class PrinceCard extends DomCard {
         if (owner==null)
             return;
         Collections.sort(owner.getCardsInHand(),SORT_FOR_TRASHING);
-        List<DomCard> princeableCards = getPrinceableCards();
-        if (!princeableCards.isEmpty()) {
+        ArrayList<DomCard> princeableCards = (ArrayList<DomCard>) getPrinceableCards();
+        if (princeableCards.isEmpty())
+            return;
+        if (owner.isHumanOrPossessedByHuman()) {
+            DomCard theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCardWithDomCard("Prince a card", princeableCards, "Mandatory!");
+            if (owner.getCardsFromPlay(getName()).contains(this))
+                owner.removeCardFromPlay(this);
+            if (DomEngine.haveToLog)
+                DomEngine.addToLog(owner + " sets aside " + theChosenCard + " with " + this);
+            owner.setAsideForPrince(owner.removeCardFromHand(theChosenCard));
+        } else {
             if (owner.getCardsFromPlay(getName()).contains(this))
                 owner.removeCardFromPlay(this);
             DomCard theCard = princeableCards.get(0);

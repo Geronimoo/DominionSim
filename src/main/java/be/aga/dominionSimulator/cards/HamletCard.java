@@ -65,7 +65,7 @@ public class HamletCard extends DomCard {
     }
 
 	private void handleHuman() {
-		owner.setNeedsToUpdate();
+		owner.setNeedsToUpdateGUI();
 		ArrayList<String> theOptions = new ArrayList<String>();
 		theOptions.add("Discard for +1 Action");
 		theOptions.add("Discard for +1 Buy");

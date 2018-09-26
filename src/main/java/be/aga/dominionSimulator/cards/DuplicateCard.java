@@ -23,7 +23,7 @@ public class DuplicateCard extends DomCard {
     public boolean wantsToGain(DomCard aCard) {
         if (owner.isHumanOrPossessedByHuman() &&
             new DomCost(6, 0).customCompare(aCard.getCost(owner.getCurrentGame()))>=0) {
-            owner.setNeedsToUpdate();
+            owner.setNeedsToUpdateGUI();
             return owner.getEngine().getGameFrame().askPlayer("<html>Duplicate " + aCard.getName().toHTML() +" ?</html>", "Resolving " + this.getName().toString());
         } else {
             if (owner.getCurrentGame().countInSupply(aCard.getName()) == 0)

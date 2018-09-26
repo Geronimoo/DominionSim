@@ -63,7 +63,7 @@ public class TeacherCard extends DomCard {
         ArrayList<String> theOptions = new ArrayList<String>();
         theOptions.add("+Action token");
         theOptions.add("+Card token");
-        theOptions.add("+Coin token");
+        theOptions.add("+$1 token");
         theOptions.add("+Buy token");
         int theChoice = owner.getEngine().getGameFrame().askToSelectOption("Place a token", theOptions, "Mandatory!");
         ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();

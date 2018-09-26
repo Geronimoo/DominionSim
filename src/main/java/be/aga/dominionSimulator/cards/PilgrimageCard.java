@@ -45,7 +45,7 @@ public class PilgrimageCard extends DomCard {
           owner.getEngine().getGameFrame().askToSelectCards("Gain up to 3", owner.getUniqueCardsInPlay(), theChosenCards, 0);
         } while (theChosenCards.size()>3);
         for (DomCard theCard:theChosenCards) {
-          owner.gain(theCard);
+          owner.gain(theCard.getName());
         }
     }
 }

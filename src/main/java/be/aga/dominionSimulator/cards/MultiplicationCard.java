@@ -50,7 +50,7 @@ public class MultiplicationCard extends DomCard {
     }
 
     protected DomCard handleHumanPlayer() {
-	    owner.setNeedsToUpdate();
+	    owner.setNeedsToUpdateGUI();
         DomCard theCardToMultiply = null;
         if (!owner.getCardsFromHand(DomCardType.Action).isEmpty()) {
             ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();

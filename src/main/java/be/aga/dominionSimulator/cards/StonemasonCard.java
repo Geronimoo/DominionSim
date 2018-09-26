@@ -123,7 +123,7 @@ public class StonemasonCard extends DomCard {
         owner.availablePotions-=theChosenCard.getPotionCost();
         if (DomEngine.haveToLog)
             DomEngine.addToLog(owner + " overpays " + theChosenCard.getCost(owner.getCurrentGame()));
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         theChooseFrom = new ArrayList<DomCardName>();
         for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
             if (theChosenCard.getCost(owner.getCurrentGame()).customCompare(theCard.getCost(owner.getCurrentGame()))==0 && owner.getCurrentGame().countInSupply(theCard)>0 && theCard.hasCardType(DomCardType.Action))

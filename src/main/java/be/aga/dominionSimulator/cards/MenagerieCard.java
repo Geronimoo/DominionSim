@@ -5,6 +5,8 @@ import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
+import java.util.ArrayList;
+
 public class MenagerieCard extends DomCard {
     public MenagerieCard () {
       super( DomCardName.Menagerie);
@@ -27,7 +29,9 @@ public class MenagerieCard extends DomCard {
 		if (owner.getActionsLeft()>1)
 		  return 1000;
 		//if we have multiples, but only 1 action left, we're going to wait until the other card gets played
-	    for (DomCard theCard : owner.getCardsInHand()) {
+		ArrayList<DomCard> theCards = new ArrayList<DomCard>();
+		theCards.addAll(owner.getCardsInHand());
+	    for (DomCard theCard : theCards) {
 		   if (theCard==this || theCard.getName()==DomCardName.Menagerie)
 			  continue;
 		   if (theCard.hasCardType(DomCardType.Action)&&!theCard.hasCardType(DomCardType.Terminal)&&theCard.getName()!=DomCardName.Shanty_Town&&theCard.wantsToBePlayed())

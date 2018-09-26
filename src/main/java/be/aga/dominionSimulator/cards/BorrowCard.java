@@ -10,8 +10,11 @@ public class BorrowCard extends DomCard {
     }
 
     public void play() {
+        if (owner.isBorrowActivated())
+            return;
         owner.addAvailableBuys(1);
         owner.addAvailableCoins(1);
         owner.setMinusOneCardToken();
+        owner.setBorrowActivated();
     }
 }

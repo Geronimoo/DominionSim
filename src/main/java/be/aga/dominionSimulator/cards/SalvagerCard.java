@@ -32,7 +32,7 @@ public class SalvagerCard extends DomCard {
     }
 
     private void handleHuman() {
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
         for (DomCard theCard : owner.getCardsInHand()) {
             theChooseFrom.add(theCard.getName());
@@ -43,6 +43,8 @@ public class SalvagerCard extends DomCard {
     }
 
     private DomCard findCardToTrash() {
+        if (!owner.getCardsFromHand(DomCardName.Rats).isEmpty())
+            return owner.getCardsFromHand(DomCardName.Rats).get(0);
     	ArrayList<DomCard> theCardsToConsiderTrashing=new ArrayList<DomCard>();
     	ArrayList<DomCardName> theCardsToGain=new ArrayList<DomCardName>();
     	DomCardName theDesiredCardIfSalvagerNotUsed = owner.getDesiredCard(owner.getTotalPotentialCurrency(),false);

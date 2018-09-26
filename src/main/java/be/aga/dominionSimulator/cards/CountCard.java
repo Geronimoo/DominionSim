@@ -114,7 +114,7 @@ public class CountCard extends DomCard {
         if (theChoice == 2) {
             owner.gain(DomCardName.Copper);
         }
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         theOptions = new ArrayList<String>();
         theOptions.add("+$3");
         theOptions.add("Trash hand");

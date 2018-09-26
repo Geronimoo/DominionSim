@@ -1,6 +1,7 @@
 package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
+import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
@@ -25,7 +26,7 @@ public class CryptCard extends DomCard {
       myArchivedCards.addAll(theCardsToCrypt);
       for (DomCard theCard : theCardsToCrypt)
           owner.removeCardFromPlay(theCard);
-      owner.setNeedsToUpdate();
+      owner.setNeedsToUpdateGUI();
     }
 
     private void handleHuman() {
@@ -58,7 +59,7 @@ public class CryptCard extends DomCard {
         } else {
             Collections.sort(myArchivedCards,SORT_FOR_DISCARDING);
             for (DomCard theCard : myArchivedCards) {
-                if (owner.addingThisIncreasesBuyingPower(theCard.getCost(owner.getCurrentGame()))){
+                if (owner.addingThisIncreasesBuyingPower(new DomCost(theCard.getCoinValue(), theCard.getPotionValue()))){
                     owner.addCardToHand(myArchivedCards.remove(myArchivedCards.indexOf(theCard)));
                     return;
                 }
@@ -69,7 +70,7 @@ public class CryptCard extends DomCard {
 
     public void resolveDuration() {
       if (owner.isHumanOrPossessedByHuman())
-          owner.setNeedsToUpdate();
+          owner.setNeedsToUpdateGUI();
       if (myArchivedCards.isEmpty())
           return;
       addCardToHandFromArchive();

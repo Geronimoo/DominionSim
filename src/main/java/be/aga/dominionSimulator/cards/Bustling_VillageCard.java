@@ -21,7 +21,7 @@ public class Bustling_VillageCard extends DomCard {
     }
 
     private void handleHuman() {
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         for (DomCard theCard:owner.getCardsFromDiscard()){
             if (theCard.getName()==DomCardName.Settlers) {
                 if (owner.getEngine().getGameFrame().askPlayer("<html>Take " + DomCardName.Settlers.toHTML() +"?</html>", "Resolving " + this.getName().toString())) {

@@ -15,7 +15,7 @@ public class SentryCard extends DomCard {
     public void play() {
         owner.addActions(1);
         owner.drawCards(1);
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         ArrayList<DomCard> theTopCards = owner.revealTopCards(2);
         Collections.sort(theTopCards, SORT_FOR_DISCARDING);
         if (theTopCards.isEmpty())

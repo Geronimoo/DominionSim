@@ -47,7 +47,7 @@ public class ApothecaryCard extends DomCard {
 	private void handleHuman(ArrayList<DomCard> theRevealedCards) {
     	if (theRevealedCards.isEmpty())
     		return;
-    	owner.setNeedsToUpdate();
+    	owner.setNeedsToUpdateGUI();
 		ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
 		owner.getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u> (first card = top card)</html>" , theRevealedCards, theChosenCards, 0);
 		if (theChosenCards.size()<theRevealedCards.size()) {

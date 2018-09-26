@@ -28,7 +28,7 @@ public class Zombie_MasonCard extends DomCard {
     }
 
     private void handleHuman(DomCard theTopCard) {
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
         for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
             if (theTopCard.getCost(owner.getCurrentGame()).add(new DomCost(1, 0)).customCompare(theCard.getCost(owner.getCurrentGame())) >= 0 && owner.getCurrentGame().countInSupply(theCard) > 0)
