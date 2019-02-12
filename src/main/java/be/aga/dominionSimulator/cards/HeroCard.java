@@ -30,4 +30,12 @@ public class HeroCard extends TravellerCard{
           owner.gain(theDesiredCard);
       }
     }
+
+    @Override
+    public boolean hasCardType(DomCardType aType) {
+        if (aType==DomCardType.Treasure && owner != null && owner.hasBuiltProject(DomCardName.Capitalism))
+            return true;
+        return super.hasCardType(aType);
+    }
+
 }

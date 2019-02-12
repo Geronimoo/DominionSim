@@ -2,6 +2,7 @@ package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.enums.DomCardName;
+import be.aga.dominionSimulator.enums.DomCardType;
 
 import java.util.ArrayList;
 
@@ -36,6 +37,12 @@ public class NoblesCard extends DomCard {
         } else {
             owner.drawCards(3);
         }
+    }
 
+    @Override
+    public int getPlayPriority() {
+        if (owner.getCardsFromHand(DomCardType.Action).size()-owner.getCardsFromHand(DomCardName.Nobles).size()>owner.getCardsFromHand(DomCardType.Terminal).size())
+            return 35;
+        return super.getPlayPriority();
     }
 }

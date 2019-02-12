@@ -14,6 +14,7 @@ public class MenagerieCard extends DomCard {
 
     public void play() {
       owner.addActions(1);
+      owner.revealHand();
       if (DomPlayer.getMultiplesInHand(this).isEmpty())
         owner.drawCards(3);
       else

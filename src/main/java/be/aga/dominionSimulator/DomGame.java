@@ -1,9 +1,11 @@
 package be.aga.dominionSimulator;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.Observable;
 
 import be.aga.dominionSimulator.cards.*;
+import be.aga.dominionSimulator.enums.DomArtifact;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
@@ -33,7 +35,8 @@ public class DomGame extends Observable{
   private boolean auctionTriggered;
   private DomPlayer previousTurnTakenBy;
   private DomCardName obeliskChoice;
-    private ArrayList<DomCard> faceDownCardsInTrash = new ArrayList<DomCard>();
+  private ArrayList<DomCard> faceDownCardsInTrash = new ArrayList<DomCard>();
+  private EnumMap<DomArtifact,DomPlayer> artifactsAndOwners = new EnumMap(DomArtifact.class);
 
 
     /**
@@ -65,6 +68,7 @@ private void initialize() {
     isNoProvinceGainedYet=true;
     auctionTriggered=false;
     setObeliskChoice();
+    artifactsAndOwners = new EnumMap<DomArtifact, DomPlayer>(DomArtifact.class);
 }
 
     private void setObeliskChoice() {
@@ -103,11 +107,11 @@ public void runSimulation() {
     long theTime = System.currentTimeMillis();
     do {
         DomEngine.logPlayerIndentation = 0;
-        for (int i=0;i<players.size()&&!isGameFinished();i++) {
+        for (int i=0;i<players.size()&&(!isGameFinished()||fleetTurnsLeft());i++) {
           activePlayer = players.get(i);
           theTime = System.currentTimeMillis();
           //first take all possessed turns
-      	  while (!activePlayer.getPossessionTurns().isEmpty() && !isGameFinished()) {
+      	  while (!activePlayer.getPossessionTurns().isEmpty() && (!isGameFinished()||fleetTurnsLeft())) {
      	    activePlayer.setPossessor(activePlayer.removePossessorTurn());
             activePlayer.takeTurn();
       	  }
@@ -115,23 +119,36 @@ public void runSimulation() {
       	  //take normal turn
       	  if (!isGameFinished()) {
             activePlayer.takeTurn();
+          } else {
+      	      if (activePlayer.hasFleetTurnLeft())
+      	          activePlayer.takeTurn();
           }
       	  //take Outpost turn
-          if (activePlayer.hasExtraOutpostTurn() && !isGameFinished()){
+          if (activePlayer.hasExtraOutpostTurn() && (!isGameFinished()||fleetTurnsLeft())){
         	activePlayer.takeTurn();
           }
-          if (activePlayer.hasExtraMissionTurn() && !isGameFinished() ) {
+          if (activePlayer.hasExtraMissionTurn() && (!isGameFinished()||fleetTurnsLeft()) ) {
             activePlayer.takeTurn();
           }
           playerTurnTime += System.currentTimeMillis()-theTime;
           DomEngine.logPlayerIndentation++;
           previousTurnTakenBy = activePlayer;
         }
-    } while (!isGameFinished() );
+    } while (!isGameFinished()||fleetTurnsLeft() );
     DomEngine.logPlayerIndentation = 0;
 }
 
-public void determineWinners() {
+    private boolean fleetTurnsLeft() {
+        if (getBoard().get(DomCardName.Fleet)==null)
+          return false;
+        for (DomPlayer thePlayer:players) {
+            if (thePlayer.hasFleetTurnLeft())
+                return true;
+        }
+        return false;
+    }
+
+    public void determineWinners() {
     int theMaxPoints = -1000;
     int theMinTurns = 10000;
     int winners = 0;
@@ -363,7 +380,7 @@ public int getPrincessesInPlay() {
     return activePlayer!=null?activePlayer.getCardsFromPlay(DomCardName.Princess).size():0;
 }
 
-public int getQuarriesPlayed() {
+public int getQuarriesInPlay() {
     return activePlayer!=null?activePlayer.getCardsFromPlay(DomCardName.Quarry).size():0;
 }
 
@@ -457,12 +474,6 @@ public int getBridge_TrollsInPlay() { return activePlayer!=null?activePlayer.get
             activePlayer=activePlayer.getOpponents().get(0);
             DomEngine.logPlayerIndentation++;
         }
-//        activePlayer.gainInHand(takeFromSupply(DomCardName.Bazaar));
-//        activePlayer.gainInHand(takeFromSupply(DomCardName.Bazaar));
-//        activePlayer.gainInHand(takeFromSupply(DomCardName.Possession));
-//        activePlayer.gainInHand(takeFromSupply(DomCardName.Possession));
-//        activePlayer.gainInHand(takeFromSupply(DomCardName.Possession));
-
         initHumanOrPossessedPlayer();
         setChanged();
         notifyObservers();
@@ -481,7 +492,7 @@ public int getBridge_TrollsInPlay() { return activePlayer!=null?activePlayer.get
     }
 
     public void continueHumanGame() {
-        if (!isGameFinished()) {
+        if (!isGameFinished()||fleetTurnsLeft()) {
             setChanged();
             notifyObservers();
             if (activePlayer.isHuman() && !activePlayer.hasExtraOutpostTurn() && !activePlayer.hasExtraMissionTurn() ) {
@@ -489,20 +500,25 @@ public int getBridge_TrollsInPlay() { return activePlayer!=null?activePlayer.get
                 DomEngine.logPlayerIndentation++;
             }
             activePlayer.setPossessor(activePlayer.removePossessorTurn());
-            while (!isGameFinished() && (!activePlayer.isHumanOrPossessedByHuman() || (activePlayer.isHuman() && activePlayer.getPossessor()!=null))) {
+            while ((!isGameFinished() ||fleetTurnsLeft()) && (!activePlayer.isHumanOrPossessedByHuman() || (activePlayer.isHuman() && activePlayer.getPossessor()!=null))) {
                 if (activePlayer.equals(players.get(0))) {
                     DomEngine.logPlayerIndentation=0;
                 }
-                while (activePlayer.getPossessor()!=null && !isGameFinished()) {
+                while (activePlayer.getPossessor()!=null && (!isGameFinished()||fleetTurnsLeft())) {
                     activePlayer.takeTurn();
                     activePlayer.setPossessor(activePlayer.removePossessorTurn());
                 }
                 if (!activePlayer.isHuman()) {
-                    activePlayer.takeTurn();
-                    if (activePlayer.hasExtraOutpostTurn() && !isGameFinished() ){
+                    if (!isGameFinished()) {
+                        activePlayer.takeTurn();
+                    } else {
+                        if (activePlayer.hasFleetTurnLeft())
+                            activePlayer.takeTurn();
+                    }
+                    if (activePlayer.hasExtraOutpostTurn() && (!isGameFinished()||fleetTurnsLeft()) ){
                         activePlayer.takeTurn();
                     }
-                    if (activePlayer.hasExtraMissionTurn() && !isGameFinished() ) {
+                    if (activePlayer.hasExtraMissionTurn() && (!isGameFinished()||fleetTurnsLeft()) ) {
                         activePlayer.takeTurn();
                     }
                     getEngine().getGameFrame().hover("<html>Opponent gained: " + activePlayer.getGainedCardsText() + "</html>");
@@ -513,11 +529,18 @@ public int getBridge_TrollsInPlay() { return activePlayer!=null?activePlayer.get
                     DomEngine.logPlayerIndentation++;
                 }
             }
-            if (!isGameFinished()) {
+            if (!isGameFinished()||fleetTurnsLeft()) {
                 if (activePlayer.equals(players.get(0))) {
                     DomEngine.logPlayerIndentation = 0;
                 }
-                initHumanOrPossessedPlayer();
+                if (!isGameFinished()) {
+                    initHumanOrPossessedPlayer();
+                } else {
+                    if (activePlayer.hasFleetTurnLeft())
+                        initHumanOrPossessedPlayer();
+                    else
+                        continueHumanGame();
+                }
             } else {
                 myEngine.doEndOfHumanGameStuff();
             }
@@ -569,5 +592,18 @@ public int getBridge_TrollsInPlay() { return activePlayer!=null?activePlayer.get
 
     public void addFaceDownCard(DomCard theChosenCard) {
         faceDownCardsInTrash.add(theChosenCard);
+    }
+
+    public void giveArtifactTo(DomArtifact anArtifact, DomPlayer aPlayer) {
+        artifactsAndOwners.put(anArtifact,aPlayer);
+        if (DomEngine.haveToLog) DomEngine.addToLog( aPlayer + " takes Artifact:" + anArtifact);
+    }
+
+    public DomPlayer getArtifactOwner(DomArtifact anArtifact) {
+       return artifactsAndOwners.get(anArtifact);
+    }
+
+    public int getInventorsPlayed() {
+        return activePlayer!=null?activePlayer.getInventorsPlayed():0;
     }
 }

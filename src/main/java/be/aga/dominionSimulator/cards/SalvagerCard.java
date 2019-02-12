@@ -6,6 +6,7 @@ import java.util.Collections;
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.enums.DomCardName;
+import be.aga.dominionSimulator.enums.DomCardType;
 
 public class SalvagerCard extends DomCard {
 
@@ -45,6 +46,8 @@ public class SalvagerCard extends DomCard {
     private DomCard findCardToTrash() {
         if (!owner.getCardsFromHand(DomCardName.Rats).isEmpty())
             return owner.getCardsFromHand(DomCardName.Rats).get(0);
+        if (!owner.getCardsFromHand(DomCardName.Fortress).isEmpty())
+            return owner.getCardsFromHand(DomCardName.Fortress).get(0);
     	ArrayList<DomCard> theCardsToConsiderTrashing=new ArrayList<DomCard>();
     	ArrayList<DomCardName> theCardsToGain=new ArrayList<DomCardName>();
     	DomCardName theDesiredCardIfSalvagerNotUsed = owner.getDesiredCard(owner.getTotalPotentialCurrency(),false);
@@ -107,4 +110,12 @@ public class SalvagerCard extends DomCard {
 //        return true;
         return findCardToTrash()!=null;
     }
+
+    @Override
+    public boolean hasCardType(DomCardType aType) {
+        if (aType==DomCardType.Treasure && owner != null && owner.hasBuiltProject(DomCardName.Capitalism))
+            return true;
+        return super.hasCardType(aType);
+    }
+
 }

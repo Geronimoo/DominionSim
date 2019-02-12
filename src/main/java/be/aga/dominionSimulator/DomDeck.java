@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 
+import be.aga.dominionSimulator.cards.Cargo_ShipCard;
 import be.aga.dominionSimulator.cards.DuplicateCard;
 import be.aga.dominionSimulator.enums.DomPhase;
 import org.apache.log4j.ConsoleAppender;
@@ -55,9 +56,41 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
       if (DomEngine.haveToLog) DomEngine.addToLog( owner + " shuffles deck" );
 	  if (count(DomCardName.Stash)>0)
         handleStash();
+      if (owner.hasBuiltProject(DomCardName.Star_Chart)) {
+          handleStarChart();
+      }
+
     }
 
-	private void handleStash() {
+    private void handleStarChart() {
+        if (owner.isHumanOrPossessedByHuman()) {
+            ArrayList<DomCardName> theCards = new ArrayList<>();
+            for (DomCard theCard : drawDeck) {
+                if (!theCards.contains(theCard.getName()))
+                    theCards.add(theCard.getName());
+            }
+            DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Put on top?", theCards, "Don't put on top");
+            if (theChosenCard != null) {
+                for (DomCard theCard : drawDeck) {
+                    if (theCard.getName() == theChosenCard) {
+                        if (DomEngine.haveToLog) DomEngine.addToLog(owner + " puts " + theCard + " on top");
+                        drawDeck.add(0, drawDeck.remove(drawDeck.indexOf(theCard)));
+                        break;
+                    }
+                }
+            }
+        } else {
+            DomCard theBestCard = drawDeck.get(0);
+            for (DomCard theCard:drawDeck) {
+                if (theCard.getDiscardPriority(10)>theBestCard.getDiscardPriority(10))
+                    theBestCard=theCard;
+            }
+            if (DomEngine.haveToLog) DomEngine.addToLog(owner + " puts " + theBestCard+ " on top");
+            drawDeck.add(0,drawDeck.remove(drawDeck.indexOf(theBestCard)));
+        }
+    }
+
+    private void handleStash() {
 	  ArrayList<DomCard> theStashes= new ArrayList<DomCard>();
 	  for (DomCard card : drawDeck){
 		if (card.getName()==DomCardName.Stash){
@@ -210,49 +243,60 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 && owner.getCurrentGame().countInSupply(DomCardName.Changeling)>0
                 && aCard.getCost(owner.getCurrentGame()).customCompare(new DomCost(3,0))>=0
                 && owner.getEngine().getGameFrame()!=null
-                &&  owner.getEngine().getGameFrame().askPlayer("<html>Gain " + DomCardName.Changeling.toHTML() +" instead of " + aCard.getName().toHTML() + "?</html>", "Replace with Changeling?".toString())) {
+                && owner.getEngine().getGameFrame().askPlayer("<html>Gain " + DomCardName.Changeling.toHTML() +" instead of " + aCard.getName().toHTML() + "?</html>", "Replace with Changeling?".toString())) {
             owner.returnToSupply(aCard);
             owner.gain(DomCardName.Changeling);
             return;
         }
-        if (aLocation==HAND && aCard.getName()!=DomCardName.Villa && aCard.getName()!=DomCardName.Ghost_Town && aCard.getName()!=DomCardName.Guardian && aCard.getName()!=DomCardName.Night_Watchman){
-	      owner.getCardsInHand().add( aCard );
-	      if (DomEngine.haveToLog) DomEngine.addToLog( owner + " gains a " + aCard + " in hand" );
-		}
-		if (aLocation==TOP_OF_DECK && aCard.getName()!=DomCardName.Villa && aCard.getName()!=DomCardName.Ghost_Town && aCard.getName()!=DomCardName.Guardian && aCard.getName()!=DomCardName.Night_Watchman){
-		  owner.putOnTopOfDeck(aCard);      	
-		}
-		if (aLocation==DISCARD && aCard.getName()!=DomCardName.Villa && aCard.getName()!=DomCardName.Ghost_Town && aCard.getName()!=DomCardName.Guardian && aCard.getName()!=DomCardName.Night_Watchman) {
-            if (aCard.getName() == DomCardName.Nomad_Camp) {
-                owner.putOnTopOfDeck(aCard);
-            } else {
-                if (!owner.getCardsFromPlay(DomCardName.Royal_Seal).isEmpty() || !owner.getCardsFromPlay(DomCardName.Tracker).isEmpty()) {
-                    if (owner.isHumanOrPossessedByHuman()) {
-                        if (owner.getEngine().getGameFrame().askPlayer("<html>On Top of Deck: " + aCard.getName().toHTML() + "</html>", "Resolving Royal Seal"))
-                            owner.putOnTopOfDeck(aCard);
-                        else
-                            discardPile.add(0, aCard);
+        if (aCard.hasCardType(DomCardType.Action)
+                && owner.hasBuiltProject(DomCardName.Innovation)
+                && !owner.hasTriggeredInnovation()
+                && (!owner.isHumanOrPossessedByHuman() || owner.getEngine().getGameFrame().askPlayer("<html>Set " + aCard.getName().toHTML() +" aside for Innovation?</html>", "Resolving " + DomCardName.Innovation.toString()))){
+            if (DomEngine.haveToLog) DomEngine.addToLog(owner + " sets " + aCard + " aside to play with Innovation");
+            owner.play(aCard);
+            owner.setInnovationTriggered(true);
+        } else {
+            if (!fillsCargoShip(aCard, aLocation)) {
+                if (aLocation == HAND && aCard.getName() != DomCardName.Villa && aCard.getName() != DomCardName.Ghost_Town && aCard.getName() != DomCardName.Guardian && aCard.getName() != DomCardName.Night_Watchman) {
+                    owner.getCardsInHand().add(aCard);
+                    if (DomEngine.haveToLog) DomEngine.addToLog(owner + " gains a " + aCard + " in hand");
+                }
+                if (aLocation == TOP_OF_DECK && aCard.getName() != DomCardName.Villa && aCard.getName() != DomCardName.Ghost_Town && aCard.getName() != DomCardName.Guardian && aCard.getName() != DomCardName.Night_Watchman) {
+                    owner.putOnTopOfDeck(aCard);
+                }
+                if (aLocation == DISCARD && aCard.getName() != DomCardName.Villa && aCard.getName() != DomCardName.Ghost_Town && aCard.getName() != DomCardName.Guardian && aCard.getName() != DomCardName.Night_Watchman) {
+                    if (aCard.getName() == DomCardName.Nomad_Camp) {
+                        owner.putOnTopOfDeck(aCard);
                     } else {
-                        if (aCard.getDiscardPriority(1) >= 16)
-                            owner.putOnTopOfDeck(aCard);
-                        else
-                            discardPile.add(0, aCard);
-                    }
-                } else {
-                    if (owner.isTravellingFairActive()) {
-                        if (owner.isHumanOrPossessedByHuman()) {
-                            if (owner.getEngine().getGameFrame().askPlayer("<html>On Top of Deck: " + aCard.getName().toHTML() + "</html>", "Resolving Travelling Fair"))
-                                owner.putOnTopOfDeck(aCard);
-                            else
-                                discardPile.add(0, aCard);
+                        if (!owner.getCardsFromPlay(DomCardName.Royal_Seal).isEmpty() || !owner.getCardsFromPlay(DomCardName.Tracker).isEmpty()) {
+                            if (owner.isHumanOrPossessedByHuman()) {
+                                if (owner.getEngine().getGameFrame().askPlayer("<html>On Top of Deck: " + aCard.getName().toHTML() + "</html>", "Resolving Royal Seal"))
+                                    owner.putOnTopOfDeck(aCard);
+                                else
+                                    discardPile.add(0, aCard);
+                            } else {
+                                if (aCard.getDiscardPriority(1) >= 16)
+                                    owner.putOnTopOfDeck(aCard);
+                                else
+                                    discardPile.add(0, aCard);
+                            }
                         } else {
-                            if (aCard.getDiscardPriority(1) > DomCardName.Copper.getDiscardPriority(1) || (aCard.getName() == DomCardName.Copper && owner.getDrawDeckSize() < 8))
-                                owner.putOnTopOfDeck(aCard);
-                            else
+                            if (owner.isTravellingFairActive()) {
+                                if (owner.isHumanOrPossessedByHuman()) {
+                                    if (owner.getEngine().getGameFrame().askPlayer("<html>On Top of Deck: " + aCard.getName().toHTML() + "</html>", "Resolving Travelling Fair"))
+                                        owner.putOnTopOfDeck(aCard);
+                                    else
+                                        discardPile.add(0, aCard);
+                                } else {
+                                    if (aCard.getDiscardPriority(1) > DomCardName.Copper.getDiscardPriority(1) || (aCard.getName() == DomCardName.Copper && owner.getDrawDeckSize() < 8))
+                                        owner.putOnTopOfDeck(aCard);
+                                    else
+                                        discardPile.add(0, aCard);
+                                }
+                            } else {
                                 discardPile.add(0, aCard);
+                            }
                         }
-                    } else {
-                        discardPile.add(0, aCard);
                     }
                 }
             }
@@ -278,11 +322,24 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
                     owner.addVP(theVP);
                 }
             }
-        }
-        if (aCard.hasCardType(DomCardType.Action) && owner.getCurrentGame().getBoard().isLandmarkActive(DomCardName.Defiled_Shrine)) {
-                owner.getCurrentGame().getBoard().moveVPFromTo(aCard.getName(),DomCardName.Defiled_Shrine);
-        }
+            for (DomPlayer theOpp : owner.getOpponents()) {
+                if (theOpp.hasBuiltProject(DomCardName.Road_Network)) {
+                    if (DomEngine.haveToLog) DomEngine.addToLog(theOpp + " has built " + DomCardName.Road_Network.toHTML());
+                    theOpp.drawCards(1);
+                }
 
+            }
+        }
+        if (aCard.hasCardType(DomCardType.Action)) {
+          if (owner.getCurrentGame().getBoard().isLandmarkActive(DomCardName.Defiled_Shrine)) {
+              owner.getCurrentGame().getBoard().moveVPFromTo(aCard.getName(), DomCardName.Defiled_Shrine);
+          }
+          if (owner.hasBuiltProject(DomCardName.Academy)) {
+              owner.addVillagers(1);
+          }
+        }
+        if (aCard.hasCardType(DomCardType.Treasure) && owner.hasBuiltProject(DomCardName.Guildhall))
+            owner.addCoffers(1);
         if (aCard.getName()==DomCardName.Province && owner.getCurrentGame().checkForMountainPass()) {
            owner.getCurrentGame().triggerAuction();
         }
@@ -296,6 +353,32 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
             }
         }
         aCard.doWhenGained();
+    }
+
+    private boolean fillsCargoShip(DomCard aCard, int aLocation) {
+        if (owner.getCurrentGame().getActivePlayer()!=owner)
+            return false;
+        for (DomCard theCard: owner.getCardsInPlay()) {
+            if (theCard.getName()==DomCardName.Cargo_Ship && !theCard.discardAtCleanUp() && ((Cargo_ShipCard)theCard).getCargoCard()==null) {
+                if (owner.isHumanOrPossessedByHuman()) {
+                    if (owner.getEngine().getGameFrame().askPlayer("<html>Put " + aCard.getName().toHTML() +" on " + DomCardName.Cargo_Ship.toHTML() + "?</html>", "Resolving " + DomCardName.Cargo_Ship.toHTML())){
+                        ((Cargo_ShipCard) theCard).setCargoCard(aCard);
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    if (aLocation != HAND && aCard.getName() != DomCardName.Villa && aCard.getName() != DomCardName.Ghost_Town && aCard.getName() != DomCardName.Guardian && aCard.getName() != DomCardName.Night_Watchman
+                            && aCard.getDiscardPriority(1)>DomCardName.Copper.getDiscardPriority(1)) {
+                        ((Cargo_ShipCard) theCard).setCargoCard(aCard);
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public boolean addPhysicalCard( DomCard aCard ) {
@@ -338,6 +421,10 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
           if (theCard.hasCardType( aType ))
             break;
         }
+        for (DomCard theCard:theTopCards){
+            if (theCard.getName()==DomCardName.Patron)
+                theCard.react();
+        }
         return theTopCards;
     }
 
@@ -377,6 +464,10 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
             } else {
               DomEngine.addToLog( owner + " reveals " + theTopX );
             }
+        }
+        for (DomCard theCard:theTopX){
+            if (theCard.getName()==DomCardName.Patron)
+                theCard.react();
         }
         return theTopX;
     }
@@ -592,6 +683,10 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
           if (theCard.getCoinCost(owner.getCurrentGame())>=aCost)
             break;
         }
+        for (DomCard theCard:theTopCards){
+            if (theCard.getName()==DomCardName.Patron)
+                theCard.react();
+        }
         return theTopCards;
 	}
 
@@ -650,6 +745,10 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
           if (theCard.hasCardType( DomCardType.Victory) || theCard.hasCardType(DomCardType.Curse))
             break;
         }
+        for (DomCard theCard:theTopCards){
+            if (theCard.getName()==DomCardName.Patron)
+                theCard.react();
+        }
         return theTopCards;
 	}
 
@@ -662,6 +761,10 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
           if (DomEngine.haveToLog) DomEngine.addToLog( owner + " reveals " + theCard );
           if (theCard.hasCardType( DomCardType.Action) || theCard.hasCardType(DomCardType.Treasure))
             break;
+        }
+        for (DomCard theCard:theTopCards){
+            if (theCard.getName()==DomCardName.Patron)
+                theCard.react();
         }
         return theTopCards;
 	}
@@ -788,6 +891,10 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
             if (theCard.hasCardType( DomCardType.Victory) && theCard.getName()!=theNamedCard)
                 break;
         }
+        for (DomCard theCard:theTopCards){
+            if (theCard.getName()==DomCardName.Patron)
+                theCard.react();
+        }
         return theTopCards;
     }
 
@@ -809,6 +916,8 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
         DomCard theTopCard = getTopCard();
         while (theCount<3 && theTopCard!=null) {
             if (DomEngine.haveToLog) DomEngine.addToLog( owner + " reveals " +  theTopCard);
+            if (theTopCard.getName()==DomCardName.Patron)
+                theTopCard.react();
             if (theTopCard.getName()==card) {
                 theCardsToDiscard.add(theTopCard);
             } else {

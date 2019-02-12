@@ -1,7 +1,6 @@
 package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
-import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
 
@@ -11,7 +10,7 @@ public class Acting_TroupeCard extends DomCard {
     }
 
     public void play() {
-      owner.gainVillagers(4);
+      owner.addVillagers(4);
       if (!owner.getCurrentGame().getBoard().getTrashedCards().contains(this)) {
           owner.removeCardFromPlay(this);
           owner.trash(this);

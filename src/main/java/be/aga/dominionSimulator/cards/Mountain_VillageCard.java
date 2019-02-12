@@ -33,7 +33,9 @@ public class Mountain_VillageCard extends DomCard {
         ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
         for (DomCard theCard : theDiscard)
            theChooseFrom.add(theCard.getName());
-        DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Select card for " + this.getName().toString(), theChooseFrom, "Mandatory!");
+        DomCardName theChosenCard=theChooseFrom.get(0);
+        if (theDiscard.size()>1)
+          theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Select card for " + this.getName().toString(), theChooseFrom, "Mandatory!");
         for (DomCard theCard:theDiscard) {
             if (theCard.getName()==theChosenCard) {
                 owner.putInHand(owner.removeCardFromDiscard(theCard));

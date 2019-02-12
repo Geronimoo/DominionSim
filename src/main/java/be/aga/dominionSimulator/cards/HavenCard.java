@@ -80,4 +80,8 @@ public class HavenCard extends DomCard {
         myHavenedCards.clear();
     }
 
+    @Override
+    public boolean durationFailed() {
+        return myHavenedCards.isEmpty();
+    }
 }

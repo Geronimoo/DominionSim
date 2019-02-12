@@ -35,7 +35,7 @@ public class KingdomViewer {
 			  }
 			  int theCount = 0;
 			  for (DomCardName theCard : myBoard) {
-			  	 if (theCard.hasCardType(DomCardType.Event) || theCard.hasCardType(DomCardType.Landmark))
+			  	 if (theCard.hasCardType(DomCardType.Event) || theCard.hasCardType(DomCardType.Landmark) || theCard.hasCardType(DomCardType.Project))
 			  		continue;
 			  	 if (theCount++==5)
 			  	 	theStr.append("</tr><tr>");
@@ -43,7 +43,7 @@ public class KingdomViewer {
 			  }
 			theStr.append("</tr><tr>");
 			for (DomCardName theCard : myBoard) {
-				if (!theCard.hasCardType(DomCardType.Event) && !theCard.hasCardType(DomCardType.Landmark))
+				if (!theCard.hasCardType(DomCardType.Event) && !theCard.hasCardType(DomCardType.Landmark) && !theCard.hasCardType(DomCardType.Project))
 					continue;
 				theStr.append("<td><img src='"+theCard.getImageLink()+"' width="+theSize*1.6+"></td>");
 			}

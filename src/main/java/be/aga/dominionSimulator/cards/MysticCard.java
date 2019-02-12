@@ -3,6 +3,7 @@ package be.aga.dominionSimulator.cards;
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
+import be.aga.dominionSimulator.enums.DomCardType;
 import be.aga.dominionSimulator.enums.DomPlayStrategy;
 
 import java.util.ArrayList;
@@ -43,4 +44,12 @@ public class MysticCard extends DomCard {
             owner.putOnTopOfDeck(theRevealedCard);
         }
     }
+
+    @Override
+    public boolean hasCardType(DomCardType aType) {
+        if (aType==DomCardType.Treasure && owner != null && owner.hasBuiltProject(DomCardName.Capitalism))
+            return true;
+        return super.hasCardType(aType);
+    }
+
 }

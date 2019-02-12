@@ -129,5 +129,13 @@ public class MandarinCard extends DomCard {
 			owner.putOnTopOfDeck(theCard);
 		  }
 		}
-	}    
+	}
+
+	@Override
+	public boolean hasCardType(DomCardType aType) {
+		if (aType==DomCardType.Treasure && owner != null && owner.hasBuiltProject(DomCardName.Capitalism))
+			return true;
+		return super.hasCardType(aType);
+	}
+
 }

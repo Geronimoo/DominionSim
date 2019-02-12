@@ -73,4 +73,12 @@ public class SquireCard extends DomCard {
             return 40;
         return super.getPlayPriority();
     }
+
+    @Override
+    public boolean hasCardType(DomCardType aType) {
+        if (aType==DomCardType.Treasure && owner != null && owner.hasBuiltProject(DomCardName.Capitalism))
+            return true;
+        return super.hasCardType(aType);
+    }
+
 }

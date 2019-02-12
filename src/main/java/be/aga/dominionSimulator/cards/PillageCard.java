@@ -15,6 +15,7 @@ public class PillageCard extends DomCard {
     public void play() {
       for (DomPlayer thePlayer : owner.getOpponents()) {
           if (!thePlayer.checkDefense() && thePlayer.getCardsInHand().size() >= 5) {
+              thePlayer.revealHand();
               if (owner.isHumanOrPossessedByHuman()) {
                   ArrayList<DomCardName> theChooseFrom=new ArrayList<DomCardName>();
                   for (DomCard theCard : thePlayer.getCardsInHand()) {

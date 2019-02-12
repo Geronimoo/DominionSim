@@ -3,6 +3,7 @@ package be.aga.dominionSimulator.cards;
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
+import be.aga.dominionSimulator.enums.DomCardType;
 
 public class Chariot_RaceCard extends DomCard {
     public Chariot_RaceCard() {
@@ -32,4 +33,12 @@ public class Chariot_RaceCard extends DomCard {
         owner.putInHand(theRevealedCard);
         theLeftOpp.putOnTopOfDeck(theOppRevealedCard);
     }
+
+    @Override
+    public boolean hasCardType(DomCardType aType) {
+        if (aType==DomCardType.Treasure && owner != null && owner.hasBuiltProject(DomCardName.Capitalism))
+            return true;
+        return super.hasCardType(aType);
+    }
+
 }

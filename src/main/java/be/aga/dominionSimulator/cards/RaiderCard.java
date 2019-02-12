@@ -3,6 +3,7 @@ package be.aga.dominionSimulator.cards;
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
+import be.aga.dominionSimulator.enums.DomCardType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,8 +23,10 @@ public class RaiderCard extends DomCard {
                     if (!theOpp.getCardsFromHand(theCard.getName()).isEmpty())
                       theChooseFrom.add(theCard.getName());
                   }
-                  if (theChooseFrom.isEmpty())
+                  if (theChooseFrom.isEmpty()) {
+                      theOpp.revealHand();
                       continue;
+                  }
                   DomCardName theChosenCard = theOpp.getEngine().getGameFrame().askToSelectOneCard("Discard", theChooseFrom, "Mandatory!");
                   theOpp.discardFromHand(theOpp.getCardsFromHand(theChosenCard).get(0));
               } else{
@@ -34,6 +37,7 @@ public class RaiderCard extends DomCard {
                           return;
                       }
                   }
+                  theOpp.revealHand();
               }
             }
     }
@@ -41,4 +45,12 @@ public class RaiderCard extends DomCard {
     public void resolveDuration() {
       owner.addAvailableCoins(3);
     }
+
+    @Override
+    public boolean hasCardType(DomCardType aType) {
+        if (aType==DomCardType.Treasure && owner != null && owner.hasBuiltProject(DomCardName.Capitalism))
+            return true;
+        return super.hasCardType(aType);
+    }
+
 }

@@ -2,6 +2,7 @@ package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.enums.DomCardName;
+import be.aga.dominionSimulator.enums.DomCardType;
 
 public class PoacherCard extends DomCard {
     public PoacherCard() {
@@ -16,4 +17,13 @@ public class PoacherCard extends DomCard {
           owner.setNeedsToUpdateGUI();
       owner.doForcedDiscard(owner.getCurrentGame().countEmptyPiles(),false);
     }
+
+    @Override
+    public boolean hasCardType(DomCardType aType) {
+        if (aType==DomCardType.Treasure && owner != null && owner.hasBuiltProject(DomCardName.Capitalism))
+            return true;
+        return super.hasCardType(aType);
+    }
+
+
 }

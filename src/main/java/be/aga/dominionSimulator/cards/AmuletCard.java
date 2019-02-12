@@ -28,7 +28,10 @@ public class AmuletCard extends DomCard {
 
             if (!playForAgroTrash())
                 if (!playForMoney())
-                    gainSilver();
+                    if (owner.wants(DomCardName.Silver))
+                      gainSilver();
+                    else
+                      owner.addAvailableCoins(1);
             return;
         }
 
@@ -142,5 +145,12 @@ public class AmuletCard extends DomCard {
     @Override
     public void resolveDuration() {
         play();
+    }
+
+    @Override
+    public boolean hasCardType(DomCardType aType) {
+        if (aType==DomCardType.Treasure && owner != null && owner.hasBuiltProject(DomCardName.Capitalism))
+            return true;
+        return super.hasCardType(aType);
     }
 }

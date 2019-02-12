@@ -32,7 +32,7 @@ public class TempleCard extends DomCard {
                 continue;
 
             if (theCardToTrash.getTrashPriority()>DomCardName.Copper.getTrashPriority(owner)
-                    || owner.removingReducesBuyingPower( theCardToTrash ))
+                    || (owner.removingReducesBuyingPower( theCardToTrash ) ))
                 continue;
             theCardsTrashed.add(theCardToTrash.getName());
         }
@@ -65,7 +65,7 @@ public class TempleCard extends DomCard {
 
     @Override
     public boolean wantsToBePlayed() {
-        if (owner.getCardsInHand().isEmpty())
+        if (owner.getCardsInHand().size()==1)
             return true;
         Collections.sort( owner.getCardsInHand() , SORT_FOR_TRASHING);
         if (owner.getCardsInHand().get(0).getTrashPriority()<=DomCardName.Copper.getTrashPriority())

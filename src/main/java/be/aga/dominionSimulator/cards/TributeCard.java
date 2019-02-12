@@ -34,4 +34,12 @@ public class TributeCard extends DomCard {
       }
       theLeftPlayer.discard(theRevealedCards);
     }
+
+    @Override
+    public boolean hasCardType(DomCardType aType) {
+        if (aType==DomCardType.Treasure && owner != null && owner.hasBuiltProject(DomCardName.Capitalism))
+            return true;
+        return super.hasCardType(aType);
+    }
+
 }

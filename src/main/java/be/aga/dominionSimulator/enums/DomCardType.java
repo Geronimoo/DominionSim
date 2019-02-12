@@ -38,6 +38,7 @@ public enum DomCardType {
     Castle(true),
     Landmark(true),
     Split_Pile(false),
+    Split_Pile_Bottom(false),
     TrashForBenefit(false),
     Night(true),
     Fate(true),
@@ -46,7 +47,7 @@ public enum DomCardType {
     Spirit(true),
     Hex(true),
     State(true),
-    Doom(true);
+    Doom(true), Project(true);
 
     private final boolean isLegalCardType;
 

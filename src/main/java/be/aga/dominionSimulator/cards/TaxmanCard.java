@@ -35,7 +35,8 @@ public class TaxmanCard extends DomCard {
           for (DomPlayer theOpp : owner.getOpponents()) {
               if (theOpp.checkDefense() || theOpp.getCardsInHand().size()<5 || theOpp.getCardsFromHand(myCardToTrash.getName()).isEmpty())
                   continue;
-              theOpp.discardFromHand(myCardToTrash.getName());
+              if (!theOpp.discardFromHand(myCardToTrash.getName()))
+              	theOpp.revealHand();
           }
       }
     }
@@ -51,7 +52,8 @@ public class TaxmanCard extends DomCard {
   		    for (DomPlayer theOpp : owner.getOpponents()) {
   		      if (theOpp.checkDefense() || theOpp.getCardsInHand().size()<5 || theOpp.getCardsFromHand(theCardToMine.getName()).isEmpty())
 			 	continue;
-			  theOpp.discardFromHand(theCardToMine.getName());
+			  if (!theOpp.discardFromHand(theCardToMine.getName()))
+			  	theOpp.revealHand();
 		    }
 		    theChooseFrom = new ArrayList<DomCardName>();
 			for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {

@@ -414,4 +414,11 @@ public class DomCard implements Comparable< DomCard >{
     public boolean durationFailed() {
         return false;
     }
+
+    public void trigger() {
+    }
+
+    public boolean getDiscardAtCleanUp() {
+        return discardAtCleanUp;
+    }
 }

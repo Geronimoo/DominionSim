@@ -12,6 +12,5 @@ public class HoardCard extends DomCard {
     @Override
     public void play() {
       owner.addAvailableCoins(2);
-      owner.increaseHoardCount();
     }
 }

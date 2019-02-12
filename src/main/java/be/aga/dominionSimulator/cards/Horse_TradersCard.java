@@ -3,6 +3,7 @@ package be.aga.dominionSimulator.cards;
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
+import be.aga.dominionSimulator.enums.DomCardType;
 
 public class Horse_TradersCard extends DomCard {
     public Horse_TradersCard () {
@@ -22,4 +23,12 @@ public class Horse_TradersCard extends DomCard {
         owner.horseTradersPile.add(owner.removeCardFromHand(this));
         return false;
     }
+
+    @Override
+    public boolean hasCardType(DomCardType aType) {
+        if (aType==DomCardType.Treasure && owner != null && owner.hasBuiltProject(DomCardName.Capitalism))
+            return true;
+        return super.hasCardType(aType);
+    }
+
 }

@@ -225,9 +225,9 @@ private JPanel getBottomPanel() {
                 int col = myBoardTable.columnAtPoint(e.getPoint());
                 DomCardName theCardName = (DomCardName) myBoardTable.getModel().getValueAt(row, col);
                 ArrayList<DomCard> thePile = myEngine.getCurrentGame().getBoard().get(theCardName);
-                if (thePile.isEmpty() && !theCardName.hasCardType(DomCardType.Event))
+                if (thePile.isEmpty() && !theCardName.hasCardType(DomCardType.Event) && !theCardName.hasCardType(DomCardType.Project))
                     return;
-                if (!theCardName.hasCardType(DomCardType.Event))
+                if (!theCardName.hasCardType(DomCardType.Event)&&!theCardName.hasCardType(DomCardType.Project))
                   theCardName=thePile.get(0).getName();
                 tryToBuyOrGainFromSupply(theCardName);
             }
@@ -436,8 +436,7 @@ public void actionPerformed(ActionEvent e) {
         myEngine.getCurrentGame().getActivePlayer().humanEndsTurn();
     }
     if (e.getActionCommand().equals("End Buy")) {
-        myEngine.getCurrentGame().getActivePlayer().setPhase(DomPhase.Night);
-        myEngine.getCurrentGame().getActivePlayer().setNeedsToUpdateGUI();
+        myEngine.getCurrentGame().getActivePlayer().endBuyPhase();
     }
     if (e.getActionCommand().equals("Hint")) {
 	    if (myEngine.getCurrentGame().getActivePlayer().getPhase()==DomPhase.Action) {

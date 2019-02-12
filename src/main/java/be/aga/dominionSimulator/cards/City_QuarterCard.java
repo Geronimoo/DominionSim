@@ -11,6 +11,7 @@ public class City_QuarterCard extends DomCard {
 
     public void play() {
       owner.addActions(2);
+      owner.revealHand();
       int theNumberOfActions = owner.getCardsFromHand(DomCardType.Action).size();
       if (theNumberOfActions>0)
         owner.drawCards(theNumberOfActions);

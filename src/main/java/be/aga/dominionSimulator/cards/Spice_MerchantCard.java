@@ -97,4 +97,12 @@ public class Spice_MerchantCard extends DomCard {
     public boolean wantsToBePlayed() {
         return !owner.getCardsFromHand(DomCardType.Treasure).isEmpty();
     }
+
+	@Override
+	public boolean hasCardType(DomCardType aType) {
+		if (aType==DomCardType.Treasure && owner != null && owner.hasBuiltProject(DomCardName.Capitalism))
+			return true;
+		return super.hasCardType(aType);
+	}
+
 }

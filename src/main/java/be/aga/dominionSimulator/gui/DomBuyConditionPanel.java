@@ -120,7 +120,8 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
                 || aBuyCondition.getLeftFunction() == DomBotFunction.isEstateTokenPlaced
                 || aBuyCondition.getLeftFunction() == DomBotFunction.isTrashingTokenPlaced
                 || aBuyCondition.getLeftFunction() == DomBotFunction.isPlusOneCoinTokenSet
-                || aBuyCondition.getLeftFunction() == DomBotFunction.countVPon
+				|| aBuyCondition.getLeftFunction() == DomBotFunction.countVPon
+				|| aBuyCondition.getLeftFunction() == DomBotFunction.hasBuiltProject
                 ) {
         	myLeftCardBox.setVisible(true);
         	myLeftCardBox.setSelectedItem( aBuyCondition.getLeftCardName() );
@@ -155,7 +156,8 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
                 || aBuyCondition.getRightFunction() == DomBotFunction.isEstateTokenPlaced
                 || aBuyCondition.getRightFunction() == DomBotFunction.isTrashingTokenPlaced
                 || aBuyCondition.getRightFunction() == DomBotFunction.isPlusOneCoinTokenSet
-                || aBuyCondition.getRightFunction() == DomBotFunction.countVPon
+				|| aBuyCondition.getRightFunction() == DomBotFunction.countVPon
+				|| aBuyCondition.getRightFunction() == DomBotFunction.hasBuiltProject
                 ) {
         	myRightCardBox.setVisible(true);
         	myRightCardBox.setSelectedItem( aBuyCondition.getRightCardName() );
@@ -191,7 +193,8 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
                         || myLeftFunctionBox.getSelectedItem() == DomBotFunction.isEstateTokenPlaced
                         || myLeftFunctionBox.getSelectedItem() == DomBotFunction.isTrashingTokenPlaced
                         || myLeftFunctionBox.getSelectedItem() == DomBotFunction.isPlusOneCoinTokenSet
-                        || myLeftFunctionBox.getSelectedItem() == DomBotFunction.countVPon
+						|| myLeftFunctionBox.getSelectedItem() == DomBotFunction.countVPon
+						|| myLeftFunctionBox.getSelectedItem() == DomBotFunction.hasBuiltProject
                         ) {
     				myLeftCardBox.setVisible(true);
 				}
@@ -215,7 +218,8 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
                         || myRightFunctionBox.getSelectedItem() == DomBotFunction.isEstateTokenPlaced
                         || myRightFunctionBox.getSelectedItem() == DomBotFunction.isTrashingTokenPlaced
                         || myRightFunctionBox.getSelectedItem() == DomBotFunction.isPlusOneCoinTokenSet
-                        || myRightFunctionBox.getSelectedItem() == DomBotFunction.countVPon
+						|| myRightFunctionBox.getSelectedItem() == DomBotFunction.countVPon
+						|| myRightFunctionBox.getSelectedItem() == DomBotFunction.hasBuiltProject
                        ) {
     				myRightCardBox.setVisible(true);
 				}

@@ -29,6 +29,8 @@ public class VillainCard extends DomCard {
               }
               if (!theChoosFrom.isEmpty())
                 thePlayer.discardFromHand(owner.getEngine().getGameFrame().askToSelectOneCardWithDomCard("Choose a card to discard", theChoosFrom, "Mandatory!" ));
+              else
+                  thePlayer.revealHand();
           } else {
               Collections.sort(thePlayer.getCardsInHand(),SORT_FOR_DISCARDING);
               for (DomCard theCard : thePlayer.getCardsInHand()) {
@@ -41,6 +43,7 @@ public class VillainCard extends DomCard {
           }
           if (!discarded) {
             if (DomEngine.haveToLog) DomEngine.addToLog(thePlayer + " discards nothing");
+            thePlayer.revealHand();
           }
         }
       }

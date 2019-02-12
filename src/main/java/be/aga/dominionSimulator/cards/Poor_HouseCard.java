@@ -11,6 +11,7 @@ public class Poor_HouseCard extends DomCard {
 
     public void play() {
       owner.addAvailableCoins(4);
+      owner.revealHand();
       owner.removeAvailableCoins(owner.getCardsFromHand(DomCardType.Treasure).size());
     }
 

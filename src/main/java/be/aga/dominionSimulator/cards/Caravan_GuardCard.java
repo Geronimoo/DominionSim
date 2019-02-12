@@ -2,6 +2,7 @@ package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.enums.DomCardName;
+import be.aga.dominionSimulator.enums.DomCardType;
 
 public class Caravan_GuardCard extends DomCard {
     public Caravan_GuardCard() {
@@ -22,4 +23,12 @@ public class Caravan_GuardCard extends DomCard {
         owner.play(owner.removeCardFromHand(this));
         return false;
     }
+
+    @Override
+    public boolean hasCardType(DomCardType aType) {
+        if (aType==DomCardType.Treasure && owner != null && owner.hasBuiltProject(DomCardName.Capitalism))
+            return true;
+        return super.hasCardType(aType);
+    }
+
 }

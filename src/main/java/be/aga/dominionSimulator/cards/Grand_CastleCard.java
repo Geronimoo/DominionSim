@@ -12,6 +12,7 @@ public class Grand_CastleCard extends DomCard {
 
     @Override
     public void doWhenGained() {
+        owner.revealHand();
         if (owner.getCardsFromHand(DomCardType.Victory).isEmpty() && owner.getCardsFromPlay(DomCardType.Victory).isEmpty()) {
             if (DomEngine.haveToLog) DomEngine.addToLog( owner + " reveals no Victory Cards so doesn't gain VP tokens");
             return;

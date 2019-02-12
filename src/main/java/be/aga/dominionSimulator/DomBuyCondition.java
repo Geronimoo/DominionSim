@@ -1,10 +1,6 @@
 package be.aga.dominionSimulator;
 
-import be.aga.dominionSimulator.enums.DomBotComparator;
-import be.aga.dominionSimulator.enums.DomBotFunction;
-import be.aga.dominionSimulator.enums.DomBotOperator;
-import be.aga.dominionSimulator.enums.DomCardName;
-import be.aga.dominionSimulator.enums.DomCardType;
+import be.aga.dominionSimulator.enums.*;
 import be.aga.dominionSimulator.gui.DomBuyConditionPanel;
 import be.aga.dominionSimulator.gui.DomBuyRulePanel;
 
@@ -159,7 +155,14 @@ public class DomBuyCondition {
           case countVillagers:
               leftValue=owner.countVillagers();
               break;
-		case constant:
+          case hasFlag:
+              leftValue=owner.getCurrentGame().getArtifactOwner(DomArtifact.Flag)==owner?1:0;
+              break;
+          case hasBuiltProject:
+              leftValue=owner.hasBuiltProject(leftCardName)?1:0;
+              break;
+
+          case constant:
             break;
         }
 		switch(rightFunction){
@@ -267,7 +270,14 @@ public class DomBuyCondition {
          case countVillagers:
               rightValue=owner.countVillagers();
               break;
-            case constant:
+         case hasFlag:
+              rightValue=owner.getCurrentGame().getArtifactOwner(DomArtifact.Flag)==owner?1:0;
+              break;
+         case hasBuiltProject:
+              rightValue=owner.hasBuiltProject(leftCardName)?1:0;
+              break;
+
+         case constant:
 			break;
         }
 		double theRightValue=rightValue;
@@ -466,6 +476,7 @@ public class DomBuyCondition {
                 || leftFunction==DomBotFunction.isTrashingTokenPlaced
                 || leftFunction==DomBotFunction.isPlusOneCoinTokenSet
                 || leftFunction==DomBotFunction.countVPon
+                || leftFunction==DomBotFunction.hasBuiltProject
                 ) {
           theXML.append(" attribute=\"").append(leftCardName.name()).append("\"");
         }
@@ -494,6 +505,7 @@ public class DomBuyCondition {
                 || rightFunction==DomBotFunction.isTrashingTokenPlaced
                 || rightFunction==DomBotFunction.isPlusOneCoinTokenSet
                 || rightFunction==DomBotFunction.countVPon
+                || rightFunction==DomBotFunction.hasBuiltProject
                 ) {
           theXML.append(" attribute=\"").append(rightCardName.name()).append("\"");
         }

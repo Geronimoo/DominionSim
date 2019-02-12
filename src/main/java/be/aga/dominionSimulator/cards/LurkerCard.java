@@ -19,13 +19,13 @@ public class LurkerCard extends DomCard {
     owner.addActions(1);
     if (owner.isHumanOrPossessedByHuman()){
         handleHuman();
-        return;
-    }
-    DomCard theWantedAction = findActionInTrash();
-    if (theWantedAction!=null && theWantedAction.getName()!=DomCardName.Hunting_Grounds ) {
-      owner.gain(owner.getCurrentGame().removeFromTrash(theWantedAction));
     } else {
-      trashActionFromSupply();
+        DomCard theWantedAction = findActionInTrash();
+        if (theWantedAction != null && theWantedAction.getName() != DomCardName.Hunting_Grounds) {
+            owner.gain(owner.getCurrentGame().removeFromTrash(theWantedAction));
+        } else {
+            trashActionFromSupply();
+        }
     }
   }
 
@@ -60,6 +60,11 @@ public class LurkerCard extends DomCard {
     }
 
     private void trashActionFromSupply() {
+        if (owner.getCurrentGame().countInSupply(DomCardName.Fortress)>0) {
+            DomCard theFortress = owner.getCurrentGame().takeFromSupply(DomCardName.Fortress);
+            owner.trash(theFortress);
+            return;
+        }
         for (DomBuyRule theBuyRule : owner.getBuyRules()) {
             if (!owner.getCurrentGame().getBoard().isFromSeparatePile(theBuyRule.getCardToBuy()) && theBuyRule.getCardToBuy().hasCardType(DomCardType.Action) && owner.checkBuyConditions(theBuyRule) && owner.getCurrentGame().countInSupply(theBuyRule.getCardToBuy())>0) {
                 DomCard theCard = owner.getCurrentGame().takeFromSupply(theBuyRule.getCardToBuy());
@@ -95,5 +100,12 @@ public class LurkerCard extends DomCard {
             }
         }
         return null;
+    }
+
+    @Override
+    public int getPlayPriority() {
+        if (owner.getCurrentGame().countInSupply(DomCardName.Fortress)>0)
+            return DomCardName.Fortress.getPlayPriority();
+        return super.getPlayPriority();
     }
 }

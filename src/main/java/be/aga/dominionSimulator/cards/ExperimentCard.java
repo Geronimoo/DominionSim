@@ -11,7 +11,8 @@ public class ExperimentCard extends DomCard {
     public void play() {
       owner.addActions(1);
       owner.drawCards(2);
-      owner.returnToSupply(owner.removeCardFromPlay(this));
+      if (owner.getDeck().get(DomCardName.Experiment).contains(this))
+        owner.returnToSupply(owner.removeCardFromPlay(this));
     }
 
     @Override

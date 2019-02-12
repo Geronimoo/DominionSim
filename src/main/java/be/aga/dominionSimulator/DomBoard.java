@@ -207,7 +207,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 
     private void putTaxTokensOnAll() {
         for (DomCardName theCard : keySet()) {
-            if (!theCard.hasCardType(DomCardType.Event) && !theCard.hasCardType(DomCardType.Landmark))
+            if (!theCard.hasCardType(DomCardType.Event) && !theCard.hasCardType(DomCardType.Landmark) && !theCard.hasCardType(DomCardType.Project))
               putTaxOn(theCard,1);
         }
     }
@@ -579,7 +579,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
         put( aCardName, new ArrayList< DomCard >() );
         int theNumber = 10;
 
-        if (aCardName.hasCardType(DomCardType.Event) || aCardName.hasCardType(DomCardType.Landmark))
+        if (aCardName.hasCardType(DomCardType.Event) || aCardName.hasCardType(DomCardType.Landmark)||aCardName.hasCardType(DomCardType.Project))
             theNumber=0;
         if (aCardName.hasCardType(DomCardType.Victory)) {
           theNumber = players.size()<3 ? 8 : 12;
@@ -676,6 +676,8 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
             theList = get(DomCardName.Sauna);
         if (aCardName.hasCardType(DomCardType.Castle))
             theList = get(DomCardName.Castles);
+        if (aCardName.hasCardType(DomCardType.Knight))
+            theList = get(DomCardName.Knights);
         if (theList==null || theList.isEmpty())
         	return null;
     	if (aCardName.hasCardType(DomCardType.Victory)){
@@ -703,7 +705,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     public int countEmptyPiles() {
         int theEmptyPiles=0;
         for (DomCardName theCardName : keySet()) {
-            if (!theCardName.hasCardType(DomCardType.Event)&&!theCardName.hasCardType(DomCardType.Heirloom)&&!theCardName.hasCardType(DomCardType.Landmark))
+            if (!theCardName.hasCardType(DomCardType.Event)&&!theCardName.hasCardType(DomCardType.Heirloom)&&!theCardName.hasCardType(DomCardType.Landmark)&&!theCardName.hasCardType(DomCardType.Project))
               theEmptyPiles+=get(theCardName).size()==0 ? 1 : 0 ;
         }
         return theEmptyPiles;
@@ -726,6 +728,8 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
             aCardName=DomCardName.Sauna;
         if (aCardName.hasCardType(DomCardType.Castle))
             aCardName=DomCardName.Castles;
+        if (aCardName.hasCardType(DomCardType.Knight))
+            aCardName=DomCardName.Knights;
         ArrayList<DomCard> theList = get(aCardName);
         if (theList==null || theList.isEmpty())
             return 0;
@@ -804,7 +808,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     public ArrayList< String > getEmptyPiles() {
         ArrayList< String > theList = new ArrayList< String >();
         for (DomCardName theCardName : keySet()) {
-            if (theCardName.hasCardType(DomCardType.Event) || theCardName.hasCardType(DomCardType.Heirloom) || theCardName.hasCardType(DomCardType.Landmark))
+            if (theCardName.hasCardType(DomCardType.Event) || theCardName.hasCardType(DomCardType.Heirloom) || theCardName.hasCardType(DomCardType.Landmark) ||theCardName.hasCardType(DomCardType.Project))
                 continue;
           if (get(theCardName).size()== 0){
               theList.add( theCardName.toHTML() );
@@ -830,6 +834,10 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 		for (int i=0;i<3 && !blackMarketDeck.isEmpty(); i++) {
 	      theCards.add(blackMarketDeck.remove(0));
 		}
+		for (DomCard theCard : theCards) {
+		    if (theCard.getName()==DomCardName.Patron)
+		        theCard.react();
+        }
 		return theCards;
 	}
 
@@ -932,7 +940,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 			return gainsNeededToEndGame;
 		ArrayList<Integer> theCounts = new ArrayList<Integer>();
 		for (DomCardName cardName : keySet()){
-		    if (cardName.hasCardType(DomCardType.Event) || cardName.hasCardType(DomCardType.Landmark) || cardName.hasCardType(DomCardType.Heirloom) || cardName.hasCardType(DomCardType.Shelter))
+		    if (cardName.hasCardType(DomCardType.Event) || cardName.hasCardType(DomCardType.Landmark) || cardName.hasCardType(DomCardType.Heirloom) || cardName.hasCardType(DomCardType.Shelter) || cardName.hasCardType(DomCardType.Project))
 		        continue;
 			theCounts.add(get(cardName).size());
 		}
@@ -1092,7 +1100,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
         int theAmount = removeVPFromGathering(fromCard, 1);
         if (theAmount>0) {
             addVPTokensTo(toCard,1);
-            if (DomEngine.haveToLog) DomEngine.addToLog( "1&#x25BC; flows "+fromCard.toHTML()+" to " + toCard.toHTML());
+            if (DomEngine.haveToLog) DomEngine.addToLog( "1&#x25BC; flows from "+fromCard.toHTML()+" to " + toCard.toHTML());
         }
     }
 
@@ -1179,7 +1187,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     public ArrayList<DomCardName> getTopCardsOfPiles() {
         ArrayList<DomCardName> theTopCards = new ArrayList<DomCardName>();
         for(DomCardName theCard : keySet()) {
-            if (theCard.hasCardType(DomCardType.Event)||theCard.hasCardType(DomCardType.Landmark)||theCard.hasCardType(DomCardType.Shelter))
+            if (theCard.hasCardType(DomCardType.Event)||theCard.hasCardType(DomCardType.Landmark)||theCard.hasCardType(DomCardType.Shelter)||theCard.hasCardType(DomCardType.Project))
                 continue;
             if (count(theCard)==0)
                 theTopCards.add(theCard);

@@ -158,6 +158,7 @@ public class PlayPreparationDialog extends JFrame implements ActionListener {
                         theRule.getCardToBuy()== DomCardName.Platinum ||
                         theRule.getCardToBuy()==DomCardName.Colony ||
                         theRule.getCardToBuy().hasCardType(DomCardType.Event) ||
+                        theRule.getCardToBuy().hasCardType(DomCardType.Project) ||
                         theRule.getCardToBuy().hasCardType(DomCardType.Landmark))
                     myBoard.add(theRule.getCardToBuy());
             }
@@ -235,21 +236,31 @@ public class PlayPreparationDialog extends JFrame implements ActionListener {
             resetBoard();
             resetBane();
             int theCount=0;
-            int theEventCount = 0;
+            int theCardShapedThingsCount = 0;
+            for (DomCardName theCard : myBoard) {
+                if (theCard.hasCardType(DomCardType.Kingdom))
+                    theCount++;
+            }
             while (theCount<10) {
                 theCount=0;
-                myBoard.add(DomCardName.getRandomKingdomCard(myValidSets));
+                HashSet<DomSet> theRenaissance = new HashSet<DomSet>();
+                theRenaissance.add(DomSet.Renaissance);
+                if (myBoard.isEmpty())
+                    myBoard.add(DomCardName.getRandomKingdomCard(theRenaissance));
+                else
+                    myBoard.add(DomCardName.getRandomKingdomCard(myValidSets));
+
                 for (DomCardName theCard : myBoard) {
                     if (theCard.hasCardType(DomCardType.Kingdom))
                         theCount++;
                 }
             }
-            while (theEventCount<2) {
-                theEventCount = 0;
-                myBoard.add(DomCardName.getRandomEventOrLandmark(myValidSets));
+            while (theCardShapedThingsCount<2) {
+                theCardShapedThingsCount = 0;
+                myBoard.add(DomCardName.getRandomCardShapedThing(myValidSets));
                 for (DomCardName theCard : myBoard) {
-                    if (theCard.hasCardType(DomCardType.Event)||theCard.hasCardType(DomCardType.Landmark))
-                        theEventCount++;
+                    if (theCard.hasCardType(DomCardType.Event)||theCard.hasCardType(DomCardType.Landmark)||theCard.hasCardType(DomCardType.Project))
+                        theCardShapedThingsCount++;
                 }
             }
             if (myBoard.contains(DomCardName.Young_Witch) && myBane==null){

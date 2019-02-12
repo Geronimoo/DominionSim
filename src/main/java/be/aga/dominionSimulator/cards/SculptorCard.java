@@ -6,7 +6,6 @@ import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 public class SculptorCard extends DomCard {
     public SculptorCard() {
@@ -31,7 +30,7 @@ public class SculptorCard extends DomCard {
         if (theDesiredCard != null) {
             owner.gainInHand(theDesiredCard);
             if (theDesiredCard.hasCardType(DomCardType.Treasure))
-                owner.gainVillagers(1);
+                owner.addVillagers(1);
         }
     }
 

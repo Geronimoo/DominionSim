@@ -16,12 +16,12 @@ public class Silk_MerchantCard extends DomCard {
     @Override
     public void doWhenGained() {
         owner.addCoffers(1);
-        owner.gainVillagers(1);
+        owner.addVillagers(1);
     }
 
     @Override
     public void doWhenTrashed() {
         owner.addCoffers(1);
-        owner.gainVillagers(1);
+        owner.addVillagers(1);
     }
 }

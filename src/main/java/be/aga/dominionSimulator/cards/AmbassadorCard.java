@@ -50,7 +50,7 @@ public class AmbassadorCard extends DomCard {
            || owner.getTotalMoneyInDeck()-theRevealedCard.getPotentialCoinValue() < 3
            || theRevealedCard.getTrashPriority()>DomCardName.Copper.getTrashPriority())
             break;
-            DomCard theCardToRemove = owner.removeCardFromHand(theRevealedCard);
+          DomCard theCardToRemove = owner.removeCardFromHand(theRevealedCard);
           owner.returnToSupply(theCardToRemove);
           theTrashCount++;
         }

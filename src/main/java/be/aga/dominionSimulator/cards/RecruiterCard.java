@@ -18,12 +18,12 @@ public class RecruiterCard extends DomCard {
       DomCard theCardToTrash = null;
       if (owner.isHumanOrPossessedByHuman()) {
           owner.setNeedsToUpdateGUI();
-          theCardToTrash= owner.removeCardFromHand(owner.getEngine().getGameFrame().askToSelectOneCardWithDomCard("Trash a card", owner.getCardsInHand(), "Mandatory!"));
+          theCardToTrash= owner.getEngine().getGameFrame().askToSelectOneCardWithDomCard("Trash a card", owner.getCardsInHand(), "Mandatory!");
       } else {
           theCardToTrash = owner.getCardsInHand().get(0);
       }
       owner.trash(owner.removeCardFromHand(theCardToTrash));
       if (theCardToTrash.getCoinCost(owner.getCurrentGame())>0)
-        owner.gainVillagers(theCardToTrash.getCoinCost(owner.getCurrentGame()));
+        owner.addVillagers(theCardToTrash.getCoinCost(owner.getCurrentGame()));
     }
 }

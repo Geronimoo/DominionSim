@@ -44,7 +44,7 @@ public class IronworksCard extends DomCard {
     private DomCardName handleHumanPlayer() {
         ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
         for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
-            if (new DomCost(4,0).customCompare(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0 && !theCard.hasCardType(DomCardType.Event))
+            if (new DomCost(4,0).customCompare(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0 )
                 theChooseFrom.add(theCard);
         }
         if (theChooseFrom.isEmpty())
@@ -62,4 +62,12 @@ public class IronworksCard extends DomCard {
     		return 14;
     	return super.getPlayPriority();
     }
+
+    @Override
+    public boolean hasCardType(DomCardType aType) {
+        if (aType==DomCardType.Treasure && owner != null && owner.hasBuiltProject(DomCardName.Capitalism))
+            return true;
+        return super.hasCardType(aType);
+    }
+
 }

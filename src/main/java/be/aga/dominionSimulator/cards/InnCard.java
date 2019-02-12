@@ -32,7 +32,9 @@ public class InnCard extends DomCard {
 		for (DomCard card : theCards){
 		    owner.getDeck().removeFromDiscard(card);
 		    owner.putOnTopOfDeck(card);
-		}
+            if (card.getName()==DomCardName.Patron)
+               card.react();
+        }
 		owner.shuffleDeck();
     }
 

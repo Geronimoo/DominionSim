@@ -18,15 +18,15 @@ public class CartographerCard extends DomCard {
     }
 
 	private void layOutMaps() {
-	  ArrayList<DomCard> theRevealedCards = owner.revealTopCards(4);
-	  if (theRevealedCards.isEmpty()) 
+	  ArrayList<DomCard> theLookedAtCards = owner.getTopCards(4);
+	  if (theLookedAtCards.isEmpty())
 	    return;
 	  if (owner.isHumanOrPossessedByHuman()) {
-	  	handleHuman(theRevealedCards);
+	  	handleHuman(theLookedAtCards);
 	  	return;
 	  }
-	  Collections.sort(theRevealedCards,SORT_FOR_DISCARDING);
-	  for (DomCard theRevealedCard : theRevealedCards){
+	  Collections.sort(theLookedAtCards,SORT_FOR_DISCARDING);
+	  for (DomCard theRevealedCard : theLookedAtCards){
 		  if (theRevealedCard.getDiscardPriority(1)<16) {
 			owner.discard(theRevealedCard);
 		  } else {

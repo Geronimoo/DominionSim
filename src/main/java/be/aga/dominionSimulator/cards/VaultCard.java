@@ -7,6 +7,7 @@ import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
+import be.aga.dominionSimulator.enums.DomCardType;
 
 public class VaultCard extends DomCard {
     public VaultCard () {
@@ -99,4 +100,12 @@ public class VaultCard extends DomCard {
 	  owner.getCardsInHand().add(theTactician);
 	  owner.getCardsInHand().add(theCardToTriggerTactician);
 	}
+
+    @Override
+    public boolean hasCardType(DomCardType aType) {
+        if (aType==DomCardType.Treasure && owner != null && owner.hasBuiltProject(DomCardName.Capitalism))
+            return true;
+        return super.hasCardType(aType);
+    }
+
 }

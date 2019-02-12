@@ -22,6 +22,8 @@ public class ConspiratorCard extends DomCard {
         if (aType==DomCardType.Terminal) {
             return owner.getActionsPlayed()<2;
         }
+        if (aType==DomCardType.Treasure && owner != null && owner.hasBuiltProject(DomCardName.Capitalism))
+            return true;
         return super.hasCardType(aType);
     }
 
@@ -32,4 +34,5 @@ public class ConspiratorCard extends DomCard {
     	}
     	return super.getPlayPriority();
     }
+
 }

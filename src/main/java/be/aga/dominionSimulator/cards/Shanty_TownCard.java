@@ -11,7 +11,7 @@ public class Shanty_TownCard extends DomCard {
 
     public void play() {
       owner.addActions(2);
-      owner.showHand();
+      owner.revealHand();
       if (owner.getCardsFromHand(DomCardType.Action).isEmpty())
     	owner.drawCards(2);
     }

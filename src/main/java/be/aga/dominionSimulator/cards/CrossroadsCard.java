@@ -12,6 +12,7 @@ public class CrossroadsCard extends DomCard {
     public void play() {
     	if (owner.getCardsFromPlay(DomCardName.Crossroads).size()==1)
           owner.addActions(3);
+    	owner.revealHand();
     	owner.drawCards(owner.getCardsFromHand(DomCardType.Victory).size());
     }
     

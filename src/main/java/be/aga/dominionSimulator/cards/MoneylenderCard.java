@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.enums.DomCardName;
+import be.aga.dominionSimulator.enums.DomCardType;
 
 public class MoneylenderCard extends DomCard {
     public MoneylenderCard () {
@@ -43,4 +44,12 @@ public class MoneylenderCard extends DomCard {
             return DomCardName.Curse.getTrashPriority()+1;
         return super.getTrashPriority();
     }
+
+    @Override
+    public boolean hasCardType(DomCardType aType) {
+        if (aType==DomCardType.Treasure && owner != null && owner.hasBuiltProject(DomCardName.Capitalism))
+            return true;
+        return super.hasCardType(aType);
+    }
+
 }

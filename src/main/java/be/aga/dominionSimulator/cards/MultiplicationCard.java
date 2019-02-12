@@ -1,6 +1,7 @@
 package be.aga.dominionSimulator.cards;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomEngine;
@@ -115,6 +116,8 @@ public class MultiplicationCard extends DomCard {
         if (card.owner==null) {
           cardOwnerWasNull = true;
           card.owner=owner;
+          //Procession trashed the Duration so it's no longer in play but it still needs to resolve its effect twice so we do it here
+          card.resolveDuration();
         }
 	    card.resolveDuration();
 	    if (getName()==DomCardName.King$s_Court){
@@ -138,6 +141,8 @@ public class MultiplicationCard extends DomCard {
 
     public DomCard getCardToMultiply( ) {
         DomCard theCardToPlay = null;
+        Collections.sort(owner.getCardsInHand(), SORT_FOR_DISCARDING);
+        DomCard thePerhapsCard = null;
         for (int i = 0;i<owner.getCardsInHand().size();i++) {
           DomCard theCard = owner.getCardsInHand().get( i );
           if (!theCard.wantsToBeMultiplied())
@@ -149,6 +154,7 @@ public class MultiplicationCard extends DomCard {
           if (theCard.getName()==DomCardName.Chariot_Race) //Chariot Race is useless when deck is empty so throne it first
               return theCard;
           if (theCard.hasCardType(DomCardType.Action) && theCard.wantsToBePlayed()){
+            thePerhapsCard = theCard;
         	if (theCard.hasCardType(DomCardType.Terminal)
                 && (owner.getActionsLeft()>0 || owner.getCardsFromHand(DomCardType.Terminal).size()==owner.getCardsFromHand(DomCardType.Action).size())
         	    && (theCardToPlay == null ||theCard.getDiscardPriority(1)> theCardToPlay.getDiscardPriority(1))) {
@@ -163,6 +169,10 @@ public class MultiplicationCard extends DomCard {
         }
 
         DomCard theNewCardToPlay = fixForKingsCourtRabble(theCardToPlay);
+        if (theNewCardToPlay==null)
+            theNewCardToPlay=theCardToPlay;
+        if (theNewCardToPlay==null)
+            theNewCardToPlay=thePerhapsCard;
         if (theNewCardToPlay!=null)
             theCardToPlay=theNewCardToPlay;
         return theCardToPlay;

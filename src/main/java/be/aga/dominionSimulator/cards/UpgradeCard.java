@@ -22,6 +22,17 @@ public class UpgradeCard extends DomCard {
             handleHuman();
             return;
         }
+        if (!owner.getCardsFromHand(DomCardName.Fortress).isEmpty()
+                &&owner.getDesiredCard(DomCardName.Fortress.getCost(owner.getCurrentGame()).add(new DomCost(1,0 ) ), true)!=null) {
+            DomCard theCard = owner.getCardsFromHand(DomCardName.Fortress).get(0);
+            DomCardName theDesiredCard = owner.getDesiredCard(theCard.getName().getCost(owner.getCurrentGame()).add(new DomCost(1,0 ) ), true);
+            if (theDesiredCard!=null && theDesiredCard.getTrashPriority(owner)>=theCard.getTrashPriority()) {
+                owner.trash( owner.removeCardFromHand( theCard ) );
+                owner.gain(theDesiredCard);
+                return;
+            }
+        }
+            
         Collections.sort( owner.getCardsInHand(), SORT_FOR_TRASHING);
         if (owner.getCardsInHand().get(0).getName()==DomCardName.Curse || owner.getCardsInHand().get(0).getName()==DomCardName.Copper || owner.getCardsInHand().get(0).hasCardType(DomCardType.Ruins)) {
             owner.trash( owner.removeCardFromHand( owner.getCardsInHand().get(0) ) );

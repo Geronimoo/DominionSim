@@ -47,9 +47,9 @@ public class TableCardRenderer extends DefaultTableCellRenderer implements Table
         if (theCard.getPotionCost()>0)
             theText.append("P");
         theText.append("&nbsp;&nbsp;&nbsp;");
-        if (myEngine.getCurrentGame().countInSupply(theCard)==0 && !theCard.hasCardType(DomCardType.Event) && !theCard.hasCardType(DomCardType.Landmark) )
+        if (myEngine.getCurrentGame().countInSupply(theCard)==0 && !theCard.hasCardType(DomCardType.Event) && !theCard.hasCardType(DomCardType.Landmark) && !theCard.hasCardType(DomCardType.Project) )
                 theText.append("<strike>");
-        if (!theCard.hasCardType(DomCardType.Landmark) && !myEngine.getCurrentGame().getBoard().isFromSeparatePile(theCard) && (myEngine.getCurrentGame().countInSupply(theCard)>0 || theCard.hasCardType(DomCardType.Event))&& myEngine.getCurrentGame().getActivePlayer().getPhase()== DomPhase.Buy ) {
+        if (!theCard.hasCardType(DomCardType.Landmark) && !myEngine.getCurrentGame().getBoard().isFromSeparatePile(theCard) && (myEngine.getCurrentGame().countInSupply(theCard)>0 || theCard.hasCardType(DomCardType.Event) || theCard.hasCardType(DomCardType.Project))&& myEngine.getCurrentGame().getActivePlayer().getPhase()== DomPhase.Buy ) {
             if (myEngine.getCurrentGame().getBoard().get(theCard).isEmpty())
                 theTopCard = theCard.createNewCardInstance();
             else
@@ -63,7 +63,7 @@ public class TableCardRenderer extends DefaultTableCellRenderer implements Table
         } else {
             theText.append(theCard.toHTML());
         }
-        if (!theCard.hasCardType(DomCardType.Landmark) && !myEngine.getCurrentGame().getBoard().isFromSeparatePile(theCard) && (myEngine.getCurrentGame().countInSupply(theCard)>0 || theCard.hasCardType(DomCardType.Event)) && myEngine.getCurrentGame().getActivePlayer().getPhase()== DomPhase.Buy ) {
+        if (!theCard.hasCardType(DomCardType.Landmark) && !myEngine.getCurrentGame().getBoard().isFromSeparatePile(theCard) && (myEngine.getCurrentGame().countInSupply(theCard)>0 || theCard.hasCardType(DomCardType.Event) || theCard.hasCardType(DomCardType.Project)) && myEngine.getCurrentGame().getActivePlayer().getPhase()== DomPhase.Buy ) {
             if (myEngine.getCurrentGame().getBoard().get(theCard).isEmpty())
                 theTopCard = theCard.createNewCardInstance();
             else
@@ -71,7 +71,7 @@ public class TableCardRenderer extends DefaultTableCellRenderer implements Table
             if (myEngine.getCurrentGame().getActivePlayer().canBuy(theTopCard.getName()))
                 theText.append("</b>");
         }
-        if (myEngine.getCurrentGame().countInSupply(theCard)==0 && !theCard.hasCardType(DomCardType.Event) && !theCard.hasCardType(DomCardType.Landmark))
+        if (myEngine.getCurrentGame().countInSupply(theCard)==0 && !theCard.hasCardType(DomCardType.Event) && !theCard.hasCardType(DomCardType.Landmark) && !theCard.hasCardType(DomCardType.Project))
             theText.append("</strike>");
         if (myEngine.getCurrentGame().getBoard().countVPon(theCard)>0) {
             theText.append(" " + myEngine.getCurrentGame().getBoard().countVPon(theCard)+"&#x25BC;");
@@ -83,7 +83,7 @@ public class TableCardRenderer extends DefaultTableCellRenderer implements Table
                 &&!myEngine.getCurrentGame().getBoard().getTradeRouteMat().contains(theCard))
                   theText.append(" <FONT style=\"BACKGROUND-COLOR: #F3F584\">$</font>");
         theText.append(myEngine.getCurrentGame().getActivePlayer().getTokensStringOn(theCard));
-        if (!theCard.hasCardType(DomCardType.Event) && !theCard.hasCardType(DomCardType.Landmark))
+        if (!theCard.hasCardType(DomCardType.Event) && !theCard.hasCardType(DomCardType.Landmark) && !theCard.hasCardType(DomCardType.Project))
             theText.append(" (").append(myEngine.getCurrentGame().countInSupply(theCard)).append(")");
         if (myEngine.getCurrentGame().getObeliskChoice()==theCard)
             theText.append(" (Ob.)");

@@ -40,4 +40,12 @@ public class IronmongerCard extends DomCard {
         if (willdraw)
             owner.drawCards(1);
     }
+
+    @Override
+    public boolean hasCardType(DomCardType aType) {
+        if (aType==DomCardType.Treasure && owner != null && owner.hasBuiltProject(DomCardName.Capitalism))
+            return true;
+        return super.hasCardType(aType);
+    }
+
 }

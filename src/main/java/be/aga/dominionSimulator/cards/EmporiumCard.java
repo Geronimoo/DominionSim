@@ -20,4 +20,12 @@ public class EmporiumCard extends DomCard {
         if (owner.getCardsFromPlay(DomCardType.Action).size()>=5)
             owner.addVP(2);
     }
+
+    @Override
+    public boolean hasCardType(DomCardType aType) {
+        if (aType==DomCardType.Treasure && owner != null && owner.hasBuiltProject(DomCardName.Capitalism))
+            return true;
+        return super.hasCardType(aType);
+    }
+
 }

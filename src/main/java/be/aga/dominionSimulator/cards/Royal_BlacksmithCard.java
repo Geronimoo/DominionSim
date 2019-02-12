@@ -13,6 +13,7 @@ public class Royal_BlacksmithCard extends DomCard {
       owner.drawCards( 5 );
       while (!owner.getCardsFromHand(DomCardName.Copper).isEmpty())
           owner.discardFromHand(DomCardName.Copper);
+      owner.revealHand();
     }
     
     @Override

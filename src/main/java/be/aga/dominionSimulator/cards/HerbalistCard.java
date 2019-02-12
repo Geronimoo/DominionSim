@@ -17,6 +17,9 @@ public class HerbalistCard extends DomCard {
     }
     
 	public void maybeAddTagFor(ArrayList<DomCard> theCardsToHandle) {
+        //if due to Capitalism Herbalist has been tagged itself by another Herbalist it can't tag another card
+      if (isTaggedByHerbalist())
+          return;
       if (owner.isHumanOrPossessedByHuman()) {
           handleHuman(theCardsToHandle);
           return;
@@ -27,11 +30,19 @@ public class HerbalistCard extends DomCard {
       }
       for (int i=theCardsToHandle.size()-1;i>=0;i--) {
     	DomCard theCard = theCardsToHandle.get(i);
-    	if (!theCard.isTaggedByHerbalist()
-    	 && theCard.getDiscardPriority(1)>20 
-    	 && theCard.hasCardType(DomCardType.Treasure) ) {
-    		theCard.addHerbalistTag();
-    		break;
+    	if (theCard!=this
+         && !theCard.isTaggedByHerbalist()
+    	 && theCard.getDiscardPriority(1)> DomCardName.Silver.getDiscardPriority(1)
+                && theCard.hasCardType(DomCardType.Treasure) ) {
+    	    if (theCard.getName()==DomCardName.Herbalist) {
+    	        if (i>theCardsToHandle.indexOf(this)) {
+                    theCard.addHerbalistTag();
+                    break;
+                }
+            } else {
+                theCard.addHerbalistTag();
+                break;
+            }
     	}
       }
 	}
@@ -39,7 +50,7 @@ public class HerbalistCard extends DomCard {
     private void handleHuman(ArrayList<DomCard> theCardsToHandle) {
         ArrayList<DomCardName> chooseFrom = new ArrayList<DomCardName>();
         for (DomCard theCard : theCardsToHandle) {
-            if (theCard.hasCardType(DomCardType.Treasure) && !theCard.isTaggedByHerbalist())
+            if (theCard.hasCardType(DomCardType.Treasure) && !theCard.isTaggedByHerbalist() && theCard!=this)
                 chooseFrom.add(theCard.getName());
         }
         if (chooseFrom.isEmpty())
@@ -53,5 +64,12 @@ public class HerbalistCard extends DomCard {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean hasCardType(DomCardType aType) {
+        if (aType==DomCardType.Treasure && owner != null && owner.hasBuiltProject(DomCardName.Capitalism))
+            return true;
+        return super.hasCardType(aType);
     }
 }

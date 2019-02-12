@@ -17,7 +17,7 @@ public class Faithful_HoundCard extends DomCard {
     @Override
     public void doWhenDiscarded() {
         if (owner.getPhase()!= DomPhase.CleanUp) {
-            owner.addFaithfulHoundToSetAside(this);
+            owner.addFaithfulHoundToSetAside(owner.removeCardFromDiscard(this));
         } else {
             super.doWhenDiscarded();
         }

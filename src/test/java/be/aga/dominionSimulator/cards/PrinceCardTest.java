@@ -8,7 +8,6 @@ import org.easymock.EasyMock;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -45,7 +44,7 @@ public class PrinceCardTest {
     private void mockBasicGameItems(DomPlayer owner, DomGame currentGame) {
         EasyMock.expect(currentGame.getBridgesPlayed()).andReturn(0).anyTimes();
         EasyMock.expect(currentGame.getPrincessesInPlay()).andReturn(0).anyTimes();
-        EasyMock.expect(currentGame.getQuarriesPlayed()).andReturn(0).anyTimes();
+        EasyMock.expect(currentGame.getQuarriesInPlay()).andReturn(0).anyTimes();
         EasyMock.expect(currentGame.getHighwaysInPlay()).andReturn(0).anyTimes();
         EasyMock.expect(currentGame.getBridge_TrollsInPlay()).andReturn(0).anyTimes();
         EasyMock.expect(currentGame.getActivePlayer()).andReturn(owner).anyTimes();

@@ -4,6 +4,7 @@ import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
+import be.aga.dominionSimulator.enums.DomCardType;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -32,6 +33,8 @@ public class CourtierCard extends DomCard {
       }
       if (DomEngine.haveToLog)
           DomEngine.addToLog(owner + " reveals " + theChosenCard);
+      if (theChosenCard.getName()==DomCardName.Patron)
+          theChosenCard.react();
       int theChoicesLeft = theChosenCard.countTypes();
       coinsChosen=false;
       actionChosen=false;
@@ -52,6 +55,8 @@ public class CourtierCard extends DomCard {
         theChooseFrom.clear();
         theChooseFrom.addAll(uniqueCards);
         DomCard theChosenCard = owner.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Reveal a card for " + this.getName().toString(), theChooseFrom, "Mandatory!")).get(0);
+        if (theChosenCard.getName()==DomCardName.Patron)
+            theChosenCard.react();
         ArrayList<String> theOptions = new ArrayList<String>();
         if (theChosenCard.countTypes()==1) {
             theOptions.add("+Action");
@@ -147,4 +152,12 @@ public class CourtierCard extends DomCard {
         }
         return super.getPlayPriority();
     }
+
+    @Override
+    public boolean hasCardType(DomCardType aType) {
+        if (aType==DomCardType.Treasure && owner != null && owner.hasBuiltProject(DomCardName.Capitalism))
+            return true;
+        return super.hasCardType(aType);
+    }
+
 }

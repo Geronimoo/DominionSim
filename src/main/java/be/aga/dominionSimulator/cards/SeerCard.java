@@ -18,6 +18,8 @@ public class SeerCard extends DomCard {
       while (!theCards.isEmpty()) {
           boolean cardFound = false;
           for (DomCard theCard:theCards) {
+              if (theCard.getPotionCost()>0)
+                  continue;
               if (theCard.getCost(owner.getCurrentGame()).getCoins()==2
                       || theCard.getCost(owner.getCurrentGame()).getCoins()==3
                       || theCard.getCost(owner.getCurrentGame()).getCoins()==4) {
@@ -48,13 +50,21 @@ public class SeerCard extends DomCard {
           chooseFrom.add(theCard);
         }
         ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
-        owner.getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u> (first card = top card)</html>" , chooseFrom, theChosenCards, chooseFrom.size());
-        for (int i=theChosenCards.size()-1;i>=0;i--) {
-            for (DomCard theCard : chooseFrom) {
-                if (theChosenCards.get(i).getName()==theCard.getName()) {
-                    owner.putOnTopOfDeck(theCard);
-                    chooseFrom.remove(theCard);
-                    break;
+        do {
+            owner.getEngine().getGameFrame().askToSelectCards("<html>Choose <u>order</u> (first card = top card)</html>", chooseFrom, theChosenCards, 0);
+        } while (theChosenCards.size()!=0 && theChosenCards.size()!=chooseFrom.size());
+        if (theChosenCards.size()==0) {
+           while (!theRevealedCards.isEmpty()) {
+               owner.putOnTopOfDeck(theRevealedCards.remove(0));
+           }
+        } else {
+            for (int i = theChosenCards.size() - 1; i >= 0; i--) {
+                for (DomCard theCard : chooseFrom) {
+                    if (theChosenCards.get(i).getName() == theCard.getName()) {
+                        owner.putOnTopOfDeck(theCard);
+                        chooseFrom.remove(theCard);
+                        break;
+                    }
                 }
             }
         }

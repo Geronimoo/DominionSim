@@ -18,6 +18,9 @@ public class ProcessionCard extends MultiplicationCard {
         DomCard theCardToMultiply = getMyCardToMultiply();
         if (theCardToMultiply==null)
             return;
+        if (theCardToMultiply instanceof MultiplicationCard && !((MultiplicationCard) theCardToMultiply).getDurationCards().isEmpty()) {
+            owner.addGhostProcessionedMultiplicationCardWithDurations(theCardToMultiply);
+        }
         if (owner.isHumanOrPossessedByHuman()) {
             ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
             for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {

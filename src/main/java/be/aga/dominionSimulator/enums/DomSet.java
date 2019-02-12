@@ -390,7 +390,8 @@ public enum DomSet {
            ,DomCardName.Stash
            ,DomCardName.Summon
            ,DomCardName.Sauna
-           ,DomCardName.Dismantle}),
+           ,DomCardName.Dismantle
+           ,DomCardName.Prince}),
                
    Common (new DomCardName[] {DomCardName.Copper
            ,DomCardName.Silver
@@ -412,6 +413,43 @@ public enum DomSet {
             , DomCardName.Acting_Troupe
             , DomCardName.Recruiter
             , DomCardName.Silk_Merchant
+            , DomCardName.Ducat
+            , DomCardName.Treasurer
+            , DomCardName.Flag_Bearer
+            , DomCardName.Swashbuckler
+            , DomCardName.Sculptor
+            , DomCardName.Villain
+            , DomCardName.Border_Guard
+            , DomCardName.Lackeys
+            , DomCardName.Cargo_Ship
+            , DomCardName.Hideout
+            , DomCardName.Capitalism
+            , DomCardName.Cathedral
+            , DomCardName.Sewers
+            , DomCardName.Star_Chart
+            , DomCardName.Silos
+            , DomCardName.Improve
+            , DomCardName.Inventor
+            , DomCardName.Old_Witch
+            , DomCardName.Patron
+            , DomCardName.Research
+            , DomCardName.Spices
+            , DomCardName.Academy
+            , DomCardName.Barracks
+            , DomCardName.Canal
+            , DomCardName.Citadel
+            , DomCardName.City_Gate
+            , DomCardName.Crop_Rotation
+            , DomCardName.Exploration
+            , DomCardName.Fair
+            , DomCardName.Fleet
+            , DomCardName.Guildhall
+            , DomCardName.Innovation
+            , DomCardName.Pageant
+            , DomCardName.Piazza
+            , DomCardName.Scepter
+            , DomCardName.Sinister_Plot
+            , DomCardName.Road_Network
     }
     );
    
