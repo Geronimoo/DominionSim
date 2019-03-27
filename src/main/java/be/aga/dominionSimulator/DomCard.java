@@ -132,7 +132,9 @@ public class DomCard implements Comparable< DomCard >{
      * @return
      */
     public int getPlayPriority() {
-      return name.getPlayPriority();  
+        if (owner!=null && owner.plusOneActionTokenOn()==name && hasCardType(DomCardType.Terminal))
+            return DomCardName.Great_Hall.getPlayPriority();
+        return name.getPlayPriority();
     }
 
     /**
@@ -420,5 +422,9 @@ public class DomCard implements Comparable< DomCard >{
 
     public boolean getDiscardAtCleanUp() {
         return discardAtCleanUp;
+    }
+
+    public boolean wantsToBeCalled() {
+        return true;
     }
 }

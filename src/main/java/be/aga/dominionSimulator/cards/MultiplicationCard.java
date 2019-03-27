@@ -240,7 +240,7 @@ public class MultiplicationCard extends DomCard {
              || theCard.getName()==DomCardName.Crown
              || theCard.getName()==DomCardName.Procession)
     			continue;
-            if (theCard.hasCardType(DomCardType.Action)) 
+            if (theCard.hasCardType(DomCardType.Action) && theCard.wantsToBeMultiplied())
             		//&& theCard.wantsToBePlayed())
             	theActionCount++;
     	}

@@ -679,12 +679,16 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
 
     private void handleTeachers() {
         DomCard theTeacher = getFromTavernMat(DomCardName.Teacher);
-        while (theTeacher != null) {
-            getCardsInPlay().add(removeFromTavernMat(theTeacher));
+        while (theTeacher != null && theTeacher.wantsToBeCalled()) {
+            putInPlay(removeFromTavernMat(theTeacher));
             if (DomEngine.haveToLog) DomEngine.addToLog(this + " calls " + theTeacher + " from the tavern mat");
             theTeacher.doWhenCalled();
             theTeacher = getFromTavernMat(DomCardName.Teacher);
         }
+    }
+
+    private void putInPlay(DomCard domCard) {
+        cardsInPlay.add(domCard);
     }
 
     private void doCleanUpPhase() {
@@ -926,7 +930,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
 
     private void doBuyPhase() {
         long theTime = System.currentTimeMillis();
-        setPhase(DomPhase.Buy);
+        setPhase(DomPhase.Buy_PlayTreasures);
         if (getCurrentGame().getBoard().isLandmarkActive(DomCardName.Arena) && !getCardsFromHand(DomCardType.Action).isEmpty()) {
             if (!getCardsFromHand(DomCardType.Action).get(0).hasCardType(DomCardType.Treasure)) {
                 discard(removeCardFromHand(getCardsFromHand(DomCardType.Action).get(0)));
@@ -952,6 +956,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         coffersToAdd = 0;
         updateMoneyCurve();
 
+        setPhase(DomPhase.Buy_BuyStuff);
         while (buysLeft > 0) {
             if (debt > 0)
                 payOffDebt();
@@ -1542,7 +1547,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                 }
             } while (getFromTavernMat(DomCardName.Coin_of_the_Realm)!=null);
             if ((actionsLeft==0 && villagers==0)|| getCardsFromHand(DomCardType.Action).isEmpty())
-                setPhase(DomPhase.Buy);
+                setPhase(DomPhase.Buy_PlayTreasures);
         } else {
             getCardsInPlay().add(removeFromTavernMat(getFromTavernMat(DomCardName.Coin_of_the_Realm)));
             if (DomEngine.haveToLog)
@@ -1563,7 +1568,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     }
 
     public void setPhase(DomPhase aPhase) {
-        if (aPhase == DomPhase.Buy) {
+        if (aPhase == DomPhase.Buy_PlayTreasures) {
             maybeHandleArena();
             if (getCurrentGame().getArtifactOwner(DomArtifact.Treasure_Chest)==this) {
                 if (DomEngine.haveToLog) DomEngine.addToLog(this + " resolves Artifact:" + DomArtifact.Treasure_Chest);
@@ -2213,6 +2218,9 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
      * @param aCardToTrash
      */
     public void trash(DomCard aCardToTrash) {
+        if (aCardToTrash.getShapeshifterCard()!=null){
+            aCardToTrash=aCardToTrash.getShapeshifterCard();
+        }
         if (aCardToTrash == null)
             return;
         if (resolvingSewers)
@@ -2308,8 +2316,11 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         if (getTypes().contains(DomBotType.AppliesPPR)
                 && (aCardName == DomCardName.Province || aCardName == DomCardName.Colony)
                 && game.countInSupply(aCardName) == 2
-                && checkPenultimateProvinceRule(aCardName))
+                && checkPenultimateProvinceRule(aCardName)) {
+//            System.out.println("PPR! " + getCurrentGame());
             return true;
+        }
+
 
         if (game.countInSupply(aCardName) != 1)
             return false;
@@ -3774,6 +3785,10 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         return plusOneActionTokenOn != null;
     }
 
+    public DomCardName plusOneActionTokenOn() {
+        return plusOneActionTokenOn;
+    }
+
     public void placePlusOneActionToken() {
         plusOneActionTokenOn = getChosenCardForFunction(DomBotFunction.isPlusOneActionTokenSet);
         if (plusOneActionTokenOn != null) {
@@ -4292,14 +4307,14 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                 if (getFromTavernMat(DomCardName.Coin_of_the_Realm) != null) {
                     handleCoinOfTheRealm();
                     if (actionsLeft==0 && villagers==0)
-                        setPhase(DomPhase.Buy);
+                        setPhase(DomPhase.Buy_PlayTreasures);
                 } else {
                     if (villagers==0)
-                      setPhase(DomPhase.Buy);
+                      setPhase(DomPhase.Buy_PlayTreasures);
                 }
             }
         } else {
-            if (selectedCard.hasCardType(DomCardType.Treasure) && getPhase() == DomPhase.Buy && (getBoughtCards().isEmpty()||getBoughtCards().get(getBoughtCards().size()-1).getName()==DomCardName.Villa)) {
+            if (selectedCard.hasCardType(DomCardType.Treasure) && getPhase() == DomPhase.Buy_PlayTreasures) {
                 play(removeCardFromHand(selectedCard));
                 if (previousPlayedCardName != null) {
                     DomEngine.addToLog(name + " plays " + (sameCardCount + 1) + " " + previousPlayedCardName.toHTML()
@@ -4320,7 +4335,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     }
 
     public void attemptToPlayAllTreasures() {
-        if (getPhase()!=DomPhase.Buy)
+        if (getPhase()!=DomPhase.Buy_PlayTreasures)
             return;
         ArrayList<DomCard> theCards = new ArrayList<DomCard>();
         theCards.addAll(cardsInHand);
@@ -4355,9 +4370,10 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     public void attemptToBuyFromSupplyAsHuman(DomCardName card) {
         if (card.hasCardType(DomCardType.Landmark))
             return;
-        if (getPhase()==DomPhase.Buy && buysLeft>0) {
+        if ((getPhase()==DomPhase.Buy_PlayTreasures || getPhase()==DomPhase.Buy_BuyStuff)&& buysLeft>0) {
             if (debt>0) {
-                attemptToPlayAllTreasures();
+                if (getPhase()==DomPhase.Buy_PlayTreasures)
+                  attemptToPlayAllTreasures();
                 payOffDebt();
                 setChanged();
                 notifyObservers();
@@ -4370,6 +4386,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                 return;
             if (availableCoins>=card.getCoinCost(myEngine.getCurrentGame())
                     && availablePotions>=card.getPotionCost()) {
+                setPhase(DomPhase.Buy_BuyStuff);
                 if (card.hasCardType(DomCardType.Event)) {
                     payForAndResolveEvent(card);
                     buysLeft--;
@@ -4391,12 +4408,13 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                         }
                     }
                 }
-                if (getPhase()==DomPhase.Buy && buysLeft==0 && (getDebt()==0 || getAvailableCoins()==0) ) {
+                if (getPhase()==DomPhase.Buy_BuyStuff && buysLeft==0 && (getDebt()==0 || getAvailableCoins()==0) ) {
                     endBuyPhase();
                 }
             } else {
                 if (getTotalPotentialCurrency().customCompare( card.getCost(getCurrentGame())) >= 0 && baseTreasuresInHand()) {
-                    attemptToPlayAllTreasures();
+                    if (getPhase()==DomPhase.Buy_PlayTreasures)
+                      attemptToPlayAllTreasures();
                     attemptToBuyFromSupplyAsHuman(card);
                 }
             }
@@ -4405,7 +4423,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
 
     public void endActions() {
         if (!getCurrentGame().isGameFinished() || currentPhase!=null) {
-            setPhase(DomPhase.Buy);
+            setPhase(DomPhase.Buy_PlayTreasures);
             setChanged();
             notifyObservers();
         }
@@ -4810,5 +4828,9 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
 
     public void setInnovationTriggered(boolean innovationActivated) {
         hasTriggeredInnovation = innovationActivated;
+    }
+
+    public int getVillagers() {
+        return villagers;
     }
 }

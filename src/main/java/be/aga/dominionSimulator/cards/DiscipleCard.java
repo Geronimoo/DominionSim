@@ -18,8 +18,10 @@ public class DiscipleCard extends MultiplicationCard {
 
     @Override
     public void handleCleanUpPhase() {
-        if (owner==null || !areDurationsEmpty())
+        if (!discardAtCleanUp()) {
+            owner.addToCardsToStayInPlay(this);
             return;
+        }
         if ((!owner.isHumanOrPossessedByHuman() && owner.wants(DomCardName.Teacher))
                 || (owner.isHumanOrPossessedByHuman()
                 && owner.getCurrentGame().countInSupply(DomCardName.Teacher)>0

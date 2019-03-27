@@ -20,7 +20,7 @@ public class RocksCard extends DomCard {
         DomCard theSilver = owner.getCurrentGame().takeFromSupply(DomCardName.Silver);
         if (theSilver==null)
             return;
-        if (owner.getPhase()==DomPhase.Buy) {
+        if (owner.getPhase()==DomPhase.Buy_BuyStuff || owner.getPhase()==DomPhase.Buy_PlayTreasures) {
             owner.gainOnTopOfDeck(theSilver);
         } else {
             owner.gainInHand(theSilver);

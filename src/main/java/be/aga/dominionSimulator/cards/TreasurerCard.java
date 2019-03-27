@@ -20,6 +20,10 @@ public class TreasurerCard extends DomCard {
         if (owner.isHumanOrPossessedByHuman()) {
             handleHuman(theTreasures);
         } else {
+            if (owner.getCurrentGame().getArtifactOwner(DomArtifact.Key)!=owner) {
+                owner.getCurrentGame().giveArtifactTo(DomArtifact.Key, owner);
+                return;
+            }
             Collections.sort(theTreasures, SORT_FOR_TRASHING);
             if (!theTreasures.isEmpty() && theTreasures.get(0).getTrashPriority() <= DomCardName.Copper.getTrashPriority() && !owner.removingReducesBuyingPower(theTreasures.get(0))) {
                 owner.trash(owner.removeCardFromHand(theTreasures.get(0)));
@@ -35,7 +39,6 @@ public class TreasurerCard extends DomCard {
                     }
                 }
             }
-            owner.getCurrentGame().giveArtifactTo(DomArtifact.Key, owner);
         }
     }
 
@@ -62,16 +65,16 @@ public class TreasurerCard extends DomCard {
         }
         //Gain a Treasure from trash?
         ArrayList<DomCard> theTrash = owner.getCurrentGame().getTrashedCards();
-        theChooseFrom = new ArrayList<>();
+        ArrayList<DomCard> theChooseFrom2 = new ArrayList<>();
         for (DomCard theCard : theTrash) {
             if (theCard.hasCardType(DomCardType.Treasure))
-              theChooseFrom.add(theCard.getName());
+              theChooseFrom2.add(theCard);
         }
         if (theChooseFrom.isEmpty())
             return;
-        DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Gain from trash?", theChooseFrom, "Gain nothing");
+        DomCard theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCardWithDomCard("Gain from trash?", theChooseFrom2, "Gain nothing");
         if (theChosenCard != null) {
-            owner.gainInHand(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
+            owner.gainInHand(owner.getCurrentGame().getBoard().removeFromTrash(theChosenCard));
         }
     }
 

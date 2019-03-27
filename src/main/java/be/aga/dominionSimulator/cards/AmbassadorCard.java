@@ -164,4 +164,11 @@ public class AmbassadorCard extends DomCard {
     		return 14;
     	return super.getTrashPriority();
     }
+
+    @Override
+    public int getPlayPriority() {
+        if (owner!=null && owner.getTurns()<6)
+            return 22;
+        return super.getPlayPriority();
+    }
 }

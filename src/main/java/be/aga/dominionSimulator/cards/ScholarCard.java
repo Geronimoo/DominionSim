@@ -2,6 +2,7 @@ package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.enums.DomCardName;
+import be.aga.dominionSimulator.enums.DomCardType;
 import be.aga.dominionSimulator.enums.DomPlayStrategy;
 
 public class ScholarCard extends DomCard {
@@ -19,5 +20,12 @@ public class ScholarCard extends DomCard {
     @Override
     public boolean wantsToBePlayed() {
       return !owner.isGoingToBuyTopCardInBuyRules(owner.getTotalPotentialCurrency());
+    }
+
+    @Override
+    public int getPlayPriority() {
+        if (!owner.getCardsFromHand(DomCardType.Action).isEmpty() && owner.getVillagers()>1)
+            return 1000;
+        return super.getPlayPriority();
     }
 }

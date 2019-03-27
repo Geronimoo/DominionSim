@@ -74,7 +74,7 @@ public class CrownCard extends MultiplicationCard {
 
     @Override
     public int getPlayPriority() {
-        if (owner.getPhase()==DomPhase.Buy)
+        if (owner.getPhase()==DomPhase.Buy_PlayTreasures)
             return 1;
         return super.getPlayPriority();
     }

@@ -113,6 +113,12 @@ public class DomBuyCondition {
         	  for (DomPlayer player : owner.getOpponents())
         		 leftValue+=player.countInDeck(leftCardName);
               break;
+          case countAllCardsInOpponentsDeck:
+              if (owner.getOpponents().isEmpty())
+                leftValue=0;
+              else
+                leftValue=owner.getOpponents().get(0).countAllCards();
+              break;
           case isPlusOneBuyTokenSet:
               leftValue=owner.isPlusOneBuyTokenSet() ? 1:0;
               break;
@@ -227,6 +233,12 @@ public class DomBuyCondition {
         	  rightValue=0;
         	  for (DomPlayer player : owner.getOpponents())
         		 rightValue+=player.countInDeck(rightCardName);
+              break;
+          case countAllCardsInOpponentsDeck:
+              if (owner.getOpponents().isEmpty())
+                  rightValue=0;
+              else
+                  rightValue=owner.getOpponents().get(0).countAllCards();
               break;
           case isPlusOneBuyTokenSet:
               rightValue=owner.isPlusOneBuyTokenSet() ? 1:0;

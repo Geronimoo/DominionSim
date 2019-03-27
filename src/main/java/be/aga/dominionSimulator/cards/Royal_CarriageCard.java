@@ -23,7 +23,7 @@ public class Royal_CarriageCard extends DomCard {
         cleanVariablesFromPreviousGames();
         int i=0;
         for (i=owner.getCardsInPlay().size()-1;i>=0;i--) {
-            if (owner.getCardsInPlay().get(i).getName()==DomCardName.Royal_Carriage)
+            if (owner.getCardsInPlay().get(i).getName()==DomCardName.Royal_Carriage || !owner.getCardsInPlay().get(i).hasCardType(DomCardType.Action))
                 continue;
             break;
         }

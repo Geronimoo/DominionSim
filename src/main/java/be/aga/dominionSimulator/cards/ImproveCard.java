@@ -58,4 +58,12 @@ public class ImproveCard extends DomCard {
             }
         }
     }
+
+    @Override
+    public boolean hasCardType(DomCardType aType) {
+        if (aType==DomCardType.Treasure && owner != null && owner.hasBuiltProject(DomCardName.Capitalism) && owner.getCurrentGame().getActivePlayer()==owner)
+            return true;
+        return super.hasCardType(aType);
+    }
+
 }

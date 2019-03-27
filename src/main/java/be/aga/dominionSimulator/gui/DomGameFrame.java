@@ -446,7 +446,7 @@ public void actionPerformed(ActionEvent e) {
             else
                 JOptionPane.showMessageDialog(null, "<html>End Actions</html>");
         }
-        if (myEngine.getCurrentGame().getActivePlayer().getPhase()==DomPhase.Buy) {
+        if (myEngine.getCurrentGame().getActivePlayer().getPhase()==DomPhase.Buy_BuyStuff || myEngine.getCurrentGame().getActivePlayer().getPhase()==DomPhase.Buy_PlayTreasures) {
             DomCardName theCard = myEngine.getCurrentGame().getHumanPlayer().getDesiredCard(myEngine.getCurrentGame().getHumanPlayer().getTotalPotentialCurrency(),false);
             if (theCard!=null)
               JOptionPane.showMessageDialog(null, "<html>Buy " + theCard.toHTML()+"</html>");
@@ -540,7 +540,7 @@ public void actionPerformed(ActionEvent e) {
             myEndActions.setVisible(true);
         else
             myEndActions.setVisible(false);
-        if (theActivePlayer.getPhase()==DomPhase.Buy && theActivePlayer.getBoughtCards().isEmpty() && !theActivePlayer.getCardsFromHand(DomCardType.Treasure).isEmpty())
+        if (theActivePlayer.getPhase()==DomPhase.Buy_PlayTreasures && !theActivePlayer.getCardsFromHand(DomCardType.Treasure).isEmpty())
             myPlayAllTreasurersBTN.setVisible(true);
         else
             myPlayAllTreasurersBTN.setVisible(false);
@@ -551,7 +551,7 @@ public void actionPerformed(ActionEvent e) {
         } else {
             mySpendCoffersBTN.setVisible(false);
         }
-        if (theActivePlayer.getPhase()==DomPhase.Buy && theActivePlayer.getBoughtCards().isEmpty() && theActivePlayer.getCoffers()>0) {
+        if (theActivePlayer.getPhase()==DomPhase.Buy_PlayTreasures && theActivePlayer.getCoffers()>0) {
             mySpendCoffersBTN.setEnabled(true);
         } else {
             mySpendCoffersBTN.setEnabled(false);
@@ -575,12 +575,12 @@ public void actionPerformed(ActionEvent e) {
         } else {
             myPayOffDebtBTN.setVisible(false);
         }
-        if (theActivePlayer.getPhase()==DomPhase.Buy && theActivePlayer.getDebt()>0 && theActivePlayer.getAvailableCoinsWithoutTokens()>0) {
+        if ((theActivePlayer.getPhase()==DomPhase.Buy_BuyStuff || theActivePlayer.getPhase()==DomPhase.Buy_PlayTreasures) && theActivePlayer.getDebt()>0 && theActivePlayer.getAvailableCoinsWithoutTokens()>0) {
             myPayOffDebtBTN.setEnabled(true);
         } else {
             myPayOffDebtBTN.setEnabled(false);
         }
-        if (theActivePlayer.getPhase()==DomPhase.Action || theActivePlayer.getPhase()==DomPhase.Buy)
+        if (theActivePlayer.getPhase()==DomPhase.Action || theActivePlayer.getPhase()==DomPhase.Buy_BuyStuff || theActivePlayer.getPhase()==DomPhase.Buy_PlayTreasures)
             myHintButton.setVisible(true);
         else
             myHintButton.setVisible(false);

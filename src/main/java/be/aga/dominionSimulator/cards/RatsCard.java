@@ -97,7 +97,12 @@ public class RatsCard extends DomCard {
         if (owner==null)
             return super.getTrashPriority();
         if (owner.countInDeck(DomCardName.Rats)>1)
-            return 15;
+            return 13;
         return super.getTrashPriority();
+    }
+
+    @Override
+    public boolean wantsToBeMultiplied() {
+        return false;
     }
 }

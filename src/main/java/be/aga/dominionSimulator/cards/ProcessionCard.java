@@ -29,8 +29,9 @@ public class ProcessionCard extends MultiplicationCard {
                   && theCard.hasCardType(DomCardType.Action))
                     theChooseFrom.add(theCard);
             }
-            if (owner.getCardsInPlay().indexOf(theCardToMultiply) != -1)
-              owner.trash(owner.removeCardFromPlay(theCardToMultiply));
+            DomCard theCard = findCardInPlay(theCardToMultiply);
+            if (owner.getCardsInPlay().indexOf(theCard) != -1)
+              owner.trash(owner.removeCardFromPlay(theCard));
             if (theChooseFrom.isEmpty())
                 return;
             if (theChooseFrom.size()==1) {
@@ -40,7 +41,8 @@ public class ProcessionCard extends MultiplicationCard {
             }
         } else {
             DomCardName theDesiredCard = owner.getDesiredCard(DomCardType.Action, theCardToMultiply.getName().getCost(owner.getCurrentGame()).add(new DomCost(1, 0)), true, false, null);
-            if (owner.getCardsInPlay().indexOf(theCardToMultiply) != -1)
+            DomCard theCard = findCardInPlay(theCardToMultiply);
+            if (owner.getCardsInPlay().indexOf(theCard) != -1)
                 owner.trash(owner.removeCardFromPlay(theCardToMultiply));
             if (theDesiredCard == null) {
                 DomCost theCost = new DomCost(theCardToMultiply.getCoinCost(owner.getCurrentGame()) + 1, theCardToMultiply.getPotionCost());
@@ -51,5 +53,13 @@ public class ProcessionCard extends MultiplicationCard {
                 owner.gain(theDesiredCard);
             }
         }
+    }
+
+    private DomCard findCardInPlay(DomCard theCardToMultiply) {
+        for (DomCard theCard : owner.getCardsInPlay()){
+            if (theCard==theCardToMultiply || (theCard.getShapeshifterCard()!=null && theCard.getShapeshifterCard()==theCardToMultiply))
+                return theCard;
+        }
+        return null;
     }
 }

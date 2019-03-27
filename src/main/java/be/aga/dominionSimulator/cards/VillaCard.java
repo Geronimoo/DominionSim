@@ -21,7 +21,7 @@ public class VillaCard extends DomCard {
         owner.addCardToHand(this);
         if (owner.getCurrentGame().getActivePlayer()==owner) {
             owner.addActions(1);
-            if (owner.getPhase() == DomPhase.Buy) {
+            if (owner.getPhase() == DomPhase.Buy_BuyStuff || owner.getPhase()==DomPhase.Buy_PlayTreasures) {
                 if (owner.isHumanOrPossessedByHuman()) {
                     owner.setPhase(DomPhase.Action);
                 } else {

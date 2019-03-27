@@ -90,7 +90,8 @@ public class GraverobberCard extends DomCard {
         ArrayList<DomCard> theCardsToConsider = new ArrayList<DomCard>();
         for (DomCard theCard:owner.getCurrentGame().getTrashedCards()) {
             if (theCard.getCoinCost(owner.getCurrentGame())>= 3 && theCard.getCoinCost(owner.getCurrentGame())<=6 && theCard.getPotionCost()==0 && theCard.getCost(owner.getCurrentGame()).getDebt()==0)
-                theCardsToConsider.add(theCard);
+                if (theCard.getName()!=DomCardName.Rats)
+                  theCardsToConsider.add(theCard);
         }
         if (theCardsToConsider.isEmpty())
             return false;

@@ -257,14 +257,14 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
             owner.setInnovationTriggered(true);
         } else {
             if (!fillsCargoShip(aCard, aLocation)) {
-                if (aLocation == HAND && aCard.getName() != DomCardName.Villa && aCard.getName() != DomCardName.Ghost_Town && aCard.getName() != DomCardName.Guardian && aCard.getName() != DomCardName.Night_Watchman) {
+                if (aLocation == HAND && aCard.getName() != DomCardName.Villa && aCard.getName() != DomCardName.Ghost_Town && aCard.getName() != DomCardName.Guardian && aCard.getName() != DomCardName.Night_Watchman && aCard.getName() != DomCardName.Den_of_Sin) {
                     owner.getCardsInHand().add(aCard);
                     if (DomEngine.haveToLog) DomEngine.addToLog(owner + " gains a " + aCard + " in hand");
                 }
-                if (aLocation == TOP_OF_DECK && aCard.getName() != DomCardName.Villa && aCard.getName() != DomCardName.Ghost_Town && aCard.getName() != DomCardName.Guardian && aCard.getName() != DomCardName.Night_Watchman) {
+                if (aLocation == TOP_OF_DECK && aCard.getName() != DomCardName.Villa && aCard.getName() != DomCardName.Ghost_Town && aCard.getName() != DomCardName.Guardian && aCard.getName() != DomCardName.Night_Watchman && aCard.getName() != DomCardName.Den_of_Sin) {
                     owner.putOnTopOfDeck(aCard);
                 }
-                if (aLocation == DISCARD && aCard.getName() != DomCardName.Villa && aCard.getName() != DomCardName.Ghost_Town && aCard.getName() != DomCardName.Guardian && aCard.getName() != DomCardName.Night_Watchman) {
+                if (aLocation == DISCARD && aCard.getName() != DomCardName.Villa && aCard.getName() != DomCardName.Ghost_Town && aCard.getName() != DomCardName.Guardian && aCard.getName() != DomCardName.Night_Watchman && aCard.getName() != DomCardName.Den_of_Sin) {
                     if (aCard.getName() == DomCardName.Nomad_Camp) {
                         owner.putOnTopOfDeck(aCard);
                     } else {
@@ -368,7 +368,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
                         return false;
                     }
                 } else {
-                    if (aLocation != HAND && aCard.getName() != DomCardName.Villa && aCard.getName() != DomCardName.Ghost_Town && aCard.getName() != DomCardName.Guardian && aCard.getName() != DomCardName.Night_Watchman
+                    if (aLocation != HAND && aCard.getName() != DomCardName.Villa && aCard.getName() != DomCardName.Ghost_Town && aCard.getName() != DomCardName.Guardian && aCard.getName() != DomCardName.Night_Watchman && aCard.getName() != DomCardName.Den_of_Sin
                             && aCard.getDiscardPriority(1)>DomCardName.Copper.getDiscardPriority(1)) {
                         ((Cargo_ShipCard) theCard).setCargoCard(aCard);
                         return true;

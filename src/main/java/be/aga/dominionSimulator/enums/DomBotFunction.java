@@ -25,6 +25,7 @@ public enum DomBotFunction {
    countCardsLeftInSmallestPile,
    countCardsInPlay,
    countCardsInHand,
+   countAllCardsInOpponentsDeck,
    countCardsInOpponentsDecks,
    countVP,
    countMAXOpponentVP,
@@ -99,6 +100,9 @@ public enum DomBotFunction {
 
        case countCardsInOpponentsDecks :
            return "count in all opponents' decks";
+
+       case countAllCardsInOpponentsDeck:
+           return "count all cards in opponent's deck";
 
        case countGainedCards:
            return "count gained cards";

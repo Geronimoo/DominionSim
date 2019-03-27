@@ -18,7 +18,8 @@ public class SwashbucklerCard extends DomCard {
         if (owner.getCardsFromDiscard().isEmpty())
             return;
         owner.addCoffers(1);
-        if (owner.getCoffers()>=4 && owner.getCurrentGame().getArtifactOwner(DomArtifact.Treasure_Chest)!=owner)
+        if (owner.getCoffers()>=4 && owner.getCurrentGame().getArtifactOwner(DomArtifact.Treasure_Chest)!=owner) {
             owner.getCurrentGame().giveArtifactTo(DomArtifact.Treasure_Chest, owner);
+        }
     }
 }

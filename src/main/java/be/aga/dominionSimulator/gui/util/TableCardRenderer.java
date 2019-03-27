@@ -49,7 +49,7 @@ public class TableCardRenderer extends DefaultTableCellRenderer implements Table
         theText.append("&nbsp;&nbsp;&nbsp;");
         if (myEngine.getCurrentGame().countInSupply(theCard)==0 && !theCard.hasCardType(DomCardType.Event) && !theCard.hasCardType(DomCardType.Landmark) && !theCard.hasCardType(DomCardType.Project) )
                 theText.append("<strike>");
-        if (!theCard.hasCardType(DomCardType.Landmark) && !myEngine.getCurrentGame().getBoard().isFromSeparatePile(theCard) && (myEngine.getCurrentGame().countInSupply(theCard)>0 || theCard.hasCardType(DomCardType.Event) || theCard.hasCardType(DomCardType.Project))&& myEngine.getCurrentGame().getActivePlayer().getPhase()== DomPhase.Buy ) {
+        if (!theCard.hasCardType(DomCardType.Landmark) && !myEngine.getCurrentGame().getBoard().isFromSeparatePile(theCard) && (myEngine.getCurrentGame().countInSupply(theCard)>0 || theCard.hasCardType(DomCardType.Event) || theCard.hasCardType(DomCardType.Project))&& (myEngine.getCurrentGame().getActivePlayer().getPhase()== DomPhase.Buy_BuyStuff || myEngine.getCurrentGame().getActivePlayer().getPhase()== DomPhase.Buy_PlayTreasures) ) {
             if (myEngine.getCurrentGame().getBoard().get(theCard).isEmpty())
                 theTopCard = theCard.createNewCardInstance();
             else
@@ -63,7 +63,7 @@ public class TableCardRenderer extends DefaultTableCellRenderer implements Table
         } else {
             theText.append(theCard.toHTML());
         }
-        if (!theCard.hasCardType(DomCardType.Landmark) && !myEngine.getCurrentGame().getBoard().isFromSeparatePile(theCard) && (myEngine.getCurrentGame().countInSupply(theCard)>0 || theCard.hasCardType(DomCardType.Event) || theCard.hasCardType(DomCardType.Project)) && myEngine.getCurrentGame().getActivePlayer().getPhase()== DomPhase.Buy ) {
+        if (!theCard.hasCardType(DomCardType.Landmark) && !myEngine.getCurrentGame().getBoard().isFromSeparatePile(theCard) && (myEngine.getCurrentGame().countInSupply(theCard)>0 || theCard.hasCardType(DomCardType.Event) || theCard.hasCardType(DomCardType.Project)) && (myEngine.getCurrentGame().getActivePlayer().getPhase()== DomPhase.Buy_BuyStuff || myEngine.getCurrentGame().getActivePlayer().getPhase()== DomPhase.Buy_PlayTreasures) ) {
             if (myEngine.getCurrentGame().getBoard().get(theCard).isEmpty())
                 theTopCard = theCard.createNewCardInstance();
             else

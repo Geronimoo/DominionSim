@@ -2,6 +2,8 @@ package be.aga.dominionSimulator.enums;
 
 public enum DomPhase {
 	Action,
-	Buy,
-    Night, CleanUp
+	Buy_PlayTreasures,
+	Buy_BuyStuff,
+    Night,
+	CleanUp
 }

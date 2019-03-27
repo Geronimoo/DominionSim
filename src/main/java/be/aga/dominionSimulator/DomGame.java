@@ -369,7 +369,7 @@ public double countCardsInSmallestPile() {
 }
 
 public boolean isBuyPhase() {
-  return activePlayer.getPhase()==DomPhase.Buy;
+  return activePlayer.getPhase()==DomPhase.Buy_BuyStuff || activePlayer.getPhase()==DomPhase.Buy_PlayTreasures;
 }
 
 public int getBridgesPlayed() {
@@ -556,7 +556,7 @@ public int getBridge_TrollsInPlay() { return activePlayer!=null?activePlayer.get
         activePlayer.resolveBeginningOfTurnForHuman();
         activePlayer.setPhase(DomPhase.Action);
         if (activePlayer.getCardsFromHand(DomCardType.Action).isEmpty())
-            activePlayer.setPhase(DomPhase.Buy);
+            activePlayer.setPhase(DomPhase.Buy_PlayTreasures);
     }
 
     public DomCard removeFromTrash(DomCardName theChosenCard) {

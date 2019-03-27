@@ -18,6 +18,41 @@ public class TeacherCard extends DomCard {
     }
 
     @Override
+    public boolean wantsToBeCalled() {
+        for (DomBuyRule theRule : owner.getBuyRules()) {
+            if (theRule.getCardToBuy()!=DomCardName.Teacher)
+                continue;
+            for (DomBuyCondition theCondition : theRule.getBuyConditions()) {
+                switch (theCondition.getLeftFunction()) {
+                    case isPlusOneActionTokenSet:
+                        if (!owner.isPlusOneActionTokenSet()) {
+                            return true;
+                        }
+                        break;
+                    case isPlusOneCardTokenSet:
+                        if (!owner.isPlusOneCardTokenSet()) {
+                            return true;
+                        }
+                        break;
+                    case isPlusOneCoinTokenSet:
+                        if (!owner.isPlusOneCoinTokenSet()) {
+                            return true;
+                        }
+                        break;
+                    case isPlusOneBuyTokenSet:
+                        if (!owner.isPlusOneBuyTokenSet()){
+                            return true;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
     public void doWhenCalled() {
         if (owner.isHumanOrPossessedByHuman()) {
             handleHuman();
