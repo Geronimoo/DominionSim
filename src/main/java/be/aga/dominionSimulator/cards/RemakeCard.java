@@ -77,7 +77,7 @@ public class RemakeCard extends DomCard {
         for (DomCardName card : owner.getDeck().keySet()){
             //avoid endless loop when both Temple and Amb in deck
             if (card.getTrashPriority(owner)<16)
-                theCount+=owner.countInDeck(card);
+                theCount+=owner.count(card);
         }
         if (theCount>5)
             return 20;

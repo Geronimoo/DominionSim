@@ -14,24 +14,25 @@ public class MillCard extends DomCard {
     }
 
     public void play() {
-      owner.addActions(1);
-      owner.drawCards(1);
-      if (owner.getCardsInHand().size()<2)
-          return;
-      if (owner.isHumanOrPossessedByHuman()) {
-          handleHuman();
-      } else {
-          if (!owner.getCardsFromHand(DomCardName.Menagerie).isEmpty()) {
-              processMenagerie();
-          } else
-              Collections.sort(owner.getCardsInHand(), SORT_FOR_DISCARD_FROM_HAND);
-              if (owner.getCardsInHand().get(1).getDiscardPriority(owner.getActionsLeft()) <= DomCardName.Copper.getDiscardPriority(1)) {
-                  owner.discard(owner.removeCardFromHand(owner.getCardsInHand().get(0)));
-                  owner.discard(owner.removeCardFromHand(owner.getCardsInHand().get(0)));
-                  owner.addAvailableCoins(2);
-              }
-          }
-      }
+        owner.addActions(1);
+        owner.drawCards(1);
+        if (owner.getCardsInHand().size() < 2)
+            return;
+        if (owner.isHumanOrPossessedByHuman()) {
+            handleHuman();
+        } else {
+            if (!owner.getCardsFromHand(DomCardName.Menagerie).isEmpty()) {
+                processMenagerie();
+            } else {
+                Collections.sort(owner.getCardsInHand(), SORT_FOR_DISCARD_FROM_HAND);
+                if (owner.getCardsInHand().get(1).getDiscardPriority(owner.getActionsLeft()) <= DomCardName.Copper.getDiscardPriority(1)) {
+                    owner.discard(owner.removeCardFromHand(owner.getCardsInHand().get(0)));
+                    owner.discard(owner.removeCardFromHand(owner.getCardsInHand().get(0)));
+                    owner.addAvailableCoins(2);
+                }
+            }
+        }
+    }
 
     private void processMenagerie() {
         MenagerieCard theMenagerie = (MenagerieCard) owner.getCardsFromHand(DomCardName.Menagerie).get(0);

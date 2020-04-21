@@ -379,6 +379,10 @@ public void actionPerformed(ActionEvent e) {
             theInfo.append("<br>");
             theInfo.append("Island Mat:").append(myEngine.getCurrentGame().getActivePlayer().getIslandMatString());
         }
+        if (!myEngine.getCurrentGame().getActivePlayer().getExileMatString().isEmpty()) {
+            theInfo.append("<br>");
+            theInfo.append("Exile Mat:").append(myEngine.getCurrentGame().getActivePlayer().getExileMatString());
+        }
         if (myEngine.getCurrentGame().getActivePlayer().getPirateShipLevel()>0) {
             theInfo.append("<br>");
             theInfo.append("Pirate Ship Level: $").append(myEngine.getCurrentGame().getActivePlayer().getPirateShipLevel());
@@ -436,7 +440,7 @@ public void actionPerformed(ActionEvent e) {
         myEngine.getCurrentGame().getActivePlayer().humanEndsTurn();
     }
     if (e.getActionCommand().equals("End Buy")) {
-        myEngine.getCurrentGame().getActivePlayer().endBuyPhase();
+        myEngine.getCurrentGame().getActivePlayer().endBuyPhaseForHuman();
     }
     if (e.getActionCommand().equals("Hint")) {
 	    if (myEngine.getCurrentGame().getActivePlayer().getPhase()==DomPhase.Action) {

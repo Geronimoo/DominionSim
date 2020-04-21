@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 
-import be.aga.dominionSimulator.cards.Cargo_ShipCard;
-import be.aga.dominionSimulator.cards.DuplicateCard;
+import be.aga.dominionSimulator.cards.*;
 import be.aga.dominionSimulator.enums.DomPhase;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Logger;
@@ -31,6 +30,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
     private ArrayList< DomCard > drawDeck = new ArrayList< DomCard >();
     private final ArrayList< DomCard > discardPile = new ArrayList< DomCard >();
     private ArrayList< DomCard > islandMat = new ArrayList< DomCard >();
+    private ArrayList< DomCard > exileMat = new ArrayList< DomCard >();
 
     private DomPlayer owner;
 	private ArrayList<DomCard> putAsideCards=new ArrayList<DomCard>();
@@ -41,7 +41,8 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
     public DomDeck (DomPlayer aDomPlayer) {
       super( DomCardName.class );
       owner = aDomPlayer; 
-      islandMat = new ArrayList< DomCard >();
+      islandMat = new ArrayList<>();
+      exileMat = new ArrayList<>();
     }
 
     public void shuffle() {
@@ -82,8 +83,13 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
         } else {
             DomCard theBestCard = drawDeck.get(0);
             for (DomCard theCard:drawDeck) {
-                if (theCard.getDiscardPriority(10)>theBestCard.getDiscardPriority(10))
-                    theBestCard=theCard;
+                if (owner.getPhase()==DomPhase.Action) {
+                    if (theCard.getDiscardPriority(owner.actionsLeft)> theBestCard.getDiscardPriority(owner.actionsLeft))
+                        theBestCard = theCard;
+                } else {
+                    if (theCard.getDiscardPriority(10) > theBestCard.getDiscardPriority(10))
+                        theBestCard = theCard;
+                }
             }
             if (DomEngine.haveToLog) DomEngine.addToLog(owner + " puts " + theBestCard+ " on top");
             drawDeck.add(0,drawDeck.remove(drawDeck.indexOf(theBestCard)));
@@ -253,10 +259,24 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 && !owner.hasTriggeredInnovation()
                 && (!owner.isHumanOrPossessedByHuman() || owner.getEngine().getGameFrame().askPlayer("<html>Set " + aCard.getName().toHTML() +" aside for Innovation?</html>", "Resolving " + DomCardName.Innovation.toString()))){
             if (DomEngine.haveToLog) DomEngine.addToLog(owner + " sets " + aCard + " aside to play with Innovation");
-            owner.play(aCard);
             owner.setInnovationTriggered(true);
+            owner.play(aCard);
         } else {
-            if (!fillsCargoShip(aCard, aLocation)) {
+            if (!fillsCargoShip(aCard, aLocation) && !handleGatekeeper(aCard)) {
+                if (owner.count(DomCardName.Sleigh)>0 && !owner.getCardsFromHand(DomCardName.Sleigh).isEmpty()) {
+                    if (((SleighCard)owner.getCardsFromHand(DomCardName.Sleigh).get(0)).wantsToReact(aCard)) {
+                        owner.discardFromHand(owner.getCardsFromHand(DomCardName.Sleigh).get(0));
+                        if (owner.getActionsLeft() > 0 && owner.getPhase() == DomPhase.Action && aCard.hasCardType(DomCardType.Action)) {
+                            aLocation = HAND;
+                        } else {
+                            if (owner.getPhase() != DomPhase.Buy_BuyStuff && aCard.hasCardType(DomCardType.Treasure)) {
+                                aLocation = HAND;
+                            } else {
+                                aLocation = TOP_OF_DECK;
+                            }
+                        }
+                    }
+                }
                 if (aLocation == HAND && aCard.getName() != DomCardName.Villa && aCard.getName() != DomCardName.Ghost_Town && aCard.getName() != DomCardName.Guardian && aCard.getName() != DomCardName.Night_Watchman && aCard.getName() != DomCardName.Den_of_Sin) {
                     owner.getCardsInHand().add(aCard);
                     if (DomEngine.haveToLog) DomEngine.addToLog(owner + " gains a " + aCard + " in hand");
@@ -327,7 +347,13 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
                     if (DomEngine.haveToLog) DomEngine.addToLog(theOpp + " has built " + DomCardName.Road_Network.toHTML());
                     theOpp.drawCards(1);
                 }
-
+                if (theOpp.count(DomCardName.Black_Cat)>0) {
+                    while (!theOpp.getCardsFromHand(DomCardName.Black_Cat).isEmpty()) {
+                        if (!((Black_CatCard)theOpp.getCardsFromHand(DomCardName.Black_Cat).get(0)).wantsToReact())
+                            break;
+                        theOpp.play(theOpp.removeCardFromHand(theOpp.getCardsFromHand(DomCardName.Black_Cat).get(0)));
+                    }
+                }
             }
         }
         if (aCard.hasCardType(DomCardType.Action)) {
@@ -352,28 +378,44 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 theDuplicate=owner.getFromTavernMat(DomCardName.Duplicate);
             }
         }
+        if (owner.getLiveryTriggers()>0 && aCard.getCoinCost(owner.getCurrentGame())>=4) {
+            owner.gain(DomCardName.Horse);
+        }
+        ArrayList<DomCard> cardsToDiscard = new ArrayList<>();
+        for (DomCard theCard : exileMat) {
+            if (theCard==aCard) {
+                //fix for Gatekeeper which doesn't want to trigger discard from exile
+                cardsToDiscard.clear();
+                break;
+            }
+            if (aCard.getName() == theCard.getName() && theCard.getDiscardPriority(1)>=DomCardName.Silver.getDiscardPriority(1))
+                cardsToDiscard.add(theCard);
+        }
+        for (DomCard theCard : cardsToDiscard) {
+            discardPile.add(exileMat.remove(exileMat.indexOf(theCard)));
+            if (DomEngine.haveToLog) DomEngine.addToLog(owner + " discards " + theCard + " from Exile");
+            if (owner.hasInvestedIn(theCard.getName())) {
+                owner.removeFromInvestments(theCard);
+            }
+        }
         aCard.doWhenGained();
     }
 
-    private boolean fillsCargoShip(DomCard aCard, int aLocation) {
-        if (owner.getCurrentGame().getActivePlayer()!=owner)
+    private boolean handleGatekeeper(DomCard aCard) {
+        if (!owner.getCurrentGame().isInKingDom(DomCardName.Gatekeeper))
             return false;
-        for (DomCard theCard: owner.getCardsInPlay()) {
-            if (theCard.getName()==DomCardName.Cargo_Ship && !theCard.discardAtCleanUp() && ((Cargo_ShipCard)theCard).getCargoCard()==null) {
-                if (owner.isHumanOrPossessedByHuman()) {
-                    if (owner.getEngine().getGameFrame().askPlayer("<html>Put " + aCard.getName().toHTML() +" on " + DomCardName.Cargo_Ship.toHTML() + "?</html>", "Resolving " + DomCardName.Cargo_Ship.toHTML())){
-                        ((Cargo_ShipCard) theCard).setCargoCard(aCard);
-                        return true;
-                    } else {
-                        return false;
-                    }
+        if (!aCard.hasCardType(DomCardType.Action) && !aCard.hasCardType(DomCardType.Treasure))
+            return false;
+        for (DomPlayer theOpp : owner.getOpponents()) {
+            for (DomCard theGatekeepr : theOpp.getCardsFromPlay(DomCardName.Gatekeeper)) {
+                if (((GatekeeperCard) theGatekeepr).hasProtectedOpponent(owner)) {
+                    if (DomEngine.haveToLog) DomEngine.addToLog(owner + " is protected from " + theGatekeepr);
+                    return false;
                 } else {
-                    if (aLocation != HAND && aCard.getName() != DomCardName.Villa && aCard.getName() != DomCardName.Ghost_Town && aCard.getName() != DomCardName.Guardian && aCard.getName() != DomCardName.Night_Watchman && aCard.getName() != DomCardName.Den_of_Sin
-                            && aCard.getDiscardPriority(1)>DomCardName.Copper.getDiscardPriority(1)) {
-                        ((Cargo_ShipCard) theCard).setCargoCard(aCard);
+                    if (!owner.hasInExile(aCard.getName())) {
+                        if (DomEngine.haveToLog) DomEngine.addToLog(theGatekeepr + " from player " + theOpp + " attacks!");
+                        owner.moveToExileMat(aCard);
                         return true;
-                    } else {
-                        return false;
                     }
                 }
             }
@@ -381,30 +423,88 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
         return false;
     }
 
-    public boolean addPhysicalCard( DomCard aCard ) {
-      //TODO Trader might conflict with Watchtower ????
-      if (aCard.getName()!=DomCardName.Silver && owner.countInDeck( DomCardName.Trader )>0 && owner.usesTrader(aCard))
-      return false;
-    	
-      if (owner.countInDeck( DomCardName.Watchtower )>0 && owner.usesWatchtower(aCard))
+    private boolean fillsCargoShip(DomCard aCard, int aLocation) {
+        if (owner.getCurrentGame().getActivePlayer()!=owner)
+            return false;
+        if (owner.getCargoShipTriggers()>0) {
+                if (owner.isHumanOrPossessedByHuman()) {
+                    if (owner.getEngine().getGameFrame().askPlayer("<html>Put " + aCard.getName().toHTML() +" on " + DomCardName.Cargo_Ship.toHTML() + "?</html>", "Resolving " + DomCardName.Cargo_Ship.toHTML())){
+                        owner.addCargoCard(aCard);
+                        owner.removeCargoShipTrigger();
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    if (aLocation != HAND && aCard.getName() != DomCardName.Villa && aCard.getName() != DomCardName.Ghost_Town && aCard.getName() != DomCardName.Guardian && aCard.getName() != DomCardName.Night_Watchman && aCard.getName() != DomCardName.Den_of_Sin
+                            && aCard.getDiscardPriority(1)>DomCardName.Copper.getDiscardPriority(1)) {
+                        owner.addCargoCard(aCard);
+                        owner.removeCargoShipTrigger();
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+        }
         return false;
-      
-      if (!containsKey( aCard.getName() )) {
-        put(aCard.getName(), new ArrayList< DomCard >());
-      }
-      get(aCard.getName()).add( aCard );
-      aCard.setOwner(owner);
-      owner.addCardGainedLastTurn(aCard.getName());
-      if (owner.getCurrentGame().getBoard().isLandmarkActive(DomCardName.Labyrinth) && owner==owner.getCurrentGame().getActivePlayer()){
-          if (owner.getCardsGainedLastTurn().size()==2) {
-              int theVP = owner.getCurrentGame().getBoard().removeVPFrom(DomCardName.Labyrinth, 2);
-              if (theVP>0) {
-                  if (DomEngine.haveToLog) DomEngine.addToLog( owner + " gains 2nd card this turn and triggers " + DomCardName.Labyrinth.toHTML());
-                  owner.addVP(theVP);
-              }
-          }
-      }
-      return true;
+    }
+
+    public boolean addPhysicalCard( DomCard aCard ) {
+        //TODO Trader might conflict with Watchtower ????
+        if (aCard.getName() != DomCardName.Silver && owner.count(DomCardName.Trader) > 0 && owner.usesTrader(aCard))
+            return false;
+
+        if (aCard.hasCardType(DomCardType.Action)) {
+            for (DomPlayer thePlayer : owner.getOpponents()) {
+                if (thePlayer.hasInvestments() && thePlayer.hasInvestedIn(aCard.getName())) {
+                    if (DomEngine.haveToLog)
+                        DomEngine.addToLog(thePlayer + " has Invested in " + aCard.getName().toHTML());
+                    thePlayer.drawCards(thePlayer.countInvestmentsIn(aCard.getName()) * 2);
+                }
+            }
+        }
+        if (owner.getCurrentGame().getBoard().get(DomCardName.Falconer) != null && aCard.countTypes() > 1) {
+            for (DomPlayer player : owner.getCurrentGame().getPlayers()) {
+                if (!player.getCardsFromHand(DomCardName.Falconer).isEmpty()) {
+                    if (player.isHumanOrPossessedByHuman()) {
+                        owner.getCurrentGame().setChangedForced();
+                        while (!player.getCardsFromHand(DomCardName.Falconer).isEmpty() && owner.getEngine().getGameFrame().askPlayer("<html>Play " + DomCardName.Falconer.toHTML() + "?</html>", "Resolving " + DomCardName.Falconer.toString()))
+                            player.play(player.removeCardFromHand(player.getCardsFromHand(DomCardName.Falconer).get(0)));
+                    } else {
+                        while (!player.getCardsFromHand(DomCardName.Falconer).isEmpty() && player.getCardsFromHand(DomCardName.Falconer).get(0).wantsToBePlayed()) {
+                            player.play(player.removeCardFromHand(player.getCardsFromHand(DomCardName.Falconer).get(0)));
+                        }
+                    }
+                }
+            }
+        }
+        if (owner.count(DomCardName.Watchtower) > 0 && owner.usesWatchtower(aCard))
+            return false;
+
+        if (!containsKey(aCard.getName())) {
+            put(aCard.getName(), new ArrayList<DomCard>());
+        }
+        get(aCard.getName()).add(aCard);
+        aCard.setOwner(owner);
+        owner.addCardGainedLastTurn(aCard.getName());
+        if (owner.getCurrentGame().getBoard().isLandmarkActive(DomCardName.Labyrinth) && owner == owner.getCurrentGame().getActivePlayer()) {
+            if (owner.getCardsGainedLastTurn().size() == 2) {
+                int theVP = owner.getCurrentGame().getBoard().removeVPFrom(DomCardName.Labyrinth, 2);
+                if (theVP > 0) {
+                    if (DomEngine.haveToLog)
+                        DomEngine.addToLog(owner + " gains 2nd card this turn and triggers " + DomCardName.Labyrinth.toHTML());
+                    owner.addVP(theVP);
+                }
+            }
+        }
+        if (owner.count(DomCardName.Sheepdog) > 0){
+            while (!owner.getCardsFromHand(DomCardName.Sheepdog).isEmpty()) {
+                if (!((SheepdogCard) owner.getCardsFromHand(DomCardName.Sheepdog).get(0)).wantsToReact())
+                    break;
+                owner.play(owner.removeCardFromHand(owner.getCardsFromHand(DomCardName.Sheepdog).get(0)));
+            }
+        }
+        return true;
     }
 
     /**
@@ -600,15 +700,20 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
       return drawDeck.size()+discardPile.size();
     }
 
-    /**
-     *
-     */
     public void returnCardsFromIslandMat() {
         if (DomEngine.haveToLog) DomEngine.addToLog( owner + " returns all cards from the Island Mat: " + getIslandMat() );
         for (DomCard theCard : islandMat) {
             discardPile.add(theCard);
         }
         islandMat.clear();
+    }
+
+    public void returnCardsFromExileMat() {
+        if (DomEngine.haveToLog) DomEngine.addToLog( owner + " returns all cards from the Exile Mat: " + getExileMat() );
+        for (DomCard theCard : exileMat) {
+            discardPile.add(theCard);
+        }
+        exileMat.clear();
     }
 
     /**
@@ -618,11 +723,12 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
       islandMat.add( aCard );
     }
 
-    /**
-     * @return
-     */
     public ArrayList< DomCard > getIslandMat() {
       return islandMat;
+    }
+
+    public ArrayList< DomCard > getExileMat() {
+        return exileMat;
     }
 
     /**
@@ -845,7 +951,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
 		return false;
 	}
 
-    public DomCardName getMostLikelyCrappyCard() {
+    public DomCardName getMostLikelyCrappyCardForDoctor() {
         if (getDeckAndDiscardSize()==0)
             return null;
         if (drawDeck.isEmpty()){
@@ -1021,5 +1127,29 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
     public void addHandToDiscardPile() {
         while (!owner.getCardsInHand().isEmpty())
             discard(owner.getCardsInHand().remove(0));
+    }
+
+    public boolean drawDeckHasJunkLeft() {
+	    for (DomCard theCard : drawDeck) {
+           if (theCard.getTrashPriority()<=DomCardName.Copper.getTrashPriority())
+               return true;
+        }
+        return false;
+    }
+
+    public void moveToExileMat(DomCard domCard) {
+        exileMat.add(domCard);
+    }
+
+    public void discardAllFromExileMat(DomCardName cardName) {
+        ArrayList<DomCard> cardsToDiscard = new ArrayList<>();
+        for (DomCard theCard : exileMat) {
+            if (cardName == theCard.getName())
+                cardsToDiscard.add(theCard);
+        }
+        for (DomCard theCard : cardsToDiscard) {
+            owner.discard(exileMat.remove(exileMat.indexOf(theCard)));
+            if (DomEngine.haveToLog) DomEngine.addToLog(owner + " discards " + theCard + " from Exile");
+        }
     }
 }

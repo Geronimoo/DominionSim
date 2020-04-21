@@ -40,7 +40,7 @@ public class MoneylenderCard extends DomCard {
     public int getTrashPriority() {
         if (owner==null)
             return super.getTrashPriority();
-        if (owner.countInDeck(DomCardName.Copper)==0)
+        if (owner.count(DomCardName.Copper)==0)
             return DomCardName.Curse.getTrashPriority()+1;
         return super.getTrashPriority();
     }

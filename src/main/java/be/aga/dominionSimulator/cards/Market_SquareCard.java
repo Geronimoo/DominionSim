@@ -19,9 +19,9 @@ public class Market_SquareCard extends DomCard {
     public int getPlayPriority() {
         if (!owner.getCardsFromHand(DomCardName.Apprentice).isEmpty())
             return 40;
-        if (!owner.getCardsFromHand(DomCardType.Trasher).isEmpty() && owner.countInDeck(DomCardName.Gold)<11)
+        if (!owner.getCardsFromHand(DomCardType.Trasher).isEmpty() && owner.count(DomCardName.Gold)<11)
             return 40;
-        if (!owner.getCardsFromHand(DomCardName.Moneylender).isEmpty() && !owner.getCardsFromHand(DomCardName.Copper).isEmpty() && owner.countInDeck(DomCardName.Gold)<3)
+        if (!owner.getCardsFromHand(DomCardName.Moneylender).isEmpty() && !owner.getCardsFromHand(DomCardName.Copper).isEmpty() && owner.count(DomCardName.Gold)<3)
             return 40;
         if (!owner.getCardsFromHand(DomCardType.Trasher).isEmpty() && !owner.getCardsFromHand(DomCardName.Madman).isEmpty())
             return 40;

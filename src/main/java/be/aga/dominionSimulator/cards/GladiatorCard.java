@@ -31,9 +31,9 @@ public class GladiatorCard extends DomCard {
           }
           theChosenCard = owner.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Reveal a card", theChooseFrom, "Mandatory!")).get(0);
       } else {
-          int theMinCount = theLeftOpponent.countInDeck(theChosenCard.getName());
+          int theMinCount = theLeftOpponent.count(theChosenCard.getName());
           for (DomCard theCard : owner.getCardsInHand()) {
-              int theCount = theLeftOpponent.countInDeck(theCard.getName());
+              int theCount = theLeftOpponent.count(theCard.getName());
               if (theCount < theMinCount) {
                   theMinCount = theCount;
                   theChosenCard = theCard;

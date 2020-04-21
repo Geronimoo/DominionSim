@@ -42,7 +42,7 @@ public class TransmogrifyCard extends DomCard {
             return;
         }
         Collections.sort( owner.getCardsInHand(), SORT_FOR_TRASHING);
-        if (!owner.getCardsFromHand(DomCardName.Rats).isEmpty() && owner.countInDeck(DomCardName.Rats)>1) {
+        if (!owner.getCardsFromHand(DomCardName.Rats).isEmpty() && owner.count(DomCardName.Rats)>1) {
             owner.trash( owner.removeCardFromHand( owner.getCardsFromHand(DomCardName.Rats).get(0) ) );
             DomCardName theDesiredCard = owner.getDesiredCard(DomCardName.Rats.getCost(owner.getCurrentGame()).add(new DomCost(1,0 ))  , false);
             if (theDesiredCard!=null )

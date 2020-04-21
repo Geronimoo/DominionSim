@@ -36,11 +36,11 @@ public class TableCardRenderer extends DefaultTableCellRenderer implements Table
         DomCardName theCardName = theTopCard == null ? theCard : theTopCard.getName();
         if (theCardName.getDebtCost()>0)
             theText.append(theCardName.getDebtCost()+"D");
-        if (theCard.getCoinCost(myEngine.getCurrentGame())!=0 || (theCard.getPotionCost()==0 && theCard.getDebtCost()==0 && !theCard.hasCardType(DomCardType.Landmark))) {
+        if (theCard.getCoinCost(myEngine.getCurrentGame().getActivePlayer())!=0 || (theCard.getPotionCost()==0 && theCard.getDebtCost()==0 && !theCard.hasCardType(DomCardType.Landmark))) {
             if (myEngine.getCurrentGame().getBoard().get(theCard)!=null && !myEngine.getCurrentGame().getBoard().get(theCard).isEmpty())
               theTopCard = myEngine.getCurrentGame().getBoard().get(theCard).get(0);
             theCardName = theTopCard == null ? theCard : theTopCard.getName();
-            theText.append("$").append(theCardName.getCoinCost(myEngine.getCurrentGame()));
+            theText.append("$").append(theCardName.getCoinCost(myEngine.getCurrentGame().getActivePlayer()));
         }
         if (myEngine.getCurrentGame().getBoard().isFromSeparatePile(theCard))
             theText.append("*");

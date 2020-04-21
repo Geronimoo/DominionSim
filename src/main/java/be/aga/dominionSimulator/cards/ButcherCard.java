@@ -32,7 +32,7 @@ public class ButcherCard extends DomCard {
       if (theDesiredCard==null)
     	theDesiredCard=owner.getCurrentGame().getBestCardInSupplyFor(owner, null, theMaxCostOfCardToGain);
       if (theDesiredCard!=null) {
-          int theCoffersToSpend = theDesiredCard.getCoinCost(owner.getCurrentGame()) - theCardToTrash.getCoinCost(owner.getCurrentGame());
+          int theCoffersToSpend = theDesiredCard.getCoinCost(owner) - theCardToTrash.getCoinCost(owner.getCurrentGame());
           if (theCoffersToSpend>0)
               owner.spendCoffers(theCoffersToSpend);
           owner.gain(theDesiredCard);
@@ -60,7 +60,7 @@ public class ButcherCard extends DomCard {
             return;
         theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Select card to gain from " + this.getName().toString(), theChooseFrom, "Mandatory!");
 
-        int theCoffersToSpend = theChosenCard.getCoinCost(owner.getCurrentGame()) - theCardToButcher.getCoinCost(owner.getCurrentGame());
+        int theCoffersToSpend = theChosenCard.getCoinCost(owner) - theCardToButcher.getCoinCost(owner.getCurrentGame());
         if (theCoffersToSpend>0)
           owner.spendCoffers(theCoffersToSpend);
         owner.gain(theChosenCard);

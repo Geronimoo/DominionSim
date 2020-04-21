@@ -17,7 +17,7 @@ public class TowerCard extends DomCard {
                 continue;
             if (aPlayer.getCurrentGame().countInSupply(theCard)>0)
                 continue;
-            theCount+=aPlayer.countInDeck(theCard);
+            theCount+=aPlayer.count(theCard);
         }
         return theCount;
     }

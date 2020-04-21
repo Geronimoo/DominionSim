@@ -19,7 +19,7 @@ public class ScholarCard extends DomCard {
 
     @Override
     public boolean wantsToBePlayed() {
-      return !owner.isGoingToBuyTopCardInBuyRules(owner.getTotalPotentialCurrency());
+  return !owner.isGoingToBuyTopCardInBuyRules(owner.getTotalPotentialCurrency()) || (owner.getActionsLeft()>1);
     }
 
     @Override

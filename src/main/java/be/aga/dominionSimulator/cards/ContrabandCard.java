@@ -24,10 +24,10 @@ public class ContrabandCard extends DomCard {
       DomPlayer theRightOpponent = owner.getOpponents().get(owner.getOpponents().size()-1);
       ArrayList<DomCardName> cardsGainedLastTurn = theRightOpponent.getCardsGainedLastTurn();
 
-        int theExpectedMoney=cardsGainedLastTurn.isEmpty()? 4 : cardsGainedLastTurn.get(0).getCoinCost(owner.getCurrentGame());
+        int theExpectedMoney=cardsGainedLastTurn.isEmpty()? 4 : cardsGainedLastTurn.get(0).getCoinCost(owner);
         for (;theChosenCard==null && theExpectedMoney>0;theExpectedMoney--) {
         //forbid buying a good card (add $3 to the average money in the deck to simulate a good turn)
-        DomCost theExpectedCurrency = new DomCost(theExpectedMoney + 3, owner.countInDeck(DomCardName.Potion));
+        DomCost theExpectedCurrency = new DomCost(theExpectedMoney + 3, owner.count(DomCardName.Potion));
         theChosenCard = owner.getDesiredCard(theExpectedCurrency, false);
         //if multiple Contrabands played, make sure there are multiple forbidden cards to buy
         if (owner.getForbiddenCardsToBuy().contains(theChosenCard))

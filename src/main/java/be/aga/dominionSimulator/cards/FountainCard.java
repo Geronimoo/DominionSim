@@ -10,6 +10,6 @@ public class FountainCard extends DomCard {
     }
 
     public static int countVP(DomPlayer aPlayer ){
-        return aPlayer.countInDeck(DomCardName.Copper)>=10 ? 15 : 0;
+        return aPlayer.count(DomCardName.Copper)>=10 ? 15 : 0;
     }
 }

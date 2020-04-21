@@ -32,7 +32,7 @@ public class JourneymanCard extends DomCard {
                   theMaxAmount = theCardsToConsider.get(theCard);
               }
           }
-          if (theMaxAmount == owner.getDeckSize()) {
+          if (theMaxAmount == owner.getDeckAndDiscardSize()) {
               theChosenCard = DomCardName.Curse;
           }
       }

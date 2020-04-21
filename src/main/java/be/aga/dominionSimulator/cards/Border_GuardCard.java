@@ -29,10 +29,11 @@ public class Border_GuardCard extends DomCard {
             handleHuman(theRevealedCards);
         } else {
 			Collections.sort(theRevealedCards, SORT_FOR_DISCARD_FROM_HAND);
-			owner.discard(theRevealedCards.get(0));
 			if (theRevealedCards.size()==2) {
+				owner.discard(theRevealedCards.get(0));
 				owner.addCardToHand(theRevealedCards.get(1));
 			} else {
+				owner.discard(theRevealedCards.get(0));
 				owner.discard(theRevealedCards.get(1));
 				owner.addCardToHand(theRevealedCards.get(2));
 			}
@@ -40,11 +41,12 @@ public class Border_GuardCard extends DomCard {
 		if (theRevealedCards.get(0).hasCardType(DomCardType.Action) && theRevealedCards.get(1).hasCardType(DomCardType.Action)
 				&& (theRevealedCards.size()<3 || theRevealedCards.get(2).hasCardType(DomCardType.Action))) {
 		   if (owner.isHumanOrPossessedByHuman()) {
-			   if (owner.getEngine().getGameFrame().askPlayer("<html>Take " + DomArtifact.Horn +"?</html>", "Resolving " + this.getName().toString())){
-				   owner.getCurrentGame().giveArtifactTo(DomArtifact.Horn, owner);
-			   } else {
-				   owner.getCurrentGame().giveArtifactTo(DomArtifact.Lantern, owner);
-			   }
+   		     if (owner.getCurrentGame().getArtifactOwner(DomArtifact.Horn) != owner
+			     && owner.getEngine().getGameFrame().askPlayer("<html>Take " + DomArtifact.Horn +"?</html>", "Resolving " + this.getName().toString())){
+			   owner.getCurrentGame().giveArtifactTo(DomArtifact.Horn, owner);
+			 } else {
+			   owner.getCurrentGame().giveArtifactTo(DomArtifact.Lantern, owner);
+			 }
 		   } else {
 			   if (owner.getCurrentGame().getArtifactOwner(DomArtifact.Horn) == owner)
 				   owner.getCurrentGame().giveArtifactTo(DomArtifact.Lantern, owner);

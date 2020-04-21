@@ -72,7 +72,7 @@ public class SeerCard extends DomCard {
 
     @Override
     public int getPlayPriority() {
-        if (owner.getDeckSize()==0)
+        if (owner.getDeckAndDiscardSize()==0)
             return 1000;
         return super.getPlayPriority();
     }

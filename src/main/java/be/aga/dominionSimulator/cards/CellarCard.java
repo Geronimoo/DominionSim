@@ -20,7 +20,7 @@ public class CellarCard extends DomCard {
           handleHumanPlayer();
       } else {
           checkBadReshuffle();
-          deckSize = owner.getDeckSize();
+          deckSize = owner.getDeckAndDiscardSize();
           discardCount = 0;
           discardExcessTerminalActions();
           discardOtherCellars();

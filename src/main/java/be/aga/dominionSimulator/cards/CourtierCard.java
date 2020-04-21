@@ -104,7 +104,7 @@ public class CourtierCard extends DomCard {
             buysChosen=true;
             return;
         }
-        if (!goldChosen && owner.stillInEarlyGame() && owner.countInDeck(DomCardName.Gold)==0) {
+        if (!goldChosen && owner.stillInEarlyGame() && owner.count(DomCardName.Gold)==0) {
             owner.gain(DomCardName.Gold);
             goldChosen=true;
             return;

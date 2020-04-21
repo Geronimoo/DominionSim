@@ -24,7 +24,7 @@ public class ScavengerCard extends DomCard {
           return;
       Collections.sort(theCardsToConsider, SORT_FOR_DISCARDING);
       DomCard theChosenCard = theCardsToConsider.get(theCardsToConsider.size() - 1);
-      if (owner.countInDeck(DomCardName.Stash)>0) {
+      if (owner.count(DomCardName.Stash)>0) {
           for (DomCard theCard : theCardsToConsider){
               if (theCard.getName()==DomCardName.Scavenger)
                   theChosenCard=theCard;

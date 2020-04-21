@@ -18,7 +18,7 @@ public class RemodelCard extends DomCard {
       if (owner.isHumanOrPossessedByHuman()) {
           handleHumanPlayer();
       } else {
-            DomCard theCardToTrash = owner.findCardToRemodel(this, 2);
+            DomCard theCardToTrash = owner.findCardToRemodel(this, 2, true);
             if (theCardToTrash == null) {
                 //this is needed when card is played with Throne Room effect or Golem
                 Collections.sort(owner.getCardsInHand(), SORT_FOR_TRASHING);
@@ -53,6 +53,6 @@ public class RemodelCard extends DomCard {
 
     @Override
     public boolean wantsToBePlayed() {
-      return owner.findCardToRemodel(this, 2)!=null;
+      return owner.findCardToRemodel(this, 2, true)!=null;
    }
 }

@@ -136,7 +136,6 @@ public class DomEngine {
 			rdr.parse(src);
 			bots = saxHandler.getBots();
 		} catch (Exception e) {
-			// TODO: Update this message since this requires Java 1.8.
 			JOptionPane.showMessageDialog(myGui, "You'll need to download Java 1.8 at www.java.com to runSimulation this program!!!");
 		}
 		Collections.sort( bots );
@@ -235,6 +234,8 @@ public class DomEngine {
                         + thePlayer.getWins() + ")"
                         + " and " + thePlayer.getTies() * 100 / NUMBER_OF_GAMES + "% ties ("
                         + thePlayer.getTies() + ")");
+				LOGGER.info(thePlayer+ " average turn 3 $" + thePlayer.getMoneyCurve(2)/ NUMBER_OF_GAMES);
+				LOGGER.info(thePlayer+" average turn 4 $" + thePlayer.getMoneyCurve(3)/ NUMBER_OF_GAMES);
             }
             myGui.showTiePercentage((int) (theTotalTies*100/NUMBER_OF_GAMES));
             LOGGER.info("Empty Piles Endings : " + emptyPilesEndingCount / NUMBER_OF_GAMES * 100 + "%");

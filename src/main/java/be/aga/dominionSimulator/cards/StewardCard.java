@@ -15,11 +15,18 @@ public class StewardCard extends DomCard {
     }
 
     public void play() {
+        //for testing purposes
+//        if (owner.getName().startsWith("Steward 2") && owner.getTurns()==1) {
+//            Collections.sort(owner.getCardsInHand(),SORT_FOR_TRASHING);
+//            owner.trash(owner.removeCardFromHand(owner.getCardsInHand().get(0)));
+//            owner.trash(owner.removeCardFromHand(owner.getCardsInHand().get(0)));
+//            return;
+//        }
         if (owner.isHumanOrPossessedByHuman()) {
             handleHuman();
             return;
         }
-//    	if (owner.getActionsLeft()>0 && owner.getDeckSize()>0) {
+//    	if (owner.getActionsLeft()>0 && owner.getDeckAndDiscardSize()>0) {
 //    	  owner.drawCards( 2 );
 //    	  return;
 //    	}
@@ -31,7 +38,7 @@ public class StewardCard extends DomCard {
              return;
          }
 
-        if (owner.getActionsLeft()>0 && owner.getDeckSize()>0) {
+        if (owner.getActionsLeft()>0 && owner.getDeckAndDiscardSize()>0) {
             playForCards();
             return;
         }
@@ -80,7 +87,7 @@ public class StewardCard extends DomCard {
         }
 
     private boolean playForCards() {
-      if (owner.getDeckSize()==0){
+      if (owner.getDeckAndDiscardSize()==0){
     	  return false;
       }
       owner.drawCards( 2 );
@@ -104,7 +111,7 @@ public class StewardCard extends DomCard {
         if (cardsInHand.isEmpty())
         	return false;
         if (cardsInHand.size()==1){
-        	if (cardsInHand.get(0).getTrashPriority()<16){
+        	if (cardsInHand.get(0).getTrashPriority()<16 && owner.getTotalMoneyInDeck()>5){
               owner.trash(owner.removeCardFromHand( cardsInHand.get(0)));
               return true;
         	} else {
@@ -119,7 +126,7 @@ public class StewardCard extends DomCard {
                 return true;
             }
         }else {
-            if (cardsInHand.get(0).getTrashPriority() < 20 && cardsInHand.get(1).getTrashPriority() < 20) {
+            if (cardsInHand.get(0).getTrashPriority() < 20 && cardsInHand.get(1).getTrashPriority() < 20 && owner.getTotalMoneyInDeck()>5) {
                 owner.trash(owner.removeCardFromHand(cardsInHand.get(0)));
                 owner.trash(owner.removeCardFromHand(cardsInHand.get(0)));
                 return true;

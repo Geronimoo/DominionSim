@@ -17,7 +17,7 @@ public class RangerCard extends DomCard {
 
     @Override
     public int getPlayPriority() {
-      if (owner.getDeckSize()==0)
+      if (owner.getDeckAndDiscardSize()==0)
           return 100;
       return owner.getActionsLeft()>1 ? 8 : super.getPlayPriority();
     }
@@ -26,7 +26,7 @@ public class RangerCard extends DomCard {
     public int getDiscardPriority(int aActionsLeft) {
         if (aActionsLeft==0)
             return 1;
-        if (owner.getDeckSize()==0)
+        if (owner.getDeckAndDiscardSize()==0)
             return 15;
         return super.getDiscardPriority(aActionsLeft);
     }

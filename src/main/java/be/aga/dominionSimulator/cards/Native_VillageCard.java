@@ -65,10 +65,17 @@ public class Native_VillageCard extends DomCard {
                 return true;
               }
             }
-            break;
+            int theBridgeCount=owner.getCardsFromHand(DomCardName.Bridge).size();
+            int theVillageCount=owner.getCardsFromHand(DomCardName.Native_Village).size()+owner.getActionsLeft();
+            for (DomCard card: owner.getNativeVillageMat()) {
+                theBridgeCount += card.getName()==DomCardName.Bridge ? 1 : 0;
+                theVillageCount += card.getName() == DomCardName.Native_Village ? 1:0;
+            }
+            return theBridgeCount>5 && theVillageCount>5;
+//            break;
 
         case bigTurnGoons:
-            if (owner.countInDeck(DomCardName.Goons)>3) {
+            if (owner.count(DomCardName.Goons)>3) {
               return true;
             }
             break;

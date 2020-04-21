@@ -23,7 +23,7 @@ public class PawnCard extends DomCard {
       boolean buysChosen = false;
 
       //special handling for Library decks
-      if (owner.countInDeck(DomCardName.Library)>0 ) {
+      if (owner.count(DomCardName.Library)>0 ) {
           if (owner.getCardsFromHand(DomCardName.Library).isEmpty()) {
               owner.addActions(1);
               owner.drawCards(1);
@@ -50,7 +50,7 @@ public class PawnCard extends DomCard {
     	  theChoicesCount++;
     	  coinsChosen=true;
       }
-      if (owner.getDeckSize()>0 && theChoicesCount<2){
+      if (owner.getDeckAndDiscardSize()>0 && theChoicesCount<2){
     	  owner.drawCards(1);
     	  theChoicesCount++;
       }

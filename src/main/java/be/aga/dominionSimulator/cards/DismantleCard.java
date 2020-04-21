@@ -22,6 +22,8 @@ public class DismantleCard extends DomCard {
         }
         Collections.sort( owner.getCardsInHand(), SORT_FOR_TRASHING);
         DomCard theCardToTrash = owner.getCardsInHand().get(0);
+//        if (!owner.getCardsFromHand(DomCardName.Gold).isEmpty())
+//            theCardToTrash=owner.getCardsFromHand(DomCardName.Gold).get(0);
         owner.trash(owner.removeCardFromHand(theCardToTrash));
         if (theCardToTrash.getCoinCost(owner.getCurrentGame())>0) {
             DomCost theDownCost = theCardToTrash.getName().getCost(owner.getCurrentGame()).add(new DomCost(-1,0 )) ;
@@ -40,7 +42,7 @@ public class DismantleCard extends DomCard {
         }
         DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!");
         owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
-        if (theChosenCard.getCoinCost(owner.getCurrentGame())>0) {
+        if (theChosenCard.getCoinCost(owner)>0) {
             theChooseFrom = new ArrayList<DomCardName>();
             for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
                 if (theChosenCard.getCost(owner.getCurrentGame()).add(new DomCost(-1, 0)).customCompare(theCard.getCost(owner.getCurrentGame())) >= 0 && owner.getCurrentGame().countInSupply(theCard) > 0)

@@ -17,7 +17,7 @@ public class MysticCard extends DomCard {
     public void play() {
         owner.addActions(1);
         owner.addAvailableCoins(2);
-        if (owner.getDeckSize() == 0)
+        if (owner.getDeckAndDiscardSize() == 0)
             return;
         DomCardName theChoice = null;
         if (owner.isHumanOrPossessedByHuman()) {

@@ -15,7 +15,7 @@ public class GolemCard extends DomCard {
     public void play() {
       ArrayList<DomCard> theRevealedActions = new ArrayList<DomCard>();
       ArrayList<DomCard> theCardsToDiscard = new ArrayList<DomCard>();
-      while (theRevealedActions.size()<2 && owner.getDeckSize()>0) {
+      while (theRevealedActions.size()<2 && owner.getDeckAndDiscardSize()>0) {
     	 ArrayList<DomCard> theCards = owner.revealUntilType(DomCardType.Action);
     	 for (DomCard theCard : theCards) {
     		 if (theCard.hasCardType(DomCardType.Action)&& theCard.getName()!=DomCardName.Golem) {
@@ -56,6 +56,6 @@ public class GolemCard extends DomCard {
 
     @Override
     public boolean wantsToBePlayed() {
-        return owner.getDeckSize()>0;
+        return owner.getDeckAndDiscardSize()>0;
     }
 }

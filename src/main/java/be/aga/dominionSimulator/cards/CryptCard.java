@@ -59,7 +59,7 @@ public class CryptCard extends DomCard {
         } else {
             Collections.sort(myArchivedCards,SORT_FOR_DISCARDING);
             //fix for Capital combo
-            if (!owner.getCardsFromHand(DomCardName.Crypt).isEmpty() && owner.countInDeck(DomCardName.Capital)>0){
+            if (!owner.getCardsFromHand(DomCardName.Crypt).isEmpty() && owner.count(DomCardName.Capital)>0){
                 for (DomCard theCard : myArchivedCards) {
                     if (theCard.getName() == DomCardName.Capital) {
                         owner.addCardToHand(myArchivedCards.remove(myArchivedCards.indexOf(theCard)));
@@ -94,4 +94,10 @@ public class CryptCard extends DomCard {
     public void cleanVariablesFromPreviousGames() {
         myArchivedCards.clear();
     }
+
+    @Override
+    public boolean discardAtCleanUp() {
+        return myArchivedCards.isEmpty();
+    }
+
 }

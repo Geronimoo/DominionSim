@@ -14,6 +14,7 @@ public class Cargo_ShipCard extends DomCard {
 
     public void play() {
       owner.addAvailableCoins(2);
+      owner.addCargoShipTrigger();
     }
 
     public void resolveDuration() {

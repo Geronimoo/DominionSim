@@ -17,7 +17,7 @@ public class DoctorCard extends DomCard {
           handleHumanPlay();
           return;
       }
-      DomCardName theChoice=owner.getDeck().getMostLikelyCrappyCard();
+      DomCardName theChoice=owner.getDeck().getMostLikelyCrappyCardForDoctor();
       if (theChoice==null) {
           theChoice=DomCardName.Curse;
       }

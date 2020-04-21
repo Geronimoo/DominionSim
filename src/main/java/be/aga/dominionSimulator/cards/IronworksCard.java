@@ -32,13 +32,13 @@ public class IronworksCard extends DomCard {
       }
       if (theDesiredCard==null)
     	return;
+        if (theDesiredCard.hasCardType(DomCardType.Treasure))
+            owner.addAvailableCoins(1);
+        if (theDesiredCard.hasCardType(DomCardType.Action))
+            owner.addActions(1);
+        if (theDesiredCard.hasCardType(DomCardType.Victory))
+            owner.drawCards(1);
       owner.gain(theDesiredCard);
-      if (theDesiredCard.hasCardType(DomCardType.Treasure))
-      	owner.addAvailableCoins(1);
-      if (theDesiredCard.hasCardType(DomCardType.Action))
-      	owner.addActions(1);
-      if (theDesiredCard.hasCardType(DomCardType.Victory))
-    	owner.drawCards(1);
     }
 
     private DomCardName handleHumanPlayer() {

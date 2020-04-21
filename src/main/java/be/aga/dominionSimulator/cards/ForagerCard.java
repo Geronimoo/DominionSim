@@ -34,8 +34,13 @@ public class ForagerCard extends DomCard {
               owner.trash(owner.removeCardFromHand(owner.getCardsInHand().get(0)));
           }
       } else {
-          Collections.sort(owner.getCardsInHand(), SORT_FOR_TRASHING);
-          owner.trash(owner.removeCardFromHand(owner.getCardsInHand().get(0)));
+          //quick fix so Trader can trash Estate
+          if (!owner.getCardsFromHand(DomCardName.Trader).isEmpty() && !owner.getCardsFromHand(DomCardName.Copper).isEmpty()  ) {
+             owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(DomCardName.Copper).get(0)));
+          } else {
+              Collections.sort(owner.getCardsInHand(), SORT_FOR_TRASHING);
+              owner.trash(owner.removeCardFromHand(owner.getCardsInHand().get(0)));
+          }
       }
       owner.addAvailableCoins(owner.getCurrentGame().getBoard().countDifferentTreasuresInTrash());
     }

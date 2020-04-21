@@ -71,8 +71,12 @@ public class LookoutCard extends DomCard {
     	int theCount=0;
     	for (DomCardName card : owner.getDeck().keySet()){
     		if (card.getTrashPriority(owner)<16)
-    			theCount+=owner.countInDeck(card);
+    			theCount+=owner.count(card);
     	}
-    	return theCount>=4;
+        for (DomCard card : owner.getCardsInHand()){
+            if (card.getTrashPriority()<16)
+                theCount--;
+        }
+        return theCount*100/owner.countAllCards()>=15;
     }
 }

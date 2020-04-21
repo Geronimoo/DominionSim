@@ -40,7 +40,7 @@ public class SalvagerCard extends DomCard {
         }
         DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!");
         owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
-        owner.addAvailableCoins(theChosenCard.getCoinCost(owner.getCurrentGame()));
+        owner.addAvailableCoins(theChosenCard.getCoinCost(owner));
     }
 
     private DomCard findCardToTrash() {
@@ -48,6 +48,8 @@ public class SalvagerCard extends DomCard {
             return owner.getCardsFromHand(DomCardName.Rats).get(0);
         if (!owner.getCardsFromHand(DomCardName.Fortress).isEmpty())
             return owner.getCardsFromHand(DomCardName.Fortress).get(0);
+        if (!owner.getCardsFromHand(DomCardName.Estate).isEmpty() && !owner.wants(DomCardName.Estate))
+            return owner.getCardsFromHand(DomCardName.Estate).get(0);
     	ArrayList<DomCard> theCardsToConsiderTrashing=new ArrayList<DomCard>();
     	ArrayList<DomCardName> theCardsToGain=new ArrayList<DomCardName>();
     	DomCardName theDesiredCardIfSalvagerNotUsed = owner.getDesiredCard(owner.getTotalPotentialCurrency(),false);

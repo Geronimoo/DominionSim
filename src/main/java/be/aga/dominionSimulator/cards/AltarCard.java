@@ -34,8 +34,10 @@ public class AltarCard extends DomCard {
         for (DomCard theCard : owner.getCardsInHand()) {
             theChooseFrom.add(theCard.getName());
         }
-        DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!");
-        owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
+        if (!theChooseFrom.isEmpty()) {
+            DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!");
+            owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
+        }
         theChooseFrom = new ArrayList<DomCardName>();
         for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
             if (new DomCost(5,0).customCompare(theCard.getCost(owner.getCurrentGame()))>=0 )

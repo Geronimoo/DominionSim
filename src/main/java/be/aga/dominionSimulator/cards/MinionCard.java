@@ -71,6 +71,10 @@ public class MinionCard extends DomCard {
     }
 
     private final void playForCards() {
+      if (owner.getDeck().getDrawDeckSize()<4 && tooMuchJunkInDiscard()) {
+          playForMoney();
+          return;
+      }
       owner.discardHand();
       owner.drawCards( 4 );
       for (DomPlayer thePlayer : owner.getOpponents()) {
@@ -80,6 +84,15 @@ public class MinionCard extends DomCard {
            }
         }
     }
+
+    private boolean tooMuchJunkInDiscard() {
+        int theCount = 0;
+        for (DomCard theCard : owner.getDeck().getDiscardPile()) {
+            theCount += theCard.getDiscardPriority(1) <= DomCardName.Copper.getDiscardPriority(1) ? 1 : 0;
+        }
+        return theCount>3;
+    }
+
     @Override
     public int getPlayPriority() {
     	if (owner.getActionsLeft()>1)

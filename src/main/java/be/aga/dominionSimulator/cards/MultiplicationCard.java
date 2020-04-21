@@ -11,7 +11,7 @@ import be.aga.dominionSimulator.enums.DomCardType;
 
 public class MultiplicationCard extends DomCard {
 
-    private final ArrayList<DomCard> myDurationCards = new ArrayList<DomCard>();
+    protected final ArrayList<DomCard> myDurationCards = new ArrayList<DomCard>();
 
     protected DomCard myCardToMultiply;
 
@@ -44,7 +44,7 @@ public class MultiplicationCard extends DomCard {
       //little fix for Tactician
       if (myCardToMultiply.getName()!=DomCardName.Tactician){
           play(myCardToMultiply, 2);
-          if (getName()==DomCardName.King$s_Court) {
+          if (getName()==DomCardName.King$s_Court || getName()==DomCardName.Mastermind) {
             play(myCardToMultiply, 3);
           }
       }
@@ -55,8 +55,11 @@ public class MultiplicationCard extends DomCard {
         DomCard theCardToMultiply = null;
         if (!owner.getCardsFromHand(DomCardType.Action).isEmpty()) {
             ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
-            for (DomCard theCard : owner.getCardsFromHand(DomCardType.Action))
+            for (DomCard theCard : owner.getCardsFromHand(DomCardType.Action)) {
+                if (getName()==DomCardName.Procession && theCard.hasCardType(DomCardType.Duration))
+                    continue;
                 theChooseFrom.add(theCard.getName());
+            }
             theCardToMultiply = owner.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Select card for " + this.getName().toString(), theChooseFrom, "Don't use")).get(0);
         }
         return theCardToMultiply;
@@ -111,6 +114,9 @@ public class MultiplicationCard extends DomCard {
 	public void resolveDuration() {
       boolean cardOwnerWasNull = false;
       for (DomCard card : myDurationCards) {
+          //Mastermind is tricky
+          if (card.getName()==DomCardName.Mastermind && !((MastermindCard)card).getDurationCards().isEmpty())
+              continue;
         cardOwnerWasNull = false;
     	if (DomEngine.haveToLog) DomEngine.addToLog( owner + " played " +card + " with "+ this);
         if (card.owner==null) {
@@ -120,7 +126,7 @@ public class MultiplicationCard extends DomCard {
           card.resolveDuration();
         }
 	    card.resolveDuration();
-	    if (getName()==DomCardName.King$s_Court){
+	    if (getName()==DomCardName.King$s_Court || getName()==DomCardName.Mastermind){
 	      if (DomEngine.haveToLog) DomEngine.addToLog( owner + " played " +card + " with "+ this);
 		  card.resolveDuration();
 	    }
@@ -149,16 +155,20 @@ public class MultiplicationCard extends DomCard {
               continue;
           if (getName()==DomCardName.Procession && theCard.getName()==DomCardName.Fortress)
               return theCard;
+          if (getName()==DomCardName.Procession && theCard.hasCardType(DomCardType.Duration))
+              continue;
           if (theCard.hasCardType(DomCardType.Multiplier))
         	return theCard;
           if (theCard.getName()==DomCardName.Chariot_Race) //Chariot Race is useless when deck is empty so throne it first
+              return theCard;
+          if (theCard.getName()==DomCardName.Conspirator) //Conspirator instantly becomes a Grand Market with Throne Room
               return theCard;
           if (theCard.hasCardType(DomCardType.Action) && theCard.wantsToBePlayed()){
             thePerhapsCard = theCard;
         	if (theCard.hasCardType(DomCardType.Terminal)
                 && (owner.getActionsLeft()>0 || owner.getCardsFromHand(DomCardType.Terminal).size()==owner.getCardsFromHand(DomCardType.Action).size())
         	    && (theCardToPlay == null ||theCard.getDiscardPriority(1)> theCardToPlay.getDiscardPriority(1))) {
-              if (theCard.getName()!=DomCardName.Trading_Post)
+              if (theCard.getName()!=DomCardName.Trading_Post && theCard.getName()!=DomCardName.Tactician)
                 theCardToPlay = theCard;
         	} 
     		if (!theCard.hasCardType(DomCardType.Terminal) 
@@ -191,7 +201,7 @@ public class MultiplicationCard extends DomCard {
                 }
             }
         }
-        if (theCardToPlay!=null && owner.getDeckSize()==0 && theCardToPlay.hasCardType(DomCardType.Card_Advantage)) {
+        if (theCardToPlay!=null && owner.getDeckAndDiscardSize()==0 && theCardToPlay.hasCardType(DomCardType.Card_Advantage)) {
             for (int i = 0;i<owner.getCardsInHand().size();i++) {
                 DomCard theCard = owner.getCardsInHand().get( i );
                 if (theCard.hasCardType(DomCardType.Action) && theCard.wantsToBePlayed()){
@@ -225,7 +235,7 @@ public class MultiplicationCard extends DomCard {
     		return 0;
         if (getName()==DomCardName.Procession && !owner.getCardsFromHand(DomCardName.Fortress).isEmpty())
             return owner.getCardsFromHand(DomCardName.Fortress).get(0).getPlayPriority()-1;
-//        if (theActionCount>1 && !owner.getCardsFromHand(DomCardType.Card_Advantage).isEmpty() && owner.getDeckSize()>0)
+//        if (theActionCount>1 && !owner.getCardsFromHand(DomCardType.Card_Advantage).isEmpty() && owner.getDeckAndDiscardSize()>0)
 //            return owner.getCardsFromHand(DomCardType.Card_Advantage).get(0).getPlayPriority()-1;
     	return super.getPlayPriority();
     }

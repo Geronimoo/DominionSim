@@ -21,7 +21,7 @@ public class Fool$s_GoldCard extends DomCard {
     public double getPotentialCoinValue() {
     	//TODO needs checking (probably not correct)
     	if (!owner.getCardsInHand().contains(this) && !owner.getCardsInPlay().contains(this))
-    		return owner.countInDeck(DomCardName.Fool$s_Gold);
+    		return owner.count(DomCardName.Fool$s_Gold);
     	double theNumberOfFG = owner.getCardsFromPlay(DomCardName.Fool$s_Gold).size()+owner.getCardsFromHand(DomCardName.Fool$s_Gold).size();
     	if (theNumberOfFG==0)
     		return 0;

@@ -41,6 +41,6 @@ public class AdvisorCard extends DomCard {
 
     @Override
     public boolean wantsToBePlayed() {
-        return owner.getDeckSize()>1;
+        return owner.getDeckAndDiscardSize()>1;
     }
 }

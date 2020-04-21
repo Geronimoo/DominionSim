@@ -44,7 +44,7 @@ public class ArtificerCard extends DomCard {
       DomCardName theCardToBeBought = owner.getDesiredCard(owner.getTotalPotentialCurrency(), false);
       if (theDesiredCardForDiscardingAll!=null && (theCardToBeBought==null || theDesiredCardForDiscardingAll.getTrashPriority(owner)>theCardToBeBought.getTrashPriority(owner))) {
           theDesiredCard = theDesiredCardForDiscardingAll;
-          j = theDesiredCardForDiscardingAll.getCoinCost(owner.getCurrentGame());
+          j = theDesiredCardForDiscardingAll.getCoinCost(owner);
       }
 
       for (i=0;i<j;i++) {
@@ -65,7 +65,7 @@ public class ArtificerCard extends DomCard {
         owner.setNeedsToUpdateGUI();
         ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
         for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
-            if (new DomCost(theChosenCards.size(),0).customCompare(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0)
+            if (new DomCost(theChosenCards.size(),0).customCompare(theCard.getCost(owner.getCurrentGame()))==0 && owner.getCurrentGame().countInSupply(theCard)>0)
                 theChooseFrom.add(theCard);
         }
         if (theChooseFrom.isEmpty())

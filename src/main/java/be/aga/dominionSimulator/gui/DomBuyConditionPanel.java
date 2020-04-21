@@ -108,6 +108,7 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
 //        myLeftCardBox.setRenderer(new CustomComboBoxRenderer());
         myLeftCardBox.setVisible(false);
         if (aBuyCondition.getLeftFunction() == DomBotFunction.countCardsInDeck
+         || aBuyCondition.getLeftFunction() == DomBotFunction.countCardsInDeckNoMats
          || aBuyCondition.getLeftFunction() == DomBotFunction.countCardsInSupply
          || aBuyCondition.getLeftFunction() == DomBotFunction.countCardsInOpponentsDecks
          || aBuyCondition.getLeftFunction() == DomBotFunction.countCardsInHand
@@ -144,6 +145,7 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
         myRightCardBox.setRenderer(new CustomComboBoxRenderer());
         myRightCardBox.setVisible(false);
         if (aBuyCondition.getRightFunction() == DomBotFunction.countCardsInDeck
+				||aBuyCondition.getRightFunction() == DomBotFunction.countCardsInDeckNoMats
          || aBuyCondition.getRightFunction() == DomBotFunction.countCardsInOpponentsDecks
          || aBuyCondition.getRightFunction() == DomBotFunction.countCardsInSupply
          || aBuyCondition.getRightFunction() == DomBotFunction.countCardsInHand
@@ -181,7 +183,8 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
 				myLeftCardBox.setVisible(false);
 				myLeftTypeBox.setVisible(false);
 				if (myLeftFunctionBox.getSelectedItem() == DomBotFunction.countCardsInDeck
-				 || myLeftFunctionBox.getSelectedItem() == DomBotFunction.countCardsInOpponentsDecks
+						|| myLeftFunctionBox.getSelectedItem() == DomBotFunction.countCardsInDeckNoMats
+						|| myLeftFunctionBox.getSelectedItem() == DomBotFunction.countCardsInOpponentsDecks
 				 || myLeftFunctionBox.getSelectedItem() == DomBotFunction.countCardsInSupply
 				 || myLeftFunctionBox.getSelectedItem() == DomBotFunction.countCardsInHand
 				 || myLeftFunctionBox.getSelectedItem() == DomBotFunction.countCardsInPlay
@@ -206,7 +209,8 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
 				myRightCardBox.setVisible(false);
 				myRightTypeBox.setVisible(false);
 				if (myRightFunctionBox.getSelectedItem() == DomBotFunction.countCardsInDeck
-			     || myRightFunctionBox.getSelectedItem() == DomBotFunction.countCardsInOpponentsDecks
+						|| myRightFunctionBox.getSelectedItem() == DomBotFunction.countCardsInDeckNoMats
+						|| myRightFunctionBox.getSelectedItem() == DomBotFunction.countCardsInOpponentsDecks
 		         || myRightFunctionBox.getSelectedItem() == DomBotFunction.countCardsInSupply
 		         || myRightFunctionBox.getSelectedItem() == DomBotFunction.countCardsInHand
 				 || myRightFunctionBox.getSelectedItem() == DomBotFunction.countCardsInPlay

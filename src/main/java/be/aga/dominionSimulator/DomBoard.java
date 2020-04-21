@@ -48,6 +48,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     private DomCard myZombieMason;
     private DomCard myZombieSpy;
     private ArrayList<DomCard> druidBoons;
+    private HashSet<DomCardName> activeWays = new HashSet<>();
 
     public DomBoard ( Class< DomCardName > aKeyType, ArrayList< DomPlayer > aPlayers ) {
       super( aKeyType );
@@ -319,6 +320,17 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 if (theCard == DomCardName.Marauder || theCard == DomCardName.Bandit_Camp || theCard == DomCardName.Pillage)
                     addSeparatePile(DomCardName.Spoils, 15);
 
+                if (theCard == DomCardName.Livery
+                        || theCard == DomCardName.Paddock
+                        || theCard == DomCardName.Supplies
+                        || theCard == DomCardName.Groom
+                        || theCard == DomCardName.Cavalry
+                        || theCard == DomCardName.Demand
+                        || theCard == DomCardName.Scrap
+                        || theCard == DomCardName.Stampede
+                        || theCard == DomCardName.Sleigh)
+                    addSeparatePile(DomCardName.Horse, 30);
+
                 if (theCard == DomCardName.Devil$s_Workshop)
                     addSeparatePile(DomCardName.Imp, 13);
 
@@ -343,6 +355,9 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 }
                 if (theCard.hasCardType(DomCardType.Landmark)) {
                     addLandmark(theCard);
+                }
+                if (theCard.hasCardType(DomCardType.Way)) {
+                    addWay(theCard);
                 }
                 if (thePlayer.getBaneCard() != null) {
                     addCardPile(thePlayer.getBaneCard());
@@ -390,6 +405,10 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 }
             }
         }
+    }
+
+    private void addWay(DomCardName theCard) {
+        activeWays.add(theCard);
     }
 
     private void addZombiesToTrash() {
@@ -879,7 +898,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 		return theInfo;
 	}
 
-	public DomCardName getBestCardInSupplyFor(DomPlayer aPlayer, DomCardType aType, DomCost domCost, boolean anExactCost, DomCardType aForbiddenType) {
+	public DomCardName getBestCardInSupplyFor(DomPlayer aPlayer, DomCardType aType, DomCost domCost, boolean anExactCost, DomCardType aForbiddenType, DomCardName aForbiddenCard) {
 		DomCardName theCardToGet = null;
 		for (DomCardName theCardName : keySet()){
 			if (get(theCardName)!=null
@@ -1033,6 +1052,10 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 
     public boolean isLandmarkActive(DomCardName cardName) {
         return activeLandmarks.contains(cardName);
+    }
+
+    public boolean isWayActive(DomCardName cardName) {
+        return activeWays.contains(cardName);
     }
 
     public int getAllVPFromPile(DomCardName cardName) {

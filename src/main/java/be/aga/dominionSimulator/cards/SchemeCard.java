@@ -34,7 +34,7 @@ public class SchemeCard extends DomCard {
     			theTerminalCount+=card.hasCardType(DomCardType.Terminal) && card.isTaggedByScheme()? 1 : 0;
     			theVillageCount+=card.hasCardType(DomCardType.Village) && card.isTaggedByScheme() ? 1 : 0;
 			}
-			if (!theCard.hasCardType(DomCardType.Terminal)&&theTerminalCount<=theVillageCount) {
+			if (!theCard.hasCardType(DomCardType.Terminal)&&(theTerminalCount<=theVillageCount||owner.getCardsFromHand(DomCardType.Village).isEmpty())) {
 				theCard.addSchemeTag();
 				break;
 			} else {

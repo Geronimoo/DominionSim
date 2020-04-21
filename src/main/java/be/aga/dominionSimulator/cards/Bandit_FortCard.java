@@ -11,8 +11,8 @@ public class Bandit_FortCard extends DomCard {
 
     public static int countVP(DomPlayer aPlayer ){
         int theVP = 0;
-        theVP-=aPlayer.countInDeck(DomCardName.Silver)*2;
-        theVP-=aPlayer.countInDeck(DomCardName.Gold)*2;
+        theVP-=aPlayer.count(DomCardName.Silver)*2;
+        theVP-=aPlayer.count(DomCardName.Gold)*2;
         return theVP;
     }
 }

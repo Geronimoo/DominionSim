@@ -22,6 +22,8 @@ public class VillaCard extends DomCard {
         if (owner.getCurrentGame().getActivePlayer()==owner) {
             owner.addActions(1);
             if (owner.getPhase() == DomPhase.Buy_BuyStuff || owner.getPhase()==DomPhase.Buy_PlayTreasures) {
+                //Guildhall and Merchant Guild add Coppers we can't use in the buy phase
+                owner.handleDelayedCoffers();
                 if (owner.isHumanOrPossessedByHuman()) {
                     owner.setPhase(DomPhase.Action);
                 } else {

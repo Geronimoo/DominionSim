@@ -21,14 +21,14 @@ public class RebuildCard extends DomCard {
             return;
         }
         DomCardName theNamedCard;
-        if (owner.countInDeck(DomCardName.Estate) - owner.getCardsFromHand(DomCardName.Estate).size() > 0
+        if (owner.count(DomCardName.Estate) - owner.getCardsFromHand(DomCardName.Estate).size() > 0
                 && owner.getCurrentGame().countInSupply(DomCardName.Duchy) > 0
-                && owner.countInDeck(DomCardName.Province)-owner.getCardsFromHand(DomCardName.Province).size()==0) {
+                && owner.count(DomCardName.Province)-owner.getCardsFromHand(DomCardName.Province).size()==0) {
             theNamedCard = DomCardName.Duchy;
         } else {
             theNamedCard = DomCardName.Province;
         }
-        if (owner.countInDeck(DomCardName.Duchy)==0 && owner.getCurrentGame().countInSupply(DomCardName.Duchy)==0 && owner.getCurrentGame().countInSupply(DomCardName.Province)>0)
+        if (owner.count(DomCardName.Duchy)==0 && owner.getCurrentGame().countInSupply(DomCardName.Duchy)==0 && owner.getCurrentGame().countInSupply(DomCardName.Province)>0)
             theNamedCard=DomCardName.Estate;
 
         if (owner.getCurrentGame().countInSupply(DomCardName.Colony)>0)

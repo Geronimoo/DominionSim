@@ -86,9 +86,9 @@ public class TempleCard extends DomCard {
             if (card==DomCardName.Temple || card==DomCardName.Ambassador)
                 continue;
             if (card.getTrashPriority(owner)<16)
-                theCount+=owner.countInDeck(card);
+                theCount+=owner.count(card);
         }
-        if (theCount<3 && owner.countInDeck(DomCardName.Curse)==0)
+        if (theCount<3 && owner.count(DomCardName.Curse)==0)
             return 14;
         return super.getTrashPriority();
     }

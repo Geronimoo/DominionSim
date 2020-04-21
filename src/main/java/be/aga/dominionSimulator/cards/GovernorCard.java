@@ -31,7 +31,7 @@ public class GovernorCard extends DomCard {
        || !owner.getCardsFromHand(DomCardName.Library).isEmpty()) {
     	  if (tryToRemodel())
     		  return;
-		  if (!owner.getCardsFromHand(DomCardName.Minion).isEmpty() && owner.countInDeck(DomCardName.Minion)>5){
+		  if (!owner.getCardsFromHand(DomCardName.Minion).isEmpty() && owner.count(DomCardName.Minion)>5){
 			  drawCards();
 			  return;
 		  }
@@ -43,7 +43,7 @@ public class GovernorCard extends DomCard {
     	  if (tryToRemodel())
     		  return;
       }
-      if (owner.getDeckSize()>=3)
+      if (owner.getDeckAndDiscardSize()>=3)
     	  drawCards();
       else
     	  gainGold();
@@ -86,11 +86,11 @@ public class GovernorCard extends DomCard {
 	}
 
 	private void playGoldEarlyTrashMid() {
-        if (owner.countInDeck(DomCardName.Governor)>3 && !owner.getCardsFromHand(DomCardName.Gold).isEmpty()) {
+        if (owner.count(DomCardName.Governor)>3 && !owner.getCardsFromHand(DomCardName.Gold).isEmpty()) {
             remodelSomething();
             return;
         }
-        if (owner.stillInEarlyGame() && owner.countInDeck(DomCardName.Gold)>0
+        if (owner.stillInEarlyGame() && owner.count(DomCardName.Gold)>0
                 && owner.getDesiredCard(owner.getTotalPotentialCurrency(),false)!=DomCardName.Governor
               && owner.getDesiredCard(owner.getTotalPotentialCurrency(),false)!=DomCardName.Province) {
             drawCards();

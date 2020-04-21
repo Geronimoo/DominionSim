@@ -66,4 +66,9 @@ public class SurvivorsCard extends DomCard {
     	  }
       }
 	}
+
+	@Override
+	public boolean wantsToBePlayed() {
+		return !owner.wants(DomCardName.Animal_Fair);
+	}
 }

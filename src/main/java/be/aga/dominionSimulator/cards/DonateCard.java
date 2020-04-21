@@ -37,7 +37,7 @@ public class DonateCard extends DomCard {
         while (!owner.getCardsInHand().isEmpty()) {
             DomCard theCardToTrash = owner.getCardsInHand().get(0);
             if (theCardToTrash.getTrashPriority() > DomCardName.Copper.getTrashPriority()
-                    || owner.getTotalMoneyInDeck() - theCardToTrash.getPotentialCoinValue() < 4) {
+                    || (theCardToTrash.getName()==DomCardName.Copper  && owner.getTotalMoneyInDeck()  < 7)) {
                 break;
             }
             owner.trash(owner.removeCardFromHand(theCardToTrash));

@@ -11,7 +11,7 @@ public class Acting_TroupeCard extends DomCard {
 
     public void play() {
       owner.addVillagers(4);
-      if (!owner.getCurrentGame().getBoard().getTrashedCards().contains(this)) {
+      if (owner.getCardsInPlay().contains(this)) {
           owner.removeCardFromPlay(this);
           owner.trash(this);
       } else {

@@ -116,7 +116,7 @@ public class AmbassadorCard extends DomCard {
             if (owner.getTotalMoneyInDeck()-theRevealedCard.getPotentialCoinValue() < 3
                 || theRevealedCard.getTrashPriority()>DomCardName.Copper.getTrashPriority())
                break;
-            if (theCardToReturn!=DomCardName.Curse || owner.getCurrentGame().countInSupply(DomCardName.Curse)==0 || owner.countInDeck(DomCardName.Curse)>1) {
+            if (theCardToReturn!=DomCardName.Curse || owner.getCurrentGame().countInSupply(DomCardName.Curse)==0 || owner.count(DomCardName.Curse)>1) {
                 if (owner.getActionsLeft()==0 || owner.getNextActionToPlay()==null || owner.getNextActionToPlay().getName()!=DomCardName.Ambassador || (!owner.getCardsFromHand(theCardToReturn).isEmpty() && owner.getCardsFromHand(theCardToReturn).size()>0)) {
                     DomCard theCardToRemove = owner.removeCardFromHand(theRevealedCard);
                     owner.returnToSupply(theCardToRemove);
@@ -158,9 +158,9 @@ public class AmbassadorCard extends DomCard {
             if (card==DomCardName.Ambassador || card==DomCardName.Temple)
     			continue;
     		if (card.getTrashPriority(owner)<16)
-    			theCount+=owner.countInDeck(card);
+    			theCount+=owner.count(card);
     	}
-    	if (theCount<3 && owner.countInDeck(DomCardName.Curse)==0)
+    	if (theCount<3 && owner.count(DomCardName.Curse)==0)
     		return 14;
     	return super.getTrashPriority();
     }

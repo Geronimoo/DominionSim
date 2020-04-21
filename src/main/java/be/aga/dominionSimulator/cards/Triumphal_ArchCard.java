@@ -18,21 +18,21 @@ public class Triumphal_ArchCard extends DomCard {
         for (DomCardName theCard : aPlayer.getDeck().keySet()) {
             if (!theCard.hasCardType(DomCardType.Action))
                 continue;
-            if (aPlayer.countInDeck(theCard)>theMax) {
-                theMax=aPlayer.countInDeck(theCard);
+            if (aPlayer.count(theCard)>theMax) {
+                theMax=aPlayer.count(theCard);
                 theMaxAction=theCard;
             }
         }
         for (DomCardName theCard : aPlayer.getDeck().keySet()) {
             if (theCard.hasCardType(DomCardType.Action) && theCard!=theMaxAction) {
-                if (theCard!=theMaxAction && aPlayer.countInDeck(theCard) <= theMax && aPlayer.countInDeck(theCard)>theSecondMax) {
-                    theSecondMax = aPlayer.countInDeck(theCard);
+                if (theCard!=theMaxAction && aPlayer.count(theCard) <= theMax && aPlayer.count(theCard)>theSecondMax) {
+                    theSecondMax = aPlayer.count(theCard);
                     theSecondMaxAction = theCard;
                 }
             }
         }
         if (theSecondMaxAction==null)
             return 0;
-        return aPlayer.countInDeck(theSecondMaxAction)*3;
+        return aPlayer.count(theSecondMaxAction)*3;
     }
 }

@@ -36,7 +36,7 @@ public class MasqueradeCard extends DomCard {
       }
       DomCard theCardToTrash=owner.getCardsInHand().get( 0 );
       if (theCardToTrash.getTrashPriority() < 16 && !owner.removingReducesBuyingPower( theCardToTrash )) {
-        if (owner.countInDeck(DomCardName.Baron)>0 && owner.countInDeck(DomCardName.Estate)<3 && theCardToTrash.getName()==DomCardName.Estate){
+        if (owner.count(DomCardName.Baron)>0 && owner.count(DomCardName.Estate)<3 && theCardToTrash.getName()==DomCardName.Estate){
             if (!owner.getCardsFromHand(DomCardName.Copper).isEmpty() && !owner.removingReducesBuyingPower(owner.getCardsFromHand(DomCardName.Copper).get(0))) {
                 theCardToTrash = owner.getCardsFromHand(DomCardName.Copper).get(0);
             }else {

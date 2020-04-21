@@ -10,11 +10,11 @@ public class PalaceCard extends DomCard {
     }
 
     public static int countVP(DomPlayer aPlayer ){
-        int theMinCount = aPlayer.countInDeck(DomCardName.Copper);
-        int theCount = aPlayer.countInDeck(DomCardName.Silver);
+        int theMinCount = aPlayer.count(DomCardName.Copper);
+        int theCount = aPlayer.count(DomCardName.Silver);
         if (theCount<theMinCount)
             theMinCount=theCount;
-        theCount = aPlayer.countInDeck(DomCardName.Gold);
+        theCount = aPlayer.count(DomCardName.Gold);
         if (theCount<theMinCount)
             theMinCount=theCount;
         return theMinCount*3;

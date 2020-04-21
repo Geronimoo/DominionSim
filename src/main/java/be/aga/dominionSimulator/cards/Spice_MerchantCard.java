@@ -21,7 +21,7 @@ public class Spice_MerchantCard extends DomCard {
 	  }
       if (!trashTreasureFromHand())
     	  return;
-      if (owner.getDeckSize()==0 
+      if (owner.getDeckAndDiscardSize()==0
     	&& owner.getActionsLeft()==0 
     	&& owner.getCardsFromHand(DomCardType.Action).isEmpty()){
     	  playForMoney();

@@ -48,4 +48,17 @@ public class IronmongerCard extends DomCard {
         return super.hasCardType(aType);
     }
 
+    @Override
+    public int getPlayPriority() {
+        if (owner.getDeckAndDiscardSize()==0)
+            return 500;
+        return super.getPlayPriority();
+    }
+
+    @Override
+    public int getDiscardPriority(int aActionsLeft) {
+        if (aActionsLeft>1 && owner.getDeckAndDiscardSize()==0)
+            return 10;
+        return super.getDiscardPriority(aActionsLeft);
+    }
 }

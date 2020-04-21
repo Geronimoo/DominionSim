@@ -25,6 +25,6 @@ public class ObeliskCard extends DomCard {
       DomCardName cardForObelisk = aPlayer.getCurrentGame().getObeliskChoice();
       if (cardForObelisk == null)
           return 0;
-      return aPlayer.countInDeck(cardForObelisk)*2;
+      return aPlayer.count(cardForObelisk)*2;
     }
 }

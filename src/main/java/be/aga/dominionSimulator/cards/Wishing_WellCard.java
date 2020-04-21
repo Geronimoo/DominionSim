@@ -16,7 +16,7 @@ public class Wishing_WellCard extends DomCard {
     public void play() {
       owner.addActions(1);
       owner.drawCards(1);
-      if (owner.getDeckSize()==0)
+      if (owner.getDeckAndDiscardSize()==0)
     	return;
       DomCardName theChoice = null;
       if (owner.isHumanOrPossessedByHuman()) {

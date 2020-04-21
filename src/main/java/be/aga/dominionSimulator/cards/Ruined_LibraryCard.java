@@ -13,4 +13,10 @@ public class Ruined_LibraryCard extends DomCard {
     public void play() {
     	owner.drawCards(1);
     }
+
+    @Override
+    public boolean wantsToBePlayed() {
+        return !owner.wants(DomCardName.Animal_Fair);
+    }
+
 }

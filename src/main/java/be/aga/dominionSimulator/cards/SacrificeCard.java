@@ -82,7 +82,7 @@ public class SacrificeCard extends DomCard {
             if (theCard!=this && theCard.getTrashPriority()<16 )
                 count++;
         }
-        if (owner.countInDeck(DomCardName.King$s_Court)>0)
+        if (owner.count(DomCardName.King$s_Court)>0)
           return count>2;
         return count>1;
     }

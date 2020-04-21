@@ -41,7 +41,7 @@ public class CountCard extends DomCard {
             }
         }
         //then quick fix for Treasure Map
-        if (!owner.getCardsFromHand(DomCardName.Treasure_Map).isEmpty() && owner.countInDeck(DomCardName.Treasure_Map)>1) {
+        if (!owner.getCardsFromHand(DomCardName.Treasure_Map).isEmpty() && owner.count(DomCardName.Treasure_Map)>1) {
             owner.putOnTopOfDeck(owner.removeCardFromHand(owner.getCardsFromHand(DomCardName.Treasure_Map).get(0)));
             owner.addAvailableCoins(3);
             return;

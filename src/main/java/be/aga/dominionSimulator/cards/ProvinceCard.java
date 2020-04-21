@@ -46,7 +46,7 @@ public class ProvinceCard extends DomCard {
             return;
         }
 		//if player has some Gold in deck already it probably means he prefers 'real' Gold
-		if (thePlayer.countInDeck(DomCardName.Gold)==0)
+		if (thePlayer.count(DomCardName.Gold)==0)
 			continue;
 		//if player has 2 or more Fool's Golds in hand, he'll probably be happy to keep them
 		if (thePlayer.getCardsFromHand(DomCardName.Fool$s_Gold).size()>1)

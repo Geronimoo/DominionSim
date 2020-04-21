@@ -21,4 +21,9 @@ public class Abandoned_MineCard extends DomCard {
             return true;
         return super.hasCardType(aType);
     }
+
+    @Override
+    public boolean wantsToBePlayed() {
+        return !owner.wants(DomCardName.Animal_Fair);
+    }
 }

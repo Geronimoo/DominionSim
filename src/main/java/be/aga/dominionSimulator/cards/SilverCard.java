@@ -59,7 +59,7 @@ public class SilverCard extends DomCard {
 
     @Override
     public int getPlayPriority() {
-        if (owner.countInDeck(DomCardName.Magic_Lamp)>0
+        if (owner.count(DomCardName.Magic_Lamp)>0
                 && !owner.getCardsFromHand(DomCardName.Magic_Lamp).isEmpty()
                 && owner.getCardsFromPlay(DomCardName.Silver).isEmpty())
             return 5;
@@ -71,9 +71,9 @@ public class SilverCard extends DomCard {
         if (owner==null)
             return super.getTrashPriority();
         if (owner.getPlayStrategyFor(this)== DomPlayStrategy.trashWhenObsolete) {
-            if (owner.countInDeck(DomCardName.Gold)>0 && owner.countInDeck(DomCardName.King$s_Court)>0)
+            if (owner.count(DomCardName.Gold)>0 && owner.count(DomCardName.King$s_Court)>0)
                 return 15;
-            if (owner.count(DomCardType.Action)>9 || owner.countInDeck(DomCardName.Silver)>3)
+            if (owner.count(DomCardType.Action)>9 || owner.count(DomCardName.Silver)>3)
                 return 15;
         }
         return super.getTrashPriority();

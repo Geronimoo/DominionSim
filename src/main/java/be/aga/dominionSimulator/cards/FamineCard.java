@@ -13,7 +13,7 @@ public class FamineCard extends DomCard {
     }
 
     public void play() {
-      if (owner.getDeckSize()==0)
+      if (owner.getDeckAndDiscardSize()==0)
     	return;
       ArrayList<DomCard> theRevealedCards = owner.revealTopCards(3);
       Collections.sort(theRevealedCards,SORT_FOR_DISCARDING);

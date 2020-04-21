@@ -24,9 +24,9 @@ public class LoanCard extends DomCard {
                 }
             } else {
                 if (theCard.getName() == DomCardName.Copper
-                        || (theCard.getName() == DomCardName.Silver && owner.countInDeck(DomCardName.Venture) > 3)
-                        || (theCard.getName() == DomCardName.Silver && owner.countInDeck(DomCardName.Platinum) > 0)
-                        || (theCard.getName() == DomCardName.Loan && owner.countInDeck(DomCardName.Copper) < 2)) {
+                        || (theCard.getName() == DomCardName.Silver && owner.count(DomCardName.Venture) > 3)
+                        || (theCard.getName() == DomCardName.Silver && owner.count(DomCardName.Platinum) > 0)
+                        || (theCard.getName() == DomCardName.Loan && owner.count(DomCardName.Copper) < 2)) {
                     owner.trash(theCard);
                 } else {
                     owner.discard(theCard);

@@ -260,7 +260,7 @@ public void runSimulation() {
     
     boolean isGameFinished;
 	if (players.size()==1) {
-    	isGameFinished = board.count( DomCardName.Province)<=4 
+    	isGameFinished = board.count( DomCardName.Province)<=4
             || (board.get(DomCardName.Colony)!=null && board.count( DomCardName.Colony)<=4 );
         checkGameFinishTime+=System.currentTimeMillis()-theTime;
     } else {
@@ -353,11 +353,11 @@ public void putEmbargoTokenOn(DomCardName aCard) {
 }
 
 public DomCardName getBestCardInSupplyFor(DomPlayer aPlayer, DomCardType aType, DomCost domCost, boolean anExactCost) {
-	return board.getBestCardInSupplyFor(aPlayer, aType, domCost, anExactCost, null);
+	return board.getBestCardInSupplyFor(aPlayer, aType, domCost, anExactCost, null, null);
 }
 
 public DomCardName getBestCardInSupplyFor(DomPlayer aPlayer, DomCardType aType, DomCost domCost) {
-	return board.getBestCardInSupplyFor(aPlayer, aType, domCost, false, null);
+	return board.getBestCardInSupplyFor(aPlayer, aType, domCost, false, null, null);
 }
 
 public DomCardName getCardForSwindler(DomPlayer aPlayer, DomCost domCost) {
@@ -398,7 +398,7 @@ public int getGainsNeededToEndGame() {
 
 public DomCardName getBestCardInSupplyNotOfType(DomPlayer aPlayer,
 		DomCardType aType, DomCost domCost) {
-	return board.getBestCardInSupplyFor(aPlayer, null, domCost, false, aType);
+	return board.getBestCardInSupplyFor(aPlayer, null, domCost, false, aType, null );
 }
 
 public int getHighwaysInPlay() {
@@ -605,5 +605,10 @@ public int getBridge_TrollsInPlay() { return activePlayer!=null?activePlayer.get
 
     public int getInventorsPlayed() {
         return activePlayer!=null?activePlayer.getInventorsPlayed():0;
+    }
+
+    public void setChangedForced() {
+      setChanged();
+      notifyObservers();
     }
 }

@@ -23,7 +23,7 @@ public class NecropolisCard extends DomCard {
 
     @Override
     public int getTrashPriority() {
-        if (owner.getPlayStrategyFor(this)==DomPlayStrategy.trashWhenObsolete)
+        if (owner!=null && owner.getPlayStrategyFor(this)==DomPlayStrategy.trashWhenObsolete)
             return DomCardName.Copper.getTrashPriority()-1;
         return super.getTrashPriority();
     }
@@ -33,5 +33,10 @@ public class NecropolisCard extends DomCard {
         if (owner.getPlayStrategyFor(this)==DomPlayStrategy.trashWhenObsolete && !owner.getCardsFromHand(DomCardType.Trasher).isEmpty())
             return 50;
         return super.getPlayPriority();
+    }
+
+    @Override
+    public boolean wantsToBePlayed() {
+        return !owner.wants(DomCardName.Animal_Fair);
     }
 }

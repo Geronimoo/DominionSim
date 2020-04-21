@@ -20,7 +20,7 @@ public class GoldCard extends DomCard {
 
     @Override
     public int getPlayPriority() {
-        if (owner.countInDeck(DomCardName.Magic_Lamp)>0
+        if (owner.count(DomCardName.Magic_Lamp)>0
                 && !owner.getCardsFromHand(DomCardName.Magic_Lamp).isEmpty()
                 && owner.getCardsFromPlay(DomCardName.Gold).isEmpty())
             return 5;

@@ -24,8 +24,8 @@ public class MadmanCard extends DomCard {
         if (owner.getCardsInHand().size()<5)
             return false;
         if (owner.getPlayStrategyFor(this)== DomPlayStrategy.MarketSquareCombo) {
-          if ((owner.countInDeck(DomCardName.Madman)>4 || owner.getCardsInHand().size()>5)
-                  && (owner.countInDeck(DomCardName.Market_Square)-owner.countInPlay(DomCardName.Market_Square)>5 || owner.getCurrentGame().countInSupply(DomCardName.Market_Square)==0)
+          if ((owner.count(DomCardName.Madman)>4 || owner.getCardsInHand().size()>5)
+                  && (owner.count(DomCardName.Market_Square)-owner.countInPlay(DomCardName.Market_Square)>5 || owner.getCurrentGame().countInSupply(DomCardName.Market_Square)==0)
                   && owner.getDeck().getDeckAndDiscardSize() > 3 )
               return true;
           else
@@ -35,8 +35,8 @@ public class MadmanCard extends DomCard {
                   return false;
         }
         if (owner.getPlayStrategyFor(this)==DomPlayStrategy.bigTurnBridge) {
-            if ((owner.countInDeck(DomCardName.Madman)>4 || owner.getCardsInHand().size()>5)
-                    && owner.countInDeck(DomCardName.Bridge)>4 )
+            if ((owner.count(DomCardName.Madman)>4 || owner.getCardsInHand().size()>5)
+                    && owner.count(DomCardName.Bridge)>4 )
                 return true;
             else
                 return false;

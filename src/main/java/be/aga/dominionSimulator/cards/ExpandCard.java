@@ -19,7 +19,7 @@ public class ExpandCard extends DomCard {
           handleHuman();
           return;
       }
-      DomCard theCardToTrash = owner.findCardToRemodel(this, 3);
+      DomCard theCardToTrash = owner.findCardToRemodel(this, 3, true);
       if (theCardToTrash==null) {
         //this is needed when card is played with Throne Room effect
         Collections.sort(owner.getCardsInHand(),SORT_FOR_TRASHING);
@@ -36,7 +36,7 @@ public class ExpandCard extends DomCard {
 
     @Override
     public boolean wantsToBePlayed() {
-      return owner.findCardToRemodel(this, 3)!=null;
+      return owner.findCardToRemodel(this, 3, true)!=null;
    }
 
 

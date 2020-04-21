@@ -23,6 +23,14 @@ public class GearCard extends DomCard {
           handleHuman();
           return;
       }
+      if (owner.wants((DomCardName.Alliance)) && owner.getTotalMoneyInDeck()>18 && owner.count(DomCardName.Province)==0 && owner.getTotalPotentialCurrency().getCoins()<10) {
+          Collections.sort(owner.getCardsInHand(), DomCard.SORT_FOR_DISCARD_FROM_HAND);
+          mySetAsideCards.add(owner.getCardsInHand().remove(owner.getCardsInHand().size()-1));
+          mySetAsideCards.add(owner.getCardsInHand().remove(owner.getCardsInHand().size()-1));
+          if (DomEngine.haveToLog) DomEngine.addToLog(owner + " has set aside " + mySetAsideCards);
+          return;
+      }
+
       Collections.sort(owner.getCardsInHand(), DomCard.SORT_FOR_DISCARD_FROM_HAND);
       if (owner.getCardsInHand().get(0).hasCardType(DomCardType.Action) && owner.actionsLeft==0) {
           mySetAsideCards.add(owner.getCardsInHand().remove(0));
@@ -75,6 +83,8 @@ public class GearCard extends DomCard {
         owner.setNeedsToUpdateGUI();
         ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
         owner.getEngine().getGameFrame().askToSelectCards("Set aside cards", owner.getCardsInHand(), theChosenCards, 0);
+        while (theChosenCards.size()>2)
+            owner.getEngine().getGameFrame().askToSelectCards("Set aside cards", owner.getCardsInHand(), theChosenCards, 0);
         for (DomCard theCardName: theChosenCards) {
             for (DomCard theCard:owner.getCardsInHand()) {
                 if (theCard.getName()==theCardName.getName()) {
@@ -91,14 +101,14 @@ public class GearCard extends DomCard {
         if (owner.getCardsInHand().isEmpty())
             return;
         if (owner.getCardsInHand().get(0).getDiscardPriority(owner.getActionsLeft())<DomCardName.Copper.getDiscardPriority(1)) {
-            mySetAsideCards.add(owner.getCardsInHand().remove(0));
-            if (DomEngine.haveToLog) DomEngine.addToLog(owner + " has set aside " + mySetAsideCards);
+                mySetAsideCards.add(owner.getCardsInHand().remove(0));
+                if (DomEngine.haveToLog) DomEngine.addToLog(owner + " has set aside " + mySetAsideCards);
         }
         if (owner.getCardsInHand().isEmpty() || mySetAsideCards.size()==2)
             return;
         if (owner.getCardsInHand().get(0).getDiscardPriority(owner.getActionsLeft())<DomCardName.Copper.getDiscardPriority(1)) {
-            mySetAsideCards.add(owner.getCardsInHand().remove(0));
-            if (DomEngine.haveToLog) DomEngine.addToLog(owner + " has set aside " + mySetAsideCards);
+                mySetAsideCards.add(owner.getCardsInHand().remove(0));
+                if (DomEngine.haveToLog) DomEngine.addToLog(owner + " has set aside " + mySetAsideCards);
         }
     }
 
@@ -111,5 +121,15 @@ public class GearCard extends DomCard {
     @Override
     public void cleanVariablesFromPreviousGames() {
         mySetAsideCards.clear();
+    }
+
+    @Override
+    public boolean mustStayInPlay() {
+        return !mySetAsideCards.isEmpty();
+    }
+
+    @Override
+    public boolean discardAtCleanUp() {
+        return mySetAsideCards.isEmpty();
     }
 }

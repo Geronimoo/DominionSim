@@ -26,7 +26,7 @@ public class Treasure_MapCard extends DomCard {
     public boolean wantsToBePlayed() {
         if (owner.getCardsFromHand( DomCardName.Treasure_Map ).size()>1)
           return true;
-        if (owner.countInDeck(DomCardName.Gold)>0)
+        if (owner.count(DomCardName.Gold)>0)
           return true;
         return false;
     }

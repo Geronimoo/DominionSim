@@ -51,7 +51,7 @@ public class RazeCard extends DomCard {
             else
               return;
         }
-        int theAmount = theChosenCard.getCoinCost(theOwner.getCurrentGame());
+        int theAmount = theChosenCard.getCoinCost(theOwner);
         if (theAmount==0)
             return;
         ArrayList<DomCard> theRevealedCards = theOwner.revealTopCards(theAmount);

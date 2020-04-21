@@ -27,9 +27,10 @@ public class SculptorCard extends DomCard {
                 theDesiredCard = owner.getCurrentGame().getBestCardInSupplyFor(owner, null, new DomCost(4, 0));
             }
         }
-        if (theDesiredCard != null) {
-            owner.gainInHand(theDesiredCard);
-            if (theDesiredCard.hasCardType(DomCardType.Treasure))
+        if (theDesiredCard != null && owner.getCurrentGame().countInSupply(theDesiredCard) > 0 ) {
+            DomCard theCard = owner.getCurrentGame().takeFromSupply(theDesiredCard);
+            owner.gainInHand(theCard);
+            if (theCard.hasCardType(DomCardType.Treasure))
                 owner.addVillagers(1);
         }
     }

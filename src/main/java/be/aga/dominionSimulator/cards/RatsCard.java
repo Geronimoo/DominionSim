@@ -36,8 +36,14 @@ public class RatsCard extends DomCard {
       int i=0;
       while (i<owner.getCardsInHand().size() && owner.getCardsInHand().get(i).getName()==DomCardName.Rats)
           i++;
-      if (i<owner.getCardsInHand().size())
-        owner.trash(owner.removeCardFromHand(owner.getCardsInHand().get(i)));
+      if (i<owner.getCardsInHand().size()) {
+          if (owner.getCardsInHand().get(i).getTrashPriority()<= DomCardName.Estate.getTrashPriority() || owner.getCardsFromHand(DomCardName.Fortress).isEmpty()) {
+              owner.trash(owner.removeCardFromHand(owner.getCardsInHand().get(i)));
+          } else {
+              if (!owner.getCardsFromHand(DomCardName.Fortress).isEmpty())
+                  owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(DomCardName.Fortress).get(0)));
+          }
+      }
     }
 
     private void handleHuman() {
@@ -61,7 +67,7 @@ public class RatsCard extends DomCard {
 
         if (owner.getCardsInHand().isEmpty())
             return false;
-//        if (owner.countInDeck(DomCardName.Rats)>2)
+//        if (owner.count(DomCardName.Rats)>2)
 //            return false;
         Collections.sort( owner.getCardsInHand() , SORT_FOR_TRASHING);
         int i=0;
@@ -87,7 +93,7 @@ public class RatsCard extends DomCard {
             return owner.getCardsFromHand(DomCardName.Fortress).get(0).getPlayPriority()-1;
         if (wantsToBePlayed() && owner.getCardsFromHand(DomCardName.Rats).size()>1)
             return super.getPlayPriority();
-        if (owner.getCardsFromHand(DomCardType.TrashForBenefit).isEmpty() && owner.getCardsFromHand(DomCardName.Death_Cart).isEmpty() && (owner.getCardsFromHand(DomCardName.Chapel).isEmpty() || owner.countInDeck(DomCardName.Rats)==1))
+        if (owner.getCardsFromHand(DomCardType.TrashForBenefit).isEmpty() && owner.getCardsFromHand(DomCardName.Death_Cart).isEmpty() && (owner.getCardsFromHand(DomCardName.Chapel).isEmpty() || owner.count(DomCardName.Rats)==1))
             return super.getPlayPriority();
         return 100;
     }
@@ -96,7 +102,7 @@ public class RatsCard extends DomCard {
     public int getTrashPriority() {
         if (owner==null)
             return super.getTrashPriority();
-        if (owner.countInDeck(DomCardName.Rats)>1)
+        if (owner.count(DomCardName.Rats)>1)
             return 13;
         return super.getTrashPriority();
     }

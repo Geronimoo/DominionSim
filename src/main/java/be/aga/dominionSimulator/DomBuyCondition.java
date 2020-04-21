@@ -52,8 +52,11 @@ public class DomBuyCondition {
 	public boolean isTrue(DomPlayer owner) {
 		switch(leftFunction){
           case countCardsInDeck:
-            leftValue=owner.countInDeck(leftCardName);
+            leftValue=owner.count(leftCardName);
             break;
+          case countCardsInDeckNoMats:
+             leftValue=owner.count(leftCardName)-owner.countOnMats(leftCardName);
+             break;
           case countCardTypeInDeck:
             leftValue=owner.count(leftCardType);
             break;
@@ -90,8 +93,8 @@ public class DomBuyCondition {
           case actionsLeft:
               leftValue=owner.getActionsLeft();
               break;
-          case getTotalMoneyExcludingNativeVillage:
-              leftValue=owner.getTotalMoneyExcludingNativeVillage();
+          case getTotalMoneyExcludingMats:
+              leftValue=owner.getTotalMoneyExcludingMats();
               break;
           case countVP:
               leftValue=owner.countVictoryPoints();
@@ -100,7 +103,7 @@ public class DomBuyCondition {
               leftValue=owner.countMaxOpponentsVictoryPoints();
               break;
           case countCardsLeftInDrawDeck:
-              leftValue=owner.getDeckSize();
+              leftValue=owner.getDeckAndDiscardSize();
               break;
           case countEmptyPiles:
               leftValue=owner.getCurrentGame().countEmptyPiles();
@@ -111,7 +114,7 @@ public class DomBuyCondition {
           case countCardsInOpponentsDecks:
         	  leftValue=0;
         	  for (DomPlayer player : owner.getOpponents())
-        		 leftValue+=player.countInDeck(leftCardName);
+        		 leftValue+=player.count(leftCardName);
               break;
           case countAllCardsInOpponentsDeck:
               if (owner.getOpponents().isEmpty())
@@ -173,8 +176,11 @@ public class DomBuyCondition {
         }
 		switch(rightFunction){
 		  case countCardsInDeck:
-			rightValue=owner.countInDeck(rightCardName);
+			rightValue=owner.count(rightCardName);
 			break;
+          case countCardsInDeckNoMats:
+            rightValue=owner.count(rightCardName)-owner.countOnMats(rightCardName);
+            break;
           case countCardTypeInDeck:
             rightValue=owner.count(rightCardType);
             break;
@@ -211,8 +217,8 @@ public class DomBuyCondition {
           case actionsLeft:
               rightValue=owner.getActionsLeft();
               break;
-          case getTotalMoneyExcludingNativeVillage:
-            rightValue=owner.getTotalMoneyExcludingNativeVillage();
+          case getTotalMoneyExcludingMats:
+            rightValue=owner.getTotalMoneyExcludingMats();
             break;
           case countVP:
               rightValue=owner.countVictoryPoints();
@@ -221,7 +227,7 @@ public class DomBuyCondition {
               rightValue=owner.countMaxOpponentsVictoryPoints();
               break;
           case countCardsLeftInDrawDeck:
-              rightValue=owner.getDeckSize();
+              rightValue=owner.getDeckAndDiscardSize();
               break;
           case countEmptyPiles:
               rightValue=owner.getCurrentGame().countEmptyPiles();
@@ -232,7 +238,7 @@ public class DomBuyCondition {
           case countCardsInOpponentsDecks:
         	  rightValue=0;
         	  for (DomPlayer player : owner.getOpponents())
-        		 rightValue+=player.countInDeck(rightCardName);
+        		 rightValue+=player.count(rightCardName);
               break;
           case countAllCardsInOpponentsDeck:
               if (owner.getOpponents().isEmpty())
@@ -475,6 +481,7 @@ public class DomBuyCondition {
           theXML.append(" attribute=\"").append(leftCardType.name()).append("\"");
         }
         if (leftFunction==DomBotFunction.countCardsInDeck
+                || leftFunction==DomBotFunction.countCardsInDeckNoMats
                 || leftFunction==DomBotFunction.countCardsInSupply
                 || leftFunction==DomBotFunction.countCardsInOpponentsDecks
                 || leftFunction==DomBotFunction.countCardsInHand
@@ -504,6 +511,7 @@ public class DomBuyCondition {
           theXML.append(" attribute=\"").append(rightCardType.name()).append("\"");
         }
         if (rightFunction==DomBotFunction.countCardsInDeck
+         || rightFunction==DomBotFunction.countCardsInDeckNoMats
          || rightFunction==DomBotFunction.countCardsInSupply
          || rightFunction==DomBotFunction.countCardsInOpponentsDecks
          || rightFunction==DomBotFunction.countCardsInHand

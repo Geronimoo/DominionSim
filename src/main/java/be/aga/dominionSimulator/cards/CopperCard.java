@@ -6,8 +6,18 @@ import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.SimpleLayout;
 
 public class CopperCard extends DomCard {
+    protected static final Logger LOGGER = Logger.getLogger( CopperCard.class );
+    static {
+        LOGGER.setLevel( DomEngine.LEVEL );
+        LOGGER.removeAllAppenders();
+        if (DomEngine.addAppender)
+            LOGGER.addAppender(new ConsoleAppender(new SimpleLayout()) );
+    }
 
     public CopperCard () {
       super( DomCardName.Copper);
@@ -19,21 +29,24 @@ public class CopperCard extends DomCard {
     @Override
     public boolean wantsToBePlayed() {
         if (owner==null) {
-            System.out.println("Copper owner = null: "+ DomEngine.currentPlayer.getDeck());
-            System.out.println("opp deck: "+ DomEngine.currentPlayer.getOpponents().get(0).getDeck());
+            LOGGER.error("Copper owner = null: "+ DomEngine.currentPlayer.getDeck());
+            LOGGER.error("opp deck: "+ DomEngine.currentPlayer.getOpponents().get(0).getDeck());
         }
+        //Banishing Coppers is hard to implement. This code removed because it did more bad than good
+        //        if (owner.wants(DomCardName.Banish) && owner.getTotalPotentialCurrency().getCoins()-owner.getCardsFromHand(DomCardName.Copper).size()>=4)
+        //            return false;
         if (owner.isTrashingTokenSet()
           && countCrapCards()==0
           && owner.getCardsFromHand(DomCardName.Copper).size()==1
           && owner.getDesiredCard(owner.getTotalPotentialCurrency().add(new DomCost(-1,0)),false)==owner.getTrashingTokenOn())
             return false;
-        if (owner.countInDeck(DomCardName.Exorcist)>0
+        if (owner.count(DomCardName.Exorcist)>0
                 && !owner.getCardsFromHand(DomCardName.Exorcist).isEmpty()
                 && owner.getCardsFromHand(DomCardName.Copper).size()==1
                 && countCrapCards()==0
                 && owner.getDesiredCard(owner.getTotalPotentialCurrency().add(new DomCost(-1,0)),false)==owner.getDesiredCard(owner.getTotalPotentialCurrency(),false))
             return false;
-        if (owner.countInDeck(DomCardName.Bat)>0
+        if (owner.count(DomCardName.Bat)>0
                 && !owner.getCardsFromHand(DomCardName.Bat).isEmpty()
                 && owner.getCardsFromHand(DomCardName.Copper).size()==1
                 && countCrapCards()<2
@@ -79,7 +92,7 @@ public class CopperCard extends DomCard {
 
     @Override
     public int getPlayPriority() {
-        if (owner.countInDeck(DomCardName.Magic_Lamp)>0
+        if (owner.count(DomCardName.Magic_Lamp)>0
                 && !owner.getCardsFromHand(DomCardName.Magic_Lamp).isEmpty()
                 && owner.getCardsFromPlay(DomCardName.Copper).isEmpty())
             return 5;

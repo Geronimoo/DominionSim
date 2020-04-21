@@ -8,7 +8,7 @@ import be.aga.dominionSimulator.enums.DomCardType;
 import java.util.ArrayList;
 
 public class GhostCard extends DomCard {
-    private DomCard myDurationCard = null;
+    private DomCard myCardToGhost = null;
 
     public GhostCard() {
       super( DomCardName.Ghost);
@@ -24,47 +24,47 @@ public class GhostCard extends DomCard {
             owner.discard(theRevealedCards);
             return;
         }
-        myDurationCard =theRevealedCards.remove(theRevealedCards.size()-1);
+        myCardToGhost =theRevealedCards.remove(theRevealedCards.size()-1);
         owner.discard(theRevealedCards);
     }
 
     @Override
     public void resolveDuration() {
-        if (owner.getCardsInPlay().contains(myDurationCard)) {
-            myDurationCard.resolveDuration();
+        if (owner.getCardsInPlay().contains(myCardToGhost)) {
+            myCardToGhost.resolveDuration();
         } else {
-            owner.getCardsInPlay().add(myDurationCard);
+            owner.getCardsInPlay().add(myCardToGhost);
             if (DomEngine.haveToLog ) {
-                DomEngine.addToLog( owner + " plays " + myDurationCard );
+                DomEngine.addToLog( owner + " plays " + myCardToGhost);
                 DomEngine.logIndentation++;
             }
-            myDurationCard.owner=owner;
-            owner.playThis(myDurationCard);
+            myCardToGhost.owner=owner;
+            owner.playThis(myCardToGhost);
             if (DomEngine.haveToLog ) {
                 DomEngine.logIndentation--;
             }
             if (DomEngine.haveToLog ) {
-                DomEngine.addToLog( owner + " plays " + myDurationCard +" a second time");
+                DomEngine.addToLog( owner + " plays " + myCardToGhost +" a second time");
                 DomEngine.logIndentation++;
             }
-            myDurationCard.owner=owner;
-            owner.playThis(myDurationCard);
+            myCardToGhost.owner=owner;
+            owner.playThis(myCardToGhost);
             if (DomEngine.haveToLog ) {
                 DomEngine.logIndentation--;
             }
-            if (!myDurationCard.hasCardType(DomCardType.Duration)) {
-              myDurationCard = null;
+            if (!myCardToGhost.hasCardType(DomCardType.Duration)) {
+              myCardToGhost = null;
             }
         }
     }
 
     @Override
     public void cleanVariablesFromPreviousGames() {
-        myDurationCard = null;
+        myCardToGhost = null;
     }
 
     @Override
     public boolean mustStayInPlay() {
-        return myDurationCard != null;
+        return myCardToGhost != null;
     }
 }

@@ -48,7 +48,7 @@ public class RitualCard extends DomCard {
         DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Trash a card", theChooseFrom, "Mandatory!");
         if (theChosenCard != null) {
             owner.trash(owner.removeCardFromHand(owner.getCardsFromHand(theChosenCard).get(0)));
-            owner.addVP(theChosenCard.getCoinCost(owner.getCurrentGame()));
+            owner.addVP(theChosenCard.getCoinCost(owner));
         }
     }
 }

@@ -13,4 +13,10 @@ public class Ruined_MarketCard extends DomCard {
     public void play() {
     	owner.addAvailableBuys(1);
     }
+
+    @Override
+    public boolean wantsToBePlayed() {
+        return !owner.wants(DomCardName.Animal_Fair);
+    }
+
 }

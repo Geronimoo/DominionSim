@@ -212,7 +212,7 @@ public class DomCard implements Comparable< DomCard >{
     public void resolveDuration() {}
 
     public int getCoinCost( DomGame aGame) {
-        return name.getCoinCost( aGame );
+        return name.getCoinCost( aGame.getActivePlayer() );
     }
 
     public void handleCleanUpPhase() {
@@ -426,5 +426,9 @@ public class DomCard implements Comparable< DomCard >{
 
     public boolean wantsToBeCalled() {
         return true;
+    }
+
+    public abstract class nextTurnAbility {
+
     }
 }

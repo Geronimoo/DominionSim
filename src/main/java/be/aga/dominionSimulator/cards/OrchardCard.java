@@ -13,7 +13,7 @@ public class OrchardCard extends DomCard {
     public static int countVP(DomPlayer aPlayer ){
         int theCount = 0;
         for (DomCardName theCard : aPlayer.getDeck().keySet()) {
-            if (theCard.hasCardType(DomCardType.Action) && aPlayer.countInDeck(theCard)>=3)
+            if (theCard.hasCardType(DomCardType.Action) && aPlayer.count(theCard)>=3)
                 theCount+=4;
         }
         return theCount;

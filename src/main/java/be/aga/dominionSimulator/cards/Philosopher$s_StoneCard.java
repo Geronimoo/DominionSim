@@ -9,6 +9,6 @@ public class Philosopher$s_StoneCard extends DomCard {
   }
   @Override
   public int getCoinValue() {
-	return owner.getDeckSize()/5;
+	return owner.getDeckAndDiscardSize()/5;
   }
 }

@@ -31,7 +31,7 @@ public class StorytellerCard extends DomCard {
             handleHuman();
             return;
         }
-        if (owner.getAvailableCoins()<owner.getDeckSize()) {
+        if (owner.getAvailableCoins()<owner.getDeckAndDiscardSize()) {
             int thePlayCount = 0;
             do {
                 theCardToPlay = null;
@@ -47,7 +47,7 @@ public class StorytellerCard extends DomCard {
                     owner.play(owner.removeCardFromHand(theCardToPlay));
                     thePlayCount++;
                 }
-            } while (theCardToPlay!=null && owner.getAvailableCoins()<owner.getDeckSize() && thePlayCount<3);
+            } while (theCardToPlay!=null && owner.getAvailableCoins()<owner.getDeckAndDiscardSize() && thePlayCount<3);
         }
 
         if (DomEngine.haveToLog) {

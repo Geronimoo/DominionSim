@@ -34,7 +34,7 @@ public class WatchtowerCard extends DrawUntilXCardsCard {
     }
 
     public boolean wantsToBePlayed() {
-      if (owner.getCardsInHand().size()<=6 && owner.getDeckSize()>0)
+      if (owner.getCardsInHand().size()<=6 && owner.getDeckAndDiscardSize()>0)
     	  return super.wantsToBePlayed();
       return false;
     }

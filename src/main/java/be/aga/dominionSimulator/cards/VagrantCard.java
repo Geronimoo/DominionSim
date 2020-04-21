@@ -12,7 +12,7 @@ public class VagrantCard extends DomCard {
     public void play() {
       owner.addActions(1);
       owner.drawCards(1);
-      if (owner.getDeckSize()==0)
+      if (owner.getDeckAndDiscardSize()==0)
     	return;
       DomCard theRevealedCard = owner.revealTopCards(1).get(0);
 	  if (theRevealedCard.hasCardType(DomCardType.Ruins) || theRevealedCard.hasCardType(DomCardType.Curse) || theRevealedCard.hasCardType(DomCardType.Victory) || theRevealedCard.hasCardType(DomCardType.Shelter)) {

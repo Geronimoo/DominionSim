@@ -14,7 +14,7 @@ public class Wandering_MinstrelCard extends DomCard {
     public void play() {
       owner.addActions(2);
       owner.drawCards(1);
-      if (owner.getDeckSize()==0)
+      if (owner.getDeckAndDiscardSize()==0)
     	return;
       ArrayList<DomCard> theRevealedCards = owner.revealTopCards(3);
       if (owner.isHumanOrPossessedByHuman()) {

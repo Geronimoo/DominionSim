@@ -7902,14 +7902,14 @@
    <buy name="Bridge"/>
    <buy name="Silver">
       <condition>
-         <left type="getTotalMoneyExcludingNativeVillage"/>
+         <left type="getTotalMoneyExcludingMats"/>
          <operator type="smallerThan" />
          <right type="constant" attribute="5.0"/>
       </condition>
    </buy>
    <buy name="Copper">
       <condition>
-         <left type="getTotalMoneyExcludingNativeVillage"/>
+         <left type="getTotalMoneyExcludingMats"/>
          <operator type="smallerThan" />
          <right type="constant" attribute="5.0"/>
       </condition>

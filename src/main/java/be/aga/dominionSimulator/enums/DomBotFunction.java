@@ -2,7 +2,8 @@ package be.aga.dominionSimulator.enums;
 
 public enum DomBotFunction {
    constant,
-   countCardsInDeck,
+    countCardsInDeck,
+    countCardsInDeckNoMats,
    countCardTypeInDeck,
    countCardsInSupply,
    gainsNeededToEndGame,
@@ -30,7 +31,7 @@ public enum DomBotFunction {
    countVP,
    countMAXOpponentVP,
    tokensOnDefiledShrine,
-   getTotalMoneyExcludingNativeVillage,
+    getTotalMoneyExcludingMats,
    countOnTavernMat, isSwampHagActive,
    isTravellingFairActive,
    countGainedCards,
@@ -53,13 +54,16 @@ public enum DomBotFunction {
        case getTotalMoney :
            return "total $ in deck";
 
-       case getTotalMoneyExcludingNativeVillage :
+       case getTotalMoneyExcludingMats:
            return "total $ in deck (exclude mats)";
 
-       case countCardsInDeck :
-           return "count in deck";
+           case countCardsInDeck :
+               return "count in deck";
 
-       case countCardsInSupply :
+           case countCardsInDeckNoMats:
+               return "count in deck (no mats)";
+
+           case countCardsInSupply :
            return "count in supply";
 
        case gainsNeededToEndGame:

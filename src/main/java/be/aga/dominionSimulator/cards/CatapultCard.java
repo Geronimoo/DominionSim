@@ -44,7 +44,7 @@ public class CatapultCard extends DomCard {
 
     @Override
     public int getTrashPriority() {
-        if (owner.countInDeck(DomCardName.Rocks)<4 && owner.getCurrentGame().countInSupply(DomCardName.Rocks)==0)
+        if (owner.count(DomCardName.Rocks)<4 && owner.getCurrentGame().countInSupply(DomCardName.Rocks)==0)
             return DomCardName.Silver.getTrashPriority()-1;
         return super.getTrashPriority();
     }

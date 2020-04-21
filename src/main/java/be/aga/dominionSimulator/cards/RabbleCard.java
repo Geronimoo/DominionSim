@@ -56,14 +56,14 @@ public class RabbleCard extends DomCard {
     }
 
     public int getPlayPriority() {
-      if (owner.getDeckSize() == 0)
+      if (owner.getDeckAndDiscardSize() == 0)
           return 50;
-      return owner.getActionsLeft() > 1 && owner.getDeckSize()>0 ? 6 : super.getPlayPriority();
+      return owner.getActionsLeft() > 1 && owner.getDeckAndDiscardSize()>0 ? 6 : super.getPlayPriority();
     }
 
     @Override
     public int getDiscardPriority(int aActionsLeft) {
-        if (owner.getDeckSize() == 0)
+        if (owner.getDeckAndDiscardSize() == 0)
           return 15;
         else
           return 35;
