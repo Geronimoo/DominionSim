@@ -301,8 +301,13 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                         && getTotalAvailableCurrency().compareButIgnoreDebtTo(theCost) < 0)
                     continue;
             } else {
-                if (getTotalAvailableCurrency().compareButIgnoreDebtTo(theCost) < 0)
-                    continue;
+                if (getCoffers()>0 && doesNotWantToSpendCoffers(theBuyRule.getBuyConditions())) {
+                    if (getTotalAvailableCurrencySansCoffers().compareButIgnoreDebtTo(theCost)<0)
+                        continue;
+                } else{
+                    if (getTotalAvailableCurrency().compareButIgnoreDebtTo(theCost) < 0)
+                        continue;
+                }
             }
 
             if (checkBuyConditions(theBuyRule)) {
@@ -332,6 +337,14 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         //a bit dirty setting buysLeft to 0 to make him stop trying to buy stuff and say 'buys nothing'
         //TODO maybe clean this up
         buysLeft = 0;
+    }
+
+    private boolean doesNotWantToSpendCoffers(ArrayList<DomBuyCondition> buyConditions) {
+        for (DomBuyCondition buyCondition : buyConditions) {
+            if (buyCondition.getLeftFunction()==DomBotFunction.doesNotSpendCoffers)
+                return true;
+        }
+        return false;
     }
 
     private DomCost determineCostAndCheckSplitPiles(DomBuyRule theBuyRule) {
@@ -1224,20 +1237,21 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         }
         if (cantBuyActions && aCardName.hasCardType(DomCardType.Action))
             return false;
-        if (checkSuicide && suicideIfBuys(aCardName)) {
-            if (DomEngine.haveToLog) DomEngine.addToLog(
-                    "<FONT style=\"BACKGROUND-COLOR: red\">SUICIDE!</FONT> Can not buy " + aCardName.toHTML());
-            return false;
-        }
+
         if (forbiddenCardsToBuy.contains(aCardName))
             return false;
 
         if (aCardName == DomCardName.Grand_Market && !getCardsFromPlay(DomCardName.Copper).isEmpty())
             return false;
 
-        if (!isHumanOrPossessedByHuman() && coffers > 0 && getDesiredCard(getAvailableCurrencyWithoutTokens(), false) != aCardName && checkIfWantsToHoardCoffers() && !wants(DomCardName.Gardens)) {
+        if (checkSuicide && suicideIfBuys(aCardName)) {
+            if (DomEngine.haveToLog) DomEngine.addToLog(
+                    "<FONT style=\"BACKGROUND-COLOR: red\">SUICIDE!</FONT> Can not buy " + aCardName.toHTML());
             return false;
         }
+//        if (!isHumanOrPossessedByHuman() && coffers > 0 && getDesiredCard(getAvailableCurrencyWithoutTokens(), false) != aCardName && checkIfWantsToHoardCoffers() && !wants(DomCardName.Gardens)) {
+//            return false;
+//        }
         DomCard theCardToBuy = game.takeFromSupply(aCardName);
         buy(theCardToBuy);
         return true;
@@ -3533,6 +3547,10 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
 
     public DomCost getTotalAvailableCurrency() {
         return new DomCost(availableCoins + coffers, availablePotions);
+    }
+
+    public DomCost getTotalAvailableCurrencySansCoffers() {
+        return new DomCost(availableCoins , availablePotions);
     }
 
     public void increaseActionsPlayed() {

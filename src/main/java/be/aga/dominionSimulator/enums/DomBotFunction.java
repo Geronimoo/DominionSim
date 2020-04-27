@@ -38,7 +38,8 @@ public enum DomBotFunction {
    countVPon,
    countVillagers,
    hasFlag,
-   hasBuiltProject ;
+   hasBuiltProject,
+    doesNotSpendCoffers;
 
    public String toString() {
        switch ( this ) {
@@ -122,6 +123,9 @@ public enum DomBotFunction {
 
        case hasBuiltProject:
            return "has Built Project (1=true)";
+
+       case doesNotSpendCoffers:
+           return "does not spend Coffers";
 
        default :
         return super.toString();

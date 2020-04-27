@@ -66,6 +66,8 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
         theCons.anchor=GridBagConstraints.NORTHWEST;
 
         //right function
+		theValues.remove(DomBotFunction.doesNotSpendCoffers);
+
         myRightFunctionBox = new JComboBox<Object>(theValues.toArray());
         if (aBuyCondition.getRightFunction()==DomBotFunction.constant){
           myRightFunctionBox.setSelectedItem((int)aBuyCondition.getRightValue());
@@ -175,6 +177,13 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
         	myRightTypeBox.setSelectedItem( aBuyCondition.getRightCardType());
         }
         add(myRightTypeBox, theCons);
+
+        if( aBuyCondition.getLeftFunction()==DomBotFunction.doesNotSpendCoffers) {
+        	myRightFunctionBox.setVisible(false);
+			myComparatorBox.setVisible(false);
+        	myExtraOperator.setVisible(false);
+        	myExtraValue.setVisible(false);
+		}
 	}
 	
 		@Override
@@ -230,6 +239,17 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
 				if (myRightFunctionBox.getSelectedItem() == DomBotFunction.countCardTypeInDeck) {
     				myRightTypeBox.setVisible(true);
 				}
+			}
+			myRightFunctionBox.setVisible(true);
+			myExtraOperator.setVisible(true);
+			myExtraValue.setVisible(true);
+			myComparatorBox.setVisible(true);
+
+ 			if (myLeftFunctionBox.getSelectedItem() == DomBotFunction.doesNotSpendCoffers){
+   				myRightFunctionBox.setVisible(false);
+				myComparatorBox.setVisible(false);
+				myExtraOperator.setVisible(false);
+	  			myExtraValue.setVisible(false);
 			}
 		}
 		

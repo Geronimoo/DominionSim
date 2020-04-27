@@ -1,5 +1,6 @@
 package be.aga.dominionSimulator.cards;
 
+import be.aga.dominionSimulator.DomBoard;
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomGame;
 import be.aga.dominionSimulator.DomPlayer;
@@ -42,11 +43,13 @@ public class PrinceCardTest {
     }
 
     private void mockBasicGameItems(DomPlayer owner, DomGame currentGame) {
+        EasyMock.expect(currentGame.getInventorsPlayed()).andReturn(0).anyTimes();
         EasyMock.expect(currentGame.getBridgesPlayed()).andReturn(0).anyTimes();
         EasyMock.expect(currentGame.getPrincessesInPlay()).andReturn(0).anyTimes();
         EasyMock.expect(currentGame.getQuarriesInPlay()).andReturn(0).anyTimes();
         EasyMock.expect(currentGame.getHighwaysInPlay()).andReturn(0).anyTimes();
         EasyMock.expect(currentGame.getBridge_TrollsInPlay()).andReturn(0).anyTimes();
         EasyMock.expect(currentGame.getActivePlayer()).andReturn(owner).anyTimes();
+        EasyMock.expect(currentGame.getBoard()).andReturn(new DomBoard(DomCardName.class, new ArrayList<DomPlayer>())).anyTimes();
     }
 }

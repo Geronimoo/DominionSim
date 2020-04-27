@@ -31,6 +31,10 @@ public class RebuildCard extends DomCard {
         if (owner.count(DomCardName.Duchy)==0 && owner.getCurrentGame().countInSupply(DomCardName.Duchy)==0 && owner.getCurrentGame().countInSupply(DomCardName.Province)>0)
             theNamedCard=DomCardName.Estate;
 
+        //mill Provinces
+        if (owner.countVictoryPoints()>owner.countMaxOpponentsVictoryPoints()+3 && owner.getCurrentGame().countInSupply(DomCardName.Province)<3)
+            theNamedCard=DomCardName.Estate;
+
         if (owner.getCurrentGame().countInSupply(DomCardName.Colony)>0)
             theNamedCard=DomCardName.Colony;
 

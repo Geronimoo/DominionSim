@@ -15,6 +15,8 @@ public class Bounty_HunterCard extends DomCard {
 
     public void play() {
       owner.addActions(1);
+      if (owner.getCardsInHand().isEmpty())
+          return;
       if (owner.isHumanOrPossessedByHuman()) {
           handleHuman();
           return;
