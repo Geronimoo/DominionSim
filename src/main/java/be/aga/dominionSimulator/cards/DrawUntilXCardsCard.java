@@ -15,7 +15,7 @@ public class DrawUntilXCardsCard extends DomCard{
                 && !owner.getCardsFromHand(DomCardType.Trasher).isEmpty()
                 && owner.getCardsFromHand(DomCardType.Trasher).get(0).wantsToBePlayed())
 			return false;
-		if (owner.getCardsFromHand(DomCardName.Artificer).isEmpty())
+		if (!owner.getCardsFromHand(DomCardName.Artificer).isEmpty())
 		    return false;
     	return super.wantsToBePlayed();
     }
