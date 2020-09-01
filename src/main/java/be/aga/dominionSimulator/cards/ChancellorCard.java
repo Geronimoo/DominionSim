@@ -20,7 +20,7 @@ public class ChancellorCard extends DomCard {
     }
     @Override
     public int getPlayPriority() {
-    	if (owner.getActionsLeft()>1)
+    	if (owner.getActionsAndVillagersLeft()>1)
     		return DomCardName.Counting_House.getPlayPriority()-1;
     	return super.getPlayPriority();
     }

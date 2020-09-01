@@ -451,6 +451,66 @@ public enum DomSet {
             , DomCardName.Sinister_Plot
             , DomCardName.Road_Network
     }
+    ),
+
+    TestSet (new DomCardName[] {DomCardName.ZZZtest
+    }),
+
+    Menagerie(new DomCardName[] {DomCardName.Animal_Fair
+            ,DomCardName.Barge
+            ,DomCardName.Black_Cat
+            ,DomCardName.Bounty_Hunter
+            ,DomCardName.Camel_Train
+            ,DomCardName.Cardinal
+            ,DomCardName.Cavalry
+            ,DomCardName.Coven
+            ,DomCardName.Destrier
+            ,DomCardName.Displace
+            ,DomCardName.Falconer
+            ,DomCardName.Fisherman
+            ,DomCardName.Gatekeeper
+            ,DomCardName.Goatherd
+            ,DomCardName.Groom
+            ,DomCardName.Hostelry
+            ,DomCardName.Hunting_Lodge
+            ,DomCardName.Kiln
+            ,DomCardName.Livery
+            ,DomCardName.Mastermind
+            ,DomCardName.Paddock
+            ,DomCardName.Sanctuary
+            ,DomCardName.Bargain
+//            ,DomCardName.
+//            ,DomCardName.
+//            ,DomCardName.
+//            ,DomCardName.
+//            ,DomCardName.
+//            ,DomCardName.
+//            ,DomCardName.
+//            ,DomCardName.
+//            ,DomCardName.
+//            ,DomCardName.
+//            ,DomCardName.
+//            ,DomCardName.
+//            ,DomCardName.
+            ,DomCardName.Alliance
+            ,DomCardName.Banish
+            ,DomCardName.Captain
+            ,DomCardName.Church
+            ,DomCardName.Demand
+            ,DomCardName.Enclave
+            ,DomCardName.Horse
+            ,DomCardName.Invest
+            ,DomCardName.Reap
+            ,DomCardName.Scrap
+            ,DomCardName.Sheepdog
+            ,DomCardName.Sleigh
+            ,DomCardName.Snowy_Village
+            ,DomCardName.Stampede
+            ,DomCardName.Stockpile
+            ,DomCardName.Supplies
+            ,DomCardName.Way_of_the_Ox
+
+    }
     );
    
    private final ArrayList< DomCardName> cards = new ArrayList< DomCardName>();

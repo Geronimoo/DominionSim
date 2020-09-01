@@ -66,7 +66,7 @@ public class Native_VillageCard extends DomCard {
               }
             }
             int theBridgeCount=owner.getCardsFromHand(DomCardName.Bridge).size();
-            int theVillageCount=owner.getCardsFromHand(DomCardName.Native_Village).size()+owner.getActionsLeft();
+            int theVillageCount=owner.getCardsFromHand(DomCardName.Native_Village).size()+owner.getActionsAndVillagersLeft();
             for (DomCard card: owner.getNativeVillageMat()) {
                 theBridgeCount += card.getName()==DomCardName.Bridge ? 1 : 0;
                 theVillageCount += card.getName() == DomCardName.Native_Village ? 1:0;

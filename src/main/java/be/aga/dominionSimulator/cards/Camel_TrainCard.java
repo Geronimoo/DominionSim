@@ -18,7 +18,7 @@ public class Camel_TrainCard extends DomCard {
         if (thedesiredCard!=null) {
             DomCard aCard = owner.getCurrentGame().takeFromSupply(thedesiredCard);
             owner.getDeck().addPhysicalCardWhenNotGained(aCard);
-            owner.moveToExileMat(aCard);
+            owner.exile(aCard);
         }
     }
 
@@ -27,7 +27,7 @@ public class Camel_TrainCard extends DomCard {
         DomCard domCard = owner.getCurrentGame().takeFromSupply(DomCardName.Gold);
         if (domCard!=null) {
             owner.getDeck().addPhysicalCardWhenNotGained(domCard);
-            owner.moveToExileMat(domCard);
+            owner.exile(domCard);
         }
     }
 }

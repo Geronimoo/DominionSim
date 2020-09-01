@@ -40,27 +40,27 @@ public class Shanty_TownCard extends DomCard {
     	if (owner.getCardsFromHand(DomCardName.Shanty_Town).size()>0)
     		wantsToBePlayed=true;
 
-    	if (owner.getActionsLeft()==1 
+    	if (owner.getActionsAndVillagersLeft()==1
     	 && !owner.getCardsFromHand(DomCardName.Minion).isEmpty())
     		wantsToBePlayed=true;
 
-    	if (owner.getActionsLeft()==1 
+    	if (owner.getActionsAndVillagersLeft()==1
     	 && owner.getCardsFromHand(DomCardType.Terminal).size()>=2 
     	 && owner.getCardsFromHand(DomCardType.Action).size()==owner.getCardsFromHand(DomCardType.Terminal).size())
     		wantsToBePlayed=true;
     	
-    	if (owner.getActionsLeft()==1 
+    	if (owner.getActionsAndVillagersLeft()==1
     	 && owner.getCardsFromHand(DomCardType.Card_Advantage).size()>=1
     	 && owner.getCardsFromHand(DomCardType.Action).size()==owner.getCardsFromHand(DomCardType.Card_Advantage).size())
     		wantsToBePlayed=true;
 
-    	if (owner.getActionsLeft()==1 
+    	if (owner.getActionsAndVillagersLeft()==1
     	 && owner.getCardsFromHand(DomCardType.Terminal).size()==1
     	 && owner.getCardsFromHand(DomCardType.Action).size()==1    	 
     	 && owner.getCardsFromHand(DomCardName.Horn_of_Plenty).size()>0)
     		wantsToBePlayed=true;
 
-        if (owner.getActionsLeft()==1
+        if (owner.getActionsAndVillagersLeft()==1
                 && owner.getCardsFromHand(DomCardName.Young_Witch).size()==owner.getCardsFromHand(DomCardType.Action).size())
             wantsToBePlayed=true;
 

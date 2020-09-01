@@ -35,9 +35,9 @@ public class CrossroadsCard extends DomCard {
     public boolean wantsToBePlayed() {
         if (owner.getCardsFromPlay(DomCardName.Crossroads).isEmpty())
             return true;
-        if (owner.getActionsLeft()==1 && !owner.getCardsFromHand(DomCardName.Secret_Chamber).isEmpty())
+        if (owner.getActionsAndVillagersLeft()==1 && !owner.getCardsFromHand(DomCardName.Secret_Chamber).isEmpty())
           return false;
-        if (owner.getActionsLeft()==1 && !owner.getCardsFromHand(DomCardName.Storeroom).isEmpty())
+        if (owner.getActionsAndVillagersLeft()==1 && !owner.getCardsFromHand(DomCardName.Storeroom).isEmpty())
             return false;
         return true;
     }

@@ -266,7 +266,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 if (owner.count(DomCardName.Sleigh)>0 && !owner.getCardsFromHand(DomCardName.Sleigh).isEmpty()) {
                     if (((SleighCard)owner.getCardsFromHand(DomCardName.Sleigh).get(0)).wantsToReact(aCard)) {
                         owner.discardFromHand(owner.getCardsFromHand(DomCardName.Sleigh).get(0));
-                        if (owner.getActionsLeft() > 0 && owner.getPhase() == DomPhase.Action && aCard.hasCardType(DomCardType.Action)) {
+                        if (owner.getActionsAndVillagersLeft() > 0 && owner.getPhase() == DomPhase.Action && aCard.hasCardType(DomCardType.Action)) {
                             aLocation = HAND;
                         } else {
                             if (owner.getPhase() != DomPhase.Buy_BuyStuff && aCard.hasCardType(DomCardType.Treasure)) {
@@ -378,8 +378,9 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 theDuplicate=owner.getFromTavernMat(DomCardName.Duplicate);
             }
         }
-        if (owner.getLiveryTriggers()>0 && aCard.getCoinCost(owner.getCurrentGame())>=4) {
-            owner.gain(DomCardName.Horse);
+        if (aCard.getCoinCost(owner.getCurrentGame())>=4) {
+            for (int i=0;i<owner.getLiveryTriggers();i++)
+              owner.gain(DomCardName.Horse);
         }
         ArrayList<DomCard> cardsToDiscard = new ArrayList<>();
         for (DomCard theCard : exileMat) {
@@ -414,7 +415,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 } else {
                     if (!owner.hasInExile(aCard.getName())) {
                         if (DomEngine.haveToLog) DomEngine.addToLog(theGatekeepr + " from player " + theOpp + " attacks!");
-                        owner.moveToExileMat(aCard);
+                        owner.exile(aCard);
                         return true;
                     }
                 }

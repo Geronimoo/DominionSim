@@ -27,7 +27,7 @@ public class MenagerieCard extends DomCard {
 		if (DomPlayer.getMultiplesInHand(this).isEmpty())
 		  return 0;
 		//if we have multiples, but more than 1 action left wait to play it as long as possible
-		if (owner.getActionsLeft()>1)
+		if (owner.getActionsAndVillagersLeft()>1)
 		  return 1000;
 		//if we have multiples, but only 1 action left, we're going to wait until the other card gets played
 		ArrayList<DomCard> theCards = new ArrayList<DomCard>();

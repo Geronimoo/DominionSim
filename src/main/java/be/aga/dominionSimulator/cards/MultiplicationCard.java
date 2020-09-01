@@ -166,7 +166,7 @@ public class MultiplicationCard extends DomCard {
           if (theCard.hasCardType(DomCardType.Action) && theCard.wantsToBePlayed()){
             thePerhapsCard = theCard;
         	if (theCard.hasCardType(DomCardType.Terminal)
-                && (owner.getActionsLeft()>0 || owner.getCardsFromHand(DomCardType.Terminal).size()==owner.getCardsFromHand(DomCardType.Action).size())
+                && (owner.getActionsAndVillagersLeft()>0 || owner.getCardsFromHand(DomCardType.Terminal).size()==owner.getCardsFromHand(DomCardType.Action).size())
         	    && (theCardToPlay == null ||theCard.getDiscardPriority(1)> theCardToPlay.getDiscardPriority(1))) {
               if (theCard.getName()!=DomCardName.Trading_Post && theCard.getName()!=DomCardName.Tactician)
                 theCardToPlay = theCard;
@@ -190,7 +190,7 @@ public class MultiplicationCard extends DomCard {
 
     private DomCard fixForKingsCourtRabble(DomCard theCardToPlay) {
         DomCard theNewCardToPlay = null;
-        if (owner.getActionsLeft()==0 && owner.getCardsFromPlay(DomCardName.King$s_Court).size()==1 && theCardToPlay!=null && theCardToPlay.hasCardType(DomCardType.Card_Advantage) && theCardToPlay.hasCardType(DomCardType.Terminal)) {
+        if (owner.getActionsAndVillagersLeft()==0 && owner.getCardsFromPlay(DomCardName.King$s_Court).size()==1 && theCardToPlay!=null && theCardToPlay.hasCardType(DomCardType.Card_Advantage) && theCardToPlay.hasCardType(DomCardType.Terminal)) {
             for (int i = 0;i<owner.getCardsInHand().size();i++) {
                 DomCard theCard = owner.getCardsInHand().get( i );
                 if (theCard.hasCardType(DomCardType.Action) && theCard.wantsToBePlayed()){

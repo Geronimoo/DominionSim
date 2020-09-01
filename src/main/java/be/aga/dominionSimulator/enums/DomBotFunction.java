@@ -31,6 +31,7 @@ public enum DomBotFunction {
    countVP,
    countMAXOpponentVP,
    tokensOnDefiledShrine,
+    tokensOnBaths,
     getTotalMoneyExcludingMats,
    countOnTavernMat, isSwampHagActive,
    isTravellingFairActive,

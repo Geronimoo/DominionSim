@@ -12,7 +12,7 @@ public class DiademCard extends DomCard {
     
     public void play() {
       if (DomEngine.haveToLog) 
-    	  DomEngine.addToLog( owner + " has " + owner.getActionsLeft() + " unused actions left");
-      owner.addAvailableCoins(2+owner.getActionsLeft());
+    	  DomEngine.addToLog( owner + " has " + owner.getActionsAndVillagersLeft() + " unused actions left");
+      owner.addAvailableCoins(2+owner.getActionsAndVillagersLeft());
     }
 }

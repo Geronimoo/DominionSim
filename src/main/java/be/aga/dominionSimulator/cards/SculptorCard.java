@@ -17,7 +17,7 @@ public class SculptorCard extends DomCard {
         if (owner.isHumanOrPossessedByHuman()) {
             theDesiredCard = handleHumanPlayer();
         } else {
-            if (owner.getActionsLeft()==0 && owner.getNextActionToPlay()!=null) {
+            if (owner.getActionsAndVillagersLeft()==0 && owner.getNextActionToPlay()!=null) {
                 theDesiredCard = owner.getDesiredCard(DomCardType.Treasure, new DomCost(4, 0), false,false,null);
             }
             if (theDesiredCard==null)

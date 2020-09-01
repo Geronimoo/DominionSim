@@ -44,7 +44,7 @@ public class WorkshopCard extends DomCard {
 
     @Override
     public int getPlayPriority() {
-        if (owner.getDrawDeckSize()==0 && owner.getActionsLeft()>1 && !owner.getCardsFromHand(DomCardType.Cycler).isEmpty())
+        if (owner.getDrawDeckSize()==0 && owner.getActionsAndVillagersLeft()>1 && !owner.getCardsFromHand(DomCardType.Cycler).isEmpty())
             return 1;
         return super.getPlayPriority();
     }

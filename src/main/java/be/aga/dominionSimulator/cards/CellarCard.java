@@ -76,7 +76,7 @@ public class CellarCard extends DomCard {
 	private void discardExcessTerminalActions() {
 	  ArrayList< DomCard > theTerminalsInHand = owner.getCardsFromHand( DomCardType.Terminal );
 	  Collections.sort(theTerminalsInHand, DomCard.SORT_FOR_DISCARD_FROM_HAND);
-	  int theNumber=theTerminalsInHand.size()-owner.getActionsLeft();
+	  int theNumber=theTerminalsInHand.size()-owner.getActionsAndVillagersLeft();
 	  for (int i = 0;i<theNumber && discardCount<deckSize;i++) {
 		owner.discardFromHand(theTerminalsInHand.get(i));
 		discardCount++;

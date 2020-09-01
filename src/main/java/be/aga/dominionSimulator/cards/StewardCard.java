@@ -26,7 +26,7 @@ public class StewardCard extends DomCard {
             handleHuman();
             return;
         }
-//    	if (owner.getActionsLeft()>0 && owner.getDeckAndDiscardSize()>0) {
+//    	if (owner.getActionsAndVillagersLeft()>0 && owner.getDeckAndDiscardSize()>0) {
 //    	  owner.drawCards( 2 );
 //    	  return;
 //    	}
@@ -38,7 +38,7 @@ public class StewardCard extends DomCard {
              return;
          }
 
-        if (owner.getActionsLeft()>0 && owner.getDeckAndDiscardSize()>0) {
+        if (owner.getActionsAndVillagersLeft()>0 && owner.getDeckAndDiscardSize()>0) {
             playForCards();
             return;
         }

@@ -32,20 +32,20 @@ public class GearCard extends DomCard {
       }
 
       Collections.sort(owner.getCardsInHand(), DomCard.SORT_FOR_DISCARD_FROM_HAND);
-      if (owner.getCardsInHand().get(0).hasCardType(DomCardType.Action) && owner.actionsLeft==0) {
+      if (owner.getCardsInHand().get(0).hasCardType(DomCardType.Action) && owner.getActionsAndVillagersLeft()==0) {
           mySetAsideCards.add(owner.getCardsInHand().remove(0));
           if (DomEngine.haveToLog) DomEngine.addToLog(owner + " has set aside " + mySetAsideCards);
       }
       if (owner.getCardsInHand().isEmpty())
           return;
-      if (owner.getCardsInHand().get(0).hasCardType(DomCardType.Action) && owner.actionsLeft==0) {
+      if (owner.getCardsInHand().get(0).hasCardType(DomCardType.Action) && owner.getActionsAndVillagersLeft()==0) {
           mySetAsideCards.add(owner.getCardsInHand().remove(0));
           if (DomEngine.haveToLog) DomEngine.addToLog(owner + " has set aside " + mySetAsideCards);
       }
+        if (mySetAsideCards.size()==2)
+            return;
       ArrayList<DomCard> theTreasures = owner.getCardsFromHand(DomCardType.Treasure);
       Collections.sort(theTreasures,SORT_FOR_DISCARDING);
-      if (mySetAsideCards.size()==2)
-          return;
       if (theTreasures.isEmpty()) {
           checkForOtherJunk();
           return;
@@ -100,13 +100,13 @@ public class GearCard extends DomCard {
     private void checkForOtherJunk() {
         if (owner.getCardsInHand().isEmpty())
             return;
-        if (owner.getCardsInHand().get(0).getDiscardPriority(owner.getActionsLeft())<DomCardName.Copper.getDiscardPriority(1)) {
+        if (owner.getCardsInHand().get(0).getDiscardPriority(owner.getActionsAndVillagersLeft())<DomCardName.Copper.getDiscardPriority(1)) {
                 mySetAsideCards.add(owner.getCardsInHand().remove(0));
                 if (DomEngine.haveToLog) DomEngine.addToLog(owner + " has set aside " + mySetAsideCards);
         }
         if (owner.getCardsInHand().isEmpty() || mySetAsideCards.size()==2)
             return;
-        if (owner.getCardsInHand().get(0).getDiscardPriority(owner.getActionsLeft())<DomCardName.Copper.getDiscardPriority(1)) {
+        if (owner.getCardsInHand().get(0).getDiscardPriority(owner.getActionsAndVillagersLeft())<DomCardName.Copper.getDiscardPriority(1)) {
                 mySetAsideCards.add(owner.getCardsInHand().remove(0));
                 if (DomEngine.haveToLog) DomEngine.addToLog(owner + " has set aside " + mySetAsideCards);
         }

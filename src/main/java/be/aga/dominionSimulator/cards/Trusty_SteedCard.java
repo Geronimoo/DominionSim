@@ -16,7 +16,7 @@ public class Trusty_SteedCard extends DomCard {
             handleHuman();
             return;
         }
-      if (owner.getActionsLeft()>1) {
+      if (owner.getActionsAndVillagersLeft()>1) {
         owner.addAvailableCoins(2);
       } else {
     	owner.addActions(2);

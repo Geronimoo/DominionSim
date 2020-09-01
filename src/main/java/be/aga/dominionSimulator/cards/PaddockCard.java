@@ -25,7 +25,13 @@ public class PaddockCard extends DomCard {
     public boolean hasCardType(DomCardType aType) {
         if (aType==DomCardType.Treasure && owner != null && owner.hasBuiltProject(DomCardName.Capitalism))
             return true;
+        if (aType==DomCardType.Terminal && owner != null && owner.getCurrentGame().countEmptyPiles()>0)
+            return false;
         return super.hasCardType(aType);
     }
 
+    @Override
+    public int getPlayPriority() {
+        return hasCardType(DomCardType.Terminal) ? super.getPlayPriority() : 15;
+    }
 }

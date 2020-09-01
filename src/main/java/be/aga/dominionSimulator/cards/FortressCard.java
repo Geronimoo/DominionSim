@@ -16,7 +16,7 @@ public class FortressCard extends DomCard {
 
     @Override
     public int getPlayPriority() {
-        if (owner.getActionsLeft()>1 && !owner.getCardsFromHand(DomCardType.TrashForBenefit).isEmpty())
+        if (owner.getActionsAndVillagersLeft()>1 && !owner.getCardsFromHand(DomCardType.TrashForBenefit).isEmpty())
             return 35;
         if (!owner.getCardsFromHand(DomCardType.TrashForBenefit).isEmpty()&&!owner.getCardsFromHand(DomCardType.TrashForBenefit).get(0).hasCardType(DomCardType.Terminal))
             return 35;

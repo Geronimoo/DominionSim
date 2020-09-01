@@ -46,6 +46,6 @@ public class Hunting_GroundsCard extends DomCard {
 
     @Override
     public int getPlayPriority() {
-        return owner.getActionsLeft() > 1 ? 6 : super.getPlayPriority();
+        return owner.getActionsAndVillagersLeft() > 1 ? 6 : super.getPlayPriority();
     }
 }

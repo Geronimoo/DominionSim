@@ -21,7 +21,7 @@ public class LibraryCard extends DrawUntilXCardsCard {
           while (owner.getCardsInHand().size() < 7 && !owner.isDeckEmpty()) {
               DomCard theRevealedCard = owner.revealTopCards(1).get(0);
               if (theRevealedCard.hasCardType(DomCardType.Action)
-                      && (owner.getActionsLeft() == 0
+                      && (owner.getActionsAndVillagersLeft() == 0
                       || (theRevealedCard.hasCardType(DomCardType.Terminal) && owner.getProbableActionsLeft() <= 0))) {
                   putCardAside(theRevealedCard);
               } else {
@@ -57,7 +57,7 @@ public class LibraryCard extends DrawUntilXCardsCard {
 
     @Override
     public int getPlayPriority() {
-        if (owner.getActionsLeft()==2
+        if (owner.getActionsAndVillagersLeft()==2
           && owner.getCardsFromHand(DomCardType.Action).size()==owner.getCardsFromHand(DomCardType.Terminal).size())
                 return 5;
         return super.getPlayPriority();

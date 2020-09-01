@@ -43,6 +43,6 @@ public class CourtyardCard extends DomCard {
 
     @Override
     public int getPlayPriority() {
-        return owner.getActionsLeft()>1 ? 10 : super.getPlayPriority();
+        return owner.getActionsAndVillagersLeft()>1 ? 10 : super.getPlayPriority();
     }
 }

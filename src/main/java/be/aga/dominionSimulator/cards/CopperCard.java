@@ -59,7 +59,12 @@ public class CopperCard extends DomCard {
     	    && owner.getDesiredCard(owner.getTotalPotentialCurrency(),false)==DomCardName.Ducat
             && owner.getTotalPotentialCurrency().getCoins()>2)
     	    return false;
-    	return true;
+        if (owner.getCurrentGame().countInSupply(DomCardName.Hostelry)>0
+                && owner.getDesiredCard(new DomCost(owner.getAvailableCoinsWithoutTokens(),0),false)==DomCardName.Hostelry
+                && owner.getDesiredCard(owner.getTotalPotentialCurrency(),false)==DomCardName.Hostelry)
+            return false;
+
+        return true;
     }
 
     private int countCrapCards() {

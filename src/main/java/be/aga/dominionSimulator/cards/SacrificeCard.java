@@ -47,14 +47,14 @@ public class SacrificeCard extends DomCard {
 	private DomCard findCardToTrash() {
       Collections.sort( owner.getCardsInHand(), SORT_FOR_TRASHING);
       DomCard theCardToTrash = owner.getCardsInHand().get( 0 );
-      if (!theCardToTrash.hasCardType(DomCardType.Action) && owner.getActionsLeft()==0 && !owner.getCardsFromHand(DomCardType.Action).isEmpty() && owner.getCardsFromHand(DomCardType.Action).get(0).getName()!=DomCardName.Market_Square)
+      if (!theCardToTrash.hasCardType(DomCardType.Action) && owner.getActionsAndVillagersLeft()==0 && !owner.getCardsFromHand(DomCardType.Action).isEmpty() && owner.getCardsFromHand(DomCardType.Action).get(0).getName()!=DomCardName.Market_Square)
           theCardToTrash=owner.getCardsFromHand(DomCardType.Action).get(0);
       return theCardToTrash;
 	}
 
     @Override
     public int getPlayPriority() {
-        if (owner.getActionsLeft()==1 && owner.getCardsFromHand(DomCardType.Action).size()>1) {
+        if (owner.getActionsAndVillagersLeft()==1 && owner.getCardsFromHand(DomCardType.Action).size()>1) {
             for (DomCard theCard : owner.getCardsFromHand(DomCardType.Action)){
                 if (theCard!=this && theCard.getTrashPriority()<=getTrashPriority())
                     return 15;

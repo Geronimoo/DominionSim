@@ -1,7 +1,6 @@
 package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
-import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
@@ -33,7 +32,7 @@ public class BanishCard extends DomCard {
       }
       if (bestCard!=null) {
           for (DomCard card:owner.getCardsFromHand(bestCard.getName())) {
-              owner.moveToExileMat(owner.removeCardFromHand(card));
+              owner.exile(owner.removeCardFromHand(card));
           }
       }
     }
@@ -45,7 +44,7 @@ public class BanishCard extends DomCard {
         }
         DomCardName theChosenCard = owner.getEngine().getGameFrame().askToSelectOneCard("Exile cards", theChooseFrom, "Mandatory!");
         for (DomCard card:owner.getCardsFromHand(theChosenCard)) {
-            owner.moveToExileMat(owner.removeCardFromHand(card));
+            owner.exile(owner.removeCardFromHand(card));
         }
     }
 

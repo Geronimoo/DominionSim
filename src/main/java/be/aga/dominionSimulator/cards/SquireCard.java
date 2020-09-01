@@ -19,7 +19,7 @@ public class SquireCard extends DomCard {
             handleHuman();
             return;
         }
-        if ((owner.getActionsLeft()-owner.getCardsFromHand(DomCardType.Action).size()<1)&&!owner.getCardsFromHand(DomCardType.Action).isEmpty()) {
+        if ((owner.getActionsAndVillagersLeft()-owner.getCardsFromHand(DomCardType.Action).size()<1)&&!owner.getCardsFromHand(DomCardType.Action).isEmpty()) {
             owner.addActions(2);
             return;
         }
@@ -64,7 +64,7 @@ public class SquireCard extends DomCard {
 
     @Override
     public int getPlayPriority() {
-        if (owner.getActionsLeft()>1)
+        if (owner.getActionsAndVillagersLeft()>1)
             return 32;
 //        if (owner.getCardsFromHand(DomCardType.Action).size()-owner.getCardsFromHand(DomCardName.Squire).size() > owner.getCardsFromHand(DomCardType.Terminal).size())
 //            return 32;

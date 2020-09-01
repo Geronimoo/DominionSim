@@ -117,7 +117,7 @@ public class AmbassadorCard extends DomCard {
                 || theRevealedCard.getTrashPriority()>DomCardName.Copper.getTrashPriority())
                break;
             if (theCardToReturn!=DomCardName.Curse || owner.getCurrentGame().countInSupply(DomCardName.Curse)==0 || owner.count(DomCardName.Curse)>1) {
-                if (owner.getActionsLeft()==0 || owner.getNextActionToPlay()==null || owner.getNextActionToPlay().getName()!=DomCardName.Ambassador || (!owner.getCardsFromHand(theCardToReturn).isEmpty() && owner.getCardsFromHand(theCardToReturn).size()>0)) {
+                if (owner.getActionsAndVillagersLeft()==0 || owner.getNextActionToPlay()==null || owner.getNextActionToPlay().getName()!=DomCardName.Ambassador || (!owner.getCardsFromHand(theCardToReturn).isEmpty() && owner.getCardsFromHand(theCardToReturn).size()>0)) {
                     DomCard theCardToRemove = owner.removeCardFromHand(theRevealedCard);
                     owner.returnToSupply(theCardToRemove);
                 }

@@ -17,7 +17,7 @@ public class ShapeshifterCard extends DomCard {
     public void play() {
         DomCardName theChosenCard;
         boolean chooseNonTerminal=false;
-        if (owner.getActionsLeft()==0 && !owner.getCardsFromHand(DomCardType.Action).isEmpty())
+        if (owner.getActionsAndVillagersLeft()==0 && !owner.getCardsFromHand(DomCardType.Action).isEmpty())
           chooseNonTerminal=true;
         theChosenCard = chooseCardToShapeShift(chooseNonTerminal);
         if (theChosenCard==null && chooseNonTerminal) {
@@ -57,7 +57,7 @@ public class ShapeshifterCard extends DomCard {
             if (theCard.hasCardType(DomCardType.Terminal) && chooseNonTerminal)
                 continue;
             ArrayList< DomCard > theTerminalsInHand = owner.getCardsFromHand( DomCardType.Terminal );
-            int i=owner.getActionsLeft()-theTerminalsInHand.size();
+            int i=owner.getActionsAndVillagersLeft()-theTerminalsInHand.size();
             if (theCard.hasCardType(DomCardType.Village)&&i>0)
                 continue;
             if (getName()==DomCardName.Band_of_Misfits)

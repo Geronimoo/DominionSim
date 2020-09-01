@@ -25,7 +25,7 @@ public class MillCard extends DomCard {
                 processMenagerie();
             } else {
                 Collections.sort(owner.getCardsInHand(), SORT_FOR_DISCARD_FROM_HAND);
-                if (owner.getCardsInHand().get(1).getDiscardPriority(owner.getActionsLeft()) <= DomCardName.Copper.getDiscardPriority(1)) {
+                if (owner.getCardsInHand().get(1).getDiscardPriority(owner.getActionsAndVillagersLeft()) <= DomCardName.Copper.getDiscardPriority(1)) {
                     owner.discard(owner.removeCardFromHand(owner.getCardsInHand().get(0)));
                     owner.discard(owner.removeCardFromHand(owner.getCardsInHand().get(0)));
                     owner.addAvailableCoins(2);

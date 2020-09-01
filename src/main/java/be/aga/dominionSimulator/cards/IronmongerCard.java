@@ -32,7 +32,7 @@ public class IronmongerCard extends DomCard {
             else
                 owner.putOnTopOfDeck(theTopCard);
         } else {
-            if (theTopCard.getDiscardPriority(owner.getActionsLeft()) >= 16)
+            if (theTopCard.getDiscardPriority(owner.getActionsAndVillagersLeft()) >= 16)
                 owner.putOnTopOfDeck(theTopCard);
             else
                 owner.discard(theTopCard);

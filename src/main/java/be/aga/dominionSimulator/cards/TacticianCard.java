@@ -28,7 +28,7 @@ public class TacticianCard extends DomCard {
     
     @Override
     public int getPlayPriority() {
-    	if (owner.getActionsLeft()>1){
+    	if (owner.getActionsAndVillagersLeft()>1){
     		return 100;
     	}
     	return super.getPlayPriority();

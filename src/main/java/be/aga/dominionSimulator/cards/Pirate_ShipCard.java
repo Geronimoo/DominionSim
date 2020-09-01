@@ -106,7 +106,7 @@ public class Pirate_ShipCard extends DomCard {
     }
 
     public double getPotentialCoinValue() {
-      if (owner.getActionsLeft()==0 && owner.getCardsInHand().contains( this ) ) 
+      if (owner.getActionsAndVillagersLeft()==0 && owner.getCardsInHand().contains( this ) )
         return 0;
       return owner.getPirateShipLevel();
     }

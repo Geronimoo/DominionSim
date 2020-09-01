@@ -24,7 +24,7 @@ public class DisplaceCard extends DomCard {
                 Collections.sort(owner.getCardsInHand(), SORT_FOR_DISCARDING);
                 theCardToDisplace = owner.getCardsInHand().get(0);
             }
-            owner.moveToExileMat(owner.removeCardFromHand(theCardToDisplace));
+            owner.exile(owner.removeCardFromHand(theCardToDisplace));
             DomCost theMaxCostOfCardToGain = new DomCost(theCardToDisplace.getCoinCost(owner.getCurrentGame()) + 2, theCardToDisplace.getPotionCost());
             DomCardName theDesiredCard = owner.getDesiredCardWithRestriction(null,theMaxCostOfCardToGain, false, theCardToDisplace.getName());
             if (theDesiredCard == null)
@@ -39,7 +39,7 @@ public class DisplaceCard extends DomCard {
         for (DomCard theCard : owner.getCardsInHand())
             theChooseFrom.add(theCard.getName());
         DomCard theCardToDisplace = owner.getCardsFromHand(owner.getEngine().getGameFrame().askToSelectOneCard("Select card to " + this.getName().toString(), theChooseFrom, "Mandatory!")).get(0);
-        owner.moveToExileMat(owner.removeCardFromHand(theCardToDisplace));
+        owner.exile(owner.removeCardFromHand(theCardToDisplace));
         theChooseFrom = new ArrayList<DomCardName>();
         for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
             if (theCard!=theCardToDisplace.getName() && theCardToDisplace.getCost(owner.getCurrentGame()).add(new DomCost(2,0)).customCompare(theCard.getCost(owner.getCurrentGame()))>=0

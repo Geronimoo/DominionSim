@@ -40,6 +40,6 @@ public class EnvoyCard extends DomCard {
     
     @Override
     public int getPlayPriority() {
-      return owner.getActionsLeft()>1 ? 8 : super.getPlayPriority();
+      return owner.getActionsAndVillagersLeft()>1 ? 8 : super.getPlayPriority();
     }
 }

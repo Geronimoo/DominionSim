@@ -35,7 +35,7 @@ public class PawnCard extends DomCard {
       }
 
       //standard handling
-      if (owner.getNextActionToPlay()!=null && owner.getActionsLeft()==0) {
+      if (owner.getNextActionToPlay()!=null && owner.getActionsAndVillagersLeft()==0) {
     	  owner.addActions(1);
     	  theChoicesCount++;
     	  actionChosen=true;

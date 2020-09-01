@@ -19,7 +19,7 @@ public class CatacombsCard extends DomCard {
       }
       int theTotal=0;
       for (DomCard card : theCards){
-    	theTotal+=card.getDiscardPriority(owner.getActionsLeft());
+    	theTotal+=card.getDiscardPriority(owner.getActionsAndVillagersLeft());
     	if (card.getName()==DomCardName.Tunnel){
     		owner.discard(theCards);
             owner.drawCards(3);
@@ -52,7 +52,7 @@ public class CatacombsCard extends DomCard {
 
     @Override
     public int getPlayPriority() {
-        return owner.getActionsLeft()>1 ? 6 : super.getPlayPriority();
+        return owner.getActionsAndVillagersLeft()>1 ? 6 : super.getPlayPriority();
     }
 
     @Override

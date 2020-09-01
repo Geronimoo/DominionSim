@@ -18,7 +18,7 @@ public class JourneymanCard extends DomCard {
       } else {
           Map<DomCardName, Integer> theCardsToConsider = new EnumMap<DomCardName, Integer>(DomCardName.class);
           for (DomCard theCard : owner.getDeck().getDrawOrAndDiscardDeck()) {
-              if (theCard.getDiscardPriority(owner.getActionsLeft()) > DomCardName.Estate.getDiscardPriority(0))
+              if (theCard.getDiscardPriority(owner.getActionsAndVillagersLeft()) > DomCardName.Estate.getDiscardPriority(0))
                   continue;
               if (!theCardsToConsider.containsKey(theCard.getName()))
                   theCardsToConsider.put(theCard.getName(), 0);
@@ -53,6 +53,6 @@ public class JourneymanCard extends DomCard {
 
     @Override
     public int getPlayPriority() {
-        return owner.getActionsLeft()>1 ? 6 : super.getPlayPriority();
+        return owner.getActionsAndVillagersLeft()>1 ? 6 : super.getPlayPriority();
     }
 }

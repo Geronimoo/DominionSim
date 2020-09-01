@@ -40,7 +40,7 @@ public class HamletCard extends DomCard {
         	}
         }
         //if we're going to draw a bunch of cards later in the turn, we want to make sure we have enough actions
-        if (!owner.getCardsFromHand(DomCardType.Card_Advantage).isEmpty() && owner.getActionsLeft()==1 && !discardedForAction){
+        if (!owner.getCardsFromHand(DomCardType.Card_Advantage).isEmpty() && owner.getActionsAndVillagersLeft()==1 && !discardedForAction){
           discardForExtraAction(cardsInHand.get(0));
         }
   	    //fix for Library/Watchtower which will often be played in combo with Hamlet

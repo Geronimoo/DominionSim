@@ -98,7 +98,7 @@ public class ChurchCard extends DomCard {
 
     private void checkForOtherJunk() {
         while (!owner.getCardsInHand().isEmpty() && mySetAsideCards.size()<3) {
-            if (owner.getCardsInHand().get(0).getDiscardPriority(owner.getActionsLeft()) < DomCardName.Copper.getDiscardPriority(1))
+            if (owner.getCardsInHand().get(0).getDiscardPriority(owner.getActionsAndVillagersLeft()) < DomCardName.Copper.getDiscardPriority(1))
                 setAside(owner.getCardsInHand().remove(0));
             else
                 return;

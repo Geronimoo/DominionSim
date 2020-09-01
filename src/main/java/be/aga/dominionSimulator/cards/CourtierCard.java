@@ -94,7 +94,7 @@ public class CourtierCard extends DomCard {
 
     private void chooseOption() {
         //standard handling
-        if (!actionChosen && owner.getNextActionToPlay()!=null && owner.getActionsLeft()==0) {
+        if (!actionChosen && owner.getNextActionToPlay()!=null && owner.getActionsAndVillagersLeft()==0) {
             owner.addActions(1);
             actionChosen=true;
             return;

@@ -30,7 +30,7 @@ public class SentryCard extends DomCard {
                     if (theTopCards.get(0).getDiscardPriority(1) <= DomCardName.Silver.getDiscardPriority(1)) {
                         owner.discard(theTopCards.remove(0));
                     } else {
-                        if (theTopCards.get(0).hasCardType(DomCardType.Action) && owner.getNextActionToPlay() != null && owner.getNextActionToPlay().hasCardType(DomCardType.Card_Advantage) && owner.getNextActionToPlay().hasCardType(DomCardType.Terminal) && owner.getActionsLeft() == 1)
+                        if (theTopCards.get(0).hasCardType(DomCardType.Action) && owner.getNextActionToPlay() != null && owner.getNextActionToPlay().hasCardType(DomCardType.Card_Advantage) && owner.getNextActionToPlay().hasCardType(DomCardType.Terminal) && owner.getActionsAndVillagersLeft() == 1)
                             owner.discard(theTopCards.remove(0));
                         else
                             owner.putOnTopOfDeck(theTopCards.remove(0));

@@ -19,10 +19,10 @@ public class City_QuarterCard extends DomCard {
 
     @Override
     public int getPlayPriority() {
-        if (owner.getDeckAndDiscardSize()==0 && owner.getActionsLeft()>1)
+        if (owner.getDeckAndDiscardSize()==0 && owner.getActionsAndVillagersLeft()>1)
             return 500;
         for (DomCard theCard : owner.getCardsInHand()){
-            if (owner.getActionsLeft()>1 && theCard!=this && theCard.hasCardType(DomCardType.Card_Advantage) && theCard.wantsToBePlayed() && owner.getCardsFromHand(DomCardType.Action).size()<4)
+            if (owner.getActionsAndVillagersLeft()>1 && theCard!=this && theCard.hasCardType(DomCardType.Card_Advantage) && theCard.wantsToBePlayed() && owner.getCardsFromHand(DomCardType.Action).size()<4)
                 return theCard.getPlayPriority()+1;
         }
         return super.getPlayPriority();

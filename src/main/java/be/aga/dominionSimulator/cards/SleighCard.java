@@ -2,8 +2,6 @@ package be.aga.dominionSimulator.cards;
 
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.enums.DomCardName;
-import be.aga.dominionSimulator.enums.DomCardType;
-import be.aga.dominionSimulator.enums.DomPhase;
 
 public class SleighCard extends DomCard {
     public SleighCard() {
@@ -20,7 +18,7 @@ public class SleighCard extends DomCard {
     }
 
     public boolean wantsToReact(DomCard aCard) {
-        if (aCard.getDiscardPriority(owner.getActionsLeft())> DomCardName.Copper.getDiscardPriority(1) )
+        if (aCard.getDiscardPriority(owner.getActionsAndVillagersLeft())> DomCardName.Copper.getDiscardPriority(1) )
           return true;
         return false;
     }

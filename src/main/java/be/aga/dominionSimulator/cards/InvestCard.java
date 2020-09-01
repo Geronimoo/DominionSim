@@ -26,7 +26,7 @@ public class InvestCard extends DomCard {
             return;
         DomCard theAction = owner.getCurrentGame().takeFromSupply(theDesiredAction);
         owner.getDeck().addPhysicalCardWhenNotGained(theAction);
-        owner.moveToExileMat(theAction);
+        owner.exile(theAction);
         owner.addInvestment(theAction);
         for (DomPlayer thePlayer : owner.getOpponents()) {
             if (thePlayer.hasInvestedIn(theDesiredAction)) {

@@ -15,7 +15,7 @@ public class Secret_ChamberCard extends DomCard {
     }
 
     public void play() {
-      if (owner.getActionsLeft()>0 
+      if (owner.getActionsAndVillagersLeft()>0
       && !owner.getCardsFromHand(DomCardName.Tactician).isEmpty() 
       && owner.getCardsInHand().size()>=2) {
     	handleTactician();
@@ -31,7 +31,7 @@ public class Secret_ChamberCard extends DomCard {
 		  DomCard theCardToDiscard = null;
 		  do {
 		    theCardToDiscard = owner.getCardsInHand().get(0);
-		    if (theCardToDiscard.getDiscardPriority(owner.getActionsLeft()) >= 16)
+		    if (theCardToDiscard.getDiscardPriority(owner.getActionsAndVillagersLeft()) >= 16)
 		      return;
 		    owner.discardFromHand(theCardToDiscard);
 		    owner.addAvailableCoins( 1 );

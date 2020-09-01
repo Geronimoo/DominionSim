@@ -64,7 +64,7 @@ public class ChapelCard extends DomCard {
             theTrashCount++;
           }
         }
-        if (theTrashCount>1 && owner.getActionsLeft()==1)
+        if (theTrashCount>1 && owner.getActionsAndVillagersLeft()==1)
           return 18;
         return super.getPlayPriority();
     }

@@ -75,7 +75,7 @@ public class DomCard implements Comparable< DomCard >{
 
     public static final Comparator<DomCard> SORT_FOR_DISCARD_FROM_HAND = new Comparator<DomCard>(){
             public int compare( DomCard aO1, DomCard aO2 ) {
-                int theActionsLeft = aO1.owner.getActionsLeft();
+                int theActionsLeft = aO1.owner.getActionsAndVillagersLeft();
                 if (aO1.getDiscardPriority(theActionsLeft)< aO2.getDiscardPriority(theActionsLeft))
                     return -1;
                 if (aO1.getDiscardPriority(theActionsLeft) > aO2.getDiscardPriority(theActionsLeft))
@@ -143,7 +143,7 @@ public class DomCard implements Comparable< DomCard >{
     public double getPotentialCoinValue() {
         if (owner==null)
             return 0;
-      if (owner.getActionsLeft()==0 && hasCardType( DomCardType.Action ) && owner.getCardsInHand().contains( this ) ) {
+      if (owner.getActionsAndVillagersLeft()==0 && hasCardType( DomCardType.Action ) && owner.getCardsInHand().contains( this ) ) {
         return 0;
       } else {
         return name.getCoinValue();

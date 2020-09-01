@@ -17,7 +17,7 @@ public class NecromancerCard extends DomCard {
         owner.setNeedsToUpdateGUI();
         DomCard theChosenCard;
         boolean chooseNonTerminal=false;
-        if (owner.getActionsLeft()==0 && !owner.getCardsFromHand(DomCardType.Action).isEmpty())
+        if (owner.getActionsAndVillagersLeft()==0 && !owner.getCardsFromHand(DomCardType.Action).isEmpty())
           chooseNonTerminal=true;
         theChosenCard = chooseCardToNecro(chooseNonTerminal);
         if (theChosenCard==null)

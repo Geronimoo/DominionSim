@@ -56,9 +56,9 @@ public class WatchtowerCard extends DrawUntilXCardsCard {
     }
     @Override
     public int getPlayPriority() {
-        if (owner.getActionsLeft()>1)
+        if (owner.getActionsAndVillagersLeft()>1)
             return 20;
-        if (owner.getActionsLeft()>2)
+        if (owner.getActionsAndVillagersLeft()>2)
             return 35;
 
         return super.getPlayPriority();

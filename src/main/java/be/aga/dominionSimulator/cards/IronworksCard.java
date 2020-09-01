@@ -17,7 +17,7 @@ public class IronworksCard extends DomCard {
       if (owner.isHumanOrPossessedByHuman()) {
           theDesiredCard=handleHumanPlayer();
       } else {
-          if (!owner.getCardsFromHand(DomCardType.Action).isEmpty() && owner.getActionsLeft() == 0) {
+          if (!owner.getCardsFromHand(DomCardType.Action).isEmpty() && owner.getActionsAndVillagersLeft() == 0) {
               //if we have more actions in hand we probably want to play them so find an action card to gain
               theDesiredCard = owner.getDesiredCard(DomCardType.Action, new DomCost(4, 0), false, false, null);
           }

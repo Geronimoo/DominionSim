@@ -24,7 +24,7 @@ public class VaultCard extends DomCard {
              owner.addAvailableCoins(1);
           }
       } else {
-          if (owner.getActionsLeft() > 0 && !owner.getCardsFromHand(DomCardName.Tactician).isEmpty() && owner.getCardsInHand().size() >= 2) {
+          if (owner.getActionsAndVillagersLeft() > 0 && !owner.getCardsFromHand(DomCardName.Tactician).isEmpty() && owner.getCardsInHand().size() >= 2) {
               handleTactician();
           } else {
               playNormal();
@@ -38,7 +38,7 @@ public class VaultCard extends DomCard {
       DomCard theCardToDiscard = null;
       while (!owner.getCardsInHand().isEmpty()){
 	    theCardToDiscard = owner.getCardsInHand().get(0);
-	    if (theCardToDiscard.getDiscardPriority(owner.getActionsLeft()) >= 20)
+	    if (theCardToDiscard.getDiscardPriority(owner.getActionsAndVillagersLeft()) >= 20)
 	      return;
         owner.discardFromHand(theCardToDiscard);
 	    owner.addAvailableCoins( 1 );

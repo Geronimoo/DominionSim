@@ -37,7 +37,7 @@ public class Bounty_HunterCard extends DomCard {
             if (aCard.getName()==domCard.getName())
                 bounty = false;
         }
-        owner.moveToExileMat(domCard);
+        owner.exile(domCard);
         if (bounty)
             owner.addAvailableCoins(3);
     }

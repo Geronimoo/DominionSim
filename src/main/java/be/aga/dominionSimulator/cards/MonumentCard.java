@@ -16,7 +16,7 @@ public class MonumentCard extends DomCard {
 
     @Override
     public int getPlayPriority() {
-        if (owner.getActionsLeft()>1 && !owner.getCardsFromHand(DomCardName.Hunting_Party).isEmpty())
+        if (owner.getActionsAndVillagersLeft()>1 && !owner.getCardsFromHand(DomCardName.Hunting_Party).isEmpty())
             return owner.getCardsFromHand(DomCardName.Hunting_Party).get(0).getPlayPriority()-1;
         return super.getPlayPriority();
     }

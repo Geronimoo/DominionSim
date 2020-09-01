@@ -91,7 +91,7 @@ public class DomBuyCondition {
               leftValue=owner.getTotalMoneyInDeck();
               break;
           case actionsLeft:
-              leftValue=owner.getActionsLeft();
+              leftValue=owner.getActionsAndVillagersLeft();
               break;
           case getTotalMoneyExcludingMats:
               leftValue=owner.getTotalMoneyExcludingMats();
@@ -155,6 +155,9 @@ public class DomBuyCondition {
           case tokensOnDefiledShrine:
               leftValue=owner.getCurrentGame().getBoard().countVPon(DomCardName.Defiled_Shrine);
               break;
+          case tokensOnBaths:
+              leftValue=owner.getCurrentGame().getBoard().countVPon(DomCardName.Baths);
+              break;
           case isTravellingFairActive:
               leftValue=owner.isTravellingFairActive() ? 1 : 0;
               break;
@@ -215,7 +218,7 @@ public class DomBuyCondition {
               rightValue=owner.getTotalMoneyInDeck();
               break;
           case actionsLeft:
-              rightValue=owner.getActionsLeft();
+              rightValue=owner.getActionsAndVillagersLeft();
               break;
           case getTotalMoneyExcludingMats:
             rightValue=owner.getTotalMoneyExcludingMats();
@@ -278,6 +281,9 @@ public class DomBuyCondition {
               break;
          case tokensOnDefiledShrine:
               rightValue=owner.getCurrentGame().getBoard().countVPon(DomCardName.Defiled_Shrine);
+              break;
+         case tokensOnBaths:
+              rightValue=owner.getCurrentGame().getBoard().countVPon(DomCardName.Baths);
               break;
          case isTravellingFairActive:
               rightValue=owner.isTravellingFairActive() ? 1 : 0;

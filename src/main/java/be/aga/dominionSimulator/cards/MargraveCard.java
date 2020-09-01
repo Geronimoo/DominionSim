@@ -25,6 +25,6 @@ public class MargraveCard extends DomCard {
       if (owner.getDeckAndDiscardSize()==0)
           return 30;
       //put this higher up on the play priority if we have some actions to spare (enabling engine chains)
-      return owner.getActionsLeft() > 1 ? 6 : super.getPlayPriority();
+      return owner.getActionsAndVillagersLeft() > 1 ? 6 : super.getPlayPriority();
     }
 }

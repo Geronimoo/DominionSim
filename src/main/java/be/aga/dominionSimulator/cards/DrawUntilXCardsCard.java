@@ -11,7 +11,7 @@ public class DrawUntilXCardsCard extends DomCard{
 
 	@Override
     public boolean wantsToBePlayed() {
-		if (owner.getActionsLeft() > 2
+		if (owner.getActionsAndVillagersLeft() > 2
                 && !owner.getCardsFromHand(DomCardType.Trasher).isEmpty()
                 && owner.getCardsFromHand(DomCardType.Trasher).get(0).wantsToBePlayed())
 			return false;

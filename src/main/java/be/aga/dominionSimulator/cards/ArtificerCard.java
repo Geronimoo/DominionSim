@@ -26,7 +26,7 @@ public class ArtificerCard extends DomCard {
       Collections.sort(owner.getCardsInHand(),SORT_FOR_DISCARD_FROM_HAND);
       int i=0;
       DomCard theNextCard = owner.getCardsInHand().get(i);
-      while (theNextCard.getDiscardPriority(owner.getActionsLeft())<=DomCardName.Copper.getDiscardPriority(1) && i<owner.getCardsInHand().size()-1)
+      while (theNextCard.getDiscardPriority(owner.getActionsAndVillagersLeft())<=DomCardName.Copper.getDiscardPriority(1) && i<owner.getCardsInHand().size()-1)
           theNextCard= owner.getCardsInHand().get(++i);
       DomCardName theDesiredCard = null;
       int j = 0;

@@ -19,7 +19,7 @@ public class CovenCard extends DomCard {
           if (owner.getCurrentGame().countInSupply(DomCardName.Curse )>0) {
               DomCard theCurse = owner.getCurrentGame().takeFromSupply(DomCardName.Curse);
               thePlayer.getDeck().addPhysicalCardWhenNotGained(theCurse);
-              thePlayer.moveToExileMat(theCurse);
+              thePlayer.exile(theCurse);
           }else {
               thePlayer.discardAllFromExileMat(DomCardName.Curse);
           }

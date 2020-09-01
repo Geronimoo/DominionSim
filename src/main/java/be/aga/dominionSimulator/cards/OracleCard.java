@@ -84,7 +84,7 @@ public class OracleCard extends DomCard {
 	  }
       int theTotalValue = 0;
       for (DomCard theCard : theRevealedCards) {
-    	theTotalValue+=theCard.getDiscardPriority(owner.getActionsLeft()); 
+    	theTotalValue+=theCard.getDiscardPriority(owner.getActionsAndVillagersLeft());
       }
       if (theTotalValue<32){
     	owner.discard(theRevealedCards);
