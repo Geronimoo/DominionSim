@@ -6,6 +6,7 @@ import java.util.Observable;
 
 import be.aga.dominionSimulator.cards.*;
 import be.aga.dominionSimulator.enums.DomArtifact;
+import be.aga.dominionSimulator.stats.StatsManager;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
@@ -135,6 +136,7 @@ public void runSimulation() {
           previousTurnTakenBy = activePlayer;
         }
     } while (!isGameFinished()||fleetTurnsLeft() );
+    StatsManager.addStatsToCurrentSeries(board);
     DomEngine.logPlayerIndentation = 0;
 }
 
