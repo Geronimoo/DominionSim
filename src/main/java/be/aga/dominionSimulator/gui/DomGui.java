@@ -45,10 +45,12 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 
+import be.aga.dominionSimulator.stats.StatsManager;
 import org.jfree.ui.RefineryUtilities;
 import org.xml.sax.InputSource;
 
@@ -66,6 +68,7 @@ public class DomGui extends JFrame implements ActionListener {
   private DomBarChart myBarChart;
   private DomLineChart myVPLineChart;
   private DomLineChart myMoneyLineChart;
+  private DomStatsBreakdown domStatsBreakdown = new DomStatsBreakdown();
   private HashMap< JButton, ButtonGroup > myStartStateButtonGroups = new HashMap< JButton, ButtonGroup >();
   private HashMap< JButton, JButton > myEditCreateButtons = new HashMap<JButton, JButton>();
   private HashMap< JButton, JButton > myCopyPasteButtons = new HashMap<JButton, JButton>();
@@ -124,12 +127,13 @@ public class DomGui extends JFrame implements ActionListener {
       myVPLineChart = new DomLineChart(myEngine.getPlayers(), "VP");
 	  myBarChart = new DomBarChart(myEngine.getPlayers());
       myMoneyLineChart = new DomLineChart(myEngine.getPlayers(), "Money");
- 
-      myTopSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, new JScrollPane(getControlPanel()), myVPLineChart.getChartPanel());
+
+      myTopSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, new JScrollPane(getControlPanel()), new JPanel());
+      updateTopRightPanel();
       myBottomSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, myBarChart.getChartPanel(), myMoneyLineChart.getChartPanel());
 	  myBigSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, myTopSplit, myBottomSplit);
       myBigSplit.setResizeWeight(0.8);
-      myTopSplit.setResizeWeight(0.50);
+      myTopSplit.setResizeWeight(0.7);
       myBottomSplit.setResizeWeight(0.5);
       myBottomSplit.setDividerSize(5);
       myBigSplit.setDividerSize(5);
@@ -137,6 +141,19 @@ public class DomGui extends JFrame implements ActionListener {
 
 	  add(myBigSplit);
 	}
+
+	private void updateTopRightPanel() {
+        myTopSplit.setBottomComponent(StatsManager.gatherAdditionalStats
+            ? generateAdditionalStatsPanel()
+            : myVPLineChart.getChartPanel());
+    }
+
+    private Component generateAdditionalStatsPanel() {
+        JTabbedPane statisticsTabbedPane = new JTabbedPane();
+        statisticsTabbedPane.add("Victory points per turn chart", myVPLineChart.getChartPanel());
+        statisticsTabbedPane.add("More stats", domStatsBreakdown.getStatsPanel());
+        return statisticsTabbedPane;
+    }
 
 	private JButton getSampleGameButton() {
        JButton theBTN = new JButton("Sample game");
@@ -357,6 +374,11 @@ public class DomGui extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed( ActionEvent aE ) {
+        if ("Gather additional stats".equals(aE.getActionCommand())) {
+            StatsManager.gatherAdditionalStats = !StatsManager.gatherAdditionalStats;
+            updateTopRightPanel();
+            return;
+        }
       if (aE.getActionCommand().equals( "Select" )) {
     	myEditedSelector=(JButton) aE.getSource();
     	new DomBotSelector(myEngine, getSelectedPlayer((JButton) aE.getSource()));
@@ -576,6 +598,10 @@ public class DomGui extends JFrame implements ActionListener {
         myMoneyLineChart.getChartPanel().setChart(aChart.getChartPanel().getChart());       
     }
 
+    public void updateStatisticsBreakdown() {
+        domStatsBreakdown.update(StatsManager.calculateCurrentSeriesStats());
+    }
+
     public JPanel getSampleGamePanel() {
       final JPanel thePanel = new JPanel( new GridBagLayout() );
       final GridBagConstraints theCons = getGridBagConstraints( 2 );
@@ -638,6 +664,10 @@ public class DomGui extends JFrame implements ActionListener {
 	    saveDeck.setActionCommand( "Save" );
 	    fileMenu.add( saveDeck );
 	    fileMenu.insertSeparator( 2 );
+        JCheckBoxMenuItem additionalStatsCheckBox = new JCheckBoxMenuItem("Gather additional stats", StatsManager.gatherAdditionalStats);
+        additionalStatsCheckBox.addActionListener(this);
+        fileMenu.add(additionalStatsCheckBox);
+	    fileMenu.insertSeparator(4);
 	    JMenuItem exit = new JMenuItem( "Exit", 'X' );
 	    exit.addActionListener( new ActionListener() {
 	      public void actionPerformed( ActionEvent ae ) {

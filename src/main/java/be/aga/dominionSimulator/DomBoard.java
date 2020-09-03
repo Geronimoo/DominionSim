@@ -1226,4 +1226,8 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     public ArrayList<DomCard> getDruidBoons() {
         return druidBoons;
     }
+
+    public ArrayList<DomPlayer> getPlayers() {
+        return players;
+    }
 }
