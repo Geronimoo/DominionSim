@@ -541,6 +541,7 @@ public enum DomCardName  {
     Venture (5, 0, 2, 0, 500, 29, new DomCardType[]{DomCardType.Kingdom, DomCardType.Treasure}),
     Villa (4, 0, 1, 0, 5, 20, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Village}),
     Village (3, 0, 0, 0, 5, 21, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler, DomCardType.Village}),
+    Village_Green (4, 0, 0, 0, 5, 0, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler, DomCardType.Village, DomCardType.Reaction, DomCardType.Duration}),
     Villain (5, 0, 2, 0, 27, 27, new DomCardType[]{DomCardType.Action, DomCardType.Attack, DomCardType.Kingdom, DomCardType.Terminal}),
     Vineyard (0, 1, 0, 0, 100, 7, new DomCardType[]{DomCardType.Victory, DomCardType.Kingdom}),
     Wall (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Landmark}),
@@ -1635,6 +1636,8 @@ public enum DomCardName  {
             return new VillaCard();
         case Village:
             return new VillageCard();
+        case Village_Green:
+            return new Village_GreenCard();
         case Villain:
             return new VillainCard();
         case Vineyard:
