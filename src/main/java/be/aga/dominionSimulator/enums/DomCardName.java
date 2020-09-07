@@ -123,6 +123,7 @@ public enum DomCardName  {
     Cobbler (5, 0, 0, 0, 20, 25, new DomCardType[]{DomCardType.Kingdom, DomCardType.Duration, DomCardType.Night}),
     Coin_of_the_Realm (2, 0, 0, 0, 10, 22, new DomCardType[]{DomCardType.Treasure, DomCardType.Kingdom, DomCardType.Reserve}),
     Colonnade (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Landmark}),
+    Commerce (5, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
     Conclave (4, 0, 2, 0, 25, 23, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom}),
     Conquest (6, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
     Conspirator (4, 0, 2, 0, 35, 25, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal}),
@@ -836,6 +837,8 @@ public enum DomCardName  {
             return new Coin_of_the_RealmCard();
         case Colony:
             return new ColonyCard();
+        case Commerce:
+        	return new CommerceCard();
         case Conclave:
             return new ConclaveCard();
         case Conquest:
