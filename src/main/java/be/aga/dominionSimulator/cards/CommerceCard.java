@@ -15,9 +15,7 @@ public class CommerceCard extends DomCard {
       for (DomCardName theCard : owner.getCardsGainedLastTurn()){
           if (!theList.contains(theCard))
               theList.add(theCard);
-      }
-      for (DomCardName elem : theList) {
-    	  owner.gain(DomCardName.Gold);
+          	  owner.gain(DomCardName.Gold);
       }
     }
 }
