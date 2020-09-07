@@ -18,7 +18,6 @@ public class CommerceCard extends DomCard {
       }
       for (DomCardName elem : theList) {
     	  owner.gain(DomCardName.Gold);
-    	  System.out.print("they should gain a gold");
       }
     }
 }
