@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jnlp
-  codebase="https://raw.githubusercontent.com/Geronimoo/DominionSim/master/assets/dominion.jnlp"
+  codebase="https://raw.githubusercontent.com/Geronimoo/DominionSim/master/assets"
   href="dominion.jnlp"  >  
   <information>
     <title>Geronimoo's Dominion Simulator</title>
