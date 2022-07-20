@@ -19,9 +19,10 @@ public class RabbleCard extends DomCard {
             if (thePlayer.checkDefense())
             	continue;
             ArrayList< DomCard > theTopThree = thePlayer.revealTopCards(3);
-            if (thePlayer.isHumanOrPossessedByHuman()) {
-                handleHuman(thePlayer,theTopThree);
-            }  else {
+//            if (thePlayer.isHumanOrPossessedByHuman()) {
+            //TODO human is bugged
+//                handleHuman(thePlayer,theTopThree);
+//            }  else {
                 for (DomCard theCard : theTopThree) {
                     if (theCard.hasCardType(DomCardType.Treasure) || theCard.hasCardType(DomCardType.Action)) {
                         thePlayer.discard(theCard);
@@ -29,7 +30,7 @@ public class RabbleCard extends DomCard {
                         thePlayer.putOnTopOfDeck(theCard);
                     }
                 }
-            }
+//            }
         }
     }
 

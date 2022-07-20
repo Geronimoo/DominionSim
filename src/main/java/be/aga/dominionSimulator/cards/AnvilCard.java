@@ -7,14 +7,28 @@ import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
-public class WorkshopCard extends DomCard {
-    public WorkshopCard () {
-      super( DomCardName.Workshop);
+public class AnvilCard extends DomCard {
+    public AnvilCard() {
+      super( DomCardName.Anvil);
     }
 
     public void play() {
-      doWorkshop(owner);
+      owner.addAvailableCoins(1);
+        DomCardName theDesiredCard = owner.getDesiredCard(new DomCost(4, 0), false);
+        if (theDesiredCard != null) {
+            ArrayList<DomCard> treasuresInHand = owner.getCardsFromHand(DomCardType.Treasure);
+            if (treasuresInHand.isEmpty())
+                return;
+            Collections.sort(treasuresInHand, SORT_FOR_DISCARDING);
+            if (!owner.removingReducesBuyingPower(treasuresInHand.get(0))
+            || (owner.getDesiredCard(owner.getTotalPotentialCurrency(),false)!=null
+                    && owner.getDesiredCard(owner.getTotalPotentialCurrency(),false).getCoinCost(owner)<=4)){
+                owner.discardFromHand(treasuresInHand.get(0));
+                doWorkshop(owner);
+            }
+        }
     }
 
     public static void doWorkshop(DomPlayer domPlayer) {
@@ -36,17 +50,5 @@ public class WorkshopCard extends DomCard {
             if (theDesiredCard != null)
                 domPlayer.gain(theDesiredCard);
         }
-    }
-
-    @Override
-    public boolean wantsToBePlayed() {
-       return owner.getDesiredCard(new DomCost( 4, 0), false) != null ;
-    }
-
-    @Override
-    public int getPlayPriority() {
-        if (owner.getDrawDeckSize()==0 && owner.getActionsAndVillagersLeft()>1 && !owner.getCardsFromHand(DomCardType.Cycler).isEmpty())
-            return 1;
-        return super.getPlayPriority();
     }
 }

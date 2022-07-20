@@ -244,6 +244,10 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
     public void gain( DomCard aCard , int aLocation) {
 		if (gainIfPossessed(aCard) || !addPhysicalCard(aCard))
 		  return;
+		if (owner.isAnnoyedByMonkey()) {
+            if (DomEngine.haveToLog) DomEngine.addToLog(owner + " is annoyed by " + DomCardName.Monkey.toHTML() + " so "+ owner.getOpponents().get(0)+" draws a card");
+            owner.getOpponents().get(0).drawCards(1);
+        }
         if (owner.isHumanOrPossessedByHuman()
                 && aCard.getName()!=DomCardName.Changeling
                 && owner.getCurrentGame().countInSupply(DomCardName.Changeling)>0
@@ -288,7 +292,11 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
                     if (aCard.getName() == DomCardName.Nomad_Camp) {
                         owner.putOnTopOfDeck(aCard);
                     } else {
-                        if (!owner.getCardsFromPlay(DomCardName.Royal_Seal).isEmpty() || !owner.getCardsFromPlay(DomCardName.Tracker).isEmpty()) {
+                        //TODO fix this: if Bauble is Counterfeited it should still work while it's not in play anymore
+                        if (!owner.getCardsFromPlay(DomCardName.Royal_Seal).isEmpty()
+                                || !owner.getCardsFromPlay(DomCardName.Tracker).isEmpty()
+                                || !owner.getCardsFromPlay(DomCardName.Bauble).isEmpty()
+                                || owner.isTravellingFairActive()) {
                             if (owner.isHumanOrPossessedByHuman()) {
                                 if (owner.getEngine().getGameFrame().askPlayer("<html>On Top of Deck: " + aCard.getName().toHTML() + "</html>", "Resolving Royal Seal"))
                                     owner.putOnTopOfDeck(aCard);
@@ -301,21 +309,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
                                     discardPile.add(0, aCard);
                             }
                         } else {
-                            if (owner.isTravellingFairActive()) {
-                                if (owner.isHumanOrPossessedByHuman()) {
-                                    if (owner.getEngine().getGameFrame().askPlayer("<html>On Top of Deck: " + aCard.getName().toHTML() + "</html>", "Resolving Travelling Fair"))
-                                        owner.putOnTopOfDeck(aCard);
-                                    else
-                                        discardPile.add(0, aCard);
-                                } else {
-                                    if (aCard.getDiscardPriority(1) > DomCardName.Copper.getDiscardPriority(1) || (aCard.getName() == DomCardName.Copper && owner.getDrawDeckSize() < 8))
-                                        owner.putOnTopOfDeck(aCard);
-                                    else
-                                        discardPile.add(0, aCard);
-                                }
-                            } else {
-                                discardPile.add(0, aCard);
-                            }
+                           discardPile.add(0, aCard);
                         }
                     }
                 }
@@ -363,6 +357,15 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
           if (owner.hasBuiltProject(DomCardName.Academy)) {
               owner.addVillagers(1);
           }
+          if (owner.getCollectionTriggers()>0)
+              owner.addVP(owner.getCollectionTriggers());
+        }
+        if (aCard.hasCardType(DomCardType.Treasure)) {
+            for (DomPlayer player : owner.getCurrentGame().getPlayers()) {
+                while (!player.getCardsFromHand(DomCardName.Pirate).isEmpty()) {
+                    player.play(player.removeCardFromHand(player.getCardsFromHand(DomCardName.Pirate).get(0)));
+                }
+            }
         }
         if (aCard.hasCardType(DomCardType.Treasure) && owner.hasBuiltProject(DomCardName.Guildhall))
             owner.addCoffers(1);
@@ -654,7 +657,10 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
             }
         }
         theMessage.append( "]" );
-        
+
+        if (owner.getFavors()>0)
+            theMessage.append(" ("+owner.getFavors()+" favors)");
+
         DomEngine.addToStartOfLog(theMessage.toString());
     }
 
@@ -751,15 +757,22 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
 	}
 
 	public int countDifferentCards() {
-    	ArrayList<DomCardName> theSingleCards = new ArrayList<DomCardName>();
-		int theCount=theSingleCards.size();
+		int theCount=0;
 		for (DomCardName theCardName : keySet()) {
 	      theCount+=get(theCardName).isEmpty()? 0 : 1;
 		}
 		return theCount;
 	}
-	
-	public DomCard getBottomCard(){
+
+    public int countDifferentCardsOfType(DomCardType domCardType) {
+        int theCount=0;
+        for (DomCardName theCardName : keySet()) {
+            theCount+=theCardName.hasCardType(domCardType) ? (get(theCardName).isEmpty()? 0 : 1) : 0;
+        }
+        return theCount;
+    }
+
+    public DomCard getBottomCard(){
 	   if (drawDeck.isEmpty())
 		   return null;
 	   return drawDeck.remove(drawDeck.size()-1);	
@@ -1152,5 +1165,14 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
             owner.discard(exileMat.remove(exileMat.indexOf(theCard)));
             if (DomEngine.haveToLog) DomEngine.addToLog(owner + " discards " + theCard + " from Exile");
         }
+    }
+
+    public int countCardsThatCost(int i) {
+        int count = 0;
+        for (DomCardName theCardName : keySet()) {
+            if (theCardName.getCoinCost( null) == i)
+                count += get( theCardName ).size();
+        }
+        return count;
     }
 }

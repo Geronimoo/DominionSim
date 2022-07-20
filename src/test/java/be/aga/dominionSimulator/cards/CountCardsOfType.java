@@ -9,8 +9,9 @@ public class CountCardsOfType {
     @Test
     public void countCards() {
       for(DomCardName theCard :DomCardName.values())
-        if (theCard.hasCardType(DomCardType.Terminal)&&theCard.hasCardType(DomCardType.Card_Advantage))
+        if (theCard.hasCardType(DomCardType.Action)&&theCard.hasCardType(DomCardType.Treasure))
             System.out.println(theCard);
     }
+
 
 }

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 
@@ -39,5 +40,16 @@ public class Hand extends ArrayList<Cow> {
             teller+=theCow==aCow?1:0;
         }
         return teller;
+    }
+
+    public boolean isDead() {
+        int count=0;
+        for (Cow card : this) {
+            if (card==Cow.black)
+                count++;
+            if (count>1)
+                return true;
+        }
+        return false;
     }
 }

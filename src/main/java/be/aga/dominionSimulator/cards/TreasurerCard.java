@@ -5,6 +5,7 @@ import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomArtifact;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
+import be.aga.dominionSimulator.enums.DomPlayStrategy;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,14 +18,18 @@ public class TreasurerCard extends DomCard {
     public void play() {
         owner.addAvailableCoins(3);
         ArrayList<DomCard> theTreasures = owner.getCardsFromHand(DomCardType.Treasure);
+        Collections.sort(theTreasures, SORT_FOR_TRASHING);
         if (owner.isHumanOrPossessedByHuman()) {
             handleHuman(theTreasures);
         } else {
+            if (owner.getPlayStrategyFor(this) == DomPlayStrategy.aggressiveTrashing && !owner.getCardsFromHand(DomCardName.Copper).isEmpty()) {
+                owner.trash(owner.removeCardFromHand(theTreasures.get(0)));
+                return;
+            }
             if (owner.getCurrentGame().getArtifactOwner(DomArtifact.Key)!=owner) {
                 owner.getCurrentGame().giveArtifactTo(DomArtifact.Key, owner);
                 return;
             }
-            Collections.sort(theTreasures, SORT_FOR_TRASHING);
             if (!theTreasures.isEmpty() && theTreasures.get(0).getTrashPriority() <= DomCardName.Copper.getTrashPriority() && !owner.removingReducesBuyingPower(theTreasures.get(0))) {
                 owner.trash(owner.removeCardFromHand(theTreasures.get(0)));
                 return;

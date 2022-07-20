@@ -591,4 +591,8 @@ public class DomEngine {
     public String getStatus() {
         return myStatus;
     }
+
+	public void doSimulationWithAll2s() {
+
+	}
 }

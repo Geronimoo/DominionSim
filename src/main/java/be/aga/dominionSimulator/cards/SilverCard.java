@@ -55,6 +55,11 @@ public class SilverCard extends DomCard {
                 }
             }
         }
+        if (owner.isAttackedByCorsair() && !owner.hasTrashedForCorsair() ) {
+            owner.setTrashedForCorsair(true);
+            owner.removeCardFromPlay(this);
+            owner.trash(this);
+        }
     }
 
     @Override

@@ -4,17 +4,14 @@ import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
-public class Merchant_GuildCard extends DomCard {
-
-	public Merchant_GuildCard() {
-      super( DomCardName.Merchant_Guild);
+public class TentCard extends DomCard {
+    public TentCard() {
+      super( DomCardName.Tent);
     }
 
-    public void play() {        
-      owner.addAvailableBuys(1);
-      owner.addAvailableCoins(1);
-      owner.setMerchant_GuildTrigger(owner.getMerchant_GuildTrigger()+1);
-   }
+    public void play() {
+        owner.addAvailableCoins(2);
+    }
 
     @Override
     public boolean hasCardType(DomCardType aType) {
@@ -22,5 +19,6 @@ public class Merchant_GuildCard extends DomCard {
             return true;
         return super.hasCardType(aType);
     }
+
 
 }

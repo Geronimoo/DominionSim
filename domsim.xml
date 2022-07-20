@@ -4,10 +4,10 @@
     <target name="signjar">
         <input message="user password:" addproperty="password"/>
 
-        <signjar jar="C:/kws_development/kws_maven/client/domSim/out/artifacts/domSim_jar/GeronimooDomSim.jar" alias="domSimKey" keystore="c:/Users/jeroena/domSimKey.key" storepass="${password}"/>
-        <signjar jar="C:/kws_development/kws_maven/client/domSim/jcommon-1.0.23.jar" alias="domSimKey" keystore="c:/Users/jeroena/domSimKey.key" storepass="${password}"/>
-        <signjar jar="C:/kws_development/kws_maven/client/domSim/jfreechart-1.0.14.jar" alias="domSimKey" keystore="c:/Users/jeroena/domSimKey.key" storepass="${password}"/>
-        <signjar jar="C:/kws_development/kws_maven/client/domSim/log4j-1.2.17.jar" alias="domSimKey" keystore="c:/Users/jeroena/domSimKey.key" storepass="${password}"/>
+        <signjar jar="C:/kws_development/kws-maven/DominionSim/out/artifacts/GeronimooDomSim/GeronimooDomSim.jar" alias="domSimKey" keystore="c:/Users/jeroena/domSimKey.key" storepass="${password}"/>
+<!--        <signjar jar="C:/kws_development/kws_maven/client/domSim/jcommon-1.0.23.jar" alias="domSimKey" keystore="c:/Users/jeroena/domSimKey.key" storepass="${password}"/>-->
+<!--        <signjar jar="C:/kws_development/kws_maven/client/domSim/jfreechart-1.0.14.jar" alias="domSimKey" keystore="c:/Users/jeroena/domSimKey.key" storepass="${password}"/>-->
+<!--        <signjar jar="C:/kws_development/kws_maven/client/domSim/log4j-1.2.17.jar" alias="domSimKey" keystore="c:/Users/jeroena/domSimKey.key" storepass="${password}"/>-->
     </target>
 
 </project>

@@ -3,6 +3,7 @@ package be.aga.dominionSimulator.cards;
 import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
+import be.aga.dominionSimulator.enums.DomCardType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,11 +24,30 @@ public class HarbingerCard extends DomCard {
         if (owner.isHumanOrPossessedByHuman()) {
             handleHumanPlayer(theDiscard);
         } else {
-            Collections.sort(theDiscard, SORT_FOR_DISCARDING);
-            if (theDiscard.get(theDiscard.size() - 1).getDiscardPriority(1) > DomCardName.Copper.getDiscardPriority(1))
-                owner.putOnTopOfDeck(owner.removeCardFromDiscard(theDiscard.get(theDiscard.size() - 1)));
-            else if (DomEngine.haveToLog)
-                DomEngine.addToLog(owner + " has no good card in discard to put on top of deck");
+            if (owner.getNextActionToPlay()==null) {
+                Collections.sort(theDiscard, SORT_FOR_DISCARDING);
+                if (theDiscard.get(theDiscard.size() - 1).getDiscardPriority(1) > DomCardName.Copper.getDiscardPriority(1))
+                    owner.putOnTopOfDeck(owner.removeCardFromDiscard(theDiscard.get(theDiscard.size() - 1)));
+                else if (DomEngine.haveToLog)
+                    DomEngine.addToLog(owner + " has no good card in discard to put on top of deck");
+            } else {
+                if (owner.getNextActionToPlay().hasCardType(DomCardType.Terminal) && owner.getNextActionToPlay().hasCardType(DomCardType.Card_Advantage)){
+                    for (DomCard card:theDiscard) {
+                        if (card.getName()==DomCardName.Gold){
+                            owner.putOnTopOfDeck(owner.removeCardFromDiscard(DomCardName.Gold));
+                            break;
+                        }
+                        if (card.getName()==DomCardName.Silver){
+                            owner.putOnTopOfDeck(owner.removeCardFromDiscard(DomCardName.Silver));
+                            break;
+                        }
+                        if (card.getName()==DomCardName.Copper){
+                            owner.putOnTopOfDeck(owner.removeCardFromDiscard(DomCardName.Copper));
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
 

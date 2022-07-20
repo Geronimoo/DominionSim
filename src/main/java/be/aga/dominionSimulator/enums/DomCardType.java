@@ -49,7 +49,9 @@ public enum DomCardType {
     State(true),
     Doom(true),
     Project(true),
-    Way(true);
+    Way(true),
+    Ally(true),
+    Liaison(true);
 
     private final boolean isLegalCardType;
 
@@ -63,7 +65,6 @@ public enum DomCardType {
 
     /**
      * Returns true iff this value is a card type that appears on the bottom of the card as part of the rules.
-     * @param isLegalCardType true if this card type appears on the card
      */
     public boolean isLegal() {
         return isLegalCardType;

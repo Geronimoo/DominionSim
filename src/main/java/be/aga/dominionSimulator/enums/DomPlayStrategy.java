@@ -3,7 +3,8 @@ package be.aga.dominionSimulator.enums;
 public enum DomPlayStrategy {
    standard,
    bigTurnBridge, 
-   bigTurnGoons, 
+   bigTurnGoons,
+   PlateauShepherds,
    aggressiveTrashing,
    attackUntil5Coins, 
    ApothecaryNativeVillage, 

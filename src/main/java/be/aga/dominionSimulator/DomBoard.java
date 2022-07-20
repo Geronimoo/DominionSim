@@ -49,6 +49,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     private DomCard myZombieSpy;
     private ArrayList<DomCard> druidBoons;
     private HashSet<DomCardName> activeWays = new HashSet<>();
+    private DomCardName activeAlly=null;
 
     public DomBoard ( Class< DomCardName > aKeyType, ArrayList< DomPlayer > aPlayers ) {
       super( aKeyType );
@@ -358,6 +359,9 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 if (theCard.hasCardType(DomCardType.Landmark)) {
                     addLandmark(theCard);
                 }
+                if (theCard.hasCardType(DomCardType.Ally)) {
+                    addAlly(theCard);
+                }
                 if (theCard.hasCardType(DomCardType.Way)) {
                     addWay(theCard);
                 }
@@ -407,6 +411,10 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 }
             }
         }
+    }
+
+    private void addAlly(DomCardName theCard) {
+        activeAlly=theCard;
     }
 
     private void addWay(DomCardName theCard) {
@@ -1229,5 +1237,13 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 
     public ArrayList<DomPlayer> getPlayers() {
         return players;
+    }
+
+    public boolean isAllyPresent() {
+        return activeAlly!=null;
+    }
+
+    public DomCardName getActiveAlly() {
+        return activeAlly;
     }
 }

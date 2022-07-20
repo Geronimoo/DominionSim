@@ -544,6 +544,12 @@ public class DomGui extends JFrame implements ActionListener {
               showLog=true;
             }
             setCursor( new Cursor( Cursor.WAIT_CURSOR ) );
+            for (DomPlayer player : myPlayers.keySet()){
+                if (player.equals("try_all_2s")) {
+                    myEngine.doSimulationWithAll2s();
+                    break;
+                }
+            }
             myEngine.startSimulation(thePlayers, myOrderBox.isSelected(), theNumber, showLog);
             setCursor( new Cursor( Cursor.DEFAULT_CURSOR) );
           }

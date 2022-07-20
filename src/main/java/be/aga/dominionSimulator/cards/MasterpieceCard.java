@@ -29,10 +29,12 @@ public class MasterpieceCard extends DomCard {
             } else {
                 if (DomEngine.haveToLog)
                     DomEngine.addToLog(player + " overpays $" + player.getAvailableCoins());
-                for (int i = 0; i < player.getAvailableCoins(); i++) {
+                //limit = fix for gaining Coffers in between
+                int limit = player.getAvailableCoins();
+                for (int i = 0; i < limit; i++) {
                     player.gain(DomCardName.Silver);
                 }
-                player.spend(player.getAvailableCoins());
+                player.spend(limit);
             }
         }
     }

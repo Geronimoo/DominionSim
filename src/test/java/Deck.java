@@ -16,6 +16,7 @@ public class Deck extends ArrayList<Cow> {
 
     public Cow draw() {
         if (isEmpty()) {
+            add(Cow.black);
             shuffle();
         }
         if (isEmpty())
@@ -25,5 +26,9 @@ public class Deck extends ArrayList<Cow> {
 
     public void discard(Cow cow) {
         discard.add(cow);
+    }
+
+    public ArrayList<Cow> getDiscard() {
+        return discard;
     }
 }

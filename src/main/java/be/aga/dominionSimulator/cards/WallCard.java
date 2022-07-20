@@ -12,7 +12,7 @@ public class WallCard extends DomCard {
     public static int countVP(DomPlayer aPlayer ){
         int theCount = 15 - aPlayer.countAllCards();
         if (theCount>=0)
-            return 0;
-        return 15-aPlayer.countAllCards();
+            theCount=0;
+        return theCount;
     }
 }

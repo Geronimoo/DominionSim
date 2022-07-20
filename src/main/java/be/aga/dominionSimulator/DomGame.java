@@ -62,6 +62,10 @@ public class DomGame extends Observable{
  */
 private void initialize() {
     for (DomPlayer thePlayer : players) {
+        //fix for Pirate bug
+        thePlayer.clearCardsInHand();
+    }
+    for (DomPlayer thePlayer : players) {
         thePlayer.initializeForGame(this);
     }
     //adding the starting estates adds tokens to the trade route mat which we don't want
@@ -165,6 +169,7 @@ public void runSimulation() {
     	  DomEngine.addToStartOfLog( "<B>"+thePlayer + "</B> has " +  thePlayer.countVictoryPoints() + " points "
     			  +(thePlayer.getVictoryTokens()>0 ? (" ("+thePlayer.getVictoryTokens()+"&#x25BC;) ") : "")
                   + getLandMarkText(thePlayer)
+                  + getAllyText(thePlayer)
                   + getMiserableText(thePlayer)
                   +"and took " + thePlayer.getTurns() + " turns");
       theMaxPoints = thePlayer.countVictoryPoints()>theMaxPoints ? thePlayer.countVictoryPoints() : theMaxPoints;
@@ -198,6 +203,15 @@ public void runSimulation() {
         }
     }
 }
+
+    private String getAllyText(DomPlayer thePlayer) {
+        StringBuilder theBuilder = new StringBuilder();
+        if (getBoard().getActiveAlly()==DomCardName.Plateau_Shepherds) {
+            theBuilder.append("(").append(DomCardName.Plateau_Shepherds.toHTML()).append(":").append(Plateau_ShepherdsCard.countVP(thePlayer)).append("&#x25BC;) ");
+        }
+
+        return theBuilder.toString();
+    }
 
     private String getMiserableText(DomPlayer thePlayer) {
         StringBuilder theBuilder = new StringBuilder();
@@ -612,5 +626,13 @@ public int getBridge_TrollsInPlay() { return activePlayer!=null?activePlayer.get
     public void setChangedForced() {
       setChanged();
       notifyObservers();
+    }
+
+    public boolean isAllyPresent() {
+        return getBoard().isAllyPresent();
+    }
+
+    public DomCardName getActiveAlly() {
+        return getBoard().getActiveAlly();
     }
 }

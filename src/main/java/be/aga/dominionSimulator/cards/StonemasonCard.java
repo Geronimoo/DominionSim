@@ -95,7 +95,7 @@ public class StonemasonCard extends DomCard {
             return;
         }
         DomCardName theDesiredCard = owner.getDesiredCardWithRestriction(DomCardType.Action, owner.getTotalAvailableCurrency(), false, DomCardName.Stonemason);
-        if (theDesiredCard != null) {
+        if (theDesiredCard != null && theDesiredCard.getCoinCost(owner)>0) {
             owner.addAvailableCoins(-theDesiredCard.getCoinCost(owner));
             owner.availablePotions -= theDesiredCard.getPotionCost();
             if (DomEngine.haveToLog)
@@ -110,7 +110,7 @@ public class StonemasonCard extends DomCard {
     private void handleHumanWhenBought() {
         ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
         for (DomCardName theCard : owner.getCurrentGame().getBoard().getTopCardsOfPiles()) {
-            if (owner.getTotalAvailableCurrency().customCompare(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0 && theCard.hasCardType(DomCardType.Action))
+            if (owner.getTotalAvailableCurrency().customCompare(theCard.getCost(owner.getCurrentGame()))>=0 && owner.getCurrentGame().countInSupply(theCard)>0 && theCard.hasCardType(DomCardType.Action)&&theCard.getCoinCost(owner)>0)
                 theChooseFrom.add(theCard);
         }
         if (theChooseFrom.isEmpty())

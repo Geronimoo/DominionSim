@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class IronmongerCard extends DomCard {
     public IronmongerCard() {
-      super( DomCardName.Ironmonger);
+        super(DomCardName.Ironmonger);
     }
 
     public void play() {
@@ -22,20 +22,25 @@ public class IronmongerCard extends DomCard {
         if (theTopCard.hasCardType(DomCardType.Treasure))
             owner.addAvailableCoins(1);
         if (theTopCard.hasCardType(DomCardType.Victory))
-            willdraw=true;
+            willdraw = true;
         if (theTopCard.hasCardType(DomCardType.Action))
             owner.addActions(1);
         if (owner.isHumanOrPossessedByHuman()) {
             owner.setNeedsToUpdateGUI();
-            if (owner.getEngine().getGameFrame().askPlayer("<html>Discard " + theTopCard.getName().toHTML() +" ?</html>", "Resolving " + this.getName().toString()))
+            if (owner.getEngine().getGameFrame().askPlayer("<html>Discard " + theTopCard.getName().toHTML() + " ?</html>", "Resolving " + this.getName().toString()))
                 owner.discard(theTopCard);
             else
                 owner.putOnTopOfDeck(theTopCard);
         } else {
-            if (theTopCard.getDiscardPriority(owner.getActionsAndVillagersLeft()) >= 16)
-                owner.putOnTopOfDeck(theTopCard);
-            else
+            if (theTopCard.getDiscardPriority(owner.getActionsAndVillagersLeft()) > DomCardName.Silver.getDiscardPriority(1)) {
+                if (owner.getDeck().getDiscardPile().isEmpty() && !owner.getCardsFromHand(DomCardName.Swashbuckler).isEmpty()) {
+                    owner.discard(theTopCard);
+                } else {
+                    owner.putOnTopOfDeck(theTopCard);
+                }
+            } else {
                 owner.discard(theTopCard);
+            }
         }
         if (willdraw)
             owner.drawCards(1);
@@ -43,21 +48,21 @@ public class IronmongerCard extends DomCard {
 
     @Override
     public boolean hasCardType(DomCardType aType) {
-        if (aType==DomCardType.Treasure && owner != null && owner.hasBuiltProject(DomCardName.Capitalism))
+        if (aType == DomCardType.Treasure && owner != null && owner.hasBuiltProject(DomCardName.Capitalism))
             return true;
         return super.hasCardType(aType);
     }
 
     @Override
     public int getPlayPriority() {
-        if (owner.getDeckAndDiscardSize()==0)
+        if (owner.getDeckAndDiscardSize() == 0)
             return 500;
         return super.getPlayPriority();
     }
 
     @Override
     public int getDiscardPriority(int aActionsLeft) {
-        if (aActionsLeft>1 && owner.getDeckAndDiscardSize()==0)
+        if (aActionsLeft > 1 && owner.getDeckAndDiscardSize() == 0)
             return 10;
         return super.getDiscardPriority(aActionsLeft);
     }

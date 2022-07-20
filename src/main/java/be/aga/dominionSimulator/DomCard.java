@@ -228,7 +228,7 @@ public class DomCard implements Comparable< DomCard >{
             return;
         }
 
-        if (isTaggedByHerbalist() || isTaggedByScheme()) {
+        if (isTaggedByHerbalist() || isTaggedByScheme() || getName()== DomCardName.Tent) {
             if (getName()==DomCardName.Hermit && owner.getBoughtCards().isEmpty()) {
                 if (owner.isHumanOrPossessedByHuman()) {
                     if (owner.getEngine().getGameFrame().askPlayer("<html>Trash " + DomCardName.Hermit.toHTML() +" ? (Scheme interaction!!)</html>", "Resolving " + this.getName().toString()))

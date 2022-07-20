@@ -16,6 +16,11 @@ public class GoldCard extends DomCard {
         } else {
             owner.addAvailableCoinsSilent(3);
         }
+        if (owner.isAttackedByCorsair() && !owner.hasTrashedForCorsair() ) {
+            owner.setTrashedForCorsair(true);
+            owner.removeCardFromPlay(this);
+            owner.trash(this);
+        }
     }
 
     @Override
