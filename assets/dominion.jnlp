@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp
+  codebase="http://forum.dominionstrategy.com/simulator"
+  href="dominion.jnlp"  >  
+  <information>
+    <title>Geronimoo's Dominion Simulator</title>
+    <vendor>Jeroen Aga</vendor>
+    <homepage href="index.html"/>
+    <description>Dominion Simulator</description>
+    <description kind="short">Dominion Simulator</description>
+    <icon href="jester.jpg"/> 
+    <offline-allowed/>
+    <shortcut online="false">
+      <desktop/>
+      <menu submenu="Dominion"/>
+    </shortcut>
+  </information>
+  <security>
+      <all-permissions/>
+  </security>
+  <resources>
+    <j2se version="1.8+"/>
+    <jar href="GeronimooDomSim.jar"/>
+    <jar href="jfreechart-1.0.14.jar"/> 
+    <jar href="jcommon-1.0.23.jar"/> 
+    <jar href="log4j-1.2.17.jar"/> 
+  </resources>
+   <application-desc main-class="be.aga.dominionSimulator.DomEngine">
+    </application-desc>
+</jnlp>
