@@ -67,6 +67,7 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
 
         //right function
 		theValues.remove(DomBotFunction.doesNotSpendCoffers);
+		theValues.remove(DomBotFunction.hasBoughtRush);
 
         myRightFunctionBox = new JComboBox<Object>(theValues.toArray());
         if (aBuyCondition.getRightFunction()==DomBotFunction.constant){
@@ -178,7 +179,7 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
         }
         add(myRightTypeBox, theCons);
 
-        if( aBuyCondition.getLeftFunction()==DomBotFunction.doesNotSpendCoffers) {
+        if( aBuyCondition.getLeftFunction()==DomBotFunction.doesNotSpendCoffers || aBuyCondition.getLeftFunction()==DomBotFunction.hasBoughtRush) {
         	myRightFunctionBox.setVisible(false);
 			myComparatorBox.setVisible(false);
         	myExtraOperator.setVisible(false);
@@ -245,7 +246,7 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
 			myExtraValue.setVisible(true);
 			myComparatorBox.setVisible(true);
 
- 			if (myLeftFunctionBox.getSelectedItem() == DomBotFunction.doesNotSpendCoffers){
+ 			if (myLeftFunctionBox.getSelectedItem() == DomBotFunction.doesNotSpendCoffers || myLeftFunctionBox.getSelectedItem()==DomBotFunction.hasBoughtRush){
    				myRightFunctionBox.setVisible(false);
 				myComparatorBox.setVisible(false);
 				myExtraOperator.setVisible(false);

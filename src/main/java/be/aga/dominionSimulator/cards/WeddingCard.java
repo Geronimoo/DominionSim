@@ -13,6 +13,7 @@ public class WeddingCard extends DomCard {
       DomCard theGold = owner.getCurrentGame().takeFromSupply( DomCardName.Gold );
       if (theGold!=null) {
         owner.gain( theGold );
-      }  
+      }
+      owner.addWeddingCounter();
     }
 }

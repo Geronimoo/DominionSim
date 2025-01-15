@@ -16,5 +16,6 @@ public class SpicesCard extends DomCard {
     @Override
     public void doWhenGained() {
         owner.addCoffers(2);
+        super.doWhenGained();
     }
 }

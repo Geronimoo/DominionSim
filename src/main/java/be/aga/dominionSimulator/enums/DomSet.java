@@ -61,7 +61,7 @@ public enum DomSet {
            , DomCardName.Torturer
            , DomCardName.Trading_Post
            , DomCardName.Upgrade
-           , DomCardName.Harem
+           , DomCardName.Farm
            , DomCardName.Nobles}),
 
     OldIntrigue (new DomCardName[] {

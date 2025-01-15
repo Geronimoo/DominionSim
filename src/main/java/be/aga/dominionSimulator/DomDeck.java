@@ -60,7 +60,42 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
       if (owner.hasBuiltProject(DomCardName.Star_Chart)) {
           handleStarChart();
       }
+      if (owner.getAvoidTriggers()>0) {
+          handleAvoid();
+      }
+      if (owner.getCurrentGame().getBoard().containsShadowCards()) {
+          ArrayList<DomCard> cardsToMoveToBottom = new ArrayList<>();
+          for (DomCard card : drawDeck) {
+              if (card.hasCardType(DomCardType.Shadow)) {
+                  cardsToMoveToBottom.add(card);
+              }
+          }
+          for (DomCard card : cardsToMoveToBottom) {
+              if (DomEngine.haveToLog) DomEngine.addToLog( owner + " moves " + card.getName().toHTML() + " to bottom (Shadow ability)" );
+              drawDeck.remove(card);
+              drawDeck.add(card);
+          }
+      }
 
+    }
+
+    private void handleAvoid() {
+        ArrayList<DomCard> allCardsInDeck = new ArrayList<DomCard>();
+        allCardsInDeck.addAll(drawDeck);
+        allCardsInDeck.sort(DomCard.SORT_FOR_DISCARDING);
+        int cardsToAvoid = owner.getAvoidTriggers() * 3;
+        while (cardsToAvoid>0 && !drawDeck.isEmpty() && !allCardsInDeck.isEmpty()) {
+            if (allCardsInDeck.get(0).getDiscardPriority(1)<=DomCardName.Copper.getDiscardPriority(1)) {
+                drawDeck.remove(allCardsInDeck.get(0));
+                discardPile.add(allCardsInDeck.get(0));
+                if (DomEngine.haveToLog) DomEngine.addToLog( owner +" "+ DomCardName.Avoid.toHTML() +"s " + allCardsInDeck.get(0) + " while shuffling" );
+                allCardsInDeck.remove(0);
+                cardsToAvoid--;
+            } else {
+                cardsToAvoid=0;
+            }
+        }
+        owner.resetAvoidTriggers();
     }
 
     private void handleStarChart() {
@@ -192,7 +227,8 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
             discardPile.clear();
             shuffle();
           }
-          theTopCards.add( drawDeck.remove(0) );
+          if (!drawDeck.isEmpty())
+            theTopCards.add( drawDeck.remove(0) );
         }
         return theTopCards;
     }
@@ -266,55 +302,77 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
             owner.setInnovationTriggered(true);
             owner.play(aCard);
         } else {
-            if (!fillsCargoShip(aCard, aLocation) && !handleGatekeeper(aCard)) {
-                if (owner.count(DomCardName.Sleigh)>0 && !owner.getCardsFromHand(DomCardName.Sleigh).isEmpty()) {
-                    if (((SleighCard)owner.getCardsFromHand(DomCardName.Sleigh).get(0)).wantsToReact(aCard)) {
-                        owner.discardFromHand(owner.getCardsFromHand(DomCardName.Sleigh).get(0));
-                        if (owner.getActionsAndVillagersLeft() > 0 && owner.getPhase() == DomPhase.Action && aCard.hasCardType(DomCardType.Action)) {
-                            aLocation = HAND;
-                        } else {
-                            if (owner.getPhase() != DomPhase.Buy_BuyStuff && aCard.hasCardType(DomCardType.Treasure)) {
-                                aLocation = HAND;
-                            } else {
-                                aLocation = TOP_OF_DECK;
-                            }
-                        }
-                    }
-                }
-                if (aLocation == HAND && aCard.getName() != DomCardName.Villa && aCard.getName() != DomCardName.Ghost_Town && aCard.getName() != DomCardName.Guardian && aCard.getName() != DomCardName.Night_Watchman && aCard.getName() != DomCardName.Den_of_Sin) {
-                    owner.getCardsInHand().add(aCard);
-                    if (DomEngine.haveToLog) DomEngine.addToLog(owner + " gains a " + aCard + " in hand");
-                }
-                if (aLocation == TOP_OF_DECK && aCard.getName() != DomCardName.Villa && aCard.getName() != DomCardName.Ghost_Town && aCard.getName() != DomCardName.Guardian && aCard.getName() != DomCardName.Night_Watchman && aCard.getName() != DomCardName.Den_of_Sin) {
-                    owner.putOnTopOfDeck(aCard);
-                }
-                if (aLocation == DISCARD && aCard.getName() != DomCardName.Villa && aCard.getName() != DomCardName.Ghost_Town && aCard.getName() != DomCardName.Guardian && aCard.getName() != DomCardName.Night_Watchman && aCard.getName() != DomCardName.Den_of_Sin) {
-                    if (aCard.getName() == DomCardName.Nomad_Camp) {
-                        owner.putOnTopOfDeck(aCard);
+            if (aCard.hasCardType(DomCardType.Action)
+                    && owner.hasTriggeredRush()) {
+                if (DomEngine.haveToLog) DomEngine.addToLog(owner + " rushes " + aCard.name.toHTML());
+                owner.play(aCard);
+            } else {
+                if (owner.hasTriggeredSailor() && aCard.hasCardType(DomCardType.Duration)) {
+                    if (DomEngine.haveToLog) DomEngine.addToLog(owner + " has triggered Sailor and will play " + aCard.name.toHTML());
+                    owner.play(aCard);
+                    owner.resetTriggerSailor();
+                } else {
+                    if (owner.getCurrentGame().getBoard().getActiveProphecy() == DomCardName.Rapid_Expansion
+                            && owner.getCurrentGame().getBoard().getProphecyCount() == 0
+                            && (aCard.hasCardType(DomCardType.Treasure) || aCard.hasCardType(DomCardType.Action))) {
+                        if (DomEngine.haveToLog)
+                            DomEngine.addToLog(DomCardName.Rapid_Expansion.toHTML() + " triggers and sets aside " + aCard + " to be played next turn");
+                        owner.addPreparedCard(aCard);
                     } else {
-                        //TODO fix this: if Bauble is Counterfeited it should still work while it's not in play anymore
-                        if (!owner.getCardsFromPlay(DomCardName.Royal_Seal).isEmpty()
-                                || !owner.getCardsFromPlay(DomCardName.Tracker).isEmpty()
-                                || !owner.getCardsFromPlay(DomCardName.Bauble).isEmpty()
-                                || owner.isTravellingFairActive()) {
-                            if (owner.isHumanOrPossessedByHuman()) {
-                                if (owner.getEngine().getGameFrame().askPlayer("<html>On Top of Deck: " + aCard.getName().toHTML() + "</html>", "Resolving Royal Seal"))
-                                    owner.putOnTopOfDeck(aCard);
-                                else
-                                    discardPile.add(0, aCard);
-                            } else {
-                                if (aCard.getDiscardPriority(1) >= 16)
-                                    owner.putOnTopOfDeck(aCard);
-                                else
-                                    discardPile.add(0, aCard);
+                        if (!fillsCargoShip(aCard, aLocation) && !handleGatekeeper(aCard)) {
+                            if (owner.count(DomCardName.Sleigh) > 0 && !owner.getCardsFromHand(DomCardName.Sleigh).isEmpty()) {
+                                if (((SleighCard) owner.getCardsFromHand(DomCardName.Sleigh).get(0)).wantsToReact(aCard)) {
+                                    owner.discardFromHand(owner.getCardsFromHand(DomCardName.Sleigh).get(0));
+                                    if (owner.getActionsAndVillagersLeft() > 0 && owner.getPhase() == DomPhase.Action && aCard.hasCardType(DomCardType.Action)) {
+                                        aLocation = HAND;
+                                    } else {
+                                        if (owner.getPhase() != DomPhase.Buy_BuyStuff && aCard.hasCardType(DomCardType.Treasure)) {
+                                            aLocation = HAND;
+                                        } else {
+                                            aLocation = TOP_OF_DECK;
+                                        }
+                                    }
+                                }
                             }
-                        } else {
-                           discardPile.add(0, aCard);
+                            if (aLocation == HAND && aCard.getName() != DomCardName.Villa && aCard.getName() != DomCardName.Ghost_Town && aCard.getName() != DomCardName.Guardian && aCard.getName() != DomCardName.Night_Watchman && aCard.getName() != DomCardName.Den_of_Sin) {
+                                owner.getCardsInHand().add(aCard);
+                                if (DomEngine.haveToLog) DomEngine.addToLog(owner + " gains a " + aCard + " in hand");
+                            }
+                            if (aLocation == TOP_OF_DECK && aCard.getName() != DomCardName.Villa && aCard.getName() != DomCardName.Ghost_Town && aCard.getName() != DomCardName.Guardian && aCard.getName() != DomCardName.Night_Watchman && aCard.getName() != DomCardName.Den_of_Sin) {
+                                owner.putOnTopOfDeck(aCard);
+                            }
+                            if (aLocation == DISCARD && aCard.getName() != DomCardName.Villa && aCard.getName() != DomCardName.Ghost_Town && aCard.getName() != DomCardName.Guardian && aCard.getName() != DomCardName.Night_Watchman && aCard.getName() != DomCardName.Den_of_Sin) {
+                                if (aCard.getName() == DomCardName.Nomad_Camp) {
+                                    owner.putOnTopOfDeck(aCard);
+                                } else {
+                                    //TODO fix this: if Bauble is Counterfeited it should still work while it's not in play anymore
+                                    if (!owner.getCardsFromPlay(DomCardName.Royal_Seal).isEmpty()
+                                            || !owner.getCardsFromPlay(DomCardName.Tracker).isEmpty()
+                                            || !owner.getCardsFromPlay(DomCardName.Bauble).isEmpty()
+                                            || owner.isTravellingFairActive()) {
+                                        if (owner.isHumanOrPossessedByHuman()) {
+                                            if (owner.getEngine().getGameFrame().askPlayer("<html>On Top of Deck: " + aCard.getName().toHTML() + "</html>", "Resolving Royal Seal"))
+                                                owner.putOnTopOfDeck(aCard);
+                                            else
+                                                discardPile.add(0, aCard);
+                                        } else {
+                                            if (aCard.getDiscardPriority(1) >= 16)
+                                                owner.putOnTopOfDeck(aCard);
+                                            else
+                                                discardPile.add(0, aCard);
+                                        }
+                                    } else {
+                                        discardPile.add(0, aCard);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
         }
+
+
         if (aCard.hasCardType(DomCardType.Victory)) {
             if (owner.isCardInPlay(DomCardName.Groundskeeper)) {
                 for (DomCard theKeeper : owner.getCardsFromPlay(DomCardName.Groundskeeper)) {
@@ -396,13 +454,30 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 cardsToDiscard.add(theCard);
         }
         for (DomCard theCard : cardsToDiscard) {
-            discardPile.add(exileMat.remove(exileMat.indexOf(theCard)));
-            if (DomEngine.haveToLog) DomEngine.addToLog(owner + " discards " + theCard + " from Exile");
-            if (owner.hasInvestedIn(theCard.getName())) {
-                owner.removeFromInvestments(theCard);
+            if (!owner.hasInvestedIn(theCard.getName()) || owner.getCurrentGame().countInSupply(theCard.getName())<9) {
+              discardPile.add(exileMat.remove(exileMat.indexOf(theCard)));
+              if (DomEngine.haveToLog) DomEngine.addToLog(owner + " discards " + theCard + " from Exile");
+              if (owner.hasInvestedIn(theCard.getName())) {
+                  owner.removeFromInvestments(theCard);
+              }
             }
         }
-        aCard.doWhenGained();
+        if (owner.getCurrentGame().getBoard().get(DomCardName.Footpad)!=null
+                && owner.getCurrentGame().getActivePlayer()!=null
+                && owner.getCurrentGame().getActivePlayer().getPhase()==DomPhase.Action) {
+            owner.drawCards(1);
+        }
+
+        if (owner.getCurrentGame().getBoard().getActiveProphecy() == DomCardName.Bureaucracy
+                && owner.getCurrentGame().getBoard().getProphecyCount()==0
+                && (aCard.getCoinCost(owner.getCurrentGame())>0 || aCard.getDebtCost()>0||aCard.getPotionCost()>0)) {
+            if (DomEngine.haveToLog) DomEngine.addToLog(DomCardName.Bureaucracy.toHTML() + " triggers!");
+            owner.gain(DomCardName.Copper);
+        }
+
+        //possible when Rush on Snake Witch
+        if (aCard.owner!=null)
+          aCard.doWhenGained();
     }
 
     private boolean handleGatekeeper(DomCard aCard) {
@@ -1174,5 +1249,9 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 count += get( theCardName ).size();
         }
         return count;
+    }
+
+    public ArrayList<DomCard> getDrawDeck() {
+        return drawDeck;
     }
 }

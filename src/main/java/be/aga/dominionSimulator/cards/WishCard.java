@@ -58,6 +58,8 @@ public class WishCard extends DomCard {
 
     @Override
     public int getPlayPriority() {
+        if (!owner.getCardsFromHand(DomCardName.Leprechaun).isEmpty())
+            return 0;
         if (!owner.getCardsFromHand(DomCardType.Terminal).isEmpty())
             return owner.getCardsFromHand(DomCardType.Terminal).get(0).getPlayPriority() - 1;
         return super.getPlayPriority();

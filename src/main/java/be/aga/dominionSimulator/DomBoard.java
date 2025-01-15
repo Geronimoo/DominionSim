@@ -37,6 +37,8 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     private EnumMap< DomCardName, Integer > gatheringVPTokens = new EnumMap<DomCardName, Integer>(DomCardName.class);
     private HashSet<DomCardName> tradeRouteMat = new HashSet<DomCardName>();
     private HashSet<DomCardName> activeLandmarks = new HashSet<DomCardName>();
+    DomCardName activeProphecy = null;
+    private int prophecyCount=-1;
     private ArrayList<DomCard> boons = new ArrayList<DomCard>();
     private ArrayList<DomCard> boonsDiscard = new ArrayList<DomCard>();
     private ArrayList<DomCard> hexes = new ArrayList<DomCard>();
@@ -50,6 +52,8 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     private ArrayList<DomCard> druidBoons;
     private HashSet<DomCardName> activeWays = new HashSet<>();
     private DomCardName activeAlly=null;
+    private boolean preparePresent=false;
+    private Boolean containsShadowCards=null;
 
     public DomBoard ( Class< DomCardName > aKeyType, ArrayList< DomPlayer > aPlayers ) {
       super( aKeyType );
@@ -79,9 +83,18 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
            putShrineTokensOnActions();
         if (isLandmarkActive(DomCardName.Aqueduct))
             putAqueductTokensOnTreasures();
+        if (activeProphecy!=null) {
+            if (players.size()<=2)
+                prophecyCount=5;
+            if (players.size()==3)
+                prophecyCount=8;
+            if (players.size()==4)
+                prophecyCount=10;
+        }
         resetBoons();
         resetHexes();
         resetDruid();
+        containsShadowCards=null;
     }
 
     private void resetDruid() {
@@ -321,6 +334,10 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 if (theCard == DomCardName.Marauder || theCard == DomCardName.Bandit_Camp || theCard == DomCardName.Pillage)
                     addSeparatePile(DomCardName.Spoils, 15);
 
+                if (theCard == DomCardName.Sack_of_Loot) {
+                    addLootSeparatePile();
+                }
+
                 if (theCard == DomCardName.Livery
                         || theCard == DomCardName.Bargain
                         || theCard == DomCardName.Hostelry
@@ -359,6 +376,10 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 if (theCard.hasCardType(DomCardType.Landmark)) {
                     addLandmark(theCard);
                 }
+                if (theCard.hasCardType(DomCardType.Prophecy)) {
+                    setProphecy(theCard);
+                }
+
                 if (theCard.hasCardType(DomCardType.Ally)) {
                     addAlly(theCard);
                 }
@@ -409,8 +430,15 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 if (theCard==DomCardName.Tracker){
                     addCardPile(DomCardName.Pouch);
                 }
+                if (theCard==DomCardName.Prepare)
+                    preparePresent=true;
             }
         }
+    }
+
+    private void addLootSeparatePile() {
+       separatePiles.put(DomCardName.Loot, new ArrayList<DomCard>());
+       //TODO finish this
     }
 
     private void addAlly(DomCardName theCard) {
@@ -1060,6 +1088,10 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
         activeLandmarks.add(cardName);
     }
 
+    public void setProphecy(DomCardName cardName) {
+        activeProphecy = cardName;
+    }
+
     public boolean isLandmarkActive(DomCardName cardName) {
         return activeLandmarks.contains(cardName);
     }
@@ -1245,5 +1277,50 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 
     public DomCardName getActiveAlly() {
         return activeAlly;
+    }
+
+    public boolean isPreparePresent() {
+        return preparePresent;
+    }
+
+    public void decreaseProphecyCounter(int i) {
+        if (activeProphecy==null)
+            return;
+       prophecyCount-=i;
+       if (DomEngine.haveToLog) DomEngine.addToLog( "Player adds " + i + " &#x2738;" );
+       if (prophecyCount<0)
+          prophecyCount=0;
+        if (DomEngine.haveToLog) DomEngine.addToLog( "Prophecy " + activeProphecy.toHTML() + " has " + prophecyCount + " counters left." );
+    }
+
+    public DomCardName getActiveProphecy() {
+        return activeProphecy;
+    }
+
+    public int getProphecyCount() {
+        return prophecyCount;
+    }
+
+    public boolean containsShadowCards() {
+        if (containsShadowCards==null) {
+            for (DomCardName card : keySet()) {
+                if (card.hasCardType(DomCardType.Shadow)) {
+                    containsShadowCards = true;
+                    return true;
+                }
+            }
+            containsShadowCards=false;
+        }
+        return containsShadowCards;
+    }
+
+    public void removeEmbargoTokenFrom(DomCardName aCard) {
+        Integer theTokens = embargoTokens.get(aCard);
+        if (theTokens!=null && theTokens>1) {
+            embargoTokens.put(aCard, theTokens-1);
+        }
+        if (theTokens!=null && theTokens==1) {
+            embargoTokens.remove(aCard);
+        }
     }
 }

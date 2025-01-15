@@ -37,6 +37,8 @@ public class TrailCard extends DomCard {
     public int getPlayPriority() {
         if (owner.getCurrentGame().countEmptyPiles()>0 && !owner.getCardsFromHand(DomCardName.Carpenter).isEmpty())
             return 100;
+        if (!owner.getCardsFromHand(DomCardType.TrashForBenefit).isEmpty())
+            return owner.getCardsFromHand(DomCardType.TrashForBenefit).get(0).getPlayPriority()+1;
         return super.getPlayPriority();
     }
 }

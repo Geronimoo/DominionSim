@@ -30,4 +30,11 @@ public class RangerCard extends DomCard {
             return 15;
         return super.getDiscardPriority(aActionsLeft);
     }
+
+    @Override
+    public boolean wantsToBePlayed() {
+        if (owner.isJourneyTokenFaceUp() && owner.getDeckAndDiscardSize()==0)
+            return false;
+        return true;
+    }
 }

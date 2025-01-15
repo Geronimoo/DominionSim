@@ -180,7 +180,27 @@ public class DomCard implements Comparable< DomCard >{
      * @return
      */
     public boolean wantsToBePlayed() {
+      if ( owner.getCurrentGame().getBoard().isPreparePresent() && owner.wants(DomCardName.Prepare) && owner.getTotalPotentialCurrency().getCoins()<8) {
+          return handlePrepareEvent();
+      }
+      if (owner.getCurrentGame().getBoard().get(DomCardName.Siren)!=null
+              && this.hasCardType(DomCardType.Action)
+              && owner.wants(DomCardName.Siren)
+              && owner.getCardsFromHand(DomCardType.Action).size()==1
+              && owner.getTotalPotentialCurrency().getCoins()>=3 ) {
+          return false;
+      }
+
       return true;
+    }
+
+    private boolean handlePrepareEvent() {
+        if (owner.getPotentialCurrencyFromTreasures().getCoins()>=3 && hasCardType(DomCardType.Action))
+            return false;
+        if (owner.getAvailableCoins()<3)
+            return true;
+        else
+            return false;
     }
 
     /**
@@ -228,6 +248,11 @@ public class DomCard implements Comparable< DomCard >{
             return;
         }
 
+        if (getName()==DomCardName.Merchant_Camp) {
+           owner.putOnTopOfDeck(this);
+           return;
+        }
+
         if (isTaggedByHerbalist() || isTaggedByScheme() || getName()== DomCardName.Tent) {
             if (getName()==DomCardName.Hermit && owner.getBoughtCards().isEmpty()) {
                 if (owner.isHumanOrPossessedByHuman()) {
@@ -271,7 +296,11 @@ public class DomCard implements Comparable< DomCard >{
             isTaggedByScheme = false;
             return;
         }
-        owner.getDeck().discard(this);
+        if (owner.getCurrentGame().getBoard().getActiveProphecy()==DomCardName.Panic && owner.getCurrentGame().getBoard().getProphecyCount()==0 && hasCardType(DomCardType.Treasure)) {
+            owner.returnToSupply(this);
+        } else {
+            owner.getDeck().discard(this);
+        }
     }
 
     public int getPotionCost() {
@@ -317,7 +346,15 @@ public class DomCard implements Comparable< DomCard >{
 		isBane=true;
 	}
 	
-	public void doWhenGained() {}
+	public void doWhenGained() {
+        if (owner.getMiningRoadTriggers()>0) {
+            if (hasCardType(DomCardType.Treasure) && owner.getCardsFromDiscard().contains(this)){
+               owner.removeMiningRoadTrigger();
+               owner.removeCardFromDiscard(this);
+               owner.play(this);
+            }
+        }
+    }
 
 	public void doWhenDiscarded() {}
 

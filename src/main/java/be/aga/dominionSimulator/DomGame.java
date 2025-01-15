@@ -295,6 +295,13 @@ public void runSimulation() {
       return true;
     }
 
+    for (DomPlayer player : players) {
+        if (player.getUberDominationWinTrigger() && player.getDebt()==0) {
+            player.addVP(1000000);
+            return true;
+        }
+    }
+
     return false;
 }
 
@@ -368,6 +375,10 @@ public void putEmbargoTokenOn(DomCardName aCard) {
   board.putEmbargoTokenOn(aCard);
 }
 
+public void removeEmbargoTokenFrom(DomCardName aCard) {
+    board.removeEmbargoTokenFrom(aCard);
+}
+
 public DomCardName getBestCardInSupplyFor(DomPlayer aPlayer, DomCardType aType, DomCost domCost, boolean anExactCost) {
 	return board.getBestCardInSupplyFor(aPlayer, aType, domCost, anExactCost, null, null);
 }
@@ -389,8 +400,21 @@ public boolean isBuyPhase() {
 }
 
 public int getBridgesPlayed() {
-	return activePlayer!=null?activePlayer.getBridgesPlayedCount():0;
+    int sumBridges = 0;
+    for (DomPlayer player : players){
+        sumBridges+=player.getBridgesPlayedCount();
+    }
+	return sumBridges;
 }
+
+public int getBridgetrollPlayed() {
+    int sumBridgetrolls = 0;
+    for (DomPlayer player : players){
+        sumBridgetrolls+=player.getBridgeTrollPlayedCount();
+    }
+    return sumBridgetrolls;
+}
+
 
 public int getPrincessesInPlay() {
     return activePlayer!=null?activePlayer.getCardsFromPlay(DomCardName.Princess).size():0;
@@ -428,8 +452,6 @@ public DomPlayer getActivePlayer() {
 public boolean isInKingDom(DomCardName aCard) {
         return getBoard().containsKey(aCard);
     }
-
-public int getBridge_TrollsInPlay() { return activePlayer!=null?activePlayer.getCardsFromPlay(DomCardName.Bridge_Troll).size():0;    }
 
     public ArrayList<DomCard> getRogueableCardsInTrash() {
         ArrayList<DomCard> theRogueableCards = new ArrayList<DomCard>();
@@ -634,5 +656,13 @@ public int getBridge_TrollsInPlay() { return activePlayer!=null?activePlayer.get
 
     public DomCardName getActiveAlly() {
         return getBoard().getActiveAlly();
+    }
+
+    public void decreaseProphecyCounter(int i) {
+        getBoard().decreaseProphecyCounter(i);
+    }
+
+    public void putBlockadeTokenOn(DomCardName theDesiredCard) {
+
     }
 }

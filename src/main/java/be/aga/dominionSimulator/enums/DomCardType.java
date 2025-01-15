@@ -51,7 +51,12 @@ public enum DomCardType {
     Project(true),
     Way(true),
     Ally(true),
-    Liaison(true);
+    Liaison(true),
+    NextTime(false),
+    Loot(true),
+    Prophecy(true),
+    Omen(true),
+    Shadow(true);
 
     private final boolean isLegalCardType;
 

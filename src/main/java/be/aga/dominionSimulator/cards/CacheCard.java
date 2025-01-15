@@ -14,5 +14,6 @@ public class CacheCard extends DomCard {
 	        if (owner.getCurrentGame().countInSupply(DomCardName.Copper)>0)
 	          owner.gain(DomCardName.Copper);
     	}
+        super.doWhenGained();
     }
 }

@@ -173,7 +173,14 @@ public class DomBuyCondition {
           case hasBuiltProject:
               leftValue=owner.hasBuiltProject(leftCardName)?1:0;
               break;
-
+          case hasGained$5:
+              leftValue=owner.hasGained$5ThisTurn()?1:0;
+              break;
+          case hasInvestedAlready:
+              leftValue=owner.hasInvestments()?1:0;
+              break;
+          case hasBoughtRush:
+              return owner.hasTriggeredRush();
           case constant:
             break;
         }
@@ -300,7 +307,12 @@ public class DomBuyCondition {
          case hasBuiltProject:
               rightValue=owner.hasBuiltProject(leftCardName)?1:0;
               break;
-
+         case hasGained$5:
+              rightValue=owner.hasGained$5ThisTurn()?1:0;
+              break;
+         case hasInvestedAlready:
+              rightValue=owner.hasInvestments()?1:0;
+              break;
          case constant:
 			break;
         }

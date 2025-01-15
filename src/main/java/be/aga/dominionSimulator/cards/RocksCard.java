@@ -25,6 +25,7 @@ public class RocksCard extends DomCard {
         } else {
             owner.gainInHand(theSilver);
         }
+        super.doWhenGained();
     }
 
     @Override

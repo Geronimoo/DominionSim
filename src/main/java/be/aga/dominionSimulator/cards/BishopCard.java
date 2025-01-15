@@ -57,8 +57,11 @@ public class BishopCard extends DomCard {
       		theCardToTrash=theProvinces.get(0);
       	}
       }
-      if (!owner.getCardsFromHand(DomCardName.Market_Square).isEmpty() && !owner.getCardsFromHand(DomCardName.Gold).isEmpty())
-          theCardToTrash=owner.getCardsFromHand(DomCardName.Gold).get(0);
+  	  if (owner.countAllCards()<7 && !owner.getCardsFromHand(DomCardName.Bishop).isEmpty() ) {
+		return owner.getCardsFromHand(DomCardName.Bishop).get(0);
+	  }
+	  if (!owner.getCardsFromHand(DomCardName.Market_Square).isEmpty() && !owner.getCardsFromHand(DomCardName.Gold).isEmpty())
+	    theCardToTrash=owner.getCardsFromHand(DomCardName.Gold).get(0);
       return theCardToTrash;
 	}
 

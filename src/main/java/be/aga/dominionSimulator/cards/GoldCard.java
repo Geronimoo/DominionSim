@@ -36,5 +36,13 @@ public class GoldCard extends DomCard {
     public void doWhenGained() {
         if (owner.getCurrentGame().getBoard().isLandmarkActive(DomCardName.Aqueduct))
             owner.getCurrentGame().getBoard().moveVPFromTo(this.getName(),DomCardName.Aqueduct);
+        super.doWhenGained();
+    }
+
+    @Override
+    public boolean wantsToBePlayed() {
+        if (owner.getCurrentGame().getBoard().containsKey(DomCardName.Kintsugi) && owner.getTotalPotentialCurrency().getCoins()>=6 && owner.getTotalPotentialCurrency().getCoins()<8)
+            return false;
+        return super.wantsToBePlayed();
     }
 }

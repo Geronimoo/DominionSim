@@ -5,7 +5,7 @@
             description="">
         <type name="TwoPlayer"/>
         <type name="Province"/>
-        <board contents="Caravan Guard, Castles, Coin of the Realm, Courtier, Cultist, Enchantress, Harem, Mill, Page, Sacrifice, Training, Aqueduct" bane="" Mountain_Pass_Bid="0" Obelisk_Choice="" Shelters="true"/>
+        <board contents="Caravan Guard, Castles, Coin of the Realm, Courtier, Cultist, Enchantress, Farm, Mill, Page, Sacrifice, Training, Aqueduct" bane="" Mountain_Pass_Bid="0" Obelisk_Choice="" Shelters="true"/>
         <buy name="Castles">
             <condition>
                 <left type="countCardsInDeck" attribute="Courtier"/>
@@ -6164,7 +6164,7 @@
    <buy name="Silver"/>
 </player>
 
-<player name="ann game #6 - Geronimoo" author="Geronimoo" description="This bot is based on the strategy used by Geronimoo in the sixth annotated game: XXXXhttp://dominionstrategy.com/2011/03/23/guest-article-annotated-game-6/XXXXIt opens Envoy/Silver to get a jump start and then buys Wharves and Harems which proved dumb because of opponent's Thieves.">
+<player name="ann game #6 - Geronimoo" author="Geronimoo" description="This bot is based on the strategy used by Geronimoo in the sixth annotated game: XXXXhttp://dominionstrategy.com/2011/03/23/guest-article-annotated-game-6/XXXXIt opens Envoy/Silver to get a jump start and then buys Wharves and Farms which proved dumb because of opponent's Thieves.">
  <type name="Competitive"/>
  <type name="Province"/>
  <type name="TwoPlayer"/>
@@ -6177,7 +6177,7 @@
          <right type="constant" attribute="0.0"/>
       </condition>
    </buy>
-   <buy name="Harem">
+   <buy name="Farm">
       <condition>
          <left type="countCardsInDeck" attribute="Gold"/>
          <operator type="greaterThan" />
@@ -6221,7 +6221,7 @@
    <buy name="Silver"/>
 </player>
 
-<player name="ann game #3 - Dekker" author="Geronimoo" description="This bot is based on the strategy used by Dekker in the third annotated game: XXXXhttp://dominionstrategy.com/2011/02/21/annotated-game-3/XXXXIt opens Talisman/Silver to get multiples of Mining Villages and then onto Hoards, Islands and Harems to stop with Trade Route.">
+<player name="ann game #3 - Dekker" author="Geronimoo" description="This bot is based on the strategy used by Dekker in the third annotated game: XXXXhttp://dominionstrategy.com/2011/02/21/annotated-game-3/XXXXIt opens Talisman/Silver to get multiples of Mining Villages and then onto Hoards, Islands and Farms to stop with Trade Route.">
  <type name="Colony"/>
  <type name="Competitive"/>
  <type name="TwoPlayer"/>
@@ -6257,7 +6257,7 @@
       </condition>
    </buy>
    <buy name="Platinum"/>
-   <buy name="Harem">
+   <buy name="Farm">
       <condition>
          <left type="countCardsInPlay" attribute="Hoard"/>
          <operator type="greaterThan" />
@@ -6478,7 +6478,7 @@
    <buy name="Silver"/>
 </player>
 
-<player name="ann game #6 - Thief" author="Geronimoo" description="This bot is based on the strategy used by crduemling in the sixth annotated game: XXXXhttp://dominionstrategy.com/2011/03/23/guest-article-annotated-game-6/XXXXIt opens Thief/Silver because of the Harem on board. Thief remains a weak card despite of Harem.">
+<player name="ann game #6 - Thief" author="Geronimoo" description="This bot is based on the strategy used by crduemling in the sixth annotated game: XXXXhttp://dominionstrategy.com/2011/03/23/guest-article-annotated-game-6/XXXXIt opens Thief/Silver because of the Farm on board. Thief remains a weak card despite of Farm.">
  <type name="Attacking"/>
  <type name="Province"/>
  <type name="SingleCard"/>
@@ -6493,7 +6493,7 @@
          <right type="constant" attribute="0.0"/>
       </condition>
    </buy>
-   <buy name="Harem"/>
+   <buy name="Farm"/>
    <buy name="Duchy">
       <condition>
          <left type="countCardsInSupply" attribute="Province"/>
@@ -6519,7 +6519,7 @@
    <buy name="Silver"/>
 </player>
 
-<player name="ann game #3 - theory" author="Geronimoo" description="This bot is based on the strategy used by theory in the third annotated game: XXXXhttp://dominionstrategy.com/2011/02/21/annotated-game-3/XXXXIt opens Mining Village/Silver, to get to Hoard as quickly as possible. Then it goes for  Islands and Harems and Trade Route.">
+<player name="ann game #3 - theory" author="Geronimoo" description="This bot is based on the strategy used by theory in the third annotated game: XXXXhttp://dominionstrategy.com/2011/02/21/annotated-game-3/XXXXIt opens Mining Village/Silver, to get to Hoard as quickly as possible. Then it goes for  Islands and Farms and Trade Route.">
  <type name="Colony"/>
  <type name="Competitive"/>
  <type name="TwoPlayer"/>
@@ -6555,7 +6555,7 @@
       </condition>
    </buy>
    <buy name="Platinum"/>
-   <buy name="Harem">
+   <buy name="Farm">
       <condition>
          <left type="countCardsInPlay" attribute="Hoard"/>
          <operator type="greaterThan" />
@@ -10340,7 +10340,7 @@
    <buy name="Silver"/>
 </player>
 
-<player name="Harem" author="WanderingWinder" description="The optimized Harem strategy that buys no actions.">
+<player name="Farm" author="WanderingWinder" description="The optimized Farm strategy that buys no actions.">
  <type name="SingleCard"/>
  <type name="Optimized"/>
  <type name="BigMoney"/>
@@ -10361,14 +10361,14 @@
          <right type="constant" attribute="2.0"/>
       </condition>
    </buy>
-   <buy name="Harem">
+   <buy name="Farm">
       <condition>
          <left type="countCardsInSupply" attribute="Province"/>
          <operator type="smallerOrEqualThan" />
          <right type="constant" attribute="6.0"/>
       </condition>
    </buy>
-   <buy name="Harem">
+   <buy name="Farm">
       <condition>
          <left type="getTotalMoney"/>
          <operator type="greaterOrEqualThan" />

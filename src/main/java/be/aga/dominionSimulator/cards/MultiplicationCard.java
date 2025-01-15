@@ -147,7 +147,7 @@ public class MultiplicationCard extends DomCard {
 
     public DomCard getCardToMultiply( ) {
         DomCard theCardToPlay = null;
-        Collections.sort(owner.getCardsInHand(), SORT_FOR_DISCARDING);
+        Collections.sort(owner.getCardsInHand(), SORT_FOR_PLAYING);
         DomCard thePerhapsCard = null;
         for (int i = 0;i<owner.getCardsInHand().size();i++) {
           DomCard theCard = owner.getCardsInHand().get( i );

@@ -236,9 +236,15 @@ public class DomEngine {
                         + thePlayer.getWins() + ")"
                         + " and " + thePlayer.getTies() * 100 / NUMBER_OF_GAMES + "% ties ("
                         + thePlayer.getTies() + ")");
-				LOGGER.info(thePlayer+ " average turn 3 $" + thePlayer.getMoneyCurve(2)/ NUMBER_OF_GAMES);
-				LOGGER.info(thePlayer+" average turn 4 $" + thePlayer.getMoneyCurve(3)/ NUMBER_OF_GAMES);
-            }
+//				LOGGER.info(thePlayer+ " average turn 3 $" + thePlayer.getMoneyCurve(2)/ NUMBER_OF_GAMES);
+//				LOGGER.info(thePlayer+" average turn 4 $" + thePlayer.getMoneyCurve(3)/ NUMBER_OF_GAMES);
+
+				if (thePlayer.getCarnivalsPlayed()>0)
+				  LOGGER.info("Carnival average draw: " + thePlayer.getCarnivalDraws()*1.0/thePlayer.getCarnivalsPlayed());
+				if (thePlayer.getMagicLampOpened()>0)
+			  	  LOGGER.info("Average Magic Lamp popped: " + thePlayer.getMagicLampOpened()*1.0/NUMBER_OF_GAMES);
+				LOGGER.info("Average Weddings bought = " + thePlayer.getWeddingCounter()*1.0/NUMBER_OF_GAMES);
+			}
             myGui.showTiePercentage((int) (theTotalTies*100/NUMBER_OF_GAMES));
             LOGGER.info("Empty Piles Endings : " + emptyPilesEndingCount / NUMBER_OF_GAMES * 100 + "%");
             LOGGER.info("average VP tokens: " + totalVPTokens/NUMBER_OF_GAMES);

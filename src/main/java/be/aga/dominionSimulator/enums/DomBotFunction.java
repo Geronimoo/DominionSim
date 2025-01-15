@@ -40,7 +40,10 @@ public enum DomBotFunction {
    countVillagers,
    hasFlag,
    hasBuiltProject,
-    doesNotSpendCoffers;
+    doesNotSpendCoffers,
+    hasGained$5,
+    hasInvestedAlready,
+    hasBoughtRush;
 
    public String toString() {
        switch ( this ) {
@@ -128,8 +131,14 @@ public enum DomBotFunction {
        case doesNotSpendCoffers:
            return "does not spend Coffers";
 
+       case hasInvestedAlready:
+           return "has Invested already (1=true)";
+
+       case hasBoughtRush:
+           return "has bought Rush";
+
        default :
-        return super.toString();
+           return super.toString();
     }
    };
 }

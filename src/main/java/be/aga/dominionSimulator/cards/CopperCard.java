@@ -63,8 +63,21 @@ public class CopperCard extends DomCard {
                 && owner.getDesiredCard(new DomCost(owner.getAvailableCoinsWithoutTokens(),0),false)==DomCardName.Hostelry
                 && owner.getDesiredCard(owner.getTotalPotentialCurrency(),false)==DomCardName.Hostelry)
             return false;
+        if (owner.getCurrentGame().countInSupply(DomCardName.Souk)>0
+                && owner.getDesiredCard(new DomCost(owner.getAvailableCoinsWithoutTokens(),0),false)==DomCardName.Souk
+                && owner.getDesiredCard(owner.getTotalPotentialCurrency(),false)==DomCardName.Souk
+                && owner.stillInEarlyGame())
+            return false;
+        if (owner.getCurrentGame().getBoard().get(DomCardName.Kintsugi)!=null
+            && owner.getDesiredCard(new DomCost(owner.getAvailableCoinsWithoutTokens(),0),false)==DomCardName.Kintsugi
+            && owner.stillInEarlyGame())
+            return false;
 
-        return true;
+        if (owner.getCurrentGame().getBoard().get(DomCardName.Stampede)!=null
+                && owner.getDesiredCard(new DomCost(owner.getAvailableCoinsWithoutTokens(),0),false)==DomCardName.Stampede)
+            return false;
+
+        return super.wantsToBePlayed();
     }
 
     private int countCrapCards() {

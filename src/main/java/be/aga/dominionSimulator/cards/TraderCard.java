@@ -26,6 +26,9 @@ public class TraderCard extends DomCard {
         } else {
             for (DomCard card : owner.getCardsInHand()) {
                 if ((card.getCoinCost(owner.getCurrentGame()) > 0 && card.getTrashPriority() <= 19)
+                        || (card.getCoinCost(owner.getCurrentGame())>0 && owner.hasBuiltProject(DomCardName.Guildhall))
+                        || (card.getCoinCost(owner.getCurrentGame())>0 && owner.count(DomCardName.Farrier)>0 && card.getName()!=DomCardName.Trader)
+                        || (card.getCoinCost(owner.getCurrentGame())>0 && owner.getCurrentGame().getBoard().containsKey(DomCardName.Tower) && owner.getCurrentGame().countInSupply(DomCardName.Silver)>0)
                         || card.getTrashPriority() == 0) {
                     theCardToTrash = card;
                     break;

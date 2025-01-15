@@ -13,6 +13,7 @@ public class Magic_LampCard extends DomCard {
     public void play() {
       owner.addAvailableCoins(1);
       if (getSingleCardsInPlay()>=6 && !owner.getCardsFromPlay(DomCardName.Magic_Lamp).isEmpty()) {
+          owner.recordMagicLampOpened();
           owner.gain(DomCardName.Wish);
           owner.gain(DomCardName.Wish);
           owner.gain(DomCardName.Wish);
@@ -20,7 +21,7 @@ public class Magic_LampCard extends DomCard {
       }
     }
 
-    public  int getSingleCardsInPlay(){
+    public int getSingleCardsInPlay(){
         ArrayList<DomCardName> theSingleCards = new ArrayList<DomCardName>();
         for (DomCard theCard : owner.getCardsInPlay()) {
             if (owner.getCardsFromPlay(theCard.getName()).size()==1) {

@@ -26,7 +26,8 @@ public class ScepterCard extends DomCard {
                 if (!owner.getCardsInPlay().get(i).hasCardType(DomCardType.Action)
                         || owner.getCardsInPlay().get(i).getName() == DomCardName.Royal_Carriage
                         || (owner.getCardsInPlay().get(i).hasCardType(DomCardType.Duration) && owner.getCardsInPlay().get(i).getDiscardAtCleanUp())
-                        || (owner.getCardsInPlay().get(i).getCoinValue() < 2 && !owner.getCardsInPlay().get(i).hasCardType(DomCardType.Card_Advantage)))
+                        || (owner.getCardsInPlay().get(i).getCoinValue() < 2 && !owner.getCardsInPlay().get(i).hasCardType(DomCardType.Card_Advantage))
+                        || owner.getCardsInPlay().get(i).getName()==DomCardName.Ronin && owner.getDeckAndDiscardSize()<2)
                     continue;
                 actionFound = true;
                 break;

@@ -22,7 +22,7 @@ public class Secret_CaveCard extends DomCard {
       if (owner.isHumanOrPossessedByHuman()) {
          handleHuman();
       } else {
-          if (!owner.isGoingToBuyTopCardInBuyRules(owner.getTotalPotentialCurrency())) {
+          if (!owner.isGoingToBuyTopCardInBuyRules(owner.getTotalPotentialCurrency()) && owner.getCardsFromHand(DomCardName.Magic_Lamp).isEmpty()) {
               owner.doForcedDiscard(3, false);
               durationFailed = false;
           }

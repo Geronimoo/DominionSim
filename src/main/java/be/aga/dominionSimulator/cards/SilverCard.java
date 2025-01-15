@@ -88,5 +88,6 @@ public class SilverCard extends DomCard {
     public void doWhenGained() {
         if (owner.getCurrentGame().getBoard().isLandmarkActive(DomCardName.Aqueduct))
             owner.getCurrentGame().getBoard().moveVPFromTo(this.getName(),DomCardName.Aqueduct);
+        super.doWhenGained();
     }
 }

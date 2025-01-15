@@ -11,6 +11,7 @@ public class Bridge_TrollCard extends DomCard {
 
     public void play() {
         owner.addAvailableBuys(1);
+        owner.increaseBridgeTrollPlayedCounter();
         for (DomPlayer thePlayer : owner.getOpponents()) {
             if (!thePlayer.checkDefense()) {
                 thePlayer.activateMinusOneCoin();
@@ -20,5 +21,6 @@ public class Bridge_TrollCard extends DomCard {
 
     public void resolveDuration() {
       owner.addAvailableBuys(1);
+      owner.increaseBridgeTrollPlayedCounter();
     }
 }

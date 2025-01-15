@@ -25,4 +25,9 @@ public class SkulkCard extends DomCard {
     public void doWhenGained() {
         owner.gain(DomCardName.Gold);
     }
+
+    @Override
+    public int getTrashPriority() {
+        return 14;
+    }
 }

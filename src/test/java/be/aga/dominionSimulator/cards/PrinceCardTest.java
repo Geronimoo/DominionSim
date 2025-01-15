@@ -48,7 +48,7 @@ public class PrinceCardTest {
         EasyMock.expect(currentGame.getPrincessesInPlay()).andReturn(0).anyTimes();
         EasyMock.expect(currentGame.getQuarriesInPlay()).andReturn(0).anyTimes();
         EasyMock.expect(currentGame.getHighwaysInPlay()).andReturn(0).anyTimes();
-        EasyMock.expect(currentGame.getBridge_TrollsInPlay()).andReturn(0).anyTimes();
+        EasyMock.expect(currentGame.getBridgetrollPlayed()).andReturn(0).anyTimes();
         EasyMock.expect(currentGame.getActivePlayer()).andReturn(owner).anyTimes();
         EasyMock.expect(currentGame.getBoard()).andReturn(new DomBoard(DomCardName.class, new ArrayList<DomPlayer>())).anyTimes();
     }

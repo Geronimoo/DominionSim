@@ -114,7 +114,7 @@ public class DomGui extends JFrame implements ActionListener {
 	    public void run() {
 	      myTopSplit.remove(1);
 	      myBigSplit.remove(1);
-	  	  setPreferredSize(new Dimension(650,550));
+	  	  setPreferredSize(new Dimension(850,650));
 	  	  pack();
 	    }
 	  };
