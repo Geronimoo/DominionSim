@@ -43,7 +43,17 @@ public class DomCard implements Comparable< DomCard >{
         }
       };
 
-      public static final Comparator<DomCard> SORT_FOR_PLAYING = new Comparator<DomCard>(){
+    public static final Comparator<DomCard> SORT_FOR_TRASHING_DESC = new Comparator<DomCard>(){
+        public int compare( DomCard aO1, DomCard aO2 ) {
+            if (aO1.getTrashPriority()> aO2.getTrashPriority())
+                return -1;
+            if (aO1.getTrashPriority() < aO2.getTrashPriority())
+                return 1;
+            return 0;
+        }
+    };
+
+    public static final Comparator<DomCard> SORT_FOR_PLAYING = new Comparator<DomCard>(){
           public int compare( DomCard aO1, DomCard aO2 ) {
               if (aO1.getPlayPriority()< aO2.getPlayPriority())
                   return -1;

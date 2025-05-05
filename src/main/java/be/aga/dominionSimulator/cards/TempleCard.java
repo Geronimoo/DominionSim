@@ -68,8 +68,12 @@ public class TempleCard extends DomCard {
         if (owner.getCardsInHand().size()==1)
             return true;
         Collections.sort( owner.getCardsInHand() , SORT_FOR_TRASHING);
-        if (owner.getCardsInHand().get(0).getTrashPriority()<=DomCardName.Copper.getTrashPriority())
-            return true;
+        for (DomCard card : owner.getCardsInHand()) {
+            if (card==this)
+                continue;
+            if (owner.getCardsInHand().get(0).getTrashPriority()<=DomCardName.Copper.getTrashPriority())
+                return true;
+        }
         if (!owner.getCardsFromHand(DomCardName.Fortress).isEmpty())
             return true;
         return false;

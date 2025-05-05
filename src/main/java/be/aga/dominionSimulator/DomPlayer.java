@@ -147,6 +147,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     private boolean kilnTriggerd = false;
     private int cargoShipTriggers = 0;
     private ArrayList<DomCard> cargoCards = new ArrayList<>();
+    private ArrayList<DomCard> deliverCards = new ArrayList<>();
     private int favors=0;
     private int gainsSinceBeginningOfBuyPhase =0;
     private boolean annoyedByMonkey;
@@ -166,7 +167,8 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     private int weddingCounter=0;
     private int avoidTriggers =0;
     private boolean rushTriggered=false;
-    private boolean sailorTrigger=false;
+    private int sailorTriggers =0;
+    private boolean deliverTriggered=false;
 
     public DomPlayer(String aString) {
         name = aString;
@@ -678,13 +680,13 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         if (getCurrentGame().isGameFinished()&&possessor==null)
           setFleetTurnLeft(false);
         initializeTurn();
-        handleShaman();
         handleTeachers();
         handleGang_of_Pickpockets();
         handleGuides();
         resolveHorseTraders();
         resolvePreparedCards();
         resolveDurationEffects();
+        handleShaman();
         resolveProcessionGhosts();
         handleCropRotation();
         handleCityGate();
@@ -699,6 +701,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         handleLostInTheWoods();
         handleSilos();
         handleSinister_Plot();
+        handleClerk();
         doActionPhase();
         doBuyPhase();
         doNightPhase();
@@ -725,9 +728,18 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         miningRoadTriggers=0;
     }
 
+    private void handleClerk() {
+        if (getCardsFromHand(DomCardName.Clerk).isEmpty())
+            return;
+        while (!getCardsFromHand(DomCardName.Clerk).isEmpty()) {
+          play(removeCardFromHand(getCardsFromHand(DomCardName.Clerk).get(0)));
+        }
+    }
+
     private void handleShaman() {
         if (getCurrentGame().getBoard().get(DomCardName.Shaman)!=null && !getCurrentGame().getTrashedCards().isEmpty()) {
-            getCurrentGame().getTrashedCards().sort(DomCard.SORT_FOR_TRASHING);
+            getCurrentGame().getTrashedCards().sort(DomCard.SORT_FOR_TRASHING_DESC);
+            if (DomEngine.haveToLog) DomEngine.addToLog(DomCardName.Shaman.toHTML() + " triggers to gain something from the trash:" );
             for (DomCard theCard: getCurrentGame().getTrashedCards()) {
                 if (theCard.getCost(getCurrentGame()).getPotions()==0 && theCard.getCost(getCurrentGame()).getDebt()==0 && theCard.getCost(getCurrentGame()).getCoins()<=6) {
                     gain(getCurrentGame().removeFromTrash(theCard));
@@ -868,7 +880,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     }
 
     private void handleLostInTheWoods() {
-        if (!lostInTheWoods)
+        if (!lostInTheWoods || getCardsInHand().isEmpty())
             return;
         Collections.sort(getCardsInHand(),DomCard.SORT_FOR_DISCARD_FROM_HAND);
         DomCard theCardToDiscard=getCardsInHand().get( 0 );
@@ -956,6 +968,12 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
             cardsInHand.add(savedCard);
             setNeedsToUpdateGUI();
         }
+        for (DomCard card: deliverCards) {
+            cardsInHand.add(card);
+            setNeedsToUpdateGUI();
+            showHand();
+        }
+        deliverCards.clear();
         for (DomPlayer thePlayer : getCurrentGame().getPlayers()) {
             thePlayer.addFaithFulHoundsToHand();
         }
@@ -1219,7 +1237,8 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         villaTriggered=false;
         cavalryTriggered=false;
         rushTriggered=false;
-        sailorTrigger=false;
+        deliverTriggered=false;
+        sailorTriggers =0;
     }
 
     private void doBuyPhase() {
@@ -1299,8 +1318,8 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         return merchant_GuildTrigger;
     }
 
-    public void setMerchant_GuildTrigger(int merchant_GuildTrigger) {
-        this.merchant_GuildTrigger = merchant_GuildTrigger;
+    public void addMerchantGuildTrigger() {
+        this.merchant_GuildTrigger++;
     }
 
     private void handleMerchantGuilds() {
@@ -2263,6 +2282,8 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
      * @param aDomGame
      */
     public void initializeForGame(DomGame aDomGame) {
+        deliverCards.clear();
+        deliverTriggered=false;
         avoidTriggers =0;
         tavernMat.clear();
         pprUsed = false;
@@ -2868,6 +2889,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
           deck.returnCardsFromIslandMat();
         if (!deck.getExileMat().isEmpty())
           deck.returnCardsFromExileMat();
+        deliverCards.clear();
     }
 
     public boolean checkDefense() {
@@ -4942,9 +4964,10 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                 }
             } else {
                 if (getTotalPotentialCurrency().customCompare( card.getCost(getCurrentGame())) >= 0 && baseTreasuresInHand()) {
-                    if (getPhase()==DomPhase.Buy_PlayTreasures)
-                      attemptToPlayAllTreasures();
-                    attemptToBuyFromSupplyAsHuman(card);
+                    if (getPhase()==DomPhase.Buy_PlayTreasures) {
+                        attemptToPlayAllTreasures();
+                        attemptToBuyFromSupplyAsHuman(card);
+                    }
                 }
             }
         }
@@ -5638,15 +5661,52 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     }
 
     public void triggerSailor() {
-        sailorTrigger=true;
+        sailorTriggers++;
     }
 
-    public boolean hasTriggeredSailor() {
-        return sailorTrigger;
+    public boolean hasSailorTriggersLeft() {
+        return sailorTriggers>0;
     }
 
-    public void resetTriggerSailor() {
-        sailorTrigger=false;
+    public void removeTriggerSailor() {
+        sailorTriggers--;
     }
 
+    public int getDifferentTreasuresInHand() {
+        Set<DomCardName> differentTreasureCards = new HashSet();
+        for (DomCard card : getCardsFromHand(DomCardType.Treasure)) {
+          differentTreasureCards.add(card.getName());
+        }
+        return differentTreasureCards.size();
+    }
+
+    public void triggerDeliver() {
+        deliverTriggered=true;
+    }
+
+    public boolean getDeliverTriggered() {
+        return deliverTriggered;
+    }
+
+    public void addDeliverCard(DomCard aCard) {
+        deliverCards.add(aCard);
+    }
+
+    public DomCard getNextActionNotInPlayToPlay() {
+        ArrayList<DomCard> theActionsToConsider = getCardsFromHand(DomCardType.Action);
+        if (getCurrentGame().getBoard().containsShadowCards()) {
+            for (DomCard card : getDeck().getDrawDeck()) {
+                if (card.hasCardType(DomCardType.Shadow))
+                    theActionsToConsider.add(card);
+            }
+        }
+        if (theActionsToConsider.isEmpty())
+            return null;
+        Collections.sort(theActionsToConsider, DomCard.SORT_FOR_PLAYING);
+        for (DomCard card : theActionsToConsider) {
+            if (card.wantsToBePlayed() && getCardsFromPlay(card.getName()).isEmpty())
+                return card;
+        }
+        return null;
+    }
 }

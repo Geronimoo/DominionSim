@@ -26,9 +26,12 @@ public class FarrierCard extends DomCard {
         }
         if (owner.getAvailableCoins() == 0)
             return;
-        if (owner.getBuysLeft() > 1 && owner.getDesiredCard(owner.getTotalAvailableCurrency(), false) != null && owner.getDesiredCard(owner.getTotalAvailableCurrency(), false) != DomCardName.Farrier && owner.getDesiredCard(owner.getTotalAvailableCurrency(), false) != DomCardName.Copper)
-            return;
-
+//        if (owner.getBuysLeft() > 1
+//                && owner.getDesiredCard(owner.getTotalAvailableCurrency(), false) != null
+//                && owner.getDesiredCard(owner.getTotalAvailableCurrency(), false) != DomCardName.Farrier
+//                && owner.getDesiredCard(owner.getTotalAvailableCurrency(), false) != DomCardName.Copper)
+//            return;
+//
         int theTotalCards = owner.getAvailableCoins();
         if (DomEngine.haveToLog) DomEngine.addToLog(owner + " overbuys for $" + theTotalCards);
         owner.spend(theTotalCards);

@@ -18,7 +18,7 @@ public class Rustic_VillageCard extends DomCard {
         Collections.sort(owner.getCardsInHand(), SORT_FOR_DISCARDING);
         int theDiscardCount=0;
         for (DomCard theCard : owner.getCardsInHand()) {
-            theDiscardCount+= theCard.getDiscardPriority(owner.actionsLeft) < 15 ? 1 : 0;
+            theDiscardCount+= theCard.getDiscardPriority(owner.actionsLeft) <= 15 ? 1 : 0;
         }
         if (theDiscardCount>=2) {
             owner.discardFromHand(owner.getCardsInHand().get(0));

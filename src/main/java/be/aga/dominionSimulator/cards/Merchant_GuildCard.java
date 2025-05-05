@@ -13,7 +13,7 @@ public class Merchant_GuildCard extends DomCard {
     public void play() {        
       owner.addAvailableBuys(1);
       owner.addAvailableCoins(1);
-      owner.setMerchant_GuildTrigger(owner.getMerchant_GuildTrigger()+1);
+      owner.addMerchantGuildTrigger();
    }
 
     @Override

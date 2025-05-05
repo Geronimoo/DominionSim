@@ -998,7 +998,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 			return gainsNeededToEndGame;
 		ArrayList<Integer> theCounts = new ArrayList<Integer>();
 		for (DomCardName cardName : keySet()){
-		    if (cardName.hasCardType(DomCardType.Event) || cardName.hasCardType(DomCardType.Landmark) || cardName.hasCardType(DomCardType.Heirloom) || cardName.hasCardType(DomCardType.Shelter) || cardName.hasCardType(DomCardType.Project))
+		    if (cardName==DomCardName.Province || cardName==DomCardName.Colony|| cardName.hasCardType(DomCardType.Event) || cardName.hasCardType(DomCardType.Landmark) || cardName.hasCardType(DomCardType.Heirloom) || cardName.hasCardType(DomCardType.Shelter) || cardName.hasCardType(DomCardType.Project))
 		        continue;
 			theCounts.add(get(cardName).size());
 		}

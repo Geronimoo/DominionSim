@@ -33,8 +33,10 @@ public class RangerCard extends DomCard {
 
     @Override
     public boolean wantsToBePlayed() {
-        if (owner.isJourneyTokenFaceUp() && owner.getDeckAndDiscardSize()==0)
+        if (!owner.isJourneyTokenFaceUp() && owner.getDeckAndDiscardSize()==0)
             return false;
+//        if (!owner.isJourneyTokenFaceUp() && owner.actionsLeft<1)
+//            return false;
         return true;
     }
 }

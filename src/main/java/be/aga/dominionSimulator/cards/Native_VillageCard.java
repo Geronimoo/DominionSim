@@ -6,6 +6,7 @@ import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.DomPlayer;
 import be.aga.dominionSimulator.enums.DomCardName;
+import be.aga.dominionSimulator.enums.DomCardType;
 import be.aga.dominionSimulator.enums.DomPlayStrategy;
 
 public class Native_VillageCard extends DomCard {
@@ -87,6 +88,19 @@ public class Native_VillageCard extends DomCard {
     }
 
     private void playDefault() {
+      if (!owner.getCardsFromHand(DomCardName.Native_Village).isEmpty()) {
+          playNativeVillageForStorage();
+          return;
+      }
+      if (owner.actionsLeft-owner.getCardsFromHand(DomCardType.Terminal).size()<=0 && countOnMat(DomCardName.Native_Village)>0) {
+          playNativeVillageForCards();
+          return;
+      }
+      if (owner.getNativeVillageMat().size()>3) {
+          playNativeVillageForCards();
+          return;
+      }
+
       if (owner.addingThisIncreasesBuyingPower( owner.getPotentialCurrencyFromNativeVillageMat() )) {
         playNativeVillageForCards();
       } else {
@@ -94,7 +108,15 @@ public class Native_VillageCard extends DomCard {
       } 
     }
 
-      public void playNativeVillageForStorage() {
+    private int countOnMat(DomCardName domCardName) {
+        int count = 0;
+        for (DomCard card : owner.getNativeVillageMat()) {
+            count+=card.getName()==domCardName? 1 : 0;
+        }
+        return count;
+    }
+
+    public void playNativeVillageForStorage() {
         ArrayList< DomCard > theCard = owner.revealTopCards( 1 );
         if (!theCard.isEmpty()) {
           owner.getNativeVillageMat().addAll( theCard );

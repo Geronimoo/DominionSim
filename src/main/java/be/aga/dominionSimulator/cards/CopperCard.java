@@ -6,6 +6,8 @@ import be.aga.dominionSimulator.DomCard;
 import be.aga.dominionSimulator.DomCost;
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
+import be.aga.dominionSimulator.enums.DomCardType;
+import be.aga.dominionSimulator.enums.DomPhase;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
@@ -22,6 +24,18 @@ public class CopperCard extends DomCard {
     public CopperCard () {
       super( DomCardName.Copper);
     }
+
+    @Override
+    public void play() {
+        if (owner.getPhase()== DomPhase.Action) {
+            if (DomEngine.haveToLog) DomEngine.addToLog(this + " gets played with +" +DomCardName.Enlightenment.toHTML());
+            owner.addActions(1);
+            owner.drawCards(1);
+        } else {
+            super.play();
+        }
+    }
+
     @Override
     public int getCoinValue() {
         return owner.getCoppersmithPlayedCount() +1;
@@ -109,7 +123,21 @@ public class CopperCard extends DomCard {
 	}
 
     @Override
+    public boolean hasCardType(DomCardType aType) {
+        if (owner!=null && aType==DomCardType.Action && owner.getCurrentGame().getBoard().getActiveProphecy() == DomCardName.Enlightenment
+                && owner.getCurrentGame().getBoard().getProphecyCount()==0){
+            return true;
+        }
+        return super.hasCardType(aType);
+    }
+
+    @Override
     public int getPlayPriority() {
+        if (owner.getCurrentGame().getBoard().getActiveProphecy() == DomCardName.Enlightenment
+                && owner.getCurrentGame().getBoard().getProphecyCount()==0){
+            return 1;
+        }
+
         if (owner.count(DomCardName.Magic_Lamp)>0
                 && !owner.getCardsFromHand(DomCardName.Magic_Lamp).isEmpty()
                 && owner.getCardsFromPlay(DomCardName.Copper).isEmpty())

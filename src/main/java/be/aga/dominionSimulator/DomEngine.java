@@ -243,7 +243,7 @@ public class DomEngine {
 				  LOGGER.info("Carnival average draw: " + thePlayer.getCarnivalDraws()*1.0/thePlayer.getCarnivalsPlayed());
 				if (thePlayer.getMagicLampOpened()>0)
 			  	  LOGGER.info("Average Magic Lamp popped: " + thePlayer.getMagicLampOpened()*1.0/NUMBER_OF_GAMES);
-				LOGGER.info("Average Weddings bought = " + thePlayer.getWeddingCounter()*1.0/NUMBER_OF_GAMES);
+//				LOGGER.info("Average Weddings bought = " + thePlayer.getWeddingCounter()*1.0/NUMBER_OF_GAMES);
 			}
             myGui.showTiePercentage((int) (theTotalTies*100/NUMBER_OF_GAMES));
             LOGGER.info("Empty Piles Endings : " + emptyPilesEndingCount / NUMBER_OF_GAMES * 100 + "%");

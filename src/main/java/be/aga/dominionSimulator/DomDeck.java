@@ -307,10 +307,10 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 if (DomEngine.haveToLog) DomEngine.addToLog(owner + " rushes " + aCard.name.toHTML());
                 owner.play(aCard);
             } else {
-                if (owner.hasTriggeredSailor() && aCard.hasCardType(DomCardType.Duration)) {
+                if (owner.hasSailorTriggersLeft() && aCard.hasCardType(DomCardType.Duration)) {
                     if (DomEngine.haveToLog) DomEngine.addToLog(owner + " has triggered Sailor and will play " + aCard.name.toHTML());
                     owner.play(aCard);
-                    owner.resetTriggerSailor();
+                    owner.removeTriggerSailor();
                 } else {
                     if (owner.getCurrentGame().getBoard().getActiveProphecy() == DomCardName.Rapid_Expansion
                             && owner.getCurrentGame().getBoard().getProphecyCount() == 0
@@ -319,7 +319,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
                             DomEngine.addToLog(DomCardName.Rapid_Expansion.toHTML() + " triggers and sets aside " + aCard + " to be played next turn");
                         owner.addPreparedCard(aCard);
                     } else {
-                        if (!fillsCargoShip(aCard, aLocation) && !handleGatekeeper(aCard)) {
+                        if (!setAsideForDeliver(aCard) && !fillsCargoShip(aCard, aLocation) && !handleGatekeeper(aCard)) {
                             if (owner.count(DomCardName.Sleigh) > 0 && !owner.getCardsFromHand(DomCardName.Sleigh).isEmpty()) {
                                 if (((SleighCard) owner.getCardsFromHand(DomCardName.Sleigh).get(0)).wantsToReact(aCard)) {
                                     owner.discardFromHand(owner.getCardsFromHand(DomCardName.Sleigh).get(0));
@@ -349,6 +349,7 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
                                     if (!owner.getCardsFromPlay(DomCardName.Royal_Seal).isEmpty()
                                             || !owner.getCardsFromPlay(DomCardName.Tracker).isEmpty()
                                             || !owner.getCardsFromPlay(DomCardName.Bauble).isEmpty()
+                                            || !owner.getCardsFromPlay(DomCardName.Tiara).isEmpty()
                                             || owner.isTravellingFairActive()) {
                                         if (owner.isHumanOrPossessedByHuman()) {
                                             if (owner.getEngine().getGameFrame().askPlayer("<html>On Top of Deck: " + aCard.getName().toHTML() + "</html>", "Resolving Royal Seal"))
@@ -417,6 +418,11 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
           }
           if (owner.getCollectionTriggers()>0)
               owner.addVP(owner.getCollectionTriggers());
+          for (DomCard theCard : owner.getCardsFromPlay(DomCardName.Abundance)) {
+              if (!((AbundanceCard) theCard).hasTriggered()) {
+                  ((AbundanceCard) theCard).trigger();
+              }
+          }
         }
         if (aCard.hasCardType(DomCardType.Treasure)) {
             for (DomPlayer player : owner.getCurrentGame().getPlayers()) {
@@ -498,6 +504,14 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
                     }
                 }
             }
+        }
+        return false;
+    }
+
+    private boolean setAsideForDeliver(DomCard aCard) {
+        if (owner.getDeliverTriggered()) {
+           owner.addDeliverCard(aCard);
+           return true;
         }
         return false;
     }
@@ -1222,6 +1236,16 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
 	    for (DomCard theCard : drawDeck) {
            if (theCard.getTrashPriority()<=DomCardName.Copper.getTrashPriority())
                return true;
+        }
+        return false;
+    }
+
+    public boolean deckHasJunkLeft() {
+        if (drawDeckHasJunkLeft())
+            return true;
+        for (DomCard theCard : discardPile) {
+            if (theCard.getTrashPriority()<=DomCardName.Copper.getTrashPriority())
+                return true;
         }
         return false;
     }

@@ -158,6 +158,9 @@ public class DomBuyCondition {
           case tokensOnBaths:
               leftValue=owner.getCurrentGame().getBoard().countVPon(DomCardName.Baths);
               break;
+          case tokensOnTemple:
+              leftValue=owner.getCurrentGame().getBoard().countVPon(DomCardName.Temple);
+              break;
           case isTravellingFairActive:
               leftValue=owner.isTravellingFairActive() ? 1 : 0;
               break;
@@ -291,6 +294,9 @@ public class DomBuyCondition {
               break;
          case tokensOnBaths:
               rightValue=owner.getCurrentGame().getBoard().countVPon(DomCardName.Baths);
+              break;
+         case tokensOnTemple:
+              rightValue=owner.getCurrentGame().getBoard().countVPon(DomCardName.Temple);
               break;
          case isTravellingFairActive:
               rightValue=owner.isTravellingFairActive() ? 1 : 0;

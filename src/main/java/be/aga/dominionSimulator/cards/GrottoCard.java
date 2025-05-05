@@ -19,6 +19,10 @@ public class GrottoCard extends DomCard {
         owner.addActions(1);
         if (owner.getCardsInHand().isEmpty())
             return;
+        if (owner.isHumanOrPossessedByHuman()) {
+            handleHumanPlayer();
+            return;
+        }
         int havenCount = 0;
         //first look for excess terminals
         ArrayList<DomCard> theTerminalsInHand = owner.getCardsFromHand(DomCardType.Terminal);
@@ -44,7 +48,7 @@ public class GrottoCard extends DomCard {
             for (int i = 0; i<owner.getCardsInHand().size(); i++) {
                 DomCard theCardToHavenAway = owner.getCardsInHand().get(i);
                 if (theCardToHavenAway.hasCardType(DomCardType.Treasure)
-                        && !owner.removingReducesBuyingPower(theCardToHavenAway)) {
+                        && !owner.removingReducesBuyingPower(theCardToHavenAway) ) {
                     grottoAway(theCardToHavenAway);
                     havenCount++;
                     havenedNothing=false;
@@ -61,10 +65,19 @@ public class GrottoCard extends DomCard {
             havenCount++;
         }
         //this has a bad impact on win rate
-//        while (!owner.getCardsInHand().isEmpty() && havenCount<4 && owner.count(DomCardName.Province)>0 && !owner.isGoingToBuyTopCardInBuyRules(owner.getTotalPotentialCurrency())) {
-//            grottoAway(owner.getCardsInHand().get(0));
-//            havenCount++;
-//        }
+        while (!owner.getCardsInHand().isEmpty() && havenCount<4 && owner.count(DomCardName.Province)>0 && !owner.isGoingToBuyTopCardInBuyRules(owner.getTotalPotentialCurrency())) {
+            grottoAway(owner.getCardsInHand().get(0));
+            havenCount++;
+        }
+    }
+
+    private void handleHumanPlayer() {
+        ArrayList<DomCard> theChosenCards = new ArrayList<DomCard>();
+        do {
+            owner.getEngine().getGameFrame().askToSelectCards("Choose cards to discard", owner.getCardsInHand(), theChosenCards, 0);
+        } while (theChosenCards.size()>4);
+        for (DomCard card: theChosenCards)
+            grottoAway(card);
     }
 
     private void grottoAway(DomCard aCard) {

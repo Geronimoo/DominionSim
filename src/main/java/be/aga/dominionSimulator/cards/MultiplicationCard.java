@@ -242,6 +242,8 @@ public class MultiplicationCard extends DomCard {
     
     @Override
     public boolean wantsToBePlayed() {
+        if (getName()==DomCardName.Disciple && owner.count(DomCardName.Teacher)==0)
+            return true;
     	int theActionCount=0;
     	for (DomCard theCard : owner.getCardsInHand()) {
     		if (theCard==this 

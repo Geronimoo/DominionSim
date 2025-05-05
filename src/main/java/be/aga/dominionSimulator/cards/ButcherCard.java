@@ -82,7 +82,7 @@ public class ButcherCard extends DomCard {
             DomCost theMaxCostOfCardToGain = new DomCost(theBestCardToTrash.getCoinCost(owner.getCurrentGame()) + owner.getCoffers(), theBestCardToTrash.getPotionCost());
             DomCardName theBestCardToGain = owner.getDesiredCard(theMaxCostOfCardToGain, false);
             for (DomCard card : owner.getCardsInHand()) {
-                if (card.getName()==DomCardName.Copper)
+                if (card.getName()==DomCardName.Copper || card.getName()==DomCardName.Province)
                     continue;
                 theMaxCostOfCardToGain = new DomCost(card.getCoinCost(owner.getCurrentGame()) + owner.getCoffers(), card.getPotionCost());
                 DomCardName theRemodelGainCard = owner.getDesiredCard(theMaxCostOfCardToGain, false);

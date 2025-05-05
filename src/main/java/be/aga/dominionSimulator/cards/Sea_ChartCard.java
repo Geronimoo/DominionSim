@@ -27,4 +27,10 @@ public class Sea_ChartCard extends DomCard {
       }
     }
 
+    @Override
+    public int getPlayPriority() {
+        if (owner.getCardsFromPlay(DomCardName.Treasury).isEmpty() && !owner.getCardsFromHand(DomCardName.Treasury).isEmpty())
+            return 1000;
+        return super.getPlayPriority();
+    }
 }
