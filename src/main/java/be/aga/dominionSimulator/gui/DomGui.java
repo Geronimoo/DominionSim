@@ -201,9 +201,6 @@ public class DomGui extends JFrame implements ActionListener {
           //the copy/paste button
 	      theCons.gridx++;
 	      thePanel.add(getCopyPasteButton(theBotSelector), theCons);
-          //the colonize button
-	      theCons.gridx++;
-	      thePanel.add(getKingdomViewerButton(theBotSelector), theCons);
 	    }
   	    myBotSelectors.get(0).requestFocus();
 	    JPanel theSmallPanel = new JPanel();
