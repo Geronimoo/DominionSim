@@ -12,12 +12,12 @@ You will need the following to build and run the simulator:
 
 To build the simulator JAR file:
 ```
-$ mvn package
+mvn package
 ```
 
 ## Run
 
 To run the simulator:
 ```
-$ mvn exec:java
+mvn exec:java
 ```
