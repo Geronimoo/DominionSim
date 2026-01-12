@@ -92,6 +92,10 @@ public class Native_VillageCard extends DomCard {
           playNativeVillageForStorage();
           return;
       }
+      if (owner.getCardsFromHand(DomCardName.Wharf).isEmpty() && countOnMat(DomCardName.Wharf)>0) {
+          playNativeVillageForCards();
+          return;
+      }
       if (owner.actionsLeft-owner.getCardsFromHand(DomCardType.Terminal).size()<=0 && countOnMat(DomCardName.Native_Village)>0) {
           playNativeVillageForCards();
           return;

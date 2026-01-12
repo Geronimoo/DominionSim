@@ -53,8 +53,9 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
   private JTextField myBaneField;
   private JTextField myStartingDiscardPile;
   private JFormattedTextField myMountainPassBidField;
-    private JTextField myObeliskChoice;
-    private JCheckBox myShelters;
+  private JTextField myObeliskChoice;
+  private JTextField myRiverboatChoice;
+  private JCheckBox myShelters;
 
     public DomBotEditor ( final DomEngine anEngine , final DomPlayer aStrategy ) {
         myEngine=anEngine;
@@ -87,7 +88,7 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
     	} else {
     	  theNewPlayer.setStartState(theStartState);
     	}
-    	if (!theNewPlayer.addBoard(myBoardField.getText(), myBaneField.getText(),myMountainPassBidField.getText(),myObeliskChoice.getText(), Boolean.toString(myShelters.isSelected()))){
+    	if (!theNewPlayer.addBoard(myBoardField.getText(), myBaneField.getText(),myMountainPassBidField.getText(),myObeliskChoice.getText(), Boolean.toString(myShelters.isSelected()),myRiverboatChoice.getText())){
             JOptionPane.showMessageDialog(this, "An error was found in the Board", "Error", JOptionPane.ERROR_MESSAGE);
             return;
     	}
@@ -335,6 +336,14 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
         myObeliskChoice = new JTextField(myChosenStrategy.getObeliskChoice(), 20);
         theCons.gridx++;
         thePanel.add(myObeliskChoice,theCons);
+        //Riverboat card
+        theCons.gridx=0;
+        theCons.gridy++;
+        theCons.fill=GridBagConstraints.NONE;
+        thePanel.add(new JLabel("Riverboat choice"),theCons);
+        myRiverboatChoice = new JTextField(myChosenStrategy.getRiverboatChoice(), 20);
+        theCons.gridx++;
+        thePanel.add(myRiverboatChoice,theCons);
         //Shelters
         theCons.gridx=0;
         theCons.gridy++;

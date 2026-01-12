@@ -29,7 +29,7 @@ public class MysticCard extends DomCard {
             Collections.sort(theDeckCards);
             theChoice = owner.getEngine().getGameFrame().askToSelectOneCard("Wish for ", theDeckCards, "Wish for Ace of Spades");
         } else {
-            if (owner.getPlayStrategyFor(this) == DomPlayStrategy.goodDeckTracker)
+            if (owner.getPlayStrategyFor(this) == DomPlayStrategy.goodDeckTracker || owner.getCurrentGame().getRiverboatChoice()==DomCardName.Mystic)
                 theChoice = owner.getDeck().getMostLikelyCardOnTop();
             else if (owner.getPlayStrategyFor(this) == DomPlayStrategy.greedyDeckTracker)
                 theChoice = owner.getDeck().getMostWantedCardOnTop();

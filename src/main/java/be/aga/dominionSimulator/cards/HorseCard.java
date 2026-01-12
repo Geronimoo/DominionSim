@@ -17,7 +17,7 @@ public class HorseCard extends DomCard {
 
     @Override
     public boolean wantsToBePlayed() {
-        return true;
+        return owner.getDeckAndDiscardSize()>0;
 //        if (owner.isGoingToBuyTopCardInBuyRules(owner.getTotalPotentialCurrency()))
 //            return false;
 //        return true;

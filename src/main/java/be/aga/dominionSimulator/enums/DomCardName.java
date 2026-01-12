@@ -173,6 +173,7 @@ public enum DomCardName  {
     Cursed_Gold (4, 0, 0, 0, 30, 5, new DomCardType[]{DomCardType.Treasure,DomCardType.Heirloom,DomCardType.Kingdom}),
     Cursed_Village (5, 0, 0, 0, 15, 35, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Village, DomCardType.Doom, DomCardType.Card_Advantage}),
     Cutpurse (4, 0, 2, 0, 32, 25, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Attack, DomCardType.Terminal}),
+    Daimyo (0, 0, 0, 0, 16, 28, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler, DomCardType.Command, DomCardType.Duration}),
     Dame_Anna (5, 0, 0, 0, 25, 28, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Attack, DomCardType.Terminal, DomCardType.Trasher,DomCardType.Knight}),
     Dame_Josephine (5, 0, 0, 2, 30, 25, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Attack, DomCardType.Terminal, DomCardType.Victory,DomCardType.Knight}),
     Dame_Molly (5, 0, 0, 0, 5, 28, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Attack, DomCardType.Terminal, DomCardType.Village,DomCardType.Knight}),
@@ -185,6 +186,7 @@ public enum DomCardName  {
     Delve (2, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
     Demand (5, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
     Den_of_Sin (5, 0, 0, 0, 1, 25, new DomCardType[]{DomCardType.Kingdom, DomCardType.Duration, DomCardType.Night, DomCardType.Card_Advantage}),
+    Desperation (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
     Destrier (6, 0, 0, 0, 8, 40, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler, DomCardType.Card_Advantage}),
     Develop (3, 0, 0, 0, 33, 16, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal, DomCardType.Trasher, DomCardType.TrashForBenefit}),
     Devil$s_Workshop (4, 0, 0, 0, 38, 22, new DomCardType[]{DomCardType.Night, DomCardType.Kingdom}),
@@ -255,6 +257,7 @@ public enum DomCardName  {
     Fountain (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Landmark}),
     Frigate (5, 0, 3, 0, 19, 28, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal, DomCardType.Duration, DomCardType.Attack}),
     Fugitive (4, 0, 0, 0, 17, 25, new DomCardType[]{DomCardType.Action, DomCardType.Traveller, DomCardType.Cycler}),
+    Gamble (2, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
     Gang_of_Pickpockets (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Ally}),
     Gardens (4, 0, 0, 0, 100, 9, new DomCardType[]{DomCardType.Victory, DomCardType.Kingdom}),
     Gatekeeper (5, 0, 0, 0, 19, 27, new DomCardType[]{DomCardType.Action, DomCardType.Attack, DomCardType.Kingdom, DomCardType.Terminal, DomCardType.Duration}),
@@ -392,6 +395,7 @@ public enum DomCardName  {
     Monkey (3, 0, 0, 0, 22, 21, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Duration, DomCardType.Terminal}),
     Monument (4, 0, 2, 0, 22, 26, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal}),
     Mountain_Pass (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Landmark}),
+    Mountain_Shrine (0, 0, 0, 0, 28, 30, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal, DomCardType.Omen}),
     Mountain_Village (4, 0, 0, 0, 5, 21, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler, DomCardType.Village}),
     Mountebank (5, 0, 2, 0, 18, 30, new DomCardType[]{DomCardType.Action, DomCardType.Attack, DomCardType.Kingdom, DomCardType.Terminal}),
     Museum (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Landmark}),
@@ -447,7 +451,7 @@ public enum DomCardName  {
     Poor_House (1, 0, 4, 0, 36, 21, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal}),
     Port (4, 0, 0, 0, 5, 17, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler, DomCardType.Village}),
     Possession (6, 1, 0, 0, 22, 45, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal}),
-    Pouch (2, 0, 1, 0, 30, 5, new DomCardType[]{DomCardType.Treasure,DomCardType.Heirloom,DomCardType.Kingdom}),
+    Pouch (2, 0, 1, 0, 30, 18, new DomCardType[]{DomCardType.Treasure,DomCardType.Heirloom,DomCardType.Kingdom}),
     Poverty (0, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Hex}),
     Practice (3, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
     Prepare (3, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
@@ -476,6 +480,7 @@ public enum DomCardName  {
     Research (4, 0, 0, 0, 15, 19, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Duration, DomCardType.Trasher, DomCardType.TrashForBenefit}),
     Rice (7, 0, 0, 0, 999, 30, new DomCardType[]{DomCardType.Treasure, DomCardType.Kingdom}),
     Ritual (4, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
+    Riverboat (3, 0, 0, 0, 28, 30, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Duration, DomCardType.Terminal}),
     Road_Network (5, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Project}),
     Rocks (4, 0, 1, 0, 95, 15, new DomCardType[]{DomCardType.Treasure, DomCardType.Kingdom,DomCardType.Split_Pile, DomCardType.Split_Pile_Bottom}),
     Rogue (5, 0, 2, 0, 25, 28, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Attack, DomCardType.Terminal}),
@@ -579,6 +584,7 @@ public enum DomCardName  {
     Taskmaster (3, 0, 0, 0, 18, 21, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Duration}),
     Tax (2, 0, 0, 0, 0, 0, new DomCardType[]{DomCardType.Event}),
     Taxman (4, 0, 2, 0, 32, 25, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Attack, DomCardType.Terminal}),
+    Tea_House (5, 0, 0, 0, 16, 30, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Cycler, DomCardType.Omen}),
     Teacher (6, 0, 0, 0, 20, 30, new DomCardType[]{DomCardType.Action, DomCardType.Terminal, DomCardType.Reserve,DomCardType.Traveller}),
     Temple (4, 0, 0, 0, 37, 18, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal, DomCardType.Trasher, DomCardType.Gathering}),
     Tent (3, 0, 2, 0, 32, 25, new DomCardType[]{DomCardType.Action, DomCardType.Kingdom, DomCardType.Terminal}),
@@ -736,7 +742,10 @@ public enum DomCardName  {
       if ("Continue".equals(name())||"Donate".equals(name()) || "Royal_Blacksmith".equals(name()) || "Fortune".equals(name()) || "Overlord".equals(name()) || "Annex".equals(name()) ||"City_Quarter".equals(name())) {
           cost.setDebt(8);
       }
-      if ("Triumph".equals(name())) {
+      if ("Daimyo".equals(name())) {
+          cost.setDebt(6);
+      }
+      if ("Triumph".equals(name())||"Mountain_Shrine".equals(name())) {
           cost.setDebt(5);
       }
       if ("Engineer".equals(name())) {
@@ -1037,6 +1046,8 @@ public enum DomCardName  {
             return new Cursed_VillageCard();
         case Cutpurse:
             return new CutpurseCard();
+        case Daimyo:
+            return new DaimyoCard();
         case Dame_Anna:
             return new Dame_AnnaCard();
         case Dame_Josephine:
@@ -1059,6 +1070,8 @@ public enum DomCardName  {
             return new DemandCard();
         case Den_of_Sin:
             return new Den_of_SinCard();
+        case Desperation:
+            return new DesperationCard();
         case Destrier:
             return new DestrierCard();
         case Develop:
@@ -1191,6 +1204,8 @@ public enum DomCardName  {
             return new FrigateCard();
         case Fugitive:
             return new FugitiveCard();
+        case Gamble:
+            return new GambleCard();
         case Gardens:
             return new GardensCard();
         case Gatekeeper:
@@ -1447,6 +1462,8 @@ public enum DomCardName  {
             return new MonkeyCard();
         case Monument:
             return new MonumentCard();
+          case Mountain_Shrine:
+            return new Mountain_ShrineCard();
         case Mountain_Village:
             return new Mountain_VillageCard();
         case Mountebank:
@@ -1599,6 +1616,8 @@ public enum DomCardName  {
             return new RiceCard();
         case Ritual:
             return new RitualCard();
+        case Riverboat:
+            return new RiverboatCard();
         case Rocks:
             return new RocksCard();
         case Rogue:
@@ -1799,6 +1818,8 @@ public enum DomCardName  {
             return new TaxCard();
         case Taxman:
             return new TaxmanCard();
+        case Tea_House:
+            return new Tea_HouseCard();
         case Teacher:
             return new TeacherCard();
         case Tent:

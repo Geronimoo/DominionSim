@@ -10,11 +10,13 @@ public class WharfCard extends DomCard {
 
     public void play() {
       owner.addAvailableBuys(1);
+//      owner.addAvailableCoins(2);
       owner.drawCards(2);
     }
 
     public void resolveDuration() {
         owner.addAvailableBuys(1);
+//        owner.addAvailableCoins(2);
         owner.drawCards(2);
     }
     

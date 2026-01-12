@@ -56,6 +56,7 @@ public enum DomCardType {
     Loot(true),
     Prophecy(true),
     Omen(true),
+    Command(true),
     Shadow(true);
 
     private final boolean isLegalCardType;
