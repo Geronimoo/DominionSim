@@ -48,8 +48,8 @@ public class SetsContainsAllCardsTest {
                 if (theSet.getCards().contains(theCard))
                     found=true;
             }
-            if (!found)
-                System.out.println(theCard);
+//            if (!found)
+//                System.out.println(theCard);
             //TODO add all cards to the correct set
 //            assertTrue("Card " +theCard + " not found",found);
             i++;

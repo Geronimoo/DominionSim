@@ -2494,9 +2494,7 @@ public enum DomCardName  {
     }
 
     public String getImageLink() {
-        if (this==Poacher || this==Sentry || this==Vassal || this==Merchant || this==Harbinger || this==Bandit || this==Artisan)
-          return "http://dominion.diehrstraits.com/scans/2nd/"+toString().replaceAll(" |-|'","").toLowerCase()+".jpg";
-        return "http://dominion.diehrstraits.com/scans/"+getSet().toString().toLowerCase()+"/"+toString().replaceAll(" |-|'","").toLowerCase()+".jpg";
+        return "Not supported anymore";
     }
 
     public static DomCardName getRandomCardShapedThing(HashSet<DomSet> aValidSets) {
