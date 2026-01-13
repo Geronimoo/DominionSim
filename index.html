@@ -1,6 +1,88 @@
-<h1>Dominion stuff</h1>
-To run the simulator you'll need to <a href="https://www.java.com/en/download/faq/exception_sitelist.xml">configure a site exception</a> for this website.
-<br><br>
-<a href="https://raw.githubusercontent.com/Geronimoo/DominionSim/master/assets/dominion.jnlp">Launch Geronimoo's Dominion Simulator (only works if you have java web start set up correctly in your browser)</a><br>
-<br>
-To launch the simulator client you need to have Java installed. Then you can start it up by clicking Windows button and typing 'javaws https://raw.githubusercontent.com/Geronimoo/DominionSim/master/assets/dominion.jnlp'. Once you've done that there will be an icon on your desktop to launch it next times.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DominionSim</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    header {
+      background-color: #2c3e50;
+      color: #fff;
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+    main {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    h1, h2 {
+      color: #2c3e50;
+    }
+    pre {
+      background: #eee;
+      padding: 1rem;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      color: #666;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>DominionSim</h1>
+    <p>A simulator for the Dominion card game</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>About</h2>
+      <p>
+        DominionSim is a simulator for the Dominion card game. It allows you to
+        build and run simulations using Java and Maven.
+      </p>
+    </section>
+
+    <section>
+      <h2>Prerequisites</h2>
+      <p>You will need the following to build and run the simulator:</p>
+      <ul>
+        <li>Java SE SDK 1.8 or higher</li>
+        <li>Maven</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Build</h2>
+      <p>To build the simulator JAR file, run:</p>
+      <pre><code>mvn package</code></pre>
+    </section>
+
+    <section>
+      <h2>Run</h2>
+      <p>To run the simulator, use:</p>
+      <pre><code>mvn exec:java</code></pre>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; DominionSim</p>
+  </footer>
+</body>
+</html>
