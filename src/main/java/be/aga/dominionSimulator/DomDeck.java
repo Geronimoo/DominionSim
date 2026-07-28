@@ -624,15 +624,13 @@ public class DomDeck extends EnumMap< DomCardName, ArrayList<DomCard> > {
     /**
      * 
      */
-    public void discardTopCardFromDeck() {
-      DomCard theCard = null;
-      if (drawDeck.isEmpty()) {
-        if (DomEngine.haveToLog) DomEngine.addToLog( owner + " has no cards in the deck to discard");
-        return;
-      }
-      theCard = getTopCard();
+    public DomCard discardTopCardFromDeck() {
+      DomCard theCard = getTopCard();
+      if (theCard==null)
+          return null;
       if (DomEngine.haveToLog) DomEngine.addToLog( owner + " discards " + theCard + " from the top of his deck");
       discard( theCard);
+      return theCard;
     }
 
     private boolean gainIfPossessed(DomCard aCard) {

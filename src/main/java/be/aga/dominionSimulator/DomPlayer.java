@@ -2,6 +2,7 @@ package be.aga.dominionSimulator;
 
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 import be.aga.dominionSimulator.cards.*;
 import be.aga.dominionSimulator.enums.*;
@@ -107,6 +108,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     private boolean donateTriggered;
     private int mountainPassBid = 0;
     private DomCardName obeliskChoice = null;
+    private DomCardName riverboatChoice = null;
     private boolean villaTriggered = false;
     private int merchantsPlayed;
     private DomCard savedCard;
@@ -126,6 +128,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     private boolean twiceMiserable;
     private ArrayList<DomCard> setAsideFaithfulHounds=new ArrayList<>();
     private boolean borrowActivated;
+    private boolean desperationActivated;
     private boolean gainedExtraExperiment;
     private int trashingBonus;
     private int villagers;
@@ -169,6 +172,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     private boolean rushTriggered=false;
     private int sailorTriggers =0;
     private boolean deliverTriggered=false;
+    private List<DomCard> myDaimyoTriggers = new ArrayList<>();
 
     public DomPlayer(String aString) {
         name = aString;
@@ -509,6 +513,8 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         if (cardToBuy == DomCardName.Amass && !getCardsFromPlay(DomCardType.Action).isEmpty())
             return false;
         if (cardToBuy == DomCardName.Borrow && borrowActivated)
+            return false;
+        if (cardToBuy == DomCardName.Desperation && (desperationActivated || getCurrentGame().countInSupply(DomCardName.Curse)==0))
             return false;
         if (cardToBuy == DomCardName.Quest && !checkForQuest())
             return false;
@@ -1191,6 +1197,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         pilgrimageActivatedThisTurn = false;
         almsActivated = false;
         borrowActivated = false;
+        desperationActivated = false;
         saveActivated = false;
         expeditionsActivated = 0;
         river$sGiftActive=false;
@@ -1239,6 +1246,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         rushTriggered=false;
         deliverTriggered=false;
         sailorTriggers =0;
+        myDaimyoTriggers.clear();
     }
 
     private void doBuyPhase() {
@@ -2194,6 +2202,15 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                     aCard.setDiscardAtCleanup(false);
             }
         }
+        if (aCard.hasCardType(DomCardType.Action) && !aCard.hasCardType(DomCardType.Command) && !myDaimyoTriggers.isEmpty()) {
+            for (DomCard theDaimyo : myDaimyoTriggers) {
+                if (DomEngine.haveToLog) DomEngine.addToLog(this + " triggers Daimyo for " + aCard.getName().toHTML());
+                aCard.play();
+                if (aCard.hasCardType(DomCardType.Duration) && !aCard.durationFailed())
+                    ((DaimyoCard)theDaimyo).setDuration(aCard);
+            }
+            myDaimyoTriggers.clear();
+        }
         if (getCurrentGame().getBoard().getActiveProphecy()==DomCardName.Panic && getCurrentGame().getBoard().getProphecyCount()==0 && aCard.hasCardType(DomCardType.Treasure)) {
           addAvailableBuys(2);
         }
@@ -2203,6 +2220,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                 putOnTopOfDeck(removeCardFromPlay(theCard));
             }
         }
+
     }
 
     private boolean playedByWay(DomCard aCard) {
@@ -2768,8 +2786,8 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     /**
      *
      */
-    public void discardTopCardFromDeck() {
-        deck.discardTopCardFromDeck();
+    public DomCard discardTopCardFromDeck() {
+        return deck.discardTopCardFromDeck();
     }
 
     /**
@@ -3447,6 +3465,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         theCopy.setBane(myBaneCard);
         theCopy.setMountainPassBid(mountainPassBid);
         theCopy.setObeliskCard(obeliskChoice == null ? null : obeliskChoice.toString());
+        theCopy.setRiverboatCard(riverboatChoice == null ? null : riverboatChoice.toString());
         theCopy.setShelters(shelters);
         return theCopy;
     }
@@ -4111,7 +4130,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         }
     }
 
-    public boolean addBoard(String contents, String bane, String aMountainPassBid, String anObeliskChoice, String aShelters) {
+    public boolean addBoard(String contents, String bane, String aMountainPassBid, String anObeliskChoice, String aShelters, String aRiverboatChoice) {
         if (!StartState.dissectAndAdd(contents, mySuggestedBoardCards))
             return false;
         if (bane != null) {
@@ -4129,7 +4148,9 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         }
         setMountainPassBid(Integer.valueOf(aMountainPassBid));
         setObeliskCard(anObeliskChoice);
+        setRiverboatCard(aRiverboatChoice);
         setShelters(Boolean.valueOf(aShelters));
+
         return true;
     }
 
@@ -4425,6 +4446,9 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     public void setBorrowActivated() {
         borrowActivated = true;
     }
+    public void setDesperationActivated() {
+        desperationActivated = true;
+    }
 
     public void activateExpedition() {
         expeditionsActivated++;
@@ -4656,6 +4680,9 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     public DomCardName getCardForObelisk() {
         return obeliskChoice;
     }
+    public DomCardName getCardForRiverboat() {
+        return riverboatChoice;
+    }
 
     public boolean isCardInPlay(DomCardName cardName) {
         for (DomCard theCard : getCardsInPlay()) {
@@ -4685,8 +4712,28 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         return obeliskChoice.toString();
     }
 
+    public String getRiverboatChoice() {
+        if (riverboatChoice == null)
+            return "";
+        return riverboatChoice.toString();
+    }
+
     public void setMountainPassBid(Integer value) {
         mountainPassBid = value;
+    }
+
+    public boolean setRiverboatCard(String text) {
+        String aCard = "";
+        try {
+            aCard = text.replaceAll("\\s|-", "_").replaceAll("'", "\\$");
+            riverboatChoice = DomCardName.valueOf(aCard);
+        } catch (Exception e) {
+            if (!aCard.trim().isEmpty()) {
+                return false;
+            }
+            riverboatChoice = null;
+        }
+        return true;
     }
 
     public boolean setObeliskCard(String text) {
@@ -5284,6 +5331,9 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     public boolean isBorrowActivated() {
         return borrowActivated;
     }
+    public boolean isDesperationActivated() {
+        return desperationActivated;
+    }
 
     public boolean hasGainedExtraExperiment() {
         return gainedExtraExperiment;
@@ -5708,5 +5758,13 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                 return card;
         }
         return null;
+    }
+
+    public void addDaimyoTrigger(DaimyoCard daimyoCard) {
+        myDaimyoTriggers.add(daimyoCard);
+    }
+
+    public double countInExile(DomCardName cardName) {
+        return getDeck().getExileMat().stream().filter(it -> it.getName()==cardName).count();
     }
 }

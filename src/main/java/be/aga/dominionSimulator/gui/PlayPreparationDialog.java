@@ -277,7 +277,7 @@ public class PlayPreparationDialog extends JFrame implements ActionListener {
         if (e.getActionCommand().equals("Start")) {
             DomPlayer theHumanPlayer = new DomPlayer("Human");
             theHumanPlayer.setHuman();
-            if (!theHumanPlayer.addBoard(myBoardField.getText(),myBaneField.getText(),"0","", "false")) {
+            if (!theHumanPlayer.addBoard(myBoardField.getText(),myBaneField.getText(),"0","", "false", "")) {
               JOptionPane.showMessageDialog(this, "An error was found in the Board and/or Bane", "Error", JOptionPane.ERROR_MESSAGE);
               return;
             }

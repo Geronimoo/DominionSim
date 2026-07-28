@@ -126,6 +126,7 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
                 || aBuyCondition.getLeftFunction() == DomBotFunction.isPlusOneCoinTokenSet
 				|| aBuyCondition.getLeftFunction() == DomBotFunction.countVPon
 				|| aBuyCondition.getLeftFunction() == DomBotFunction.hasBuiltProject
+				|| aBuyCondition.getLeftFunction() == DomBotFunction.countCardsInExile
                 ) {
         	myLeftCardBox.setVisible(true);
         	myLeftCardBox.setSelectedItem( aBuyCondition.getLeftCardName() );
@@ -163,6 +164,7 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
                 || aBuyCondition.getRightFunction() == DomBotFunction.isPlusOneCoinTokenSet
 				|| aBuyCondition.getRightFunction() == DomBotFunction.countVPon
 				|| aBuyCondition.getRightFunction() == DomBotFunction.hasBuiltProject
+				|| aBuyCondition.getRightFunction() == DomBotFunction.countCardsInExile
                 ) {
         	myRightCardBox.setVisible(true);
         	myRightCardBox.setSelectedItem( aBuyCondition.getRightCardName() );
@@ -208,6 +210,7 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
                         || myLeftFunctionBox.getSelectedItem() == DomBotFunction.isPlusOneCoinTokenSet
 						|| myLeftFunctionBox.getSelectedItem() == DomBotFunction.countVPon
 						|| myLeftFunctionBox.getSelectedItem() == DomBotFunction.hasBuiltProject
+						|| myLeftFunctionBox.getSelectedItem() == DomBotFunction.countCardsInExile
                         ) {
     				myLeftCardBox.setVisible(true);
 				}
@@ -234,6 +237,7 @@ public class DomBuyConditionPanel extends JPanel implements ItemListener {
                         || myRightFunctionBox.getSelectedItem() == DomBotFunction.isPlusOneCoinTokenSet
 						|| myRightFunctionBox.getSelectedItem() == DomBotFunction.countVPon
 						|| myRightFunctionBox.getSelectedItem() == DomBotFunction.hasBuiltProject
+						|| myRightFunctionBox.getSelectedItem() == DomBotFunction.countCardsInExile
                        ) {
     				myRightCardBox.setVisible(true);
 				}

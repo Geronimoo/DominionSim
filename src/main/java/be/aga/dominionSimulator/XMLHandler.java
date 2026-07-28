@@ -42,7 +42,7 @@ public final class XMLHandler extends DefaultHandler {
           // Ignore unknown types.
         }
       }else if( localName.equals( "board" )  ) {
-    	  ((DomPlayer)stack.peek()).addBoard(resolveAttrib(uri, "contents", attribs, null), resolveAttrib(uri, "bane", attribs, null),resolveAttrib(uri, "Mountain_Pass_Bid", attribs, null), resolveAttrib(uri, "Obelisk_Choice", attribs, null), resolveAttrib(uri, "Shelters", attribs, "false") );
+    	  ((DomPlayer)stack.peek()).addBoard(resolveAttrib(uri, "contents", attribs, null), resolveAttrib(uri, "bane", attribs, null),resolveAttrib(uri, "Mountain_Pass_Bid", attribs, null), resolveAttrib(uri, "Obelisk_Choice", attribs, null), resolveAttrib(uri, "Shelters", attribs, "false") , resolveAttrib(uri, "Riverboat_Choice", attribs, null));
       }else if( localName.equals( "start_state" )  ) {
           stack.push(new StartState());
       }else if( localName.equals( "hand" )  ) {

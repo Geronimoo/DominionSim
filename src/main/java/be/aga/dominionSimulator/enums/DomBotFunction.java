@@ -44,7 +44,8 @@ public enum DomBotFunction {
     doesNotSpendCoffers,
     hasGained$5,
     hasInvestedAlready,
-    hasBoughtRush;
+    hasBoughtRush,
+    countCardsInExile;
 
    public String toString() {
        switch ( this ) {

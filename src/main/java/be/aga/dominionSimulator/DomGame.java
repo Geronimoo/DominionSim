@@ -36,6 +36,7 @@ public class DomGame extends Observable{
   private boolean auctionTriggered;
   private DomPlayer previousTurnTakenBy;
   private DomCardName obeliskChoice;
+  private DomCardName riverboatChoice;
   private ArrayList<DomCard> faceDownCardsInTrash = new ArrayList<DomCard>();
   private EnumMap<DomArtifact,DomPlayer> artifactsAndOwners = new EnumMap(DomArtifact.class);
 
@@ -73,13 +74,22 @@ private void initialize() {
     isNoProvinceGainedYet=true;
     auctionTriggered=false;
     setObeliskChoice();
+    setRiverboatChoice();
     artifactsAndOwners = new EnumMap<DomArtifact, DomPlayer>(DomArtifact.class);
 }
 
     private void setObeliskChoice() {
         for (DomPlayer thePlayer : players) {
-            if (thePlayer.getObeliskChoice()!=null && thePlayer.getObeliskChoice().length()>0) {
-                obeliskChoice=thePlayer.getCardForObelisk();
+            if (thePlayer.getObeliskChoice() != null && thePlayer.getObeliskChoice().length() > 0) {
+                obeliskChoice = thePlayer.getCardForObelisk();
+                break;
+            }
+        }
+    }
+    private void setRiverboatChoice() {
+        for (DomPlayer thePlayer : players) {
+            if (thePlayer.getRiverboatChoice()!=null && thePlayer.getRiverboatChoice().length()>0) {
+                riverboatChoice=thePlayer.getCardForRiverboat();
                 break;
             }
         }
@@ -618,6 +628,10 @@ public boolean isInKingDom(DomCardName aCard) {
 
     public DomCardName getObeliskChoice() {
         return obeliskChoice;
+    }
+
+    public DomCardName getRiverboatChoice() {
+        return riverboatChoice;
     }
 
     public ArrayList<DomCard> getFaceDownCardsInTrash() {

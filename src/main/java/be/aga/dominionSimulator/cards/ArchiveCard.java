@@ -40,9 +40,8 @@ public class ArchiveCard extends DomCard {
     }
 
     public void resolveDuration() {
-      if (myArchivedCards.isEmpty())
-          return;
-      addCardToHandFromArchive();
+      if (!myArchivedCards.isEmpty())
+        addCardToHandFromArchive();
     }
 
     @Override

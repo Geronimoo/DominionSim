@@ -184,6 +184,9 @@ public class DomBuyCondition {
               break;
           case hasBoughtRush:
               return owner.hasTriggeredRush();
+          case countCardsInExile:
+              leftValue=owner.countInExile(leftCardName);
+              break;
           case constant:
             break;
         }
@@ -302,7 +305,7 @@ public class DomBuyCondition {
               rightValue=owner.isTravellingFairActive() ? 1 : 0;
               break;
          case countVPon:
-              rightValue=owner.getCurrentGame().getBoard().countVPon(leftCardName);
+              rightValue=owner.getCurrentGame().getBoard().countVPon(rightCardName);
               break;
          case countVillagers:
               rightValue=owner.countVillagers();
@@ -311,13 +314,16 @@ public class DomBuyCondition {
               rightValue=owner.getCurrentGame().getArtifactOwner(DomArtifact.Flag)==owner?1:0;
               break;
          case hasBuiltProject:
-              rightValue=owner.hasBuiltProject(leftCardName)?1:0;
+              rightValue=owner.hasBuiltProject(rightCardName)?1:0;
               break;
          case hasGained$5:
               rightValue=owner.hasGained$5ThisTurn()?1:0;
               break;
          case hasInvestedAlready:
               rightValue=owner.hasInvestments()?1:0;
+              break;
+          case countCardsInExile:
+              rightValue=owner.countInExile(rightCardName);
               break;
          case constant:
 			break;

@@ -456,6 +456,14 @@ public enum DomSet {
     TestSet (new DomCardName[] {DomCardName.ZZZtest
     }),
 
+    Plunder (new DomCardName[] {DomCardName.Abundance
+            , DomCardName.Amphora
+    }),
+
+    Rising_Sun (new DomCardName[] {DomCardName.Alley
+            , DomCardName.Amass
+    }),
+
     Menagerie(new DomCardName[] {DomCardName.Animal_Fair
             ,DomCardName.Barge
             ,DomCardName.Black_Cat
